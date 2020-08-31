@@ -40,8 +40,3 @@ assert_numeric <- function(df, ...) {
          call. = FALSE)
   }
 }
-
-#' @noRd
-#' @importFrom dplyr %>%
-#' @importFrom rlang := !! sym .data
-NULL
