@@ -21,5 +21,7 @@ Imports:
     tidyr,
     rlang,
     wppdistro (>= 0.1.0)
-Remotes:  
+Remotes: 
     caldwellst/wppdistro
+Depends: 
+    R (>= 2.10)
