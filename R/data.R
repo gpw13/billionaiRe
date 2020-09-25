@@ -13,37 +13,21 @@
 #' \describe{
 #'   \item{unique_id}{Unique ID for each indicator}
 #'   \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
-#'   \item{year}{Year, currently 1970 - 2030}
-#'   \item{total}{Total population}
-#'   \item{under_1}{Population under the age of 1}
-#'   \item{1_4}{Population aged 1 - 4}
-#'   \item{5_9}{Population aged 5 - 9}
-#'   \item{10_14}{Population aged 10 - 14}
-#'   \item{15_19}{Population aged 15 - 19}
-#'   \item{20_24}{Population aged 20 - 24}
-#'   \item{25_29}{Population aged 25 - 29}
-#'   \item{30_34}{Population aged 30 - 34}
-#'   \item{35_39}{Population aged 35 - 39}
-#'   \item{40_44}{Population aged 40 - 44}
-#'   \item{45_49}{Population aged 45 - 49}
-#'   \item{50_54}{Population aged 50 - 54}
-#'   \item{55_59}{Population aged 55 - 59}
-#'   \item{60_64}{Population aged 60 - 64}
-#'   \item{65_69}{Population aged 65 - 69}
-#'   \item{70_74}{Population aged 70 - 74}
-#'   \item{75_79}{Population aged 75 - 79}
-#'   \item{80_84}{Population aged 80 - 84}
-#'   \item{85_89}{Population aged 85 - 89}
-#'   \item{90_94}{Population aged 90 - 94}
-#'   \item{95_99}{Population aged 95 - 99}
-#'   \item{over_99}{Population over the age of 99}
-#'   \item{under_5}{Population under the age of 5}
-#'   \item{btwn_5_14}{Population aged 5 - 14}
-#'   \item{btwn_5_19}{Population aged 5 - 19}
-#'   \item{over_14}{Population over the age of 14}
-#'   \item{under_20}{Population under the age of 20}
-#'   \item{over_19}{Population over the age of 19}
-#'   \item{urban_percent}{Proportion of the population in urban areas, mid-year 2018}
+#'   \item{gho_code}{Indicator ID in the GHO}
+#'   \item{gho_code_2}{Indicator ID in the GHO, if data stored in 2 separate locations}
+#'   \item{xmart_code}{Indicator ID in the xMart4 GPW13 instance}
+#'   \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
+#'   \item{input}{Logical, data is an input into Billions calculation (sourced externally)}
+#'   \item{calculated}{Logical, data is calculated as part of the Billions calculation (internally)}
+#'   \item{covariate}{Logical, data is used as a covariate in infilling and projections}
+#'   \item{storage_location}{Where the data is stored, GHO, xMart, or both}
+#'   \item{data_source}{Source for the data, to be used if no source available for a data point}
+#'   \item{uhc}{Logical, is a UHC Billions indicator}
+#'   \item{hpop}{Logical, is an HPOP Billions indicator}
+#'   \item{hep}{Logical, is a HEP Billions indicator}
+#'   \item{hep_prev}{Logical, is a HEP Billions Prevent indicator}
+#'   \item{hep_prep}{Logical, is a HEP Billions Prepare indicator}
+#'   \item{hep_dr}{Logical, is a HEP Billions Detect & Respond indicator}
+#'   \item{outcome}{Logical, is an outcome indicator}
 #' }
-#' @inherit get_population source
-"wpp_population"
+"indicator_df"

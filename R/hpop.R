@@ -16,7 +16,7 @@ load_hpop_gho_data <- function(gho_ids, queries) {
                                              !(.data[["ind"]] %in% gho_ids[names(gho_ids) %in% c("anc4", "beds", "pneumo")]), # remove once source available in GHO
                                              NA_character_)) %>%
     dplyr::mutate(!!sym("ind") := names(gho_ids)[match(.data[["ind"]], gho_ids)]) %>%
-    dplyr::filter(whotilities::is_who_member(.data[["iso3"]]))
+    dplyr::filter(whoville::is_who_member(.data[["iso3"]]))
 }
 
 wrangle_hpop_data <- function(df) {
@@ -57,11 +57,11 @@ asc_normal_impute <- function(df,
                               type,
                               iso3 = "iso3",
                               year = "year") {
-  df <- dplyr::mutate(df, temp_reg = whotilities::iso3_to_regions(.data[[iso3]]))
+  df <- dplyr::mutate(df, temp_reg = whoville::iso3_to_regions(.data[[iso3]]))
   df <- linear_interp_df(df, var, type, iso3, year)
   df <- flat_extrap_df(df, var, type, iso3, year)
   df <- min_impute_df(df, var, type, iso3, year, txt = "flat trend line")
-  df <- med_impute_df(df, var, type, c("temp_reg", year), year, txt = "regional median", filter_col = iso3, filter_fn = whotilities::is_large_member_state)
+  df <- med_impute_df(df, var, type, c("temp_reg", year), year, txt = "regional median", filter_col = iso3, filter_fn = whoville::is_large_member_state)
   df %>%
     dplyr::select(dplyr::all_of(c(var, type, iso3, year)))
 }
@@ -157,7 +157,7 @@ asc_prepare <- function(df) {
     tidyr::pivot_wider(names_from = val_type,
                        values_from = value) %>%
     dplyr::mutate(Billions = "UHC",
-                  GeoArea_FK = whotilities::iso3_to_names(.data[["iso3"]]),
+                  GeoArea_FK = whoville::iso3_to_names(.data[["iso3"]]),
                   Year_FK = .data[["year"]],
                   Billion_Group = dplyr::case_when(
                     .data[["ind"]] %in% c("fp", "anc4", "dtp3", "pneumo") ~ "RMNCH",
