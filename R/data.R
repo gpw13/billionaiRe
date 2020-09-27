@@ -15,6 +15,7 @@
 #'   \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 #'   \item{gho_code}{Indicator ID in the GHO}
 #'   \item{gho_code_2}{Indicator ID in the GHO, if data stored in 2 separate locations}
+#'   \item{gho_queries}{OData queries to use when accessing the GHO}
 #'   \item{xmart_code}{Indicator ID in the xMart4 GPW13 instance}
 #'   \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
 #'   \item{input}{Logical, data is an input into Billions calculation (sourced externally)}

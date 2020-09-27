@@ -20,7 +20,9 @@ Imports:
     zoo,
     tidyr,
     rlang,
-    wppdistro (>= 0.1.0)
+    wppdistro (>= 0.1.0),
+    readr,
+    stringr
 Remotes: 
     caldwellst/wppdistro
 Depends: 
