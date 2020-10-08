@@ -90,20 +90,21 @@ project_hep_data <- function(df) {
                       by = c("iso3", "year")) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]]) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::mutate(!!sym("ihr") := zoo::na.approx(.data[["ihr"]], rule = 2, na.rm = FALSE),
+    dplyr::mutate(dplyr::across(dplyr::starts_with("ihr"),
+                                ~ifelse(all(is.na(.x)), NA, zoo::na.approx(.x, rule = 2, na.rm = T))),
                   !!sym("detect_respond") := zoo::na.approx(.data[["detect_respond"]], rule = 2, na.rm = FALSE),
-                  !!sym("prevent") := project_prevent(.data[["prevent"]], .data[["year"]])) %>%
-    dplyr::ungroup() %>%
-    tidyr::pivot_longer(-c("iso3", "year"),
-                        names_to = "ind") %>%
-    dplyr::full_join(orig_df, by = c("iso3", "year", "ind")) %>%
-    dplyr::mutate("type" = tidyr::replace_na(.data[["type"]], "Projection")) %>%
-    dplyr::group_by(.data[["ind"]]) %>%
-    dplyr::filter(dplyr::row_number() >= min(which(.data[["type"]] == "Actual"))) %>%
-    dplyr::mutate(!!sym("use_dash") := tidyr::replace_na(.data[["use_dash"]], TRUE),
-                  !!sym("use_cal") := tidyr::replace_na(.data[["use_cal"]], TRUE),
-                  !!sym("use_source") := tidyr::replace_na(.data[["use_source"]], FALSE)) %>%
-    dplyr::ungroup()
+                  !!sym("prevent") := project_prevent(.data[["prevent"]], .data[["year"]])) #%>%
+    # dplyr::ungroup() %>%
+    # tidyr::pivot_longer(-c("iso3", "year"),
+    #                     names_to = "ind") %>%
+    # dplyr::full_join(orig_df, by = c("iso3", "year", "ind")) %>%
+    # dplyr::mutate("type" = tidyr::replace_na(.data[["type"]], "Projection")) %>%
+    # dplyr::group_by(.data[["ind"]]) %>%
+    # dplyr::filter(dplyr::row_number() >= min(which(.data[["type"]] == "Actual"))) %>%
+    # dplyr::mutate(!!sym("use_dash") := tidyr::replace_na(.data[["use_dash"]], TRUE),
+    #               !!sym("use_cal") := tidyr::replace_na(.data[["use_cal"]], TRUE),
+    #               !!sym("use_source") := tidyr::replace_na(.data[["use_source"]], FALSE)) %>%
+    # dplyr::ungroup()
 }
 
 #' @export
@@ -217,7 +218,8 @@ calc_hep_billions <- function(df) {
                        .data[["Value"]] >= 50 ~ 3,
                        .data[["Value"]] >= 30 ~ 2,
                        !is.na(.data[["Value"]]) ~ 1
-                     ))
+                     )) %>%
+    dplyr::ungroup()
 }
 
 #' @noRd
