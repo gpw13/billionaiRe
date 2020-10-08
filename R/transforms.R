@@ -14,7 +14,8 @@ transform_bp <- function(x) {
 transform_tobacco <- function(x) {
   x <- reverse_ind(x)
   x <- scales::rescale(x, to = c(0, 100), from = c(30, 100))
-  x
+  x <- pmin(x, 100)
+  pmax(x, 0)
 }
 
 #' @export
