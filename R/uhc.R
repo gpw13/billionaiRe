@@ -9,7 +9,7 @@ transform_uhc_data <- function(df,
                     .data[[ind]] == ind_ids["bp"] ~ transform_bp(.data[[value]]),
                     .data[[ind]] == ind_ids["fpg"] ~ transform_glucose(.data[[value]]),
                     .data[[ind]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value]]),
-                    .data[[ind]] == ind_ids["uhc_tobacco"] ~ transform_tobacco(.data[[value]]),
+                    .data[[ind]] == ind_ids["uhc_tobacco"] ~ reverse_ind(.data[[value]]),
                     .data[[ind]] == ind_ids["hwf"] ~ transform_hwf(.data[[value]])
                   ),
                   billion_group = dplyr::case_when(
