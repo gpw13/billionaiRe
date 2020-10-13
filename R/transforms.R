@@ -58,8 +58,9 @@ transform_alcohol <- function(x) {
 #' Transform road safety data
 #'
 #' Rescales road safety data using the SDI ratio according to the Billions methods report
-transform_road_safety <- function(x, sdi_ratio) {
-  x <- x * 5 * sdi_ratio / 1000
+transform_road_safety <- function(x, iso3) {
+  sdi_rti <- get_sdi_ratio(iso3)
+  x <- x * 5 * sdi_rti / 1000
   reverse_ind(x)
 }
 
@@ -69,6 +70,13 @@ transform_road_safety <- function(x, sdi_ratio) {
 transform_suicide_rate <- function(x) {
   x <- x * 5 * 20 * 100 / 10000
   reverse_ind(x)
+}
+
+#' Transform transfats policy data
+#'
+#' Rescales transfats policy data according to the Billions methods report
+transform_transfats <- function(x) {
+  100 - 14.3 + 2.1 * x / 100
 }
 
 #' Combine data from two sexes into one

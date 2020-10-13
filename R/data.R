@@ -12,3 +12,14 @@
 #'   \item{hep}{Logical, is a HEP Billions indicator}
 #' }
 "indicator_df"
+
+#' Socio-Demographic Index data used in road safety transform.
+#'
+#' Used internally to transform road safety data. Exact methods available in methods report
+#'
+#' @format A data frame with `r nrow(indicator_df)` rows and `r ncol(indicator_df)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{sdiratio}{SDI ratio.}
+#' }
+"sdi_ratio"

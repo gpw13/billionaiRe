@@ -1,10 +1,10 @@
+#' @export
 transform_uhc_data <- function(df,
                                ind = "ind",
                                value = "value",
                                ind_ids = billion_ind_codes("uhc")) {
   df %>%
-    dplyr::mutate(raw_value = .data[[value]],
-                  transform_value = dplyr::case_when(
+    dplyr::mutate(transform_value = dplyr::case_when(
                     .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "ihr", "fh", "itn")] ~ .data[[value]],
                     .data[[ind]] == ind_ids["bp"] ~ transform_bp(.data[[value]]),
                     .data[[ind]] == ind_ids["fpg"] ~ transform_glucose(.data[[value]]),
@@ -20,6 +20,7 @@ transform_uhc_data <- function(df,
                     .data[[ind]] == ind_ids["fh"] ~ "FH"))
 }
 
+#' @export
 calculate_uhc_billion <- function(df,
                                   year = "year",
                                   iso3 = "iso3",
@@ -43,6 +44,7 @@ calculate_uhc_billion <- function(df,
                         names_to = "ind")
 }
 
+#' @export
 calculate_uhc_contribution <- function(df,
                                        year = "year",
                                        iso3 = "iso3",

@@ -22,7 +22,8 @@ Imports:
     rlang,
     wppdistro (>= 0.1.0),
     readr,
-    stringr
+    stringr,
+    memoise
 Remotes: 
     caldwellst/wppdistro
 Depends: 
