@@ -5,10 +5,10 @@
 \alias{sdi_ratio}
 \title{Socio-Demographic Index data used in road safety transform.}
 \format{
-A data frame with `r nrow(indicator_df)` rows and `r ncol(indicator_df)` variables:
+A data frame with 61 rows and 5 variables:
 \describe{
-  \item{iso3}{Country ISO3 codes.}
-  \item{sdiratio}{SDI ratio.}
+\item{iso3}{Country ISO3 codes.}
+\item{sdiratio}{SDI ratio.}
 }
 }
 \usage{

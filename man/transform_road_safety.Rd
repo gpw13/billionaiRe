@@ -4,7 +4,7 @@
 \alias{transform_road_safety}
 \title{Transform road safety data}
 \usage{
-transform_road_safety(x, sdi_ratio)
+transform_road_safety(x, iso3)
 }
 \description{
 Rescales road safety data using the SDI ratio according to the Billions methods report

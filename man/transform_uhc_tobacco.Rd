@@ -7,5 +7,5 @@
 transform_uhc_tobacco(x)
 }
 \description{
-Reverses the indicator and rescales from [29,100] to [0,100]
+Reverses the indicator and rescales from \link{29,100} to \link{0,100}
 }

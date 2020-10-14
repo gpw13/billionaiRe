@@ -68,7 +68,7 @@ transform_road_safety <- function(x, iso3) {
 #'
 #' Rescales suicide rate data according to the Billions methods report
 transform_suicide_rate <- function(x) {
-  x <- x * 5 * 20 * 100 / 10000
+  x <- x * 5 * 20 * 100 / 100000
   reverse_ind(x)
 }
 
@@ -77,15 +77,6 @@ transform_suicide_rate <- function(x) {
 #' Rescales transfats policy data according to the Billions methods report
 transform_transfats <- function(x) {
   100 - 14.3 + 2.1 * x / 100
-}
-
-#' Combine data from two sexes into one
-#'
-#' Uses for if an indicator only has data produced for both sexes
-transform_totl_pop <- function(x_mle, x_fmle, pop_male, pop_fmle) {
-  pop_totl <- pop_male + pop_fmle
-  x <- (x_mle * pop_male) + (x_fmle * pop_fmle)
-  x / pop_totl
 }
 
 trim_clean_fuels <- function(x) {

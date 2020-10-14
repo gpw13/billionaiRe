@@ -7,5 +7,5 @@
 transform_glucose(x)
 }
 \description{
-Rescales FPG data from [7.1,5.1] to [0,100]
+Rescales FPG data from \link{7.1,5.1} to \link{0,100}
 }

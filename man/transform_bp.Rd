@@ -7,5 +7,5 @@
 transform_bp(x)
 }
 \description{
-Reverses the indicator and rescales from [50,100] to [0,100]
+Reverses the indicator and rescales from \link{50,100} to \link{0,100}
 }

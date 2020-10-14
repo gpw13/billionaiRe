@@ -5,13 +5,13 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with `r nrow(indicator_df)` rows and `r ncol(indicator_df)` variables:
+A data frame with 61 rows and 5 variables:
 \describe{
-  \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
-  \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
-  \item{uhc}{Logical, is a UHC Billions indicator}
-  \item{hpop}{Logical, is an HPOP Billions indicator}
-  \item{hep}{Logical, is a HEP Billions indicator}
+\item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
+\item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
+\item{uhc}{Logical, is a UHC Billions indicator}
+\item{hpop}{Logical, is an HPOP Billions indicator}
+\item{hep}{Logical, is a HEP Billions indicator}
 }
 }
 \usage{
