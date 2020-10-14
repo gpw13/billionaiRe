@@ -17,6 +17,39 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.com/caldwellst/billionaiRe.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
+[![R build status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
 <!-- badges: end -->
 
+The goal of billionaiRe is to provide an easy interface for using long format
+data to calculate the World Health Organization's Triple Billions.
 
+## Installation
+
+You can install billionaiRe from [GitHub](https://github.com/) with:
+
+```  r
+remotes::install_github("caldwellst/billionaiRe", build_vignettes = TRUE)
+```
+
+You will need to have already installed the wppdistro package, which is stored in
+a private repo and only made public upon request. Please contact caldwellst@who.int
+to request access.
+
+# Calculations
+
+The package is built around a set of functions that separately calculate the Billions
+for the three Billions separately:
+
+* Healthier Populations (HPOP)
+* Health Emergencies Protection (HEP)
+* Universal Health Coverage (UHC)
+
+## HPOP Billion calculation
+
+```{r child='vignettes/hpop.rmd'}
+```
+
+## UHC Billion calculation
+
+```{r child='vignettes/uhc.rmd'}
+```

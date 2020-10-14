@@ -1,5 +1,5 @@
 ---
-title: "uhc"
+title: "UHC Billion calculation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{uhc}
@@ -14,6 +14,25 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+
+To calculate the UHC Billion, there are a series of functions made available through
+the billionaiRe package:
+
+* `transform_uhc_data()` to transform raw values into normalized values used within the calculations.
+* `calculate_uhc_billion()` to calculate average service coverage, financial hardship, and the UHC single measure for each country and year in the data frame..
+* `calculate_uhc_contribution()` to calculate country-level Billion for specified beginning and end year.
+
+Run in sequence, these can calculate the entire UHC Billion, or they can be run separately
+to produce different outputs as required. Details on the inputs of each function are
+available in their individual documentation, but below you can see the quick
+and easy Billions calculation done using the the sample fake UHC data provided
+in the package, `uhc_df`.
+
+```{r setup_uhc}
 library(billionaiRe)
+
+uhc_df %>%
+  transform_uhc_data() %>%
+  calculate_uhc_billion() %>%
+  calculate_uhc_contribution()
 ```

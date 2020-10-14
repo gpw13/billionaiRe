@@ -24,7 +24,8 @@ Imports:
     readr,
     stringr,
     memoise,
-    scales
+    scales,
+    magrittr
 Remotes: 
     caldwellst/wppdistro
 Depends: 

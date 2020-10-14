@@ -1,5 +1,5 @@
 ---
-title: "hpop"
+title: "HPOP Billion calculation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{hpop}
@@ -14,6 +14,27 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+To calculate the HPOP Billion, there are a series of functions made available through
+the billionaiRe package:
+
+* `transform_hpop_data()` to transform raw values into normalized values used within the calculations.
+* `add_hpop_populations()` to get relevant population groups for each country and indicator.
+* `calculate_hpop_contributions()` to calculate indicator level changes and contributions to the Billion.
+* `calculate_hpop_billion()` to calculate country-level Billion, adjusting for double counting.
+
+Run in sequence, these can calculate the entire HPOP Billion, or they can be run separately
+to produce different outputs as required. Details on the inputs of each function are
+available in their individual documentation, but below you can see the quick
+and easy Billions calculation done using the sample fake HPOP data provided
+in the package, `hpop_df`.
+
+```{r setup_hpop}
 library(billionaiRe)
+
+hpop_df %>%
+  transform_hpop_data() %>%
+  add_hpop_populations() %>%
+  calculate_hpop_contributions() %>%
+  calculate_hpop_billion()
 ```
+
