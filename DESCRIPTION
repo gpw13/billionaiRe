@@ -2,10 +2,10 @@ Package: billionaiRe
 Type: Package
 Title: Calculate the WHO Triple Billions
 Version: 0.1.0
-Author: person(given = "Seth", 
-               family = "Caldwell", 
-               email = "caldwellst@gmail.com", 
-               role = c("aut", "cre"))
+Authors@R: person(given = "Seth", 
+                  family = "Caldwell", 
+                  email = "caldwellst@gmail.com", 
+                  role = c("aut", "cre"))
 Description: A package for applying methods to calculate Universal Health
     Coverage, Healthier Populations, and Health Emergencies Protection Billions.
 URL: https://www.who.int/data/triple-billion-dashboard, 
@@ -18,13 +18,13 @@ RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Imports: 
     dplyr,
-    zoo,
     tidyr,
     rlang,
     wppdistro (>= 0.1.0),
     readr,
     stringr,
-    memoise
+    memoise,
+    scales
 Remotes: 
     caldwellst/wppdistro
 Depends: 

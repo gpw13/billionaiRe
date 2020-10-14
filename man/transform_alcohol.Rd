@@ -6,6 +6,9 @@
 \usage{
 transform_alcohol(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
 Rescales hospital data according to Billions methods report
 }

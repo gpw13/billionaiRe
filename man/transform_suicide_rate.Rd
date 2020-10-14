@@ -6,6 +6,9 @@
 \usage{
 transform_suicide_rate(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
 Rescales suicide rate data according to the Billions methods report
 }

@@ -6,6 +6,9 @@
 \usage{
 transform_hosp_beds(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
 Rescales hospital beds according to Billions methods report
 }

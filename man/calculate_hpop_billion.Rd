@@ -33,7 +33,7 @@ Data frame in long format.
 }
 \description{
 \code{calculate_hpop_billion()} calculates country-level HPOP Billion based on
-indicator level changes
+indicator level changes.
 }
 \details{
 For more details on the HPOP Billion calculation process and how this function

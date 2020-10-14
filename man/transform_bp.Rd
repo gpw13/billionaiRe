@@ -6,6 +6,9 @@
 \usage{
 transform_bp(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
-Reverses the indicator and rescales from \link{50,100} to \link{0,100}
+Reverses the indicator and rescales from \verb{[50,100]} to \verb{[0,100]}
 }

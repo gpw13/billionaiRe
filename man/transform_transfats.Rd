@@ -6,6 +6,9 @@
 \usage{
 transform_transfats(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
 Rescales transfats policy data according to the Billions methods report
 }

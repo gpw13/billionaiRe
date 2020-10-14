@@ -3,9 +3,9 @@
 \docType{data}
 \name{sdi_ratio}
 \alias{sdi_ratio}
-\title{Socio-Demographic Index data used in road safety transform.}
+\title{Socio-Demographic Index data}
 \format{
-A data frame with 61 rows and 5 variables:
+A data frame with 186 rows and 2 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{sdiratio}{SDI ratio.}
@@ -15,6 +15,6 @@ A data frame with 61 rows and 5 variables:
 sdi_ratio
 }
 \description{
-Used internally to transform road safety data. Exact methods available in methods report
+Used internally to transform road safety data for the HPOP Billion. Exact methods available in methods report.
 }
 \keyword{datasets}

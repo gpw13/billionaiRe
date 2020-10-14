@@ -6,6 +6,11 @@
 \usage{
 transform_road_safety(x, iso3)
 }
+\arguments{
+\item{x}{Indicator value.}
+
+\item{iso3}{Country ISO3 code.}
+}
 \description{
 Rescales road safety data using the SDI ratio according to the Billions methods report
 }

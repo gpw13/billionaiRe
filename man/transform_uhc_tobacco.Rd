@@ -6,6 +6,9 @@
 \usage{
 transform_uhc_tobacco(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
-Reverses the indicator and rescales from \link{29,100} to \link{0,100}
+Reverses the indicator and rescales from \verb{[29,100]} to \verb{[0,100]}
 }

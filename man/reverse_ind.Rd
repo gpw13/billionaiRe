@@ -6,6 +6,11 @@
 \usage{
 reverse_ind(x, lim = 100)
 }
+\arguments{
+\item{x}{Indicator value.}
+
+\item{lim}{Value to reverse from, defaults to 100.}
+}
 \description{
 Typically reversed from a maximum of 100
 }

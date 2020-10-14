@@ -6,6 +6,9 @@
 \usage{
 transform_hwf(x)
 }
+\arguments{
+\item{x}{Indicator value.}
+}
 \description{
 Rescales healh workforce data  according to Billions methods report
 }

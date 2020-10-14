@@ -13,13 +13,62 @@
 #' }
 "indicator_df"
 
-#' Socio-Demographic Index data used in road safety transform.
+#' HPOP Billion population links
 #'
-#' Used internally to transform road safety data. Exact methods available in methods report
+#' A dataset linking each HPOP Billion indicator to relevant population groups
+#' to be used for double counting correction. Used within `generate_hpop_populations()`.
 #'
-#' @format A data frame with `r nrow(indicator_df)` rows and `r ncol(indicator_df)` variables:
+#' @format A data frame with `r nrow(pop_links)` rows and `r ncol(pop_links)` variables:
+#' \describe{
+#'   \item{ind}{HPOP indicator code.}
+#'   \item{pop_group}{Population group.}
+#' }
+"pop_links"
+
+#' Socio-Demographic Index data
+#'
+#' Used internally to transform road safety data for the HPOP Billion. Exact methods available in methods report.
+#'
+#' @format A data frame with `r nrow(sdi_ratio)` rows and `r ncol(sdi_ratio)` variables:
 #' \describe{
 #'   \item{iso3}{Country ISO3 codes.}
 #'   \item{sdiratio}{SDI ratio.}
 #' }
 "sdi_ratio"
+
+#' HPOP generated example data
+#'
+#' Generated (fake) HPOP data used to test the Billions calculations code within the billionaiRe
+#' package.
+#'
+#' See the HPOP vignette for its example use:
+#'
+#' \href{../doc/hpop.html}{\code{vignette("hpop", package = "billionaiRe")}}
+#'
+#' @format A data frame with `r nrow(hpop_df)` rows and `r ncol(hpop_df)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{year}{Year.}
+#'   \item{ind}{HPOP indicator code.}
+#'   \item{value}{Raw indicator value.}
+#'   \item{dimension}{Indicator dimension.}
+#' }
+"hpop_df"
+
+#' UHC example data
+#'
+#' Fake UHC data used to test the Billions calculations code within the billionaiRe
+#' package.
+#'
+#' See the UHC vignette for its example use:
+#'
+#' \href{../doc/uhc.html}{\code{vignette("uhc", package = "billionaiRe")}}
+#'
+#' @format A data frame with `r nrow(uhc_df)` rows and `r ncol(uhc_df)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{year}{Year.}
+#'   \item{ind}{UHC indicator code.}
+#'   \item{value}{Raw indicator value.}
+#' }
+"uhc_df"

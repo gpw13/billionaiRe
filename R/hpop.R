@@ -91,6 +91,7 @@ add_hpop_populations <- function(df,
 #' `calculate_hpop_contributions()` calculates indicator-level contributions and
 #' changes for the HPOP Billion.
 #'
+#' @param year Column name of column with years.
 #' @param start_year Base year for contribution calculation, defaults to 2018.
 #' @param end_year End year for contribution calculation, defaults to 2023.
 #' @param population Column name of column with population figures.
@@ -99,14 +100,14 @@ add_hpop_populations <- function(df,
 #' @inherit transform_hpop_data return details params
 #'
 #' @export
-calculate_hpop_ind_contributions <- function(df,
-                                             year = "year",
-                                             start_year = 2018,
-                                             end_year = 2023,
-                                             iso3 = "iso3",
-                                             ind = "ind",
-                                             population = "population",
-                                             transform_value = "transform_value") {
+calculate_hpop_contributions <- function(df,
+                                         year = "year",
+                                         start_year = 2018,
+                                         end_year = 2023,
+                                         iso3 = "iso3",
+                                         ind = "ind",
+                                         population = "population",
+                                         transform_value = "transform_value") {
   assert_columns(df, year, iso3, ind, population, transform_value)
 
   df %>%
@@ -123,7 +124,7 @@ calculate_hpop_ind_contributions <- function(df,
 #' Calculate HPOP Billion
 #'
 #' `calculate_hpop_billion()` calculates country-level HPOP Billion based on
-#' indicator level changes
+#' indicator level changes.
 #'
 #' @param change Column name of column with indicator-level change between base
 #'     year and end year.
