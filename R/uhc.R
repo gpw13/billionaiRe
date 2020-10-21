@@ -58,6 +58,7 @@ calculate_uhc_billion <- function(df,
   assert_columns(df, year, iso3, ind, billion_group, transform_value)
 
   df %>%
+    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>%
     dplyr::group_by(.data[[year]], .data[[iso3]], .data[[billion_group]]) %>%
     dplyr::summarize(!!sym(transform_value) := mean(.data[[transform_value]], na.rm = TRUE),
                      .groups = "drop") %>%
