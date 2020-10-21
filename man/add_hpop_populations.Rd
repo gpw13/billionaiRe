@@ -8,7 +8,6 @@ add_hpop_populations(
   df,
   iso3 = "iso3",
   ind = "ind",
-  dimension = "dimension",
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -19,12 +18,6 @@ country, year, and indicator.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
-
-\item{dimension}{Column of column with dimension for indicator/country values.
-Used within \code{add_hpop_populations()} to add relevant population for indicators
-with shifting dimensions across countries, such as survey-based indicators
-where values are derived from total, rural, or urban populations in
-specific countries.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
