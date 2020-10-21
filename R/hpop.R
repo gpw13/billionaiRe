@@ -33,7 +33,7 @@ transform_hpop_data <- function(df,
   df %>%
     dplyr::mutate(!!sym(value) := ifelse(.data[[ind]] == ind_ids["fuel"], trim_clean_fuels(.data[[value]]), .data[[value]]),
                   transform_value = dplyr::case_when(
-                    .data[[ind]] %in% ind_ids[c("devontrack", "water", "hpop_sanitation", "pm25", "fuel")] ~ .data[[value]],
+                    .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "pm25", "fuel")] ~ .data[[value]],
                     .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese")] ~ reverse_ind(.data[[value]]),
                     .data[[ind]] == ind_ids["suicide"] ~ transform_suicide_rate(.data[[value]]),
                     .data[[ind]] == ind_ids["alcohol"] ~ transform_alcohol(.data[[value]]),
@@ -67,8 +67,8 @@ add_hpop_populations <- function(df,
   df %>%
     dplyr::mutate(
       population = dplyr::case_when(
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water")] & .data[[dimension]] == "RUR" ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "rural"),
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water")] & .data[[dimension]] == "URB" ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "urban"),
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] & .data[[dimension]] == "RUR" ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "rural"),
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "water_urban")] & .data[[dimension]] == "URB" ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "urban"),
         .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water", "road", "fuel", "pm25", "transfats", "suicide")] ~ wppdistro::get_population(.data[[iso3]], 2023),
         .data[[ind]] %in% ind_ids[c("hpop_tobacco", "alcohol")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "over_14"),
         .data[[ind]] %in% ind_ids[c("adult_obese")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "over_19") + (wppdistro::get_population(.data[[iso3]], 2023, age_range = "15_19") / 2),
@@ -78,10 +78,8 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], 2023, sex = "female", age_range = "over_14")
       ),
       !!sym(ind) := dplyr::case_when(
-        .data[[ind]] == ind_ids["hpop_sanitation"] & .data[[dimension]] == "RUR" ~ "hpop_sanitation_rural",
-        .data[[ind]] == ind_ids["hpop_sanitation"] & .data[[dimension]] == "URB" ~ "hpop_sanitation_urban",
-        .data[[ind]] == ind_ids["water"] & .data[[dimension]] == "RUR" ~ "water_rural",
-        .data[[ind]] == ind_ids["water"] & .data[[dimension]] == "URB" ~ "water_urban",
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "hpop_sanitation_rural"] ~ "hpop_sanitation",
+        .data[[ind]] %in% ind_ids[c("water_urban", "water_rural")] ~ "water",
         TRUE ~ names(ind_ids)[match(.data[[ind]], ind_ids)]
       ))
 }
