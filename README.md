@@ -7,9 +7,9 @@ billionaiRe
 <!-- badges: start -->
 
 [![Travis build
-status](https://travis-ci.com/caldwellst/billionaiRe.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
+status](https://travis-ci.com/caldwellst/whoville.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
 [![R build
-status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
+status](https://github.com/caldwellst/whoville/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
 <!-- badges: end -->
 
 The goal of billionaiRe is to provide an easy interface for using long
@@ -71,7 +71,7 @@ package, `hpop_df`.
     #> # A tibble: 1 x 5
     #>   iso3  healthier unhealthier net_healthier perc_healthier
     #>   <chr>     <dbl>       <dbl>         <dbl>          <dbl>
-    #> 1 AFG   34908262.  -30177705.      4730557.           11.3
+    #> 1 AFG   34908262.  -35989503.     -1081241.          -2.59
 
 UHC Billion calculation
 -----------------------
