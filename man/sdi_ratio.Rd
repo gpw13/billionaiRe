@@ -5,7 +5,7 @@
 \alias{sdi_ratio}
 \title{Socio-Demographic Index data}
 \format{
-A data frame with 186 rows and 2 variables:
+A data frame with 194 rows and 2 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{sdiratio}{SDI ratio.}
