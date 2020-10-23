@@ -103,12 +103,13 @@ calculate_hpop_contributions <- function(df,
                                          value = "value",
                                          transform_value = "transform_value") {
   assert_columns(df, year, iso3, ind, population, transform_value)
-
+  piv_vals <- c(value, transform_value, source, type)
+  piv_vals <- piv_vals[piv_vals %in% names(df)]
   df %>%
     dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
     tidyr::pivot_wider(c(iso3, ind, population),
                        names_from = year,
-                       values_from = c(value, transform_value, source, type)) %>%
+                       values_from = piv_vals) %>%
     dplyr::mutate("change" := .data[[paste(transform_value, end_year, sep = "_")]] - .data[[paste(transform_value, start_year, sep = "_")]],
                   contribution = .data[["change"]] * .data[[population]] / 100,
                   "start_year" := start_year,
@@ -150,13 +151,13 @@ calculate_hpop_billion <- function(df,
                      by = c(iso3 = "iso3", ind = "ind")) %>%
     dplyr::group_by(.data[[iso3]], .data[["pop_group"]], .data[["pos"]]) %>%
     dplyr::summarize("product" := 1 - prod(.data[["od"]]),
-                     "population" := unique(.data[["population"]]),
+                     "pop_group_population" := unique(.data[["pop_group_population"]]),
                      "sumi" := sum(.data[["delta"]]),
                      .groups = "drop") %>%
     dplyr::group_by(.data[[iso3]]) %>%
-    dplyr::summarize("healthier" := sum(.data[["population"]] * .data[["product"]] * .data[["pos"]]),
-                     "unhealthier" := -sum(.data[["population"]] * .data[["product"]] * !.data[["pos"]]),
-                     "population" := unique(.data[["population"]])) %>%
+    dplyr::summarize("healthier" := sum(.data[["pop_group_population"]] * .data[["product"]] * .data[["pos"]]),
+                     "unhealthier" := -sum(.data[["pop_group_population"]] * .data[["product"]] * !.data[["pos"]]),
+                     .groups = "drop") %>%
     dplyr::mutate("net_healthier" := .data[["healthier"]] + .data[["unhealthier"]],
                   "perc_healthier" := 100 * .data[["net_healthier"]] / wppdistro::get_population(.data[[iso3]], 2023))
 }
@@ -189,7 +190,7 @@ generate_hpop_populations <- function() {
                 over_19_rural = wppdistro::get_population(iso3, 2023, age_range = "over_19", rural_urb = "rural")) %>%
     tidyr::pivot_longer(-c("iso3"),
                         names_to = "pop_group",
-                        values_to = "population") %>%
+                        values_to = "pop_group_population") %>%
     dplyr::full_join(billionaiRe::pop_links, by = "pop_group")
 }
 

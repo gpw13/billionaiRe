@@ -7,9 +7,9 @@ billionaiRe
 <!-- badges: start -->
 
 [![Travis build
-status](https://travis-ci.com/caldwellst/whoville.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
+status](https://travis-ci.com/caldwellst/billionaiRe.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
 [![R build
-status](https://github.com/caldwellst/whoville/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
+status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
 <!-- badges: end -->
 
 The goal of billionaiRe is to provide an easy interface for using long
