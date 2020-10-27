@@ -95,6 +95,5 @@ calculate_uhc_contribution <- function(df,
     dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
     tidyr::pivot_wider(names_from = year) %>%
     dplyr::mutate(population = wppdistro::get_population(.data[[iso3]], year = end_year),
-                  contribution = (.data[[as.character(end_year)]] - .data[[as.character(start_year)]]) * .data[["population"]] / 100,
-                  contribution = ifelse(.data[[ind]] == "FH", -.data[["contribution"]], .data[["contribution"]]))
+                  contribution = (.data[[as.character(end_year)]] - .data[[as.character(start_year)]]) * .data[["population"]] / 100)
 }
