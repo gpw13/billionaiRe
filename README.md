@@ -71,7 +71,7 @@ package, `hpop_df`.
     #> # A tibble: 1 x 5
     #>   iso3  healthier unhealthier net_healthier perc_healthier
     #>   <chr>     <dbl>       <dbl>         <dbl>          <dbl>
-    #> 1 AFG   34908262.  -35989503.     -1081241.          -2.59
+    #> 1 AFG   28219445.  -35897603.     -7678158.          -18.4
 
 UHC Billion calculation
 -----------------------
@@ -103,6 +103,6 @@ package, `uhc_df`.
     #> # A tibble: 3 x 6
     #>   iso3  ind   `2018` `2023` population contribution
     #>   <chr> <chr>  <dbl>  <dbl>      <dbl>        <dbl>
-    #> 1 AFG   FH      18.3   25.4   41681232    -2963536.
+    #> 1 AFG   FH      18.3   25.4   41681232     2963536.
     #> 2 AFG   ASC     41.6   45.5   41681232     1596043.
     #> 3 AFG   UHC     34.0   33.9   41681232      -42994.
