@@ -33,8 +33,8 @@ transform_hpop_data <- function(df,
   df %>%
     dplyr::mutate(!!sym(value) := ifelse(.data[[ind]] == ind_ids["fuel"], trim_clean_fuels(.data[[value]]), .data[[value]]),
                   transform_value = dplyr::case_when(
-                    .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "pm25", "fuel")] ~ .data[[value]],
-                    .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese")] ~ reverse_ind(.data[[value]]),
+                    .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ .data[[value]],
+                    .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ reverse_ind(.data[[value]]),
                     .data[[ind]] == ind_ids["suicide"] ~ transform_suicide_rate(.data[[value]]),
                     .data[[ind]] == ind_ids["alcohol"] ~ transform_alcohol(.data[[value]]),
                     .data[[ind]] == ind_ids["road"] ~ transform_road_safety(.data[[value]], .data[[iso3]]),
