@@ -69,11 +69,6 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "under_5"),
         .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], 2023, age_range = "15_19") / 2),
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], 2023, sex = "female", age_range = "over_14")
-      ),
-      !!sym(ind) := dplyr::case_when(
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "hpop_sanitation_rural")] ~ "hpop_sanitation",
-        .data[[ind]] %in% ind_ids[c("water_urban", "water_rural")] ~ "water",
-        TRUE ~ names(ind_ids)[match(.data[[ind]], ind_ids)]
       ))
 }
 
