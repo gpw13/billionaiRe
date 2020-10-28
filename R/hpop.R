@@ -87,6 +87,8 @@ add_hpop_populations <- function(df,
 #' @param end_year End year for contribution calculation, defaults to 2023.
 #' @param population Column name of column with population figures.
 #' @param transform_value Column name of column with transformed indicator values.
+#' @param source Column name of column with source information for the data.
+#' @param type Column name of type with type information for the data.
 #'
 #' @inherit transform_hpop_data return details params
 #'

@@ -12,6 +12,9 @@ calculate_hpop_contributions(
   iso3 = "iso3",
   ind = "ind",
   population = "population",
+  source = "source",
+  type = "type",
+  value = "value",
   transform_value = "transform_value"
 )
 }
@@ -30,6 +33,12 @@ country, year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{population}{Column name of column with population figures.}
+
+\item{source}{Column name of column with source information for the data.}
+
+\item{type}{Column name of type with type information for the data.}
+
+\item{value}{Column name of column with indicator values.}
 
 \item{transform_value}{Column name of column with transformed indicator values.}
 }
