@@ -73,3 +73,17 @@
 #'   \item{value}{Raw indicator value.}
 #' }
 "uhc_df"
+
+#' Country shares data
+#'
+#' Country shares data for UHC and HPOP Billions for all 194 WHO member
+#' states.
+#'
+#' @format A data frame with `r nrow(uhc_df)` rows and `r ncol(uhc_df)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{billion}{Relevant billion}
+#'   \item{share_n}{Share, in number of people.}
+#'   \item{share_perc}{Share, as percent of total projected population in 2023.}
+#' }
+"country_shares"

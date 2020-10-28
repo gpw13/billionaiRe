@@ -49,3 +49,21 @@ get_sdi_ratio <- function(iso3) {
   sdi_ratio[['sdiratio']][match(iso3, sdi_ratio[['iso3']])]
 }
 
+#' Get country shares data
+#'
+#' Matches country ISO3 codes to data in the `country_shares` data frame.
+#'
+#' @param iso3 Country ISO3 codes.
+#' @param billion Relevant Billion, either "hpop" or "uhc".
+#' @param share_type Type of share to return, either in total numbers of people ("n"),
+#'     or as a percent of total projected population in 2023 ("perc").
+get_country_shares <- function(iso3,
+                               billion = c("hpop", "uhc"),
+                               share_type = c("n", "perc")) {
+  bill <- rlang::arg_match(billion)
+  share_type <- rlang::arg_match(share_type)
+
+  df <- dplyr::filter(billionaiRe::country_shares,
+                      .data[["billion"]] == bill)
+  df[[paste0("share_", share_type)]][match(iso3, df[["iso3"]])]
+}
