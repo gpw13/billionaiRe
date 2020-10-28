@@ -57,6 +57,8 @@ get_sdi_ratio <- function(iso3) {
 #' @param billion Relevant Billion, either "hpop" or "uhc".
 #' @param share_type Type of share to return, either in total numbers of people ("n"),
 #'     or as a percent of total projected population in 2023 ("perc").
+#'
+#' @export
 get_country_shares <- function(iso3,
                                billion = c("hpop", "uhc"),
                                share_type = c("n", "perc")) {
