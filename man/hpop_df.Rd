@@ -5,7 +5,7 @@
 \alias{hpop_df}
 \title{HPOP generated example data}
 \format{
-A data frame with 34 rows and 5 variables:
+A data frame with 34 rows and 4 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{year}{Year.}

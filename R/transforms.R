@@ -100,6 +100,18 @@ transform_suicide_rate <- function(x) {
 transform_transfats <- function(x) {
   100 - 14.3 + 2.1 * x / 100
 }
+
+#' Transform PM2.5
+#'
+#' Inverts PM2.5 and caps at 100
+#'
+#' @inheritParams reverse_ind
+transform_pm25 <- function(x) {
+  x <- reverse_ind(x)
+  x <- pmax(x, 0)
+  pmin(x, 100)
+}
+
 #' Trim clean fuels data
 #'
 #' Trims clean fuels data to be between 5 and 95.
