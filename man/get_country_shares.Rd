@@ -6,14 +6,14 @@
 \usage{
 get_country_shares(
   iso3,
-  billion = c("hpop", "uhc"),
+  billion = c("hep", "hpop", "uhc"),
   share_type = c("n", "perc")
 )
 }
 \arguments{
 \item{iso3}{Country ISO3 codes.}
 
-\item{billion}{Relevant Billion, either "hpop" or "uhc".}
+\item{billion}{Relevant Billion, one of "hep", "hpop", or "uhc".}
 
 \item{share_type}{Type of share to return, either in total numbers of people ("n"),
 or as a percent of total projected population in 2023 ("perc").}

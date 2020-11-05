@@ -6,6 +6,9 @@ uhc_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
 hpop_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
                                   sheet = "HPOP")
 
+hep_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
+                                 sheet = "HEP")
+
 country_shares <- bind_rows(uhc_shares, hpop_shares) %>%
   transmute(billion = tolower(Billion),
             iso3,
