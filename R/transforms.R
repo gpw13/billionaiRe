@@ -79,7 +79,9 @@ transform_alcohol <- function(x) {
 transform_road_safety <- function(x, iso3) {
   sdi_rti <- get_sdi_ratio(iso3)
   x <- x * 5 * sdi_rti / 1000
-  reverse_ind(x)
+  x <- reverse_ind(x)
+  x <- pmin(x, 100)
+  pmax(x, 0)
 }
 
 #' Transform suicide rate data
