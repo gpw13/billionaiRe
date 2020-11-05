@@ -16,7 +16,8 @@ reverse_ind <- function(x, lim = 100) {
 transform_bp <- function(x) {
   x <- reverse_ind(x)
   x <- scales::rescale(x, to = c(0, 100), from = c(50, 100))
-  pmax(0, x)
+  x <- pmax(0, x)
+  pmin(x, 100)
 }
 
 #' Transform UHC tobacco data
@@ -37,7 +38,8 @@ transform_uhc_tobacco <- function(x) {
 #'
 #' @inheritParams reverse_ind
 transform_hosp_beds <- function(x) {
-  pmin((x / 18) * 100, 100)
+  x <- pmin((x / 18) * 100, 100)
+  pmax(x, 0)
 }
 
 #' Transform health workforce data
@@ -46,7 +48,8 @@ transform_hosp_beds <- function(x) {
 #'
 #' @inheritParams reverse_ind
 transform_hwf <- function(x) {
-  pmin((x / 154.74) * 100, 100)
+  x <- pmin((x / 154.74) * 100, 100)
+  pmax(0, x)
 }
 
 #' Transform FPG data
@@ -67,7 +70,8 @@ transform_glucose <- function(x) {
 #' @inheritParams reverse_ind
 transform_alcohol <- function(x) {
   x <- 100 - (x * 4)
-  pmax(0, x)
+  x <- pmax(0, x)
+  pmin(x, 100)
 }
 
 #' Transform road safety data
@@ -91,7 +95,9 @@ transform_road_safety <- function(x, iso3) {
 #' @inheritParams reverse_ind
 transform_suicide_rate <- function(x) {
   x <- x * 5 * 20 * 100 / 100000
-  reverse_ind(x)
+  x <- reverse_ind(x)
+  x <- pmin(x, 100)
+  pmax(x, 0)
 }
 
 #' Transform transfats policy data
@@ -100,7 +106,9 @@ transform_suicide_rate <- function(x) {
 #'
 #' @inheritParams reverse_ind
 transform_transfats <- function(x) {
-  100 - 14.3 + 2.1 * x / 100
+  x <- 100 - 14.3 + 2.1 * x / 100
+  x <- pmin(x, 100)
+  pmax(x, 0)
 }
 
 #' Transform PM2.5
