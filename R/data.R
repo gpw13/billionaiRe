@@ -52,7 +52,6 @@
 #'   \item{year}{Year.}
 #'   \item{ind}{HPOP indicator code.}
 #'   \item{value}{Raw indicator value.}
-#'   \item{dimension}{Indicator dimension.}
 #' }
 "hpop_df"
 

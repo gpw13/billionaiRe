@@ -13,8 +13,8 @@ reverse_ind <- function(x, lim = 100) {
 #' Trims transform data to ensure values are between 0 to 100
 #'
 #' @inheritParams reverse_ind
-#' @param min Minimum possible value for transform to take
-#' @param max Maximum possible value for transform to take
+#' @param min_val Minimum possible value for transform to take
+#' @param max_val Maximum possible value for transform to take
 trim_transforms <- function(x, min_val = 0, max_val = 100) {
   x <- pmin(x, max_val)
   pmax(x, min_val)

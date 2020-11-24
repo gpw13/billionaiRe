@@ -9,9 +9,9 @@ trim_transforms(x, min_val = 0, max_val = 100)
 \arguments{
 \item{x}{Indicator value.}
 
-\item{min}{Minimum possible value for transform to take}
+\item{min_val}{Minimum possible value for transform to take}
 
-\item{max}{Maximum possible value for transform to take}
+\item{max_val}{Maximum possible value for transform to take}
 }
 \description{
 Trims transform data to ensure values are between 0 to 100

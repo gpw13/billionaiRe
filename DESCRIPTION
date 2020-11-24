@@ -25,7 +25,8 @@ Imports:
     memoise,
     scales,
     magrittr,
-    whoville
+    whoville,
+    lubridate
 Remotes: 
     caldwellst/wppdistro,
     caldwellst/whoville
@@ -34,5 +35,6 @@ Depends:
 Suggests: 
     knitr,
     wppdistro (>= 0.1.0),
-    rmarkdown
+    rmarkdown,
+    xmart4
 VignetteBuilder: knitr

@@ -11,7 +11,6 @@ A data frame with 34 rows and 4 variables:
 \item{year}{Year.}
 \item{ind}{HPOP indicator code.}
 \item{value}{Raw indicator value.}
-\item{dimension}{Indicator dimension.}
 }
 }
 \usage{
