@@ -1,5 +1,11 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
+sudo: required
 cache: packages
-r_check_args: '_R_CHECK_FORCE_SUGGESTS_ = FALSE'
+
+before_install:
+- echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+- export GITHUB_PAT="<token>"
+- Rscript -e 'install.packages("devtools")'
+- Rscript -e 'devtools::install_deps(dep = TRUE, auth_token = "<token>")'
