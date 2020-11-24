@@ -21,7 +21,7 @@ transform_uhc_data <- function(df,
 
   df %>%
     dplyr::mutate(transform_value = dplyr::case_when(
-                    .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "ihr", "fh", "itn")] ~ trim_transforms(.data[[value]]),
+                    .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ trim_transforms(.data[[value]]),
                     .data[[ind]] == ind_ids["bp"] ~ transform_bp(.data[[value]]),
                     .data[[ind]] == ind_ids["fpg"] ~ transform_glucose(.data[[value]]),
                     .data[[ind]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value]]),
@@ -32,7 +32,7 @@ transform_uhc_data <- function(df,
                     .data[[ind]] %in% ind_ids[c("fp", "dtp3", "anc4", "pneumo")] ~ "RMNCH",
                     .data[[ind]] %in% ind_ids[c("tb", "art", "itn", "uhc_sanitation")] ~ "CDs",
                     .data[[ind]] %in% ind_ids[c("uhc_tobacco", "bp", "fpg")] ~ "NCDs",
-                    .data[[ind]] %in% ind_ids[c("beds", "hwf", "ihr")] ~ "SCA",
+                    .data[[ind]] %in% ind_ids[c("beds", "hwf", "espar")] ~ "SCA",
                     .data[[ind]] == ind_ids["fh"] ~ "FH"))
 }
 

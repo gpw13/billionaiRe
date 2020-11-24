@@ -3,7 +3,3 @@
 language: R
 sudo: required
 cache: packages
-
-before_install:
-- Rscript -e 'install.packages("devtools")'
-- Rscript -e 'devtools::install_deps(dep = TRUE, auth_token = GITHUB_PAT)'
