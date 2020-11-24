@@ -28,5 +28,5 @@ certain time period, or to extract all data from the database.
 \details{
 This function requires that the user have the \href{https://github.com/caldwellst/xmart4}{xmart4} package
 installed and setup to access the GPW13 mart. Details are available on the GitHub
-landing page linked above. The date filter
+landing page linked above.
 }

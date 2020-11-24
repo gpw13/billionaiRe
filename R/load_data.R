@@ -8,7 +8,7 @@
 #'
 #' This function requires that the user have the [xmart4](https://github.com/caldwellst/xmart4) package
 #' installed and setup to access the GPW13 mart. Details are available on the GitHub
-#' landing page linked above. The date filter
+#' landing page linked above.
 #'
 #' @param billion Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
