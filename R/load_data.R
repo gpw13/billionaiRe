@@ -82,10 +82,12 @@ filter_billion_date <- function(df, date_filter) {
 
 #' @noRd
 assert_date_filter <- function(fltr) {
-  if (!is.null(fltr) & fltr != "latest") {
-    if (!is.character(fltr) | length(fltr) > 1 | !stringr::str_detect(fltr, "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}")) {
-      stop("`date_filter` needs to be either 'latest', NULL, or a single hyphen delimited ISO 8601 date string (e.g. '1988-06-21').",
-           call. = FALSE)
+  if (!is.null(fltr)) {
+    if (fltr != "latest") {
+      if (!is.character(fltr) | length(fltr) > 1 | !stringr::str_detect(fltr, "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}")) {
+        stop("`date_filter` needs to be either 'latest', NULL, or a single hyphen delimited ISO 8601 date string (e.g. '1988-06-21').",
+             call. = FALSE)
+      }
     }
   }
 }
