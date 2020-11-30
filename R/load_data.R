@@ -42,7 +42,8 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
                                TYPE_DETAIL = readr::col_character(),
                                OTHER_DETAIL = readr::col_character(),
                                UPLOAD_DETAIL = readr::col_character()
-                             ))
+                             ),
+                             ...)
   df <- dplyr::rename_with(df, tolower)
   df <- filter_billion_inds(df, billion)
   df <- filter_billion_date(df, date_filter)
