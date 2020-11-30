@@ -13,12 +13,15 @@
 #' @param billion Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
 #'    string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+#' @param ... Additional arguments passed to `xmart4::xmart4_table()`. Use if
+#'     you need to provide additional token specifications for Azure authentication.
 #'
 #' @return A data frame.
 #'
 #' @export
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              date_filter = "latest") {
+                              date_filter = "latest",
+                              ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
   assert_date_filter(date_filter)

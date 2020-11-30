@@ -6,7 +6,8 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
-  date_filter = "latest"
+  date_filter = "latest",
+  ...
 )
 }
 \arguments{
@@ -14,6 +15,9 @@ load_billion_data(
 
 \item{date_filter}{One of \code{NULL}, "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".}
+
+\item{...}{Additional arguments passed to \code{xmart4::xmart4_table()}. Use if
+you need to provide additional token specifications for Azure authentication.}
 }
 \value{
 A data frame.
