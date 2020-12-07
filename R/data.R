@@ -73,6 +73,25 @@
 #' }
 "uhc_df"
 
+#' HEP generated example data
+#'
+#' Generated (fake) HEP data used to test the Billions calculations code within the billionaiRe
+#' package.
+#'
+#' See the HEP vignette for its example use:
+#'
+#' \href{../doc/hep.html}{\code{vignette("hep", package = "billionaiRe")}}
+#'
+#' @format A data frame with `r nrow(hep_df)` rows and `r ncol(hep_df)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{year}{Year.}
+#'   \item{ind}{HPOP indicator code.}
+#'   \item{value}{Raw indicator value.}
+#'   \item{type}{Data type.}
+#' }
+"hep_df"
+
 #' Country shares data
 #'
 #' Country shares data for UHC and HPOP Billions for all 194 WHO member

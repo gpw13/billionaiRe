@@ -53,3 +53,8 @@ for the three Billions separately:
 
 ```{r child='vignettes/uhc.rmd'}
 ```
+
+## HEP Billion calculation
+
+```{r child='vignettes/hep.rmd'}
+```

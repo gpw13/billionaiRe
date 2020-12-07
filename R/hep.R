@@ -94,9 +94,14 @@ transform_prev_cmpgn_data <- function(df,
 
   cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[names(ind_ids) %in% ind_check])
 
+  if (nrow(cmpgn_df) == 0) {
+    return(dplyr::mutate(df, "transform_value" := NA))
+  }
+
   yrs <- get_latest_year(cmpgn_df,
                          ind,
                          year,
+                         ind_ids,
                          cholera_latest_year,
                          meningitis_latest_year,
                          yellow_fever_latest_year)
@@ -177,45 +182,51 @@ transform_prev_cmpgn_data <- function(df,
 get_latest_year <- function(df,
                             ind,
                             year,
+                            ind_ids,
                             cholera_latest_year,
                             meningitis_latest_year,
                             yellow_fever_latest_year) {
 
   valid_year <- function(x) {
-    valid <- length(x) == 1 & is.numeric(x) & dplyr::between(x, 1900, 2100)
+    valid <- (length(x) == 1 & is.numeric(x) & dplyr::between(x, 1900, 2100)) | is.infinite(x)
     if (!valid) {
       y <- deparse(substitute(x))
       stop(sprintf("`%s` must be a numeric value between 1900 or 2100, or NULL.",
                    y),
            call. = FALSE)
     }
+    if (is.infinite(x)) {
+      NULL
+    } else {
+      x
+    }
   }
 
   if (is.null(cholera_latest_year)) {
     cholera_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], "cholera_campaign")) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "cholera_campaign"])) %>%
       dplyr::pull(.data[[year]]) %>%
-      max(na.rm = TRUE)
+      max(-Inf, na.rm = TRUE)
   }
-  valid_year(cholera_latest_year)
+  cholera_latest_year <- valid_year(cholera_latest_year)
 
   if (is.null(meningitis_latest_year)) {
     meningitis_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], "meningitis_campaign")) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "meningitis_campaign"])) %>%
       dplyr::pull(.data[[year]]) %>%
-      max(na.rm = TRUE)
+      max(-Inf, na.rm = TRUE)
   }
 
-  valid_year(meningitis_latest_year)
+  meningitis_latest_year <- valid_year(meningitis_latest_year)
 
   if (is.null(yellow_fever_latest_year)) {
     yellow_fever_latest_year <- df %>%
       dplyr::filter(stringr::str_detect(.data[[ind]], "yellow_fever_campaign")) %>%
       dplyr::pull(.data[[year]]) %>%
-      max(na.rm = TRUE)
+      max(-Inf, na.rm = TRUE)
   }
 
-  valid_year(yellow_fever_latest_year)
+  yellow_fever_latest_year <- valid_year(yellow_fever_latest_year)
 
   list(cholera_latest_year,
        meningitis_latest_year,
@@ -413,6 +424,7 @@ calculate_hepi <- function(df,
 #' @inherit transform_hpop_data return params
 #' @inheritParams calculate_hpop_contributions
 #' @param level Column name of column with indicator levels.
+#'
 #' @export
 calculate_hep_billion <- function(df,
                                   iso3 = "iso3",

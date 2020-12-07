@@ -8,6 +8,7 @@ get_latest_year(
   df,
   ind,
   year,
+  ind_ids,
   cholera_latest_year,
   meningitis_latest_year,
   yellow_fever_latest_year
@@ -20,6 +21,11 @@ country, year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{year}{Column name of column with year data.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 
 \item{cholera_latest_year}{Latest year to calculate rolling average for cholera.
 If \code{NULL}, uses the latest year with observations in the data.}
