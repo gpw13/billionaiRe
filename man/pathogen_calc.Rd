@@ -8,6 +8,8 @@ pathogen_calc(
   df,
   name,
   ind,
+  iso3,
+  year,
   numerators,
   denominators,
   transform_value,
@@ -23,6 +25,10 @@ country, year, and indicator.}
 \item{name}{Name of pathogen to provide in the data frame.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with year data.}
 
 \item{numerators}{Indicator names for numerators.}
 

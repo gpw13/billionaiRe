@@ -323,12 +323,15 @@ prevent_calculations <- function(df,
                                   c("cholera_campaign_denom"),
                                   c("surviving_infants"),
                                   c("surviving_infants"),
-                                  c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom", "surviving_infants")))
+                                  c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom", "surviving_infants")),
+               multiply_surviving_infs = c(rep(FALSE, 5), TRUE))
 
   purrr::pmap_dfr(args,
                   pathogen_calc,
                   df = df,
                   ind = ind,
+                  iso3 = iso3,
+                  year = year,
                   transform_value = transform_value,
                   type = type,
                   ind_ids = ind_ids)
@@ -354,6 +357,8 @@ prevent_calculations <- function(df,
 pathogen_calc <- function(df,
                           name,
                           ind,
+                          iso3,
+                          year,
                           numerators,
                           denominators,
                           transform_value,
@@ -361,11 +366,12 @@ pathogen_calc <- function(df,
                           ind_ids,
                           multiply_surviving_infs = TRUE) {
   if (multiply_surviving_infs) {
-    df <- dplyr::mutate(df,
-                        !!sym(transform_value) := dplyr::case_when(
-                          .data[[ind]] == ind_ids[names(ind_ids) == "surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[stringr::str_detect(names(ind_ids), "routine")]),
-                          TRUE ~ .data[[transform_value]]
-                          ))
+    df <- dplyr::group_by(df, .data[[iso3]], .data[[year]]) %>%
+      dplyr::mutate(!!sym(transform_value) := dplyr::case_when(
+        .data[[ind]] == ind_ids[names(ind_ids) == "surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[stringr::str_detect(names(ind_ids), "routine")]),
+        TRUE ~ .data[[transform_value]]
+      )) %>%
+      dplyr::ungroup()
   }
 
   df %>%
