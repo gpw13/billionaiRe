@@ -1,2 +1,2 @@
 #' @noRd
-utils::globalVariables("sdi_ratio")
+utils::globalVariables(".")
