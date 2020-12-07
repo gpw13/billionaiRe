@@ -365,18 +365,18 @@ pathogen_calc <- function(df,
                           type,
                           ind_ids,
                           multiply_surviving_infs = TRUE) {
+  df <- dplyr::filter(df,
+                      .data[[ind]] %in% ind_ids[names(ind_ids) %in% c(numerators, denominators)],
+                      any(ind_ids[names(ind_ids) %in% numerators] %in% .data[[ind]]))
+
   if (multiply_surviving_infs) {
-    df <- dplyr::group_by(df, .data[[iso3]], .data[[year]]) %>%
-      dplyr::mutate(!!sym(transform_value) := dplyr::case_when(
+    df <- dplyr::mutate(df, !!sym(transform_value) := dplyr::case_when(
         .data[[ind]] == ind_ids[names(ind_ids) == "surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[stringr::str_detect(names(ind_ids), "routine")]),
         TRUE ~ .data[[transform_value]]
-      )) %>%
-      dplyr::ungroup()
+      ))
   }
 
   df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c(numerators, denominators)],
-                  any(ind_ids[names(ind_ids) %in% numerators] %in% .data[[ind]])) %>%
     dplyr::summarize(!!sym(transform_value) := 100 * sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[names(ind_ids) %in% numerators]]) /
                        sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[names(ind_ids) %in% denominators]]),
                      !!sym(type) := ifelse(length(unique(.data[[type]])) == 1, unique(.data[[type]]), "Projection"),
