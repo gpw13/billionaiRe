@@ -444,20 +444,22 @@ calculate_hep_billion <- function(df,
   assert_columns(df, iso3, ind, year, transform_value, level)
 
   df %>%
-    dplyr::filter(.data[[year]] %in% c(start_year, end_year),
-                  .data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent",
+    dplyr::filter(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent",
                                                                   "detect_respond",
                                                                   "espar",
-                                                                  "hep_idx")]) %>%
+                                                                  "hep_idx")],
+                  .data[[year]] <= end_year) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
+    dplyr::filter(!((.data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"]) & (.data[[year]] < max(.data[[year]], -Inf))),
+                  !((.data[[ind]] %in% c("prevent", "espar", "hep_idx")) & !(.data[[year]] %in% c(start_year, end_year)))) %>%
     dplyr::arrange(.data[[year]],
                    .by_group = TRUE) %>%
     dplyr::mutate("change" := dplyr::case_when(
-      .data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"] ~ .data[[level]][.data[[year]] == end_year],
+      .data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"] ~ .data[[level]],
       .data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent", "espar", "hep_idx")] ~ .data[[transform_value]] - dplyr::lag(.data[[transform_value]])
     )) %>%
+    dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data[[year]] == end_year) %>%
     dplyr::select(iso3, year, ind, "change") %>%
     dplyr::mutate("contribution" := ifelse(.data[[ind]] == ind_ids[names(ind_ids) == "hep_idx"],
                                            NA,
