@@ -419,8 +419,9 @@ calculate_hepi <- function(df,
 #' `calculate_hep_billion()` calculates country-level HEP Billion based on
 #' the component indicators. It calculates the change for Prevent and Prepare between
 #' a start year and end year, and estimated the change for Detect and Respond based on
-#' its level in the end year. Details are available in the methods report for the exact
-#' method applied.
+#' its level in the end year. If data is not available for the end year for Detect and
+#' Respond, the latest year of observed data is used. Details are available in
+#' the methods report for the exact method applied.
 #'
 #' For more details on the HEPP Billion calculation process and how this function
 #' ties in with the rest, see the vignette:
@@ -467,8 +468,7 @@ calculate_hep_billion <- function(df,
     dplyr::group_by(.data[[iso3]]) %>%
     dplyr::mutate("contribution" := ifelse(.data[[ind]] == ind_ids[names(ind_ids) == "hep_idx"],
                                            sum(.data[["contribution"]], na.rm = TRUE),
-                                           .data[["contribution"]]),
-                  !!sym(year) := end_year) %>%
+                                           .data[["contribution"]])) %>%
     dplyr::ungroup()
 }
 

@@ -46,8 +46,9 @@ Data frame in long format.
 \code{calculate_hep_billion()} calculates country-level HEP Billion based on
 the component indicators. It calculates the change for Prevent and Prepare between
 a start year and end year, and estimated the change for Detect and Respond based on
-its level in the end year. Details are available in the methods report for the exact
-method applied.
+its level in the end year. If data is not available for the end year for Detect and
+Respond, the latest year of observed data is used. Details are available in
+the methods report for the exact method applied.
 }
 \details{
 For more details on the HEPP Billion calculation process and how this function
