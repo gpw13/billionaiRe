@@ -456,7 +456,9 @@ calculate_hep_billion <- function(df,
     dplyr::arrange(.data[[year]],
                    .by_group = TRUE) %>%
     dplyr::mutate("change" := dplyr::case_when(
-      .data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"] ~ .data[[level]],
+      .data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"] ~ ifelse(.data[[level]] == 1,
+                                                                             0,
+                                                                             .data[[level]]),
       .data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent", "espar", "hep_idx")] ~ .data[[transform_value]] - dplyr::lag(.data[[transform_value]])
     )) %>%
     dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
