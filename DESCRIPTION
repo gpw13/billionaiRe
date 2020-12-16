@@ -32,7 +32,7 @@ Imports:
 Remotes: 
     caldwellst/wppdistro,
     caldwellst/whoville,
-    caldwellst/xmart4
+    caldwellst/xmart4 (>= 0.2.1)
 Depends: 
     R (>= 2.10)
 Suggests: 
