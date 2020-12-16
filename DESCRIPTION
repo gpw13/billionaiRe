@@ -39,5 +39,5 @@ Suggests:
     knitr,
     wppdistro (>= 0.1.0),
     rmarkdown,
-    xmart4 (>= 0.0.1)
+    xmart4 (>= 0.2.1)
 VignetteBuilder: knitr
