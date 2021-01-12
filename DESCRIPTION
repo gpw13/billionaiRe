@@ -2,10 +2,18 @@ Package: billionaiRe
 Type: Package
 Title: Calculate the WHO Triple Billions
 Version: 0.2.0
-Authors@R: person(given = "Seth", 
-                  family = "Caldwell", 
-                  email = "caldwellst@gmail.com", 
-                  role = c("aut", "cre"))
+Authors@R: c(person(given = "Seth", 
+                    family = "Caldwell", 
+                    email = "caldwellst@gmail.com", 
+                    role = c("aut", "cre")),
+             person(given = "Alice", 
+                    family = "Robson", 
+                    email = "robsona@who.int", 
+                    role = c("aut")),
+             person(given = "Nelly", 
+                    family = "Biondi", 
+                    email = "biondin@who.int", 
+                    role = c("aut")))
 Description: A package for applying methods to calculate Universal Health
     Coverage, Healthier Populations, and Health Emergencies Protection Billions.
 URL: https://www.who.int/data/triple-billion-dashboard, 
