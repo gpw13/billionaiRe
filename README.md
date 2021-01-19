@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# billionaiRe
+# billionaiRe <a href='https://github.com/caldwellst/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -19,13 +19,13 @@ Billions.
 
 You can install billionaiRe from [GitHub](https://github.com/) with:
 
-    remotes::install_github("caldwellst/billionaiRe", build_vignettes = TRUE)
+``` r
+remotes::install_github("caldwellst/billionaiRe", build_vignettes = TRUE)
+```
 
 You will need to have already installed the wppdistro package, which is
 stored in a private repo and only made public upon request. Please
-contact
-<a href="mailto:caldwellst@who.int" class="email">caldwellst@who.int</a>
-to request access.
+contact <caldwellst@who.int> to request access.
 
 # Calculations
 
@@ -57,17 +57,19 @@ documentation, but below you can see the quick and easy Billions
 calculation done using the sample fake HPOP data provided in the
 package, `hpop_df`.
 
-    library(billionaiRe)
+``` r
+library(billionaiRe)
 
-    hpop_df %>%
-      transform_hpop_data() %>%
-      add_hpop_populations() %>%
-      calculate_hpop_contributions() %>%
-      calculate_hpop_billion()
-    #> # A tibble: 1 x 5
-    #>   iso3  healthier unhealthier net_healthier perc_healthier
-    #>   <chr>     <dbl>       <dbl>         <dbl>          <dbl>
-    #> 1 AFG   28219445.  -35897603.     -7678158.          -18.4
+hpop_df %>%
+  transform_hpop_data() %>%
+  add_hpop_populations() %>%
+  calculate_hpop_contributions() %>%
+  calculate_hpop_billion()
+#> # A tibble: 1 x 5
+#>   iso3  healthier unhealthier net_healthier perc_healthier
+#>   <chr>     <dbl>       <dbl>         <dbl>          <dbl>
+#> 1 AFG   28219445.  -35897603.     -7678158.          -18.4
+```
 
 ## UHC Billion calculation
 
@@ -89,18 +91,20 @@ documentation, but below you can see the quick and easy Billions
 calculation done using the the sample fake UHC data provided in the
 package, `uhc_df`.
 
-    library(billionaiRe)
+``` r
+library(billionaiRe)
 
-    uhc_df %>%
-      transform_uhc_data() %>%
-      calculate_uhc_billion() %>%
-      calculate_uhc_contribution()
-    #> # A tibble: 3 x 6
-    #>   iso3  ind   `2018` `2023` population contribution
-    #>   <chr> <chr>  <dbl>  <dbl>      <dbl>        <dbl>
-    #> 1 AFG   FH      18.3   25.4   41681232     2963536.
-    #> 2 AFG   ASC     40.9   43.0   41681232      863800.
-    #> 3 AFG   UHC     33.5   32.1   41681232     -568702.
+uhc_df %>%
+  transform_uhc_data() %>%
+  calculate_uhc_billion() %>%
+  calculate_uhc_contribution()
+#> # A tibble: 3 x 6
+#>   iso3  ind   `2018` `2023` population contribution
+#>   <chr> <chr>  <dbl>  <dbl>      <dbl>        <dbl>
+#> 1 AFG   FH      18.3   25.4   41681232     2963536.
+#> 2 AFG   ASC     40.9   43.0   41681232      863800.
+#> 3 AFG   UHC     33.5   32.1   41681232     -568702.
+```
 
 ## HEP Billion calculation
 
@@ -124,16 +128,18 @@ documentation, but below you can see the quick and easy Billions
 calculation done using the sample fake HEP data provided in the package,
 `hep_df`.
 
-    library(billionaiRe)
+``` r
+library(billionaiRe)
 
-    hep_df %>%
-      transform_hep_data() %>%
-      calculate_hep_components() %>%
-      calculate_hep_billion()
-    #> # A tibble: 4 x 5
-    #>   iso3   year ind            change contribution
-    #>   <chr> <dbl> <chr>           <dbl>        <dbl>
-    #> 1 AFG    2023 detect_respond    5       2084062.
-    #> 2 AFG    2023 espar            11.2     4680802.
-    #> 3 AFG    2023 hep_idx          21.7    23326420.
-    #> 4 AFG    2023 prevent          39.7    16561556.
+hep_df %>%
+  transform_hep_data() %>%
+  calculate_hep_components() %>%
+  calculate_hep_billion()
+#> # A tibble: 4 x 5
+#>   iso3   year ind            change contribution
+#>   <chr> <dbl> <chr>           <dbl>        <dbl>
+#> 1 AFG    2023 detect_respond    5       2084062.
+#> 2 AFG    2023 espar            11.2     4680802.
+#> 3 AFG    2023 hep_idx          21.7    23326420.
+#> 4 AFG    2023 prevent          39.7    16561556.
+```
