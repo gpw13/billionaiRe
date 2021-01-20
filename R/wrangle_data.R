@@ -86,7 +86,7 @@ wrangle_unsd_data <- function(df,
                        .data[["Nature"]] %in% c("C", "CA") ~ "reported",
                        .data[["Nature"]] %in% c("E", "M") ~"estimated"
                      ),
-                     "other_detail" := .data[["Comment"]]) %>%
+                     "other_detail" := .data[["Comments"]]) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 }
