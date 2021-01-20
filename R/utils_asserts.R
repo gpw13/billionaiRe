@@ -40,3 +40,30 @@ assert_numeric <- function(df, ...) {
          call. = FALSE)
   }
 }
+
+#' Assert that `x` is a character vector of length 1
+#'
+#' @param x Supposed string to test
+assert_string_l1 <- function(x) {
+  if (!is.null(x)) {
+    lx <- length(x)
+    if (!(is.character(x) & (lx == 1))) {
+      stop(sprintf("`%s` must be a character vector of length 1, not %s of length %d.",
+                   deparse(substitute(x)),
+                   class(x),
+                   lx))
+    }
+  }
+}
+
+#' Assert that `df` is a data frame
+#'
+#' @param df Supposed data frame
+assert_df <- function(df) {
+  if (!is.data.frame(df)) {
+    stop(sprintf("`df` must be a data frame, not a %s.",
+                 class(df)[1]),
+         call. = FALSE)
+  }
+}
+
