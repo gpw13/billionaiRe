@@ -15,6 +15,8 @@
 #'     `NULL`, the type column is just filled with `NA_character_`.
 #'
 #' @return A data frame.
+#'
+#' @export
 wrangle_gho_data <- function(df,
                              source = NULL,
                              type = NULL) {
@@ -60,6 +62,8 @@ wrangle_gho_data <- function(df,
 #'     "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".
 #'
 #' @return A data frame.
+#'
+#' @export
 wrangle_unsd_data <- function(df,
                               source = NULL,
                               type = NULL) {
