@@ -37,7 +37,7 @@ wrangle_gho_data <- function(df,
                      "type" := ifelse(is.null(type),
                                       NA_character_,
                                       type),
-                     "other_detail" := .data[["Comment"]]) %>%
+                     "other_detail" := .data[["Comments"]]) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 }
@@ -86,7 +86,7 @@ wrangle_unsd_data <- function(df,
                        .data[["Nature"]] %in% c("C", "CA") ~ "reported",
                        .data[["Nature"]] %in% c("E", "M") ~"estimated"
                      ),
-                     "other_detail" := .data[["Comments"]]) %>%
+                     "other_detail" := .data[["FootNote"]]) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 }
