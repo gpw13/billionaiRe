@@ -46,7 +46,7 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @return Numeric vector of SDI ratios.
 get_sdi_ratio <- function(iso3) {
-  sdi_ratio[['sdiratio']][match(iso3, sdi_ratio[['iso3']])]
+  billionaiRe::sdi_ratio[['sdiratio']][match(iso3, billionaiRe::sdi_ratio[['iso3']])]
 }
 
 #' Get country shares data

@@ -5,7 +5,7 @@
 \alias{pop_links}
 \title{HPOP Billion population links}
 \format{
-A data frame with 130 rows and 2 variables:
+A data frame with 254 rows and 2 variables:
 \describe{
 \item{ind}{HPOP indicator code.}
 \item{pop_group}{Population group.}

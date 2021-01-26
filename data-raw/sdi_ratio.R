@@ -17,4 +17,4 @@ sdi_ratio <- sdi_df2 %>%
             sdiratio = -35.69 + 497.40 * value - 1272.90 * (value^2) + 1075.56 * (value^3)) %>%
   select(iso3, sdiratio)
 
-usethis::use_data(sdi_ratio, overwrite = TRUE, internal = TRUE)
+usethis::use_data(sdi_ratio, overwrite = TRUE, internal = FALSE)
