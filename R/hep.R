@@ -106,6 +106,7 @@ transform_prev_cmpgn_data <- function(df,
                          meningitis_latest_year,
                          yellow_fever_latest_year)
 
+  # Apply sums to various
   new_df <- cmpgn_df %>%
     dplyr::right_join(tidyr::expand_grid(!!sym(iso3) := unique(.[[iso3]]),
                                          !!sym(year) := min(.[[year]]):extrapolate_to,
@@ -144,30 +145,66 @@ transform_prev_cmpgn_data <- function(df,
     tidyr::pivot_longer(-c(iso3, year),
                         names_to = "ind",
                         values_to = "transform_value") %>%
-    dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
-    dplyr::mutate(!!sym("transform_value") := dplyr::case_when(
-      stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] <= yrs[[1]] ~ .data[["transform_value"]],
-      stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] > yrs[[1]] ~ .data[["transform_value"]][.data[[year]] == yrs[[1]]],
-      stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] <= yrs[[2]] ~ .data[["transform_value"]],
-      stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] > yrs[[2]] ~ .data[["transform_value"]][.data[[year]] == yrs[[2]]],
-      stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] <= yrs[[3]] ~ .data[["transform_value"]],
-      stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] > yrs[[3]] ~ .data[["transform_value"]][.data[[year]] == yrs[[3]]])) %>%
+    dplyr::group_by(.data[[iso3]], .data[[ind]])
+
+  # Extrapolate out latest values
+
+  if (!is.null(yrs[[1]])) {
+    new_df <- dplyr::mutate(new_df,
+                            !!sym("transform_value") := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] <= yrs[[1]] ~ .data[["transform_value"]],
+                              stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] > yrs[[1]] ~ .data[["transform_value"]][.data[[year]] == yrs[[1]]],
+                              TRUE ~ .data[["transform_value"]]
+                            ),
+                            "billionaiRe_type_temp" := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] <= yrs[[1]] ~ "reported",
+                              stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] > yrs[[1]] ~ "projected"
+                              ))
+  }
+
+  if (!is.null(yrs[[2]])) {
+    new_df <- dplyr::mutate(new_df,
+                            !!sym("transform_value") := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] <= yrs[[2]] ~ .data[["transform_value"]],
+                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] > yrs[[2]] ~ .data[["transform_value"]][.data[[year]] == yrs[[2]]],
+                              TRUE ~ .data[["transform_value"]]
+                            ),
+                            "billionaiRe_type_temp" := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] <= yrs[[2]] ~ "reported",
+                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] > yrs[[2]] ~ "projected"
+                            ))
+  }
+
+  if (!is.null(yrs[[3]])) {
+    new_df <- dplyr::mutate(new_df,
+                            !!sym("transform_value") := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] <= yrs[[3]] ~ .data[["transform_value"]],
+                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] > yrs[[3]] ~ .data[["transform_value"]][.data[[year]] == yrs[[3]]],
+                              TRUE ~ .data[["transform_value"]]
+                            ),
+                            "billionaiRe_type_temp" := dplyr::case_when(
+                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] <= yrs[[3]] ~ "reported",
+                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] > yrs[[3]] ~ "projected"
+                            ))
+  }
+
+  # Arrange data and drop rows with no data
+  # Necessary since some series are longer than others
+
+  new_df <- new_df %>%
     dplyr::arrange(.data[[year]],
                    .by_group = TRUE) %>%
     dplyr::filter(dplyr::row_number() >= min(which(.data[["transform_value"]] > 0), Inf)) %>%
     dplyr::ungroup()
 
-  new_df %>% dplyr::full_join(df,
-                       by = c(iso3, ind, year)) %>%
-    dplyr::mutate(!!sym(type) := dplyr::case_when(
-      !is.na(.data[[type]]) ~ .data[[type]],
-      stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] <= yrs[[1]] ~ "Actual",
-      stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] > yrs[[1]] ~ "Projection",
-      stringr::str_detect(.data[[ind]], "meningitis_campaign") & .data[[year]] <= yrs[[2]] ~ "Actual",
-      stringr::str_detect(.data[[ind]], "meningitis_campaign") & .data[[year]] > yrs[[2]] ~ "Projection",
-      stringr::str_detect(.data[[ind]], "yellow_fever_campaign") & .data[[year]] <= yrs[[3]] ~ "Actual",
-      stringr::str_detect(.data[[ind]], "yellow_fever_campaign") & .data[[year]] > yrs[[3]] ~ "Projection",
-    ))
+  # Join up with original data frame
+  # and export
+  new_df %>%
+    dplyr::full_join(df, by = c(iso3, ind, year)) %>%
+    dplyr::mutate(!!sym(type) := ifelse(is.na(.data[[type]]) & !is.na(.data[["billionaiRe_type_temp"]]),
+                                        .data[["billionaiRe_type_temp"]],
+                                        .data[[type]])) %>%
+    dplyr::select(-"billionaiRe_type_temp")
 }
 
 #' Get latest years for pathogens
