@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.com/caldwellst/billionaiRe.svg?branch=master)](https://travis-ci.com/caldwellst/billionaiRe)
 [![R build
 status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
 <!-- badges: end -->
@@ -67,8 +65,8 @@ hpop_df %>%
   calculate_hpop_billion()
 #> # A tibble: 1 x 5
 #>   iso3  healthier unhealthier net_healthier perc_healthier
-#>   <chr>     <dbl>       <dbl>         <dbl>          <dbl>
-#> 1 AFG   28219445.  -35897603.     -7678158.          -18.4
+#> * <chr>     <dbl>       <dbl>         <dbl>          <dbl>
+#> 1 AFG   25608812.  -35897603.    -10288791.          -24.7
 ```
 
 ## UHC Billion calculation
