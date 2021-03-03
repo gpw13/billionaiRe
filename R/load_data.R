@@ -11,8 +11,12 @@
 #' landing page linked above.
 #'
 #' @param billion Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".
+#' @param mart_table Name of xMart4 table in the GPW13 mart to load data from. Currently,
+#'     pulls from the full input data to the Billions by default, but can also pull
+#'     from the table containing data needing DDI infilling and projections or
+#'     those already infilled and projected by technical programmes.
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
-#'    string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+#'     string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 #' @param ... Additional arguments passed to `xmart4::xmart4_table()`. Use if
 #'     you need to provide additional token specifications for Azure authentication.
 #'
@@ -20,30 +24,15 @@
 #'
 #' @export
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
+                              mart_table = c("RAW_INDICATOR", "RAW_UNPROJ_DATA", "RAW_PROJ_DATA"),
                               date_filter = "latest",
                               ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
+  mart_table <- rlang::arg_match(mart_table)
   assert_date_filter(date_filter)
 
-  df <- xmart4::xmart4_table("GPW13", "RAW_INDICATOR",
-                             col_types = readr::cols(
-                               ISO3 = readr::col_character(),
-                               YEAR = readr::col_double(),
-                               IND = readr::col_character(),
-                               UPLOAD_DATE = readr::col_date(format = ""),
-                               VALUE = readr::col_double(),
-                               LOW = readr::col_double(),
-                               HIGH = readr::col_double(),
-                               USE_DASH = readr::col_logical(),
-                               USE_CALC = readr::col_logical(),
-                               SOURCE = readr::col_character(),
-                               TYPE = readr::col_character(),
-                               TYPE_DETAIL = readr::col_character(),
-                               OTHER_DETAIL = readr::col_character(),
-                               UPLOAD_DETAIL = readr::col_character()
-                             ),
-                             ...)
+  df <- load_billion_table(mart_table, ...)
   df <- dplyr::rename_with(df, tolower)
   df <- filter_billion_inds(df, billion)
   df <- filter_billion_date(df, date_filter)
@@ -90,4 +79,26 @@ assert_date_filter <- function(fltr) {
       }
     }
   }
+}
+
+#' @noRd
+load_billion_table <- function(tbl, ...) {
+  xmart4::xmart4_table("GPW13", tbl,
+                       col_types = readr::cols(
+                         ISO3 = readr::col_character(),
+                         YEAR = readr::col_double(),
+                         IND = readr::col_character(),
+                         UPLOAD_DATE = readr::col_date(format = ""),
+                         VALUE = readr::col_double(),
+                         LOW = readr::col_double(),
+                         HIGH = readr::col_double(),
+                         USE_DASH = readr::col_logical(),
+                         USE_CALC = readr::col_logical(),
+                         SOURCE = readr::col_character(),
+                         TYPE = readr::col_character(),
+                         TYPE_DETAIL = readr::col_character(),
+                         OTHER_DETAIL = readr::col_character(),
+                         UPLOAD_DETAIL = readr::col_character()
+                       ),
+                       ...)
 }

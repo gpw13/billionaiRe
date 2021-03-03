@@ -6,12 +6,18 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
+  mart_table = c("RAW_INDICATOR", "RAW_UNPROJ_DATA", "RAW_PROJ_DATA"),
   date_filter = "latest",
   ...
 )
 }
 \arguments{
 \item{billion}{Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".}
+
+\item{mart_table}{Name of xMart4 table in the GPW13 mart to load data from. Currently,
+pulls from the full input data to the Billions by default, but can also pull
+from the table containing data needing DDI infilling and projections or
+those already infilled and projected by technical programmes.}
 
 \item{date_filter}{One of \code{NULL}, "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".}
