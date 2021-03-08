@@ -6,7 +6,7 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
-  mart_table = c("RAW_INDICATOR", "RAW_UNPROJ_DATA", "RAW_PROJ_DATA"),
+  mart_table = c("full_ind", "unproj_data", "proj_data"),
   date_filter = "latest",
   ...
 )

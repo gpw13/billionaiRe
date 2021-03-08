@@ -10,5 +10,5 @@ transform_alcohol(x)
 \item{x}{Indicator value.}
 }
 \description{
-Rescales hospital data according to Billions methods report
+Rescales alcohol data according to Billions methods report
 }
