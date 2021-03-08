@@ -24,12 +24,14 @@
 #'
 #' @export
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              mart_table = c("RAW_INDICATOR", "RAW_UNPROJ_DATA", "RAW_PROJ_DATA"),
+                              mart_table = c("full_ind", "unproj_data", "proj_data"),
                               date_filter = "latest",
                               ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
   mart_table <- rlang::arg_match(mart_table)
+  mart_match <- c("full_ind" = "RAW_INDICATOR", "unproj_data" = "RAW_UNPROJ_DATA", "proj_data" = "RAW_PROJ_DATA")
+  mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
 
   df <- load_billion_table(mart_table, ...)
