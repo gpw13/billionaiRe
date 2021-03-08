@@ -74,13 +74,24 @@ transform_glucose <- function(x) {
 
 #' Transform alcohol data
 #'
-#' Rescales hospital data according to Billions methods report
+#' Rescales alcohol data according to Billions methods report
 #'
 #' @inheritParams reverse_ind
 transform_alcohol <- function(x) {
   x <- 100 - (x * 4)
   trim_transforms(x)
 }
+
+#' Untransform alcohol data
+#'
+#' Untransforms alcohol data according to Billions methods report
+#'
+#' @inheritParams reverse_ind
+untransform_alcohol <- function(x) {
+  x <- (100 - x) / 4
+  x
+}
+
 
 #' Transform road safety data
 #'
@@ -95,6 +106,19 @@ transform_road_safety <- function(x, iso3) {
   trim_transforms(x)
 }
 
+#' Untransform road safety data
+#'
+#' Unscales road safety data using the SDI ratio according to the Billions methods report
+#'
+#' @inheritParams reverse_ind
+#' @param iso3 Country ISO3 code.
+untransform_road_safety <- function(x, iso3) {
+  sdi_rti <- get_sdi_ratio(iso3)
+  x <- reverse_ind(x)
+  x <- x * 1000 / (5 * sdi_rti)
+  x
+}
+
 #' Transform suicide rate data
 #'
 #' Rescales suicide rate data according to the Billions methods report
@@ -106,6 +130,17 @@ transform_suicide_rate <- function(x) {
   trim_transforms(x)
 }
 
+#' Untransform suicide rate date
+#'
+#' Rescales transformed suicide rate date according to the Billions methods report
+#'
+#' @inheritParams reverse_ind
+untransform_suicide_rate <- function(x) {
+  x <- reverse_ind(x)
+  x <- x * 100000 / (5 * 20 * 100)
+  x
+}
+
 #' Transform transfats policy data
 #'
 #' Rescales transfats policy data according to the Billions methods report
@@ -114,6 +149,16 @@ transform_suicide_rate <- function(x) {
 transform_transfats <- function(x) {
   x <- 100 - 14.3 + 2.1 * x / 100
   trim_transforms(x)
+}
+
+#' Untransform transfats policy data
+#'
+#' Unscales transfats policy data according to the Billions methods report
+#'
+#' @inheritParams reverse_ind
+untransform_transfats <- function(x) {
+  x <- (x - 100 + 14.3) * 100 / 2.1
+  round(x)
 }
 
 #' Reverse indicator and cap
