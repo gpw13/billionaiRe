@@ -5,6 +5,8 @@ data, projected data, and final input data for the Billions.
 data could be converted back into the original domain of the raw data.
 * Allow multiple columns to be transformed or untransformed at once using the
 `transform_...` and `untransform_...` functions for UHC and HPOP Billions.
+* Clear error messages added if there are non-distinct rows in `df` for `ind`, `iso3`,
+and `year`.
 
 # billionaiRe 0.2.1
 
