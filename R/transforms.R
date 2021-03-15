@@ -31,6 +31,18 @@ transform_bp <- function(x) {
   trim_transforms(x)
 }
 
+#' Untransform blood pressure data
+#'
+#' Reverses the transformation of [transform_bp()]
+#'
+#' @inheritParams reverse_ind
+untransform_bp <- function(x) {
+  x <- scales::rescale(x, to = c(50, 100), from = c(0, 100))
+  x <- reverse_ind(x)
+  x
+}
+
+
 #' Transform UHC tobacco data
 #'
 #' Reverses the indicator and rescales from `[29,100]` to `[0,100]`
@@ -52,6 +64,16 @@ transform_hosp_beds <- function(x) {
   trim_transforms(x)
 }
 
+#' Untransform hospital beds data
+#'
+#' Reverses transformation from [transform_hosp_beds()]
+#'
+#' @inheritParams reverse_ind
+untransform_hosp_beds <- function(x) {
+  x <- (x * 18) / 100
+  x
+}
+
 #' Transform health workforce data
 #'
 #' Rescales healh workforce data  according to Billions methods report
@@ -62,6 +84,16 @@ transform_hwf <- function(x) {
   trim_transforms(x)
 }
 
+#' Untransform health workforce data
+#'
+#' Reverses transformation from [transform_hwf()]
+#'
+#' @inheritParams reverse_ind
+untransform_hwf <- function(x) {
+  x <- (x * 154.74) / 100
+  x
+}
+
 #' Transform FPG data
 #'
 #' Rescales FPG data from `[7.4,5.1]` to `[0,100]`
@@ -70,6 +102,16 @@ transform_hwf <- function(x) {
 transform_glucose <- function(x) {
   x <- scales::rescale(x, from = c(7.4, 5.1), to = c(0,100))
   trim_transforms(x)
+}
+
+#' Unransform FPG data
+#'
+#' Reverses transformation from [transform_glucose()]
+#'
+#' @inheritParams reverse_ind
+untransform_glucose <- function(x) {
+  x <- scales::rescale(x, to = c(7.4, 5.1), from = c(0,100))
+  x
 }
 
 #' Transform alcohol data

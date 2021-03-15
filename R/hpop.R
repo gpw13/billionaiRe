@@ -42,7 +42,7 @@ transform_hpop_data <- function(df,
                   ))
 }
 
-#' Transform Raw Indicator Values for HPOP Billion
+#' Untransform Indicator Values for HPOP Billion
 #'
 #' `untransform_hpop_data()` reverses transformations on HPOP Billion indicators to
 #' return raw indicator values. Details on the specific transformations applied
