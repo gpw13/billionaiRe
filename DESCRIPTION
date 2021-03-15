@@ -36,7 +36,8 @@ Imports:
     whoville,
     lubridate,
     purrr,
-    zoo
+    zoo,
+    glue
 Remotes: 
     caldwellst/wppdistro,
     caldwellst/whoville,

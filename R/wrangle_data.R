@@ -21,8 +21,8 @@ wrangle_gho_data <- function(df,
                              source = NULL,
                              type = NULL) {
   assert_df(df)
-  assert_string_l1(source)
-  assert_string_l1(type)
+  assert_string(source, 1)
+  assert_string(type, 1)
 
   df %>%
     dplyr::transmute("iso3" := .data[["SpatialDim"]],
@@ -68,8 +68,8 @@ wrangle_unsd_data <- function(df,
                               source = NULL,
                               type = NULL) {
   assert_df(df)
-  assert_string_l1(source)
-  assert_string_l1(type)
+  assert_string(source, 1)
+  assert_string(type, 1)
 
   df %>%
     dplyr::transmute("iso3" := whoville::codes_to_iso3(.data[["GeoAreaCode"]], type = "m49"),

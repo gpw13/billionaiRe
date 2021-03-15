@@ -8,6 +8,7 @@ transform_uhc_data(
   df,
   ind = "ind",
   value = "value",
+  transform_glue = "transform_{value}",
   ind_ids = billion_ind_codes("uhc")
 )
 }
@@ -18,6 +19,10 @@ country, year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{value}{Column name of column with indicator values.}
+
+\item{transform_glue}{Glue expression to be passed to \code{\link[glue:glue]{glue::glue()}}. Defaults to
+\code{'transform_{value}'} which will create new column names by prefixing \code{transform_}
+to the original name.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
@@ -31,7 +36,9 @@ Data frame in long format.
 \code{transform_uhc_data()} applies transformations on UHC Billion indicators so
 that transformed indicator values can be used within Billions calculations.
 Details on the specific transformations applied can be found within the
-Billions methods report.
+Billions methods report. Values in the transform column, if it already exists,
+are replaced for UHC indicators that have data in the value column, otherwise
+the column keeps its original data.
 }
 \details{
 For more details on the UHC Billion calculation process and how this function

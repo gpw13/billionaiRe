@@ -41,15 +41,17 @@ assert_numeric <- function(df, ...) {
   }
 }
 
-#' Assert that `x` is a character vector of length 1
+#' Assert that `x` is a character vector of length n
 #'
 #' @param x Supposed string to test
-assert_string_l1 <- function(x) {
+#' @param n Length to test
+assert_string <- function(x, n) {
   if (!is.null(x)) {
     lx <- length(x)
-    if (!(is.character(x) & (lx == 1))) {
-      stop(sprintf("`%s` must be a character vector of length 1, not %s of length %d.",
+    if (!((is.character(x) & (lx == n)))) {
+      stop(sprintf("`%s` must be a character vector of length %d, not %s of length %d.",
                    deparse(substitute(x)),
+                   n,
                    class(x),
                    lx))
     }
@@ -67,3 +69,16 @@ assert_df <- function(df) {
   }
 }
 
+#' Assert that ind_ids is the correct named vector
+#'
+#' @param ind_ids Indicator ids to check
+#' @param billion Billion which we're checking for
+assert_ind_ids <- function(ind_ids, billion) {
+  ind_check <- billion_ind_codes(billion)
+  ind_check_nms <- all(ind_check %in% names(ind_ids))
+  if (!ind_check_nms) {
+    stop(sprintf("`ind_ids` must be a named vector with all `billion_ind_codes('%s')` present as names.",
+                 billion),
+         call. = FALSE)
+  }
+}
