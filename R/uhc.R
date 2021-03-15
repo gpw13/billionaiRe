@@ -36,6 +36,44 @@ transform_uhc_data <- function(df,
                     .data[[ind]] == ind_ids["fh"] ~ "FH"))
 }
 
+#' Untransform Indicator Values for UHC Billion
+#'
+#' `untransform_uhc_data()` reverses transformations on UHC Billion indicators to
+#' return raw indicator values. Details on the specific transformations applied
+#' can be found within the Billions methods report.
+#'
+#' For more details on the UHC Billion calculation process and how this function
+#' ties in with the rest, see the vignette:
+#'
+#' \href{../doc/uhc.html}{\code{vignette("uhc", package = "billionaiRe")}}
+#'
+#' @inherit untransform_hpop_data params return
+#'
+#' @export
+untransform_uhc_data <- function(df,
+                                 iso3 = "iso3",
+                                 ind = "ind",
+                                 transform_value = "transform_value",
+                                 value = "value",
+                                 ind_ids = billion_ind_codes("uhc")) {
+  assert_columns(df, iso3, ind, transform_value)
+
+  if (!(value %in% names(df))) {
+    df[[value]] <- NA_real_
+  }
+
+  df %>%
+    dplyr::mutate(!!sym(value) := dplyr::case_when(
+      .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ .data[[transform_value]],
+      .data[[ind]] %in% ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value]]),
+      .data[[ind]] == ind_ids["bp"] ~ untransform_bp(.data[[transform_value]]),
+      .data[[ind]] == ind_ids["fpg"] ~ untransform_glucose(.data[[transform_value]]),
+      .data[[ind]] == ind_ids["beds"] ~ untransform_hosp_beds(.data[[transform_value]], .data[[iso3]]),
+      .data[[ind]] == ind_ids["hwf"] ~ untransform_hwf(.data[[transform_value]]),
+      TRUE ~ .data[[value]]
+    ))
+}
+
 #' Calculate UHC Billion
 #'
 #' `calculate_uhc_billion()` calculates country-level UHC Billion based on

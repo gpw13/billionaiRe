@@ -42,6 +42,56 @@ transform_hpop_data <- function(df,
                   ))
 }
 
+#' Untransform Indicator Values for HPOP Billion
+#'
+#' `untransform_hpop_data()` reverses transformations on HPOP Billion indicators to
+#' return raw indicator values. Details on the specific transformations applied
+#' can be found within the Billions methods report.
+#'
+#' For more details on the HPOP Billion calculation process and how this function
+#' ties in with the rest, see the vignette:
+#'
+#' \href{../doc/hpop.html}{\code{vignette("hpop", package = "billionaiRe")}}
+#'
+#' @param df Data frame in long format, where 1 row corresponds to a specific
+#'     country, year, and indicator.
+#' @param iso3 Column name of column with country ISO3 codes.
+#' @param ind Column name of column with indicator names.
+#' @param transform_value Column name of column with transformed values to retrieve.
+#' @param value Column name of column to put in untransformed values.
+#' @param ind_ids Named vector of indicator codes for input indicators to the Billion.
+#'     Although separate indicator codes can be used than the standard, they must
+#'     be supplied as a named vector where the names correspond to the output of
+#'     `billion_ind_codes()`.
+#'
+#' @return Data frame in long format.
+#'
+#' @export
+untransform_hpop_data <- function(df,
+                                  iso3 = "iso3",
+                                  ind = "ind",
+                                  transform_value = "transform_value",
+                                  value = "value",
+                                  ind_ids = billion_ind_codes("hpop")) {
+  assert_columns(df, iso3, ind, transform_value)
+
+  if (!(value %in% names(df))) {
+    df[[value]] <- NA_real_
+  }
+
+  df %>%
+    dplyr::mutate(!!sym(value) := dplyr::case_when(
+                    !is.na(.data[[value]]) ~ .data[[value]],
+                    .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ .data[[transform_value]],
+                    .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[value]]),
+                    .data[[ind]] == ind_ids["suicide"] ~ untransform_suicide_rate(.data[[transform_value]]),
+                    .data[[ind]] == ind_ids["alcohol"] ~ untransform_alcohol(.data[[transform_value]]),
+                    .data[[ind]] == ind_ids["road"] ~ untransform_road_safety(.data[[transform_value]], .data[[iso3]]),
+                    .data[[ind]] == ind_ids["transfats"] ~ untransform_transfats(.data[[transform_value]])
+                  ))
+}
+
+
 #' Add Population Figures for HPOP Billion
 #'
 #' `add_hpop_populations()` adds relevant populations to each HPOP Billion indicator
