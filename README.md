@@ -100,8 +100,8 @@ uhc_df %>%
 #>   iso3  ind   `2018` `2023` population contribution
 #>   <chr> <chr>  <dbl>  <dbl>      <dbl>        <dbl>
 #> 1 AFG   FH      18.3   25.4   41681232     2963536.
-#> 2 AFG   ASC     40.9   43.0   41681232      863800.
-#> 3 AFG   UHC     33.5   32.1   41681232     -568702.
+#> 2 AFG   ASC     41.1   43.2   41681232      874893.
+#> 3 AFG   UHC     33.6   32.2   41681232     -563946.
 ```
 
 ## HEP Billion calculation
