@@ -3,6 +3,8 @@
 data, projected data, and final input data for the Billions.
 * Added in `untransform_hpop_data()` and `untransform_uhc_data()` so that transformed
 data could be converted back into the original domain of the raw data.
+* Allow multiple columns to be transformed or untransformed at once using the
+`transform_...` and `untransform_...` functions for UHC and HPOP Billions.
 
 # billionaiRe 0.2.1
 
