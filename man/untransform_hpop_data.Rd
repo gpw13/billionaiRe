@@ -23,7 +23,10 @@ country, year, and indicator.}
 
 \item{transform_value}{Column name of column with transformed values to retrieve.}
 
-\item{value}{Column name of column to put in untransformed values.}
+\item{value}{Column name of column to place untransformed values. If the column already
+exists, values are overwritten wherever \code{ind} and \code{transform_value} are available
+to be untransformed for this Billion, but otherwise, the column retains its
+other values.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

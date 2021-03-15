@@ -58,7 +58,10 @@ transform_hpop_data <- function(df,
 #' @param iso3 Column name of column with country ISO3 codes.
 #' @param ind Column name of column with indicator names.
 #' @param transform_value Column name of column with transformed values to retrieve.
-#' @param value Column name of column to put in untransformed values.
+#' @param value Column name of column to place untransformed values. If the column already
+#'     exists, values are overwritten wherever `ind` and `transform_value` are available
+#'     to be untransformed for this Billion, but otherwise, the column retains its
+#'     other values.
 #' @param ind_ids Named vector of indicator codes for input indicators to the Billion.
 #'     Although separate indicator codes can be used than the standard, they must
 #'     be supplied as a named vector where the names correspond to the output of
@@ -81,13 +84,14 @@ untransform_hpop_data <- function(df,
 
   df %>%
     dplyr::mutate(!!sym(value) := dplyr::case_when(
-                    !is.na(.data[[value]]) ~ .data[[value]],
+                    is.na(.data[[transform_value]]) ~ .data[[value]],
                     .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ .data[[transform_value]],
                     .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[value]]),
                     .data[[ind]] == ind_ids["suicide"] ~ untransform_suicide_rate(.data[[transform_value]]),
                     .data[[ind]] == ind_ids["alcohol"] ~ untransform_alcohol(.data[[transform_value]]),
                     .data[[ind]] == ind_ids["road"] ~ untransform_road_safety(.data[[transform_value]], .data[[iso3]]),
-                    .data[[ind]] == ind_ids["transfats"] ~ untransform_transfats(.data[[transform_value]])
+                    .data[[ind]] == ind_ids["transfats"] ~ untransform_transfats(.data[[transform_value]]),
+                    TRUE ~ .data[[value]]
                   ))
 }
 

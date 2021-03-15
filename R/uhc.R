@@ -64,6 +64,7 @@ untransform_uhc_data <- function(df,
 
   df %>%
     dplyr::mutate(!!sym(value) := dplyr::case_when(
+      is.na(.data[[transform_value]]) ~ .data[[value]],
       .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ .data[[transform_value]],
       .data[[ind]] %in% ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value]]),
       .data[[ind]] == ind_ids["bp"] ~ untransform_bp(.data[[transform_value]]),
