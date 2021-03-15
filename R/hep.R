@@ -38,6 +38,7 @@ transform_hep_data <- function(df,
                                yellow_fever_latest_year = NULL,
                                extrapolate_to = 2023) {
   assert_columns(df, iso3, ind, value)
+  assert_ind_ids(ind_ids, "hep")
 
   new_df <- df %>%
     dplyr::filter(!is.na(.data[[value]])) %>%
@@ -480,6 +481,8 @@ calculate_hep_billion <- function(df,
                                   end_year = 2023,
                                   ind_ids = billion_ind_codes("hep")) {
   assert_columns(df, iso3, ind, year, transform_value, level)
+  assert_ind_ids(ind_ids, "hep")
+  assert_unique_rows(df, ind, iso3, year, ind_ids)
 
   df %>%
     dplyr::filter(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent",

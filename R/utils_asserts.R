@@ -82,3 +82,19 @@ assert_ind_ids <- function(ind_ids, billion) {
          call. = FALSE)
   }
 }
+
+#' Assert unique rows of df
+#'
+#' Makes sure there are distinct rows for each ind, iso3, and year
+assert_unique_rows <- function(df,
+                               ind,
+                               iso3,
+                               year,
+                               ind_ids) {
+  ind_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids)
+  dist_df <- dplyr::distinct(ind_df, .data[[ind]], .data[[iso3]], .data[[year]])
+  if (nrow(ind_df) != nrow(dist_df)) {
+    stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year`, please make distinct.",
+         call. = FALSE)
+  }
+}

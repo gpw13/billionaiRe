@@ -217,12 +217,17 @@ calculate_hpop_contributions <- function(df,
                                          source = "source",
                                          type = "type",
                                          value = "value",
-                                         transform_value = "transform_value") {
+                                         transform_value = "transform_value",
+                                         ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, year, iso3, ind, population, transform_value)
+  assert_ind_ids(ind_ids, "hpop")
+  assert_unique_rows(df, ind, iso3, year, ind_ids)
+
   piv_vals <- c(value, transform_value, source, type)
   piv_vals <- piv_vals[piv_vals %in% names(df)]
   df %>%
-    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
+    dplyr::filter(.data[[year]] %in% c(start_year, end_year),
+                  .data[[ind]] %in% ind_ids) %>%
     tidyr::pivot_wider(c(iso3, ind, population),
                        names_from = year,
                        values_from = piv_vals) %>%

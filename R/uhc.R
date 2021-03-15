@@ -156,9 +156,11 @@ calculate_uhc_billion <- function(df,
                                   transform_value = "transform_value",
                                   ind_ids = billion_ind_codes("uhc")) {
   assert_columns(df, year, iso3, ind, billion_group, transform_value)
+  assert_ind_ids(ind_ids, "uhc")
+  assert_unique_rows(df, ind, iso3, year, ind_ids)
 
   df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>%
+    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>% # nurses doctors already aggregated to hwf
     dplyr::group_by(.data[[year]], .data[[iso3]], .data[[billion_group]]) %>%
     dplyr::summarize(!!sym(transform_value) := mean(.data[[transform_value]], na.rm = TRUE),
                      .groups = "drop") %>%

@@ -15,7 +15,8 @@ calculate_hpop_contributions(
   source = "source",
   type = "type",
   value = "value",
-  transform_value = "transform_value"
+  transform_value = "transform_value",
+  ind_ids = billion_ind_codes("hpop")
 )
 }
 \arguments{
@@ -41,6 +42,11 @@ country, year, and indicator.}
 \item{value}{Column name of column with indicator values.}
 
 \item{transform_value}{Column name of column with transformed indicator values.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 Data frame in long format.
