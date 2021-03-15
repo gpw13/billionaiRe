@@ -6,6 +6,21 @@
 \usage{
 assert_unique_rows(df, ind, iso3, year, ind_ids)
 }
+\arguments{
+\item{df}{Data frame in long format, where 1 row corresponds to a specific
+country, year, and indicator.}
+
+\item{ind}{Column name of column with indicator names.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with year.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
+}
 \description{
-Makes sure there are distinct rows for each ind, iso3, and year
+Makes sure there are distinct rows for each ind, iso3, and
 }

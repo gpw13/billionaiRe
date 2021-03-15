@@ -85,7 +85,9 @@ assert_ind_ids <- function(ind_ids, billion) {
 
 #' Assert unique rows of df
 #'
-#' Makes sure there are distinct rows for each ind, iso3, and year
+#' Makes sure there are distinct rows for each ind, iso3, and
+#' @inheritParams transform_hpop_data
+#' @param year Column name of column with year.
 assert_unique_rows <- function(df,
                                ind,
                                iso3,
