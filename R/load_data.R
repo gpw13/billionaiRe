@@ -17,6 +17,11 @@
 #'     those already infilled and projected by technical programmes.
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
 #'     string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+#' @param format Specification of the output format to be returned by the xMart API.
+#'     Defaults to `"none"`, but consider switching to `"csv"` if you are having
+#'     loading an extremely large table. Passed to [xmart4::xmart4_table()]. See the
+#'     [xMart4 API documentation](https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html)
+#'     for details on the three options.
 #' @param ... Additional arguments passed to `xmart4::xmart4_table()`. Use if
 #'     you need to provide additional token specifications for Azure authentication.
 #'
@@ -26,6 +31,7 @@
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
                               mart_table = c("full_ind", "unproj_data", "proj_data"),
                               date_filter = "latest",
+                              format = c("none", "csv", "streaming"),
                               ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
@@ -33,8 +39,9 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   mart_match <- c("full_ind" = "RAW_INDICATOR", "unproj_data" = "RAW_UNPROJ_DATA", "proj_data" = "RAW_PROJ_DATA")
   mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
+  format <- rlang::arg_match(format)
 
-  df <- load_billion_table(mart_table, ...)
+  df <- load_billion_table(mart_table, format, ...)
   df <- dplyr::rename_with(df, tolower)
   df <- filter_billion_inds(df, billion)
   df <- filter_billion_date(df, date_filter)
@@ -84,7 +91,7 @@ assert_date_filter <- function(fltr) {
 }
 
 #' @noRd
-load_billion_table <- function(tbl, ...) {
+load_billion_table <- function(tbl, format, ...) {
   xmart4::xmart4_table("GPW13", tbl,
                        col_types = readr::cols(
                          ISO3 = readr::col_character(),
@@ -102,5 +109,6 @@ load_billion_table <- function(tbl, ...) {
                          OTHER_DETAIL = readr::col_character(),
                          UPLOAD_DETAIL = readr::col_character()
                        ),
+                       format = format,
                        ...)
 }
