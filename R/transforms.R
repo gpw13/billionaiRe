@@ -212,13 +212,3 @@ transform_inversion <- function(x) {
   x <- reverse_ind(x)
   trim_transforms(x)
 }
-
-#' Trim clean fuels data
-#'
-#' Trims clean fuels data to be between 5 and 95.
-#'
-#' @inheritParams reverse_ind
-trim_clean_fuels <- function(x) {
-  x <- pmin(x, 95)
-  pmax(x, 5)
-}

@@ -69,8 +69,7 @@ transform_hpop_single <- function(df,
     df[[transform_col]] <- NA_real_
   }
   df %>%
-    dplyr::mutate(!!sym(value) := ifelse(.data[[ind]] == ind_ids["fuel"], trim_clean_fuels(.data[[value]]), .data[[value]]),
-                  !!sym(transform_col) := dplyr::case_when(
+    dplyr::mutate(!!sym(transform_col) := dplyr::case_when(
                     .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ trim_transforms(.data[[value]]),
                     .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[value]]),
                     .data[[ind]] == ind_ids["suicide"] ~ transform_suicide_rate(.data[[value]]),
