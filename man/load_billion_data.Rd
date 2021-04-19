@@ -8,6 +8,7 @@ load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
   mart_table = c("full_ind", "unproj_data", "proj_data"),
   date_filter = "latest",
+  na_rm = TRUE,
   format = c("none", "csv", "streaming"),
   ...
 )
@@ -21,10 +22,15 @@ from the table containing data needing DDI infilling and projections or
 those already infilled and projected by technical programmes.}
 
 \item{date_filter}{One of \code{NULL}, "latest", or a single date string. The date
-string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".}
+string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+If a date is provided, will only take values loaded on or prior to that
+date into the xMart4 database.}
+
+\item{na_rm}{Logical value, specifying whether to filter the data to only rows
+where \code{value} is not missing. Defaults to \code{TRUE}.}
 
 \item{format}{Specification of the output format to be returned by the xMart API.
-Defaults to \code{"none"}, but consider switching to \code{"csv"} if you are having
+Defaults to \code{"none"}, but consider switching to \code{"csv"} if you are
 loading an extremely large table. Passed to \code{\link[xmart4:xmart4_table]{xmart4::xmart4_table()}}. See the
 \href{https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html}{xMart4 API documentation}
 for details on the three options.}

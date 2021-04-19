@@ -17,8 +17,12 @@
 #'     those already infilled and projected by technical programmes.
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
 #'     string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+#'     If a date is provided, will only take values loaded on or prior to that
+#'     date into the xMart4 database.
+#' @param na_rm Logical value, specifying whether to filter the data to only rows
+#'     where `value` is not missing. Defaults to `TRUE`.
 #' @param format Specification of the output format to be returned by the xMart API.
-#'     Defaults to `"none"`, but consider switching to `"csv"` if you are having
+#'     Defaults to `"none"`, but consider switching to `"csv"` if you are
 #'     loading an extremely large table. Passed to [xmart4::xmart4_table()]. See the
 #'     [xMart4 API documentation](https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html)
 #'     for details on the three options.
@@ -31,6 +35,7 @@
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
                               mart_table = c("full_ind", "unproj_data", "proj_data"),
                               date_filter = "latest",
+                              na_rm = TRUE,
                               format = c("none", "csv", "streaming"),
                               ...) {
   requireNamespace("xmart4", quietly = TRUE)
@@ -45,6 +50,7 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   df <- dplyr::rename_with(df, tolower)
   df <- filter_billion_inds(df, billion)
   df <- filter_billion_date(df, date_filter)
+  df <- filter_billion_na(df, na_rm)
   df
 }
 
@@ -74,6 +80,14 @@ filter_billion_date <- function(df, date_filter) {
     }
     df <- dplyr::filter(df, .data[["upload_date"]] == max(.data[["upload_date"]], -Inf))
     df <- dplyr::ungroup(df)
+  }
+  df
+}
+
+#' @noRd
+filter_billion_na <- function(df, na_rm) {
+  if (na_rm) {
+    df <- dplyr::filter(df, !is.na(.data[["value"]]))
   }
   df
 }
