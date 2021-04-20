@@ -11,6 +11,7 @@
 #'   \item{uhc}{Logical, is a UHC Billions indicator}
 #'   \item{hpop}{Logical, is an HPOP Billions indicator}
 #'   \item{hep}{Logical, is a HEP Billions indicator}
+#'   \item{covariate}{Logical, is the indicator just a covariate for the Billions}
 #' }
 "indicator_df"
 
