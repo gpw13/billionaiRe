@@ -57,7 +57,7 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
 #' @noRd
 filter_billion_inds <- function(df, billion) {
   if (billion != "all") {
-    inds <- billion_ind_codes(billion)
+    inds <- billion_ind_codes(billion, include_covariates = TRUE)
     df <- dplyr::filter(df, .data[["ind"]] %in% inds)
   }
   df
