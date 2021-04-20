@@ -4,10 +4,16 @@
 \alias{billion_ind_codes}
 \title{Indicator codes for the Billions}
 \usage{
-billion_ind_codes(billion = c("hep", "hpop", "uhc"))
+billion_ind_codes(
+  billion = c("hep", "hpop", "uhc"),
+  include_covariates = FALSE
+)
 }
 \arguments{
 \item{billion}{Billion indicator names to return, either "hep", "hpop", or "uhc".}
+
+\item{include_covariates}{Logical, whether or not to include covariates when getting
+the Billions indicator codes.}
 }
 \value{
 Character vector of indicator names.

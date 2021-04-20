@@ -5,7 +5,7 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 74 rows and 6 variables:
+A data frame with 88 rows and 7 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
@@ -13,6 +13,7 @@ A data frame with 74 rows and 6 variables:
 \item{uhc}{Logical, is a UHC Billions indicator}
 \item{hpop}{Logical, is an HPOP Billions indicator}
 \item{hep}{Logical, is a HEP Billions indicator}
+\item{covariate}{Logical, is the indicator just a covariate for the Billions}
 }
 }
 \usage{

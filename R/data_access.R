@@ -5,13 +5,19 @@
 #' in any data frame passed to calculate Billions.
 #'
 #' @param billion Billion indicator names to return, either "hep", "hpop", or "uhc".
+#' @param include_covariates Logical, whether or not to include covariates when getting
+#'     the Billions indicator codes.
 #'
 #' @return Character vector of indicator names.
 #'
 #' @export
-billion_ind_codes <- function(billion = c("hep", "hpop", "uhc")) {
+billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
+                              include_covariates = FALSE) {
   billion <- rlang::arg_match(billion)
   df <- billionaiRe::indicator_df
+  if (!include_covariates) {
+    df <- dplyr::filter(df, !.data[["covariate"]])
+  }
   codes <- df[["analysis_code"]][df[[billion]]]
   names(codes) <- codes
   codes
