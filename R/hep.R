@@ -51,7 +51,13 @@ transform_hep_data <- function(df,
                               cholera_latest_year,
                               meningitis_latest_year,
                               yellow_fever_latest_year,
-                              extrapolate_to)
+                              extrapolate_to) %>%
+    transform_prev_routine_data(iso3,
+                                year,
+                                ind,
+                                value,
+                                type,
+                                ind_ids)
 
   new_df %>%
     dplyr::mutate(!!sym("transform_value") := ifelse(is.na(.data[["transform_value"]]),
@@ -63,6 +69,37 @@ transform_hep_data <- function(df,
 #'
 #' Prevent routine data is now stored raw using the percent coverage of the indicator.
 #' We want to transform this back into a numerator value for use within `pathogen_calc`.
+#'
+#' @inheritParams transform_hep_data
+transform_prev_routine_data <- function(df,
+                                        iso3,
+                                        year,
+                                        ind,
+                                        value,
+                                        type,
+                                        ind_ids) {
+  routine_inds <- ind_ids[c("measles_routine", "polio_routine", "meningitis_routine", "yellow_fever_routine")]
+  inf_ind <- ind_ids[c("surviving_infants")]
+
+  routine_match <- ind_ids[c("measles_routine_num", "polio_routine_num", "meningitis_routine_num", "yellow_fever_routine_num")]
+  names(routine_match) <- routine_inds
+
+  df %>%
+    dplyr::filter(.data[[ind]] %in% c(routine_inds, inf_ind)) %>%
+    tidyr::pivot_wider(c(iso3, year),
+                       names_from = ind,
+                       values_from = c(value, type),
+                       names_sep = "-") %>%
+    dplyr::mutate(dplyr::across(dplyr::any_of(paste(value, routine_inds, sep = "-")),
+                                ~ .x * .data[[paste(value, inf_ind, sep = "-")]] / 100)) %>%
+    tidyr::pivot_longer(contains("-"),
+                        names_sep = "-",
+                        names_to = c(".value", ind)) %>%
+    dplyr::filter(.data[[ind]] %in% routine_inds) %>%
+    dplyr::mutate(!!sym(ind) := routine_match[.data[[ind]]]) %>%
+    dplyr::bind_rows(df)
+}
+
 
 #' Transform Prevent campaigns data
 #'
@@ -92,13 +129,13 @@ transform_prev_cmpgn_data <- function(df,
                                       yellow_fever_latest_year = NULL,
                                       extrapolate_to = 2023) {
   ind_check <- c("meningitis_campaign_denom",
-                 "meningitis_campaign",
-                 "cholera_campaign",
+                 "meningitis_campaign_num",
+                 "cholera_campaign_num",
                  "cholera_campaign_denom",
-                 "yellow_fever_campaign",
+                 "yellow_fever_campaign_num",
                  "yellow_fever_campaign_denom")
 
-  cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[names(ind_ids) %in% ind_check])
+  cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[ind_check])
 
   if (nrow(cmpgn_df) == 0) {
     return(dplyr::mutate(df, "transform_value" := NA))
@@ -126,21 +163,21 @@ transform_prev_cmpgn_data <- function(df,
     dplyr::group_by(.data[[iso3]]) %>%
     dplyr::arrange(.data[[year]],
                    .by_group = TRUE) %>%
-    dplyr::mutate(dplyr::across(dplyr::contains("cholera"),
+    dplyr::mutate(dplyr::across(ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")],
                                 ~zoo::rollapply(.x,
                                                 3,
                                                 sum,
                                                 na.rm = T,
                                                 partial = TRUE,
                                                 align = "right")),
-                  dplyr::across(dplyr::contains("meningitis"),
+                  dplyr::across(ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")],
                                 ~zoo::rollapply(.x,
                                                 10,
                                                 sum,
                                                 na.rm = T,
                                                 partial = TRUE,
                                                 align = "right")),
-                  dplyr::across(dplyr::contains("yellow_fever"),
+                  dplyr::across(ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")],
                                 ~zoo::rollapply(.x,
                                                 length(.x),
                                                 sum,
@@ -158,39 +195,39 @@ transform_prev_cmpgn_data <- function(df,
   if (!is.null(yrs[[1]])) {
     new_df <- dplyr::mutate(new_df,
                             !!sym("transform_value") := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] <= yrs[[1]] ~ .data[["transform_value"]],
-                              stringr::str_detect(.data[[ind]], "cholera") & .data[[year]] > yrs[[1]] ~ .data[["transform_value"]][.data[[year]] == yrs[[1]]],
+                              .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] & .data[[year]] <= yrs[[1]] ~ .data[["transform_value"]],
+                              .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] & .data[[year]] > yrs[[1]] ~ .data[["transform_value"]][.data[[year]] == yrs[[1]]],
                               TRUE ~ .data[["transform_value"]]
                             ),
                             "billionaiRe_type_temp" := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] <= yrs[[1]] ~ "reported",
-                              stringr::str_detect(.data[[ind]], "cholera_campaign") & .data[[year]] > yrs[[1]] ~ "projected"
-                              ))
+                              .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] & .data[[year]] <= yrs[[1]] ~ "reported",
+                              .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] & .data[[year]] > yrs[[1]] ~ "projected"
+                            ))
   }
 
   if (!is.null(yrs[[2]])) {
     new_df <- dplyr::mutate(new_df,
                             !!sym("transform_value") := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] <= yrs[[2]] ~ .data[["transform_value"]],
-                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] > yrs[[2]] ~ .data[["transform_value"]][.data[[year]] == yrs[[2]]],
+                              .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] & .data[[year]] <= yrs[[2]] ~ .data[["transform_value"]],
+                              .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] & .data[[year]] > yrs[[2]] ~ .data[["transform_value"]][.data[[year]] == yrs[[2]]],
                               TRUE ~ .data[["transform_value"]]
                             ),
                             "billionaiRe_type_temp" := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] <= yrs[[2]] ~ "reported",
-                              stringr::str_detect(.data[[ind]], "meningitis") & .data[[year]] > yrs[[2]] ~ "projected"
+                              .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] & .data[[year]] <= yrs[[2]] ~ "reported",
+                              .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] & .data[[year]] > yrs[[2]] ~ "projected"
                             ))
   }
 
   if (!is.null(yrs[[3]])) {
     new_df <- dplyr::mutate(new_df,
                             !!sym("transform_value") := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] <= yrs[[3]] ~ .data[["transform_value"]],
-                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] > yrs[[3]] ~ .data[["transform_value"]][.data[[year]] == yrs[[3]]],
+                              .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")] & .data[[year]] <= yrs[[3]] ~ .data[["transform_value"]],
+                              .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")] & .data[[year]] > yrs[[3]] ~ .data[["transform_value"]][.data[[year]] == yrs[[3]]],
                               TRUE ~ .data[["transform_value"]]
                             ),
                             "billionaiRe_type_temp" := dplyr::case_when(
-                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] <= yrs[[3]] ~ "reported",
-                              stringr::str_detect(.data[[ind]], "yellow_fever") & .data[[year]] > yrs[[3]] ~ "projected"
+                              .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")] & .data[[year]] <= yrs[[3]] ~ "reported",
+                              .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")] & .data[[year]] > yrs[[3]] ~ "projected"
                             ))
   }
 
@@ -247,7 +284,7 @@ get_latest_year <- function(df,
 
   if (is.null(cholera_latest_year)) {
     cholera_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "cholera_campaign"])) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "cholera_campaign_num"])) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -255,7 +292,7 @@ get_latest_year <- function(df,
 
   if (is.null(meningitis_latest_year)) {
     meningitis_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "meningitis_campaign"])) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "meningitis_campaign_num"])) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -264,7 +301,7 @@ get_latest_year <- function(df,
 
   if (is.null(yellow_fever_latest_year)) {
     yellow_fever_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "yellow_fever_campaign"])) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "yellow_fever_campaign_num"])) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -320,13 +357,13 @@ calculate_hep_components <- function(df,
                                     hepi_start_year,
                                     ind_ids)) %>%
     dplyr::mutate(!!sym(level) := dplyr::case_when(
-      !(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c("detect_respond",
-                                                        "detect",
-                                                        "notify",
-                                                        "respond",
-                                                        "prevent",
-                                                        "espar",
-                                                        "hep_idx")]) ~ NA_real_,
+      !(.data[[ind]] %in% ind_ids[c("detect_respond",
+                                    "detect",
+                                    "notify",
+                                    "respond",
+                                    "prevent",
+                                    "espar",
+                                    "hep_idx")]) ~ NA_real_,
       .data[[transform_value]] < 30 ~ 1,
       .data[[transform_value]] < 50 ~ 2,
       .data[[transform_value]] < 70 ~ 3,
@@ -354,19 +391,19 @@ prevent_calculations <- function(df,
 
   df <- dplyr::group_by(df, .data[[iso3]], .data[[year]])
 
-  args <- list(name = c("meningitis", "yellow_fever", "cholera", "polio", "measles", "prevent"),
-               numerator = list(c("meningitis_campaign", "meningitis_routine"),
-                                c("yellow_fever_campaign", "yellow_fever_routine"),
-                                c("cholera_campaign"),
-                                c("polio_routine"),
-                                c("measles_routine"),
-                                c("meningitis_campaign", "meningitis_routine", "yellow_fever_campaign", "yellow_fever_routine", "cholera_campaign", "polio_routine", "measles_routine")),
-               denominator = list(c("meningitis_campaign_denom", "surviving_infants"),
-                                  c("yellow_fever_campaign_denom", "surviving_infants"),
-                                  c("cholera_campaign_denom"),
-                                  c("surviving_infants"),
-                                  c("surviving_infants"),
-                                  c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom", "surviving_infants")),
+  args <- list(name = ind_ids[c("meningitis", "yellow_fever", "cholera", "polio", "measles", "prevent")],
+               numerator = list(ind_ids[c("meningitis_campaign_num", "meningitis_routine_num")],
+                                ind_ids[c("yellow_fever_campaign_num", "yellow_fever_routine_num")],
+                                ind_ids[c("cholera_campaign_num")],
+                                ind_ids[c("polio_routine_num")],
+                                ind_ids[c("measles_routine_num")],
+                                ind_ids[c("meningitis_campaign_num", "meningitis_routine_num", "yellow_fever_campaign_num", "yellow_fever_routine_num", "cholera_campaign_num", "polio_routine_num", "measles_routine_num")]),
+               denominator = list(ind_ids[c("meningitis_campaign_denom", "surviving_infants")],
+                                  ind_ids[c("yellow_fever_campaign_denom", "surviving_infants")],
+                                  ind_ids[c("cholera_campaign_denom")],
+                                  ind_ids[c("surviving_infants")],
+                                  ind_ids[c("surviving_infants")],
+                                  ind_ids[c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom", "surviving_infants")]),
                multiply_surviving_infs = c(rep(FALSE, 5), TRUE))
 
   purrr::pmap_dfr(args,
@@ -409,22 +446,29 @@ pathogen_calc <- function(df,
                           ind_ids,
                           multiply_surviving_infs = TRUE) {
   df <- dplyr::filter(df,
-                      .data[[ind]] %in% ind_ids[names(ind_ids) %in% c(numerators, denominators)],
-                      any(ind_ids[names(ind_ids) %in% numerators] %in% .data[[ind]]))
+                      .data[[ind]] %in% ind_ids[c(numerators, denominators)],
+                      any(ind_ids[numerators] %in% .data[[ind]]))
 
   if (multiply_surviving_infs) {
     df <- dplyr::mutate(df, !!sym(transform_value) := dplyr::case_when(
-        .data[[ind]] == ind_ids[names(ind_ids) == "surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[stringr::str_detect(names(ind_ids), "routine")]),
-        TRUE ~ .data[[transform_value]]
-      ))
+      .data[[ind]] == ind_ids["surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
+      TRUE ~ .data[[transform_value]]
+    ))
   }
 
   df %>%
-    dplyr::summarize(!!sym(transform_value) := 100 * sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[names(ind_ids) %in% numerators]]) /
-                       sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[names(ind_ids) %in% denominators]]),
-                     !!sym(type) := ifelse(length(unique(.data[[type]])) == 1, unique(.data[[type]]), "Projection"),
-                     !!sym(ind) := name,
-                     .groups = "drop")
+    dplyr::summarize(!!sym(transform_value) := dplyr::case_when(
+      all(is.na(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]])) ~ NA_real_,
+      TRUE ~ 100 * sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]], na.rm = TRUE) /
+        sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[denominators]], na.rm = TRUE)
+    ),
+    !!sym(type) := dplyr::case_when(
+      is.na(.data[[transform_value]]) ~ NA_character_,
+      length(unique(.data[[type]][!is.na(.data[[type]])])) == 1 ~ unique(.data[[type]][!is.na(.data[[type]])]),
+      TRUE ~ "projected"
+    ),
+    !!sym(ind) := name,
+    .groups = "drop")
 }
 
 #' Calculate HEPI
@@ -443,16 +487,16 @@ calculate_hepi <- function(df,
                            earliest_year,
                            ind_ids) {
   df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c("detect_respond",
-                                                                  "prevent",
-                                                                  "espar")],
+    dplyr::filter(.data[[ind]] %in% ind_ids[c("detect_respond",
+                                              "prevent",
+                                              "espar")],
                   .data[[year]] >= earliest_year) %>%
     dplyr::group_by(.data[[iso3]], .data[[year]]) %>%
     dplyr::summarize(!!sym(transform_value) := mean(.data[[transform_value]],
                                                     na.rm = TRUE),
                      !!sym(type) := ifelse(length(unique(.data[[type]])) == 1,
                                            unique(.data[[type]]),
-                                           "Projection"),
+                                           "projected"),
                      !!sym(ind) := "hep_idx",
                      .groups = "drop")
 }
@@ -490,10 +534,10 @@ calculate_hep_billion <- function(df,
   assert_unique_rows(df, ind, iso3, year, ind_ids)
 
   df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent",
-                                                                  "detect_respond",
-                                                                  "espar",
-                                                                  "hep_idx")],
+    dplyr::filter(.data[[ind]] %in% ind_ids[c("prevent",
+                                              "detect_respond",
+                                              "espar",
+                                              "hep_idx")],
                   .data[[year]] <= end_year) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
     dplyr::filter(!((.data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"]) & (.data[[year]] < max(.data[[year]], -Inf))),
@@ -504,7 +548,7 @@ calculate_hep_billion <- function(df,
       .data[[ind]] %in% ind_ids[names(ind_ids) == "detect_respond"] ~ ifelse(.data[[level]] == 1,
                                                                              0,
                                                                              .data[[level]]),
-      .data[[ind]] %in% ind_ids[names(ind_ids) %in% c("prevent", "espar", "hep_idx")] ~ .data[[transform_value]] - dplyr::lag(.data[[transform_value]])
+      .data[[ind]] %in% ind_ids[c("prevent", "espar", "hep_idx")] ~ .data[[transform_value]] - dplyr::lag(.data[[transform_value]])
     )) %>%
     dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
     dplyr::ungroup() %>%
