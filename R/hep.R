@@ -59,6 +59,11 @@ transform_hep_data <- function(df,
                                                      .data[["transform_value"]]))
 }
 
+#' Transform Prevent routine data
+#'
+#' Prevent routine data is now stored raw using the percent coverage of the indicator.
+#' We want to transform this back into a numerator value for use within `pathogen_calc`.
+
 #' Transform Prevent campaigns data
 #'
 #' Prevent campaign data uses aggregates across years that a vaccine provides
@@ -259,7 +264,7 @@ get_latest_year <- function(df,
 
   if (is.null(yellow_fever_latest_year)) {
     yellow_fever_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], "yellow_fever_campaign")) %>%
+      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "yellow_fever_campaign"])) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
