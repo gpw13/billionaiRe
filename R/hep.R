@@ -457,18 +457,39 @@ pathogen_calc <- function(df,
   }
 
   df %>%
-    dplyr::summarize(!!sym(transform_value) := dplyr::case_when(
-      all(is.na(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]])) ~ NA_real_,
-      TRUE ~ 100 * sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]], na.rm = TRUE) /
-        sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[denominators]], na.rm = TRUE)
-    ),
-    !!sym(type) := dplyr::case_when(
-      is.na(.data[[transform_value]]) ~ NA_character_,
-      length(unique(.data[[type]][!is.na(.data[[type]])])) == 1 ~ unique(.data[[type]][!is.na(.data[[type]])]),
-      TRUE ~ "projected"
-    ),
-    !!sym(ind) := name,
-    .groups = "drop")
+    dplyr::summarize(
+      !!sym(type) := reduce_type(.data[[transform_value]], .data[[type]]),
+      !!sym(transform_value) := dplyr::case_when(
+        all(is.na(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]])) ~ NA_real_,
+        TRUE ~ 100 * sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[numerators]], na.rm = TRUE) /
+          sum(.data[[transform_value]][.data[[ind]] %in% ind_ids[denominators]], na.rm = TRUE)
+      ),
+      !!sym(ind) := !!name,
+      .groups = "drop")
+}
+
+#' Helper to reduce type to unique value
+#'
+#' Used with `pathogen_calc()`
+#'
+#' @param value Vector of values
+#' @param type Vector of types
+#'
+reduce_type <- function(value, type, mult_input = "projected") {
+  if (all(is.na(value))) {
+    return(NA_character_)
+  } else {
+    ut <- unique(type[!is.na(type)])
+    if (length(ut) == 1) {
+      return(ut)
+    } else if ("projected" %in% ut){
+      return("projected")
+    } else if ("imputed" %in% ut) {
+      return("imputed")
+    } else {
+      return("estimated")
+    }
+  }
 }
 
 #' Calculate HEPI
