@@ -8,6 +8,7 @@ add_hpop_populations(
   df,
   iso3 = "iso3",
   ind = "ind",
+  pop_year = 2025,
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -18,6 +19,8 @@ country, year, and indicator.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

@@ -183,19 +183,20 @@ calculate_uhc_billion <- function(df,
 #'
 #' @inherit calculate_uhc_billion return details params
 #' @inherit calculate_hpop_contributions params
-#'
+#' @inherit add_hpop_populations params
 #' @export
 calculate_uhc_contribution <- function(df,
                                        year = "year",
                                        iso3 = "iso3",
                                        ind = "ind",
                                        start_year = 2018,
-                                       end_year = 2023) {
+                                       end_year = 2025,
+                                       pop_year = 2025) {
   assert_columns(df, year, iso3, ind)
 
   df %>%
     dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
     tidyr::pivot_wider(names_from = year) %>%
-    dplyr::mutate(population = wppdistro::get_population(.data[[iso3]], year = end_year),
+    dplyr::mutate(population = wppdistro::get_population(.data[[iso3]], year = pop_year),
                   contribution = (.data[[as.character(end_year)]] - .data[[as.character(start_year)]]) * .data[["population"]] / 100)
 }

@@ -15,7 +15,7 @@ transform_hep_data(
   cholera_latest_year = NULL,
   meningitis_latest_year = NULL,
   yellow_fever_latest_year = NULL,
-  extrapolate_to = 2023
+  extrapolate_to = 2025
 )
 }
 \arguments{
@@ -46,7 +46,7 @@ If \code{NULL}, uses the latest year with observations in the data.}
 \item{yellow_fever_latest_year}{Latest year to calculate rolling average for meningitis
 If \code{NULL}, uses the latest year with observations in the data.}
 
-\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023.}
+\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
 }
 \value{
 Data frame in long format.

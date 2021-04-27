@@ -34,5 +34,5 @@ library(billionaiRe)
 uhc_df %>%
   transform_uhc_data() %>%
   calculate_uhc_billion() %>%
-  calculate_uhc_contribution()
+  calculate_uhc_contribution(end_year = 2023)
 ```

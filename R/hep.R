@@ -21,7 +21,7 @@
 #'     If `NULL`, uses the latest year with observations in the data.
 #' @param yellow_fever_latest_year Latest year to calculate rolling average for meningitis
 #'     If `NULL`, uses the latest year with observations in the data.
-#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2023.
+#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2025
 #'
 #' @return Data frame in long format.
 #'
@@ -36,7 +36,7 @@ transform_hep_data <- function(df,
                                cholera_latest_year = NULL,
                                meningitis_latest_year = NULL,
                                yellow_fever_latest_year = NULL,
-                               extrapolate_to = 2023) {
+                               extrapolate_to = 2025) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
 
@@ -92,7 +92,7 @@ transform_prev_routine_data <- function(df,
                        names_sep = "-") %>%
     dplyr::mutate(dplyr::across(dplyr::any_of(paste(value, routine_inds, sep = "-")),
                                 ~ .x * .data[[paste(value, inf_ind, sep = "-")]] / 100)) %>%
-    tidyr::pivot_longer(contains("-"),
+    tidyr::pivot_longer(dplyr::contains("-"),
                         names_sep = "-",
                         names_to = c(".value", ind)) %>%
     dplyr::filter(.data[[ind]] %in% routine_inds) %>%
@@ -112,7 +112,7 @@ transform_prev_routine_data <- function(df,
 #' out for instance years before there were any pathogens reported for a country).
 #'
 #' These transform values are then flat extrapolated from their latest year out to
-#' a specific year, the default being 2023. If latest year values are provided
+#' a specific year, the default being 2025 If latest year values are provided
 #' for a specific pathogen, those years are used for calculating the rolling
 #' average out to, otherwise, the latest year with observed values is used.
 #'
@@ -127,7 +127,7 @@ transform_prev_cmpgn_data <- function(df,
                                       cholera_latest_year = NULL,
                                       meningitis_latest_year = NULL,
                                       yellow_fever_latest_year = NULL,
-                                      extrapolate_to = 2023) {
+                                      extrapolate_to = 2025) {
   ind_check <- c("meningitis_campaign_denom",
                  "meningitis_campaign_num",
                  "cholera_campaign_num",
@@ -474,8 +474,8 @@ pathogen_calc <- function(df,
 #'
 #' @param value Vector of values
 #' @param type Vector of types
-#'
-reduce_type <- function(value, type, mult_input = "projected") {
+#' @param mult_input
+reduce_type <- function(value, type) {
   if (all(is.na(value))) {
     return(NA_character_)
   } else {
@@ -531,13 +531,14 @@ calculate_hepi <- function(df,
 #' Respond, the latest year of observed data is used. Details are available in
 #' the methods report for the exact method applied.
 #'
-#' For more details on the HEPP Billion calculation process and how this function
+#' For more details on the HEP Billion calculation process and how this function
 #' ties in with the rest, see the vignette:
 #'
 #' \href{../doc/hep.html}{\code{vignette("hep", package = "billionaiRe")}}
 #'
 #' @inherit transform_hpop_data return params
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams add_hpop_populations
 #' @param level Column name of column with indicator levels.
 #'
 #' @export
@@ -548,7 +549,8 @@ calculate_hep_billion <- function(df,
                                   transform_value = "transform_value",
                                   level = "level",
                                   start_year = 2018,
-                                  end_year = 2023,
+                                  end_year = 2025,
+                                  pop_year = 2025,
                                   ind_ids = billion_ind_codes("hep")) {
   assert_columns(df, iso3, ind, year, transform_value, level)
   assert_ind_ids(ind_ids, "hep")
@@ -576,7 +578,7 @@ calculate_hep_billion <- function(df,
     dplyr::select(iso3, year, ind, "change") %>%
     dplyr::mutate("contribution" := ifelse(.data[[ind]] == ind_ids[names(ind_ids) == "hep_idx"],
                                            NA,
-                                           .data[["change"]] * wppdistro::get_population(.data[[iso3]], 2023) / 100)) %>%
+                                           .data[["change"]] * wppdistro::get_population(.data[[iso3]], pop_year) / 100)) %>%
     dplyr::group_by(.data[[iso3]]) %>%
     dplyr::mutate("contribution" := ifelse(.data[[ind]] == ind_ids[names(ind_ids) == "hep_idx"],
                                            sum(.data[["contribution"]], na.rm = TRUE),

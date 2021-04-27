@@ -34,7 +34,7 @@ library(billionaiRe)
 hpop_df %>%
   transform_hpop_data() %>%
   add_hpop_populations() %>%
-  calculate_hpop_contributions() %>%
+  calculate_hpop_contributions(end_year = 2023) %>%
   calculate_hpop_billion()
 ```
 

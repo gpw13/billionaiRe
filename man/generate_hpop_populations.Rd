@@ -4,7 +4,10 @@
 \alias{generate_hpop_populations}
 \title{Generate HPOP Population Table}
 \usage{
-generate_hpop_populations()
+generate_hpop_populations(pop_year)
+}
+\arguments{
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 }
 \value{
 Data frame in long format.

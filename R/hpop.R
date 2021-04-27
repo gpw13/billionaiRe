@@ -167,26 +167,27 @@ untransform_hpop_single <- function(df,
 #' to the HPOP Billion.
 #'
 #' @inherit transform_hpop_data return details params
-#'
+#' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
 #' @export
 add_hpop_populations <- function(df,
                                  iso3 = "iso3",
                                  ind = "ind",
+                                 pop_year = 2025,
                                  ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind)
 
   df %>%
     dplyr::mutate(
       population = dplyr::case_when(
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "rural"),
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "water_urban")] ~ wppdistro::get_population(.data[[iso3]], 2023, rural_urb = "urban"),
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water", "road", "fuel", "pm25", "transfats", "suicide")] ~ wppdistro::get_population(.data[[iso3]], 2023),
-        .data[[ind]] %in% ind_ids[c("hpop_tobacco", "alcohol")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "over_14"),
-        .data[[ind]] %in% ind_ids[c("adult_obese")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "over_19") + (wppdistro::get_population(.data[[iso3]], 2023, age_range = "15_19") / 2),
-        .data[[ind]] %in% ind_ids[c("child_obese")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "btwn_5_19"),
-        .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "under_5"),
-        .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], 2023, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], 2023, age_range = "15_19") / 2),
-        .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], 2023, sex = "female", age_range = "over_14")
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] ~ wppdistro::get_population(.data[[iso3]], pop_year, rural_urb = "rural"),
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "water_urban")] ~ wppdistro::get_population(.data[[iso3]], pop_year, rural_urb = "urban"),
+        .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water", "road", "fuel", "pm25", "transfats", "suicide")] ~ wppdistro::get_population(.data[[iso3]], pop_year),
+        .data[[ind]] %in% ind_ids[c("hpop_tobacco", "alcohol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "over_14"),
+        .data[[ind]] %in% ind_ids[c("adult_obese")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "over_19") + (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
+        .data[[ind]] %in% ind_ids[c("child_obese")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "btwn_5_19"),
+        .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_5"),
+        .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
+        .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
       ))
 }
 
@@ -197,7 +198,7 @@ add_hpop_populations <- function(df,
 #'
 #' @param year Column name of column with years.
 #' @param start_year Base year for contribution calculation, defaults to 2018.
-#' @param end_year End year for contribution calculation, defaults to 2023.
+#' @param end_year End year for contribution calculation, defaults to 2025.
 #' @param population Column name of column with population figures.
 #' @param transform_value Column name of column with transformed indicator values.
 #' @param source Column name of column with source information for the data.
@@ -209,7 +210,7 @@ add_hpop_populations <- function(df,
 calculate_hpop_contributions <- function(df,
                                          year = "year",
                                          start_year = 2018,
-                                         end_year = 2023,
+                                         end_year = 2025,
                                          iso3 = "iso3",
                                          ind = "ind",
                                          population = "population",
@@ -245,12 +246,14 @@ calculate_hpop_contributions <- function(df,
 #'     year and end year.
 #'
 #' @inherit transform_hpop_data return details params
+#' @inheritParams add_hpop_populations
 #'
 #' @export
 calculate_hpop_billion <- function(df,
                                    iso3 = "iso3",
                                    ind = "ind",
                                    change = "change",
+                                   pop_year = 2025,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind, change)
 
@@ -267,7 +270,7 @@ calculate_hpop_billion <- function(df,
     dplyr::mutate("delta" := .data[["change"]] / 100,
                   "od" := 1 - abs(.data[["delta"]]),
                   "pos" := .data[["delta"]] > 0) %>%
-    dplyr::left_join(generate_hpop_populations(),
+    dplyr::left_join(generate_hpop_populations(pop_year),
                      by = c(iso3 = "iso3", ind = "ind")) %>%
     dplyr::group_by(.data[[iso3]], .data[["pop_group"]], .data[["pos"]]) %>%
     dplyr::summarize("product" := 1 - prod(.data[["od"]]),
@@ -279,7 +282,7 @@ calculate_hpop_billion <- function(df,
                      "unhealthier" := -sum(.data[["pop_group_population"]] * .data[["product"]] * !.data[["pos"]]),
                      .groups = "drop") %>%
     dplyr::mutate("net_healthier" := .data[["healthier"]] + .data[["unhealthier"]],
-                  "perc_healthier" := 100 * .data[["net_healthier"]] / wppdistro::get_population(.data[[iso3]], 2023))
+                  "perc_healthier" := 100 * .data[["net_healthier"]] / wppdistro::get_population(.data[[iso3]], pop_year))
 }
 
 #' Generate HPOP Population Table
@@ -294,30 +297,31 @@ calculate_hpop_billion <- function(df,
 #' dynamically generated each R session.
 #'
 #' @return Data frame in long format.
+#' @inheritParams add_hpop_populations
 #'
 #' @export
-generate_hpop_populations <- function() {
+generate_hpop_populations <- function(pop_year) {
   dplyr::tibble(iso3 = whoville::who_member_states(),
-                under_5_urban_male = wppdistro::get_population(iso3, 2023, age_range = "under_5", rural_urb = "urban", sex = "male"),
-                btwn_5_14_urban_male = wppdistro::get_population(iso3, 2023, age_range = "btwn_5_14", rural_urb = "urban", sex = "male"),
-                btwn_15_18_urban_male = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
-                btwn_18_19_urban_male = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
-                over_19_urban_male = wppdistro::get_population(iso3, 2023, age_range = "over_19", rural_urb = "urban", sex = "male"),
-                under_5_rural_male = wppdistro::get_population(iso3, 2023, age_range = "under_5", rural_urb = "rural", sex = "male"),
-                btwn_5_14_rural_male = wppdistro::get_population(iso3, 2023, age_range = "btwn_5_14", rural_urb = "rural", sex = "male"),
-                btwn_15_18_rural_male = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
-                btwn_18_19_rural_male = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
-                over_19_rural_male = wppdistro::get_population(iso3, 2023, age_range = "over_19", rural_urb = "rural", sex = "male"),
-                under_5_urban_female = wppdistro::get_population(iso3, 2023, age_range = "under_5", rural_urb = "urban", sex = "female"),
-                btwn_5_14_urban_female = wppdistro::get_population(iso3, 2023, age_range = "btwn_5_14", rural_urb = "urban", sex = "female"),
-                btwn_15_18_urban_female = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
-                btwn_18_19_urban_female = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
-                over_19_urban_female = wppdistro::get_population(iso3, 2023, age_range = "over_19", rural_urb = "urban", sex = "female"),
-                under_5_rural_female = wppdistro::get_population(iso3, 2023, age_range = "under_5", rural_urb = "rural", sex = "female"),
-                btwn_5_14_rural_female = wppdistro::get_population(iso3, 2023, age_range = "btwn_5_14", rural_urb = "rural", sex = "female"),
-                btwn_15_18_rural_female = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
-                btwn_18_19_rural_female = wppdistro::get_population(iso3, 2023, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
-                over_19_rural_female = wppdistro::get_population(iso3, 2023, age_range = "over_19", rural_urb = "rural", sex = "female")) %>%
+                under_5_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "male"),
+                btwn_5_14_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "male"),
+                btwn_15_18_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
+                btwn_18_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
+                over_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "male"),
+                under_5_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "male"),
+                btwn_5_14_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "male"),
+                btwn_15_18_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
+                btwn_18_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
+                over_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "male"),
+                under_5_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "female"),
+                btwn_5_14_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "female"),
+                btwn_15_18_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
+                btwn_18_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
+                over_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "female"),
+                under_5_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "female"),
+                btwn_5_14_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "female"),
+                btwn_15_18_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
+                btwn_18_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
+                over_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "female")) %>%
     tidyr::pivot_longer(-c("iso3"),
                         names_to = "pop_group",
                         values_to = "pop_group_population") %>%
