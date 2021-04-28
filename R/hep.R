@@ -451,7 +451,7 @@ pathogen_calc <- function(df,
 
   if (multiply_surviving_infs) {
     df <- dplyr::mutate(df, !!sym(transform_value) := dplyr::case_when(
-      .data[[ind]] == ind_ids["surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
+      .data[[ind]] == ind_ids["surviving_infants"] ~ .data[[transform_value]] * sum(unique(.data[[ind]][!is.na(.data[[transform_value]])]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
       TRUE ~ .data[[transform_value]]
     ))
   }
