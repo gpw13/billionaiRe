@@ -176,7 +176,11 @@ add_hpop_populations <- function(df,
                                  ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind)
 
-  df %>%
+  #populations are fixed for each iso3 x ind combination - so do the hard work on a minimal dataset
+  pop_df <- df %>%
+    dplyr::ungroup() %>%
+  	dplyr::select(iso3, ind) %>%
+  	dplyr::distinct() %>%
     dplyr::mutate(
       population = dplyr::case_when(
         .data[[ind]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] ~ wppdistro::get_population(.data[[iso3]], pop_year, rural_urb = "rural"),
@@ -189,6 +193,8 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
       ))
+  df %>%
+	  dplyr::left_join(pop_df, by=c("iso3","ind"))
 }
 
 #' Calculate HPOP Indicator Contributions
