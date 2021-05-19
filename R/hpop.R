@@ -193,8 +193,9 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
       ))
+
   df %>%
-	  dplyr::left_join(pop_df, by=c("iso3","ind"))
+	  dplyr::left_join(pop_df, by = c("iso3", "ind"))
 }
 
 #' Calculate HPOP Indicator Contributions
