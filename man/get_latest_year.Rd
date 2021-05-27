@@ -27,14 +27,17 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{cholera_latest_year}{Latest year to calculate rolling average for cholera.
-If \code{NULL}, uses the latest year with observations in the data.}
+\item{cholera_latest_year}{Latest year to calculate rolling sum for cholera campaign
+data. From there, data is flat extrapolated. If \code{NULL}, uses the latest
+year with observations in the data.}
 
-\item{meningitis_latest_year}{Latest year to calculate rolling average for meningitis
-If \code{NULL}, uses the latest year with observations in the data.}
+\item{meningitis_latest_year}{Latest year to calculate rolling sum for meningitis campaign
+data. From there, data is flat extrapolated. If \code{NULL}, uses the latest
+year with observations in the data.}
 
-\item{yellow_fever_latest_year}{Latest year to calculate rolling average for meningitis
-If \code{NULL}, uses the latest year with observations in the data.}
+\item{yellow_fever_latest_year}{Latest year to calculate rolling sum for yellow
+fever campaign data. From there, data is flat extrapolated. If \code{NULL},
+uses the latest year with observations in the data.}
 }
 \description{
 Since campaign data is not projected, we only want to do rolling sums on the

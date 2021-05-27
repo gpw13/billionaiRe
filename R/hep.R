@@ -15,12 +15,15 @@
 #' @inheritParams transform_hpop_data
 #' @param type Column name of column with type data.
 #' @param year Column name of column with year data.
-#' @param cholera_latest_year Latest year to calculate rolling average for cholera.
-#'     If `NULL`, uses the latest year with observations in the data.
-#' @param meningitis_latest_year Latest year to calculate rolling average for meningitis
-#'     If `NULL`, uses the latest year with observations in the data.
-#' @param yellow_fever_latest_year Latest year to calculate rolling average for meningitis
-#'     If `NULL`, uses the latest year with observations in the data.
+#' @param cholera_latest_year Latest year to calculate rolling sum for cholera campaign
+#'     data. From there, data is flat extrapolated. If `NULL`, uses the latest
+#'     year with observations in the data.
+#' @param meningitis_latest_year Latest year to calculate rolling sum for meningitis campaign
+#'     data. From there, data is flat extrapolated. If `NULL`, uses the latest
+#'     year with observations in the data.
+#' @param yellow_fever_latest_year Latest year to calculate rolling sum for yellow
+#'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
+#'     uses the latest year with observations in the data.
 #' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2025
 #'
 #' @return Data frame in long format.
@@ -99,7 +102,6 @@ transform_prev_routine_data <- function(df,
     dplyr::mutate(!!sym(ind) := routine_match[.data[[ind]]]) %>%
     dplyr::bind_rows(df)
 }
-
 
 #' Transform Prevent campaigns data
 #'
@@ -267,24 +269,9 @@ get_latest_year <- function(df,
                             meningitis_latest_year,
                             yellow_fever_latest_year) {
 
-  valid_year <- function(x) {
-    valid <- (length(x) == 1 & is.numeric(x) & dplyr::between(x, 1900, 2100)) | is.infinite(x)
-    if (!valid) {
-      y <- deparse(substitute(x))
-      stop(sprintf("`%s` must be a numeric value between 1900 or 2100, or NULL.",
-                   y),
-           call. = FALSE)
-    }
-    if (is.infinite(x)) {
-      NULL
-    } else {
-      x
-    }
-  }
-
   if (is.null(cholera_latest_year)) {
     cholera_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "cholera_campaign_num"])) %>%
+      dplyr::filter(.data[[ind]], ind_ids["cholera_campaign_num"]) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -292,7 +279,7 @@ get_latest_year <- function(df,
 
   if (is.null(meningitis_latest_year)) {
     meningitis_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "meningitis_campaign_num"])) %>%
+      dplyr::filter(.data[[ind]] %in% ind_ids["meningitis_campaign_num"]) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -301,7 +288,7 @@ get_latest_year <- function(df,
 
   if (is.null(yellow_fever_latest_year)) {
     yellow_fever_latest_year <- df %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], ind_ids[names(ind_ids) == "yellow_fever_campaign_num"])) %>%
+      dplyr::filter(.data[[ind]] %in% ind_ids["yellow_fever_campaign_num"]) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
@@ -311,6 +298,24 @@ get_latest_year <- function(df,
   list(cholera_latest_year,
        meningitis_latest_year,
        yellow_fever_latest_year)
+}
+
+#' Check if year value is valid
+#'
+#' @param x Year
+valid_year <- function(x) {
+  valid <- (length(x) == 1 & is.numeric(x) & dplyr::between(x, 1900, 2100)) | is.infinite(x)
+  if (!valid) {
+    y <- deparse(substitute(x))
+    stop(sprintf("`%s` must be a numeric value between 1900 or 2100, or NULL.",
+                 y),
+         call. = FALSE)
+  }
+  if (is.infinite(x)) {
+    NULL
+  } else {
+    x
+  }
 }
 
 #' Calculate HEP component indicators
