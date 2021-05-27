@@ -9,7 +9,7 @@ calculate_hpop_billion(
   iso3 = "iso3",
   ind = "ind",
   change = "change",
-  pop_year = 2025,
+  pop_year = 2023,
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -24,7 +24,7 @@ country, year, and indicator.}
 \item{change}{Column name of column with indicator-level change between base
 year and end year.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

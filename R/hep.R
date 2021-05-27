@@ -24,7 +24,7 @@
 #' @param yellow_fever_latest_year Latest year to calculate rolling sum for yellow
 #'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
 #'     uses the latest year with observations in the data.
-#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2025
+#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2023
 #'
 #' @return Data frame in long format.
 #'
@@ -39,7 +39,7 @@ transform_hep_data <- function(df,
                                cholera_latest_year = NULL,
                                meningitis_latest_year = NULL,
                                yellow_fever_latest_year = NULL,
-                               extrapolate_to = 2025) {
+                               extrapolate_to = 2023) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
 
@@ -114,7 +114,7 @@ transform_prev_routine_data <- function(df,
 #' out for instance years before there were any pathogens reported for a country).
 #'
 #' These transform values are then flat extrapolated from their latest year out to
-#' a specific year, the default being 2025 If latest year values are provided
+#' a specific year, the default being 2023 If latest year values are provided
 #' for a specific pathogen, those years are used for calculating the rolling
 #' average out to, otherwise, the latest year with observed values is used.
 #'
@@ -129,7 +129,7 @@ transform_prev_cmpgn_data <- function(df,
                                       cholera_latest_year = NULL,
                                       meningitis_latest_year = NULL,
                                       yellow_fever_latest_year = NULL,
-                                      extrapolate_to = 2025) {
+                                      extrapolate_to = 2023) {
   ind_check <- c("meningitis_campaign_denom",
                  "meningitis_campaign_num",
                  "cholera_campaign_num",
@@ -554,8 +554,8 @@ calculate_hep_billion <- function(df,
                                   transform_value = "transform_value",
                                   level = "level",
                                   start_year = 2018,
-                                  end_year = 2025,
-                                  pop_year = 2025,
+                                  end_year = 2023,
+                                  pop_year = 2023,
                                   ind_ids = billion_ind_codes("hep")) {
   assert_columns(df, iso3, ind, year, transform_value, level)
   assert_ind_ids(ind_ids, "hep")

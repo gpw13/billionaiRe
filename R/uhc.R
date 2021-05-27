@@ -190,8 +190,8 @@ calculate_uhc_contribution <- function(df,
                                        iso3 = "iso3",
                                        ind = "ind",
                                        start_year = 2018,
-                                       end_year = 2025,
-                                       pop_year = 2025) {
+                                       end_year = 2023,
+                                       pop_year = 2023) {
   assert_columns(df, year, iso3, ind)
 
   df %>%

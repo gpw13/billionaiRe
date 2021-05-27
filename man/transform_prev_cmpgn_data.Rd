@@ -15,7 +15,7 @@ transform_prev_cmpgn_data(
   cholera_latest_year = NULL,
   meningitis_latest_year = NULL,
   yellow_fever_latest_year = NULL,
-  extrapolate_to = 2025
+  extrapolate_to = 2023
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ year with observations in the data.}
 fever campaign data. From there, data is flat extrapolated. If \code{NULL},
 uses the latest year with observations in the data.}
 
-\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
+\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023}
 }
 \description{
 Prevent campaign data uses aggregates across years that a vaccine provides
@@ -62,7 +62,7 @@ out for instance years before there were any pathogens reported for a country).
 }
 \details{
 These transform values are then flat extrapolated from their latest year out to
-a specific year, the default being 2025 If latest year values are provided
+a specific year, the default being 2023 If latest year values are provided
 for a specific pathogen, those years are used for calculating the rolling
 average out to, otherwise, the latest year with observed values is used.
 }

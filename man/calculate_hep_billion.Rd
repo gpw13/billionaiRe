@@ -12,8 +12,8 @@ calculate_hep_billion(
   transform_value = "transform_value",
   level = "level",
   start_year = 2018,
-  end_year = 2025,
-  pop_year = 2025,
+  end_year = 2023,
+  pop_year = 2023,
   ind_ids = billion_ind_codes("hep")
 )
 }
@@ -33,9 +33,9 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year for contribution calculation, defaults to 2025.}
+\item{end_year}{End year for contribution calculation, defaults to 2023.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

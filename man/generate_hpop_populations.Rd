@@ -7,7 +7,7 @@
 generate_hpop_populations(pop_year)
 }
 \arguments{
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 }
 \value{
 Data frame in long format.

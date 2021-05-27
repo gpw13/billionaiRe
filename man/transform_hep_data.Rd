@@ -15,7 +15,7 @@ transform_hep_data(
   cholera_latest_year = NULL,
   meningitis_latest_year = NULL,
   yellow_fever_latest_year = NULL,
-  extrapolate_to = 2025
+  extrapolate_to = 2023
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ year with observations in the data.}
 fever campaign data. From there, data is flat extrapolated. If \code{NULL},
 uses the latest year with observations in the data.}
 
-\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
+\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023}
 }
 \value{
 Data frame in long format.

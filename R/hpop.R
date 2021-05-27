@@ -167,12 +167,12 @@ untransform_hpop_single <- function(df,
 #' to the HPOP Billion.
 #'
 #' @inherit transform_hpop_data return details params
-#' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
+#' @param pop_year Year used to pull in HPOP populations, defaults to 2023.
 #' @export
 add_hpop_populations <- function(df,
                                  iso3 = "iso3",
                                  ind = "ind",
-                                 pop_year = 2025,
+                                 pop_year = 2023,
                                  ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind)
 
@@ -205,7 +205,7 @@ add_hpop_populations <- function(df,
 #'
 #' @param year Column name of column with years.
 #' @param start_year Base year for contribution calculation, defaults to 2018.
-#' @param end_year End year for contribution calculation, defaults to 2025.
+#' @param end_year End year for contribution calculation, defaults to 2023.
 #' @param population Column name of column with population figures.
 #' @param transform_value Column name of column with transformed indicator values.
 #' @param source Column name of column with source information for the data.
@@ -217,7 +217,7 @@ add_hpop_populations <- function(df,
 calculate_hpop_contributions <- function(df,
                                          year = "year",
                                          start_year = 2018,
-                                         end_year = 2025,
+                                         end_year = 2023,
                                          iso3 = "iso3",
                                          ind = "ind",
                                          population = "population",
@@ -260,7 +260,7 @@ calculate_hpop_billion <- function(df,
                                    iso3 = "iso3",
                                    ind = "ind",
                                    change = "change",
-                                   pop_year = 2025,
+                                   pop_year = 2023,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind, change)
 

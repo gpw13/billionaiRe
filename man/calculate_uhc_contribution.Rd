@@ -10,8 +10,8 @@ calculate_uhc_contribution(
   iso3 = "iso3",
   ind = "ind",
   start_year = 2018,
-  end_year = 2025,
-  pop_year = 2025
+  end_year = 2023,
+  pop_year = 2023
 )
 }
 \arguments{
@@ -26,9 +26,9 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year for contribution calculation, defaults to 2025.}
+\item{end_year}{End year for contribution calculation, defaults to 2023.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 }
 \value{
 Data frame in long format.
