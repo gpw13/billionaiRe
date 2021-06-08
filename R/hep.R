@@ -271,7 +271,7 @@ get_latest_year <- function(df,
 
   if (is.null(cholera_latest_year)) {
     cholera_latest_year <- df %>%
-      dplyr::filter(.data[[ind]], ind_ids["cholera_campaign_num"]) %>%
+      dplyr::filter(.data[[ind]] %in% ind_ids["cholera_campaign_num"]) %>%
       dplyr::pull(.data[[year]]) %>%
       max(-Inf, na.rm = TRUE)
   }
