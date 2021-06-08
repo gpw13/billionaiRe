@@ -415,7 +415,7 @@ prevent_calculations <- function(df,
                                   ind_ids[c("surviving_infants")],
                                   ind_ids[c("surviving_infants")],
                                   ind_ids[c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom", "surviving_infants")]),
-               multiply_surviving_infs = c(rep(FALSE, 5), TRUE))
+               multiply_surviving_infs = c(rep(FALSE, 8), TRUE))
 
   purrr::pmap_dfr(args,
                   pathogen_calc,

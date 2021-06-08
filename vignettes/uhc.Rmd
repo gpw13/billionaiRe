@@ -2,7 +2,7 @@
 title: "UHC Billion calculation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{uhc}
+  %\VignetteIndexEntry{UHC Billion calculation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
