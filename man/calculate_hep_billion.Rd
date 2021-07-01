@@ -27,13 +27,14 @@ country, year, and indicator.}
 
 \item{year}{Column name of column with years.}
 
-\item{transform_value}{Column name of column with transformed indicator values.}
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
 
 \item{level}{Column name of column with indicator levels.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year for contribution calculation, defaults to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
 \item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 

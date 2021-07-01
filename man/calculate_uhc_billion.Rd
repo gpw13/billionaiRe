@@ -27,7 +27,8 @@ country, year, and indicator.}
 \item{billion_group}{Column name of column indicating UHC Billion group that
 each indicator belongs to.}
 
-\item{transform_value}{Column name of column with transformed indicator values.}
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

@@ -26,7 +26,7 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year for contribution calculation, defaults to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
 \item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 }

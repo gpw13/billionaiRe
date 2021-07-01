@@ -1,4 +1,7 @@
-#' @noRd
+#' Assert that columns exist in a data frame
+#'
+#' @param df Data frame
+#' @param ... Column names
 assert_columns <- function(df, ...) {
   columns <- c(...)
   bad_cols <- columns[!(columns %in% names(df))]
@@ -9,7 +12,9 @@ assert_columns <- function(df, ...) {
   }
 }
 
-#' @noRd
+#' Assert that arguments passed in are length 1 character vectors
+#'
+#' @param ... Character vectors to check
 assert_strings <- function(...) {
   arg_names <- sys.call()[-1]
   args <- list(...)
@@ -29,7 +34,10 @@ assert_strings <- function(...) {
   }
 }
 
-#' @noRd
+#' Assert that columns are numeric in a data frame
+#'
+#' @param df Data frame
+#' @param ... Column names
 assert_numeric <- function(df, ...) {
   args <- c(...)
   nums <- sapply(args, function(x) is.numeric(df[[x]]))
@@ -85,18 +93,47 @@ assert_ind_ids <- function(ind_ids, billion) {
 
 #' Assert unique rows of df
 #'
-#' Makes sure there are distinct rows for each ind, iso3, and
+#' Makes sure there are distinct rows for each ind, iso3, year, and scenario if
+#' being used.
+#'
 #' @inheritParams transform_hpop_data
 #' @param year Column name of column with year.
 assert_unique_rows <- function(df,
                                ind,
                                iso3,
                                year,
+                               scenario = NULL,
                                ind_ids) {
   ind_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids)
-  dist_df <- dplyr::distinct(ind_df, .data[[ind]], .data[[iso3]], .data[[year]])
+  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(!!ind, !!iso3, !!year, !!scenario))))
   if (nrow(ind_df) != nrow(dist_df)) {
-    stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year`, please make distinct.",
+    stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
+         call. = FALSE)
+  }
+}
+
+#' Assert that two vectors are the same length
+#'
+#' @param ... Arguments to pass two vectors that should be the same length.
+assert_same_length <- function(...) {
+  arg_names <- sys.call()[-1]
+  args <- list(...)
+  lns <- sapply(args, length)
+
+  if (lns[1] != lns[2]) {
+    stop(sprintf("%s must have the same length.",
+                 paste(arg_names, collapse = " and ")),
+         call. = FALSE)
+  }
+}
+
+#' Assert that end years are always later than start year
+#'
+#' @param start_year Start year
+#' @param end_year End year(s)
+assert_years <- function(start_year, end_year) {
+  if (!all(start_year < end_year)) {
+    stop("`end_year` must always be after `start_year`.",
          call. = FALSE)
   }
 }

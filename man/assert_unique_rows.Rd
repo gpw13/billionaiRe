@@ -4,7 +4,7 @@
 \alias{assert_unique_rows}
 \title{Assert unique rows of df}
 \usage{
-assert_unique_rows(df, ind, iso3, year, ind_ids)
+assert_unique_rows(df, ind, iso3, year, scenario = NULL, ind_ids)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -22,5 +22,6 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 }
 \description{
-Makes sure there are distinct rows for each ind, iso3, and
+Makes sure there are distinct rows for each ind, iso3, year, and scenario if
+being used.
 }
