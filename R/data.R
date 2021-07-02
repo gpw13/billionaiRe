@@ -12,6 +12,7 @@
 #'   \item{hpop}{Logical, is an HPOP Billions indicator}
 #'   \item{hep}{Logical, is a HEP Billions indicator}
 #'   \item{covariate}{Logical, is the indicator just a covariate for the Billions}
+#'   \item{calculated{Logical, is the indicator calculated within the package and thus not an input}}
 #' }
 "indicator_df"
 

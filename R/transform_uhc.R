@@ -31,14 +31,7 @@ transform_uhc_data <- function(df,
     df <- transform_uhc_single(df, ind, value[i], transform_value[i], ind_ids)
   }
 
-  # generate Billions groups
-  df %>%
-    dplyr::mutate(billion_group = dplyr::case_when(
-                    .data[[ind]] %in% ind_ids[c("fp", "dtp3", "anc4", "pneumo")] ~ "RMNCH",
-                    .data[[ind]] %in% ind_ids[c("tb", "art", "itn", "uhc_sanitation")] ~ "CDs",
-                    .data[[ind]] %in% ind_ids[c("uhc_tobacco", "bp", "fpg")] ~ "NCDs",
-                    .data[[ind]] %in% ind_ids[c("beds", "hwf", "espar")] ~ "SCA",
-                    .data[[ind]] == ind_ids["fh"] ~ "FH"))
+  df
 }
 
 #' Perform a transformation on a single column
@@ -72,6 +65,7 @@ transform_uhc_single <- function(df,
                   TRUE ~ .data[[transform_col]]
                 ))
 }
+
 
 #' Untransform Indicator Values for UHC Billion
 #'
@@ -116,11 +110,7 @@ untransform_uhc_single <- function(df,
                                    transform_value,
                                    value,
                                    ind_ids) {
-
-  # check if transform column in data and create if not
-  if (!(value %in% names(df))) {
-    df[[value]] <- NA_real_
-  }
+  df <- billionaiRe_add_columns(df, value, NA_real_)
 
   df %>%
     dplyr::mutate(!!sym(value) := dplyr::case_when(
@@ -133,70 +123,4 @@ untransform_uhc_single <- function(df,
       .data[[ind]] == ind_ids["hwf"] ~ untransform_hwf(.data[[transform_value]]),
       TRUE ~ .data[[value]]
     ))
-}
-
-
-#' Calculate UHC Billion
-#'
-#' `calculate_uhc_billion()` calculates country-level UHC Billion based on
-#' indicator level data. Calculates it for each country-year combination in the provided data.
-#'
-#' @param billion_group Column name of column indicating UHC Billion group that
-#'    each indicator belongs to.
-#'
-#' @inherit calculate_hpop_contributions params
-#' @inherit transform_uhc_data return details params
-#'
-#' @export
-calculate_uhc_billion <- function(df,
-                                  year = "year",
-                                  iso3 = "iso3",
-                                  ind = "ind",
-                                  billion_group = "billion_group",
-                                  transform_value = "transform_value",
-                                  ind_ids = billion_ind_codes("uhc")) {
-  assert_columns(df, year, iso3, ind, billion_group, transform_value)
-  assert_ind_ids(ind_ids, "uhc")
-  assert_unique_rows(df, ind, iso3, year, ind_ids)
-
-  df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>% # nurses doctors already aggregated to hwf
-    dplyr::group_by(.data[[year]], .data[[iso3]], .data[[billion_group]]) %>%
-    dplyr::summarize(!!sym(transform_value) := mean(.data[[transform_value]], na.rm = TRUE),
-                     .groups = "drop") %>%
-    tidyr::pivot_wider(names_from = billion_group,
-                       values_from = transform_value) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate("ASC" := mean(dplyr::c_across(c("CDs", "NCDs", "RMNCH", "SCA")),
-                             na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate("UHC" := .data[["ASC"]] * (100 - .data[["FH"]]) / 100) %>%
-    dplyr::select(-dplyr::any_of(c("CDs", "NCDs", "RMNCH", "SCA"))) %>%
-    tidyr::pivot_longer(c("FH", "ASC", "UHC"),
-                        names_to = "ind")
-}
-
-#' Calculate UHC Billion
-#'
-#' `calculate_uhc_billion()` calculates country-level UHC Billion based on
-#' indicator level data. Calculates it for each country-year combination in the provided data.
-#'
-#' @inherit calculate_uhc_billion return details params
-#' @inherit calculate_hpop_contributions params
-#' @inherit add_hpop_populations params
-#' @export
-calculate_uhc_contribution <- function(df,
-                                       year = "year",
-                                       iso3 = "iso3",
-                                       ind = "ind",
-                                       start_year = 2018,
-                                       end_year = 2023,
-                                       pop_year = 2023) {
-  assert_columns(df, year, iso3, ind)
-
-  df %>%
-    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
-    tidyr::pivot_wider(names_from = year) %>%
-    dplyr::mutate(population = wppdistro::get_population(.data[[iso3]], year = pop_year),
-                  contribution = (.data[[as.character(end_year)]] - .data[[as.character(start_year)]]) * .data[["population"]] / 100)
 }

@@ -12,12 +12,18 @@
 #'
 #' @export
 billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
-                              include_covariates = FALSE) {
+                              include_covariates = FALSE,
+                              include_calculated = FALSE) {
   billion <- rlang::arg_match(billion)
   df <- billionaiRe::indicator_df
   if (!include_covariates) {
     df <- dplyr::filter(df, !.data[["covariate"]])
   }
+
+  if (!include_calculated) {
+    df <- dplyr::filter(df, !.data[["calculated"]])
+  }
+
   codes <- df[["analysis_code"]][df[[billion]]]
   names(codes) <- codes
   codes

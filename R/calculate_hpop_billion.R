@@ -72,7 +72,7 @@ calculate_hpop_billion <- function(df,
   change_df <- purrr::reduce(change_df_list, left_join, by = keys)
 
   # return Billions with the rest of the original data
-  dplyr::bind_rows(change_df, df)
+  dplyr::bind_rows(df, change_df)
 }
 
 #' Calculate the HPOP Billion for one column of change

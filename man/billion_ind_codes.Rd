@@ -6,7 +6,8 @@
 \usage{
 billion_ind_codes(
   billion = c("hep", "hpop", "uhc"),
-  include_covariates = FALSE
+  include_covariates = FALSE,
+  include_calculated = FALSE
 )
 }
 \arguments{
