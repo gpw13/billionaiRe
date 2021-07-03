@@ -36,7 +36,7 @@ to request access.
 
 # Calculations
 
-The package is built around a set of functions that separately calculate the Billions
+The package is built around a set of functions that calculate the Billions
 for the three Billions separately:
 
 * Healthier Populations (HPOP)

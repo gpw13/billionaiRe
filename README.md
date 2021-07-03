@@ -27,8 +27,8 @@ contact <caldwellst@who.int> to request access.
 
 # Calculations
 
-The package is built around a set of functions that separately calculate
-the Billions for the three Billions separately:
+The package is built around a set of functions that calculate the
+Billions for the three Billions separately:
 
 -   Healthier Populations (HPOP)
 -   Health Emergencies Protection (HEP)
@@ -61,12 +61,15 @@ library(billionaiRe)
 hpop_df %>%
   transform_hpop_data() %>%
   add_hpop_populations() %>%
-  calculate_hpop_contributions() %>%
-  calculate_hpop_billion()
-#> # A tibble: 1 x 5
-#>   iso3  healthier unhealthier net_healthier perc_healthier
-#> * <chr>     <dbl>       <dbl>         <dbl>          <dbl>
-#> 1 AFG   25608812.  -35897603.    -10288791.          -24.7
+  calculate_hpop_contributions(end_year = 2023) %>%
+  calculate_hpop_billion() %>%
+  dplyr::filter(stringr::str_detect(ind, "hpop_healthier"))
+#> # A tibble: 3 x 7
+#>   iso3   year ind                  value transform_value population contribution
+#>   <chr> <dbl> <chr>                <dbl>           <dbl>      <dbl>        <dbl>
+#> 1 AFG    2023 hpop_healthier_plus     NA              NA         NA    25608812.
+#> 2 AFG    2023 hpop_healthier_minus    NA              NA         NA   -35897603.
+#> 3 AFG    2023 hpop_healthier          NA              NA         NA   -10288791.
 ```
 
 ## UHC Billion calculation
@@ -95,13 +98,16 @@ library(billionaiRe)
 uhc_df %>%
   transform_uhc_data() %>%
   calculate_uhc_billion() %>%
-  calculate_uhc_contribution()
-#> # A tibble: 3 x 6
-#>   iso3  ind   `2018` `2023` population contribution
-#>   <chr> <chr>  <dbl>  <dbl>      <dbl>        <dbl>
-#> 1 AFG   FH      18.3   25.4   41681232     2963536.
-#> 2 AFG   ASC     41.1   43.2   41681232      874893.
-#> 3 AFG   UHC     33.6   32.2   41681232     -563946.
+  calculate_uhc_contribution(end_year = 2023) %>%
+  dplyr::filter(ind %in% c("uhc_sm", "asc", "fh"),
+                year == 2023)
+#> # A tibble: 3 x 8
+#> # Groups:   iso3, ind [3]
+#>   iso3   year ind    value transform_value type    source           contribution
+#>   <chr> <dbl> <chr>  <dbl>           <dbl> <chr>   <chr>                   <dbl>
+#> 1 AFG    2023 fh      25.4            25.4 <NA>    <NA>                 2963536.
+#> 2 AFG    2023 asc     45.6            45.6 projec… WHO DDI calcula…     1607136.
+#> 3 AFG    2023 uhc_sm  34.0            34.0 projec… WHO DDI calcula…      -38238.
 ```
 
 ## HEP Billion calculation
@@ -132,12 +138,17 @@ library(billionaiRe)
 hep_df %>%
   transform_hep_data() %>%
   calculate_hep_components() %>%
-  calculate_hep_billion()
-#> # A tibble: 4 x 5
-#>   iso3   year ind            change contribution
-#>   <chr> <dbl> <chr>           <dbl>        <dbl>
-#> 1 AFG    2023 detect_respond    5       2084062.
-#> 2 AFG    2023 espar            11.2     4680802.
-#> 3 AFG    2023 hep_idx          21.7    23326420.
-#> 4 AFG    2023 prevent          39.7    16561556.
+  calculate_hep_billion(end_year = 2023) %>%
+  dplyr::filter(ind %in% c("prevent",
+                           "espar",
+                           "detect_respond",
+                           "hep_idx"),
+                year == 2023)
+#> # A tibble: 4 x 9
+#>   iso3   year ind      value type   source    transform_value level contribution
+#>   <chr> <dbl> <chr>    <dbl> <chr>  <chr>               <dbl> <dbl>        <dbl>
+#> 1 AFG    2023 espar     51.2 Proje… <NA>                 51.2     3     4680802.
+#> 2 AFG    2023 detect_…  91   Proje… <NA>                 91       5     2084062.
+#> 3 AFG    2023 prevent   NA   Proje… WHO DDI,…           153.      5    16561556.
+#> 4 AFG    2023 hep_idx   NA   Proje… WHO DDI,…            98.5     5    23326420.
 ```
