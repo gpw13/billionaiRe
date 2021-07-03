@@ -38,5 +38,6 @@ calculate_uhc_contribution <- function(df,
       ))
   }
 
-  dplyr::select(df, -"_population_temp")
+  dplyr::select(df, -"_population_temp") %>%
+    dplyr::ungroup()
 }
