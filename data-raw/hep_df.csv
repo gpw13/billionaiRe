@@ -18,7 +18,7 @@ AFG,2018,espar05,20,Actual
 AFG,2018,detect_respond,,Actual
 AFG,2018,espar13,20,Actual
 AFG,2018,espar11,40,Actual
-AFG,2018,polio_routine,2343434,Actual
-AFG,2023,measles_routine,348472,Projection
-AFG,2023,polio_routine,3434343,Projection
-AFG,2018,measles_routine,454545,Actual
+AFG,2018,polio_routine_num,2343434,Actual
+AFG,2023,measles_routine_num,348472,Projection
+AFG,2023,polio_routine_num,3434343,Projection
+AFG,2018,measles_routine_num,454545,Actual

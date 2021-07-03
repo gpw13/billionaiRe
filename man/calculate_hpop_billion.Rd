@@ -33,6 +33,8 @@ country, year, and indicator.}
 
 \item{ind}{Column name of column with indicator names.}
 
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
+
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
@@ -47,9 +49,6 @@ calculating contributions on data in long format rather than wide format.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
-
-\item{change}{Column name of column with indicator-level change between base
-year and end year.}
 }
 \value{
 Data frame in long format.

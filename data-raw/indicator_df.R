@@ -9,3 +9,4 @@ indicator_df <- read_excel("data-raw/indicator_df.xlsx") %>%
                 ~ifelse(is.na(.x), F, T)))
 
 usethis::use_data(indicator_df, overwrite = TRUE, internal = FALSE)
+

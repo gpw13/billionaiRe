@@ -15,6 +15,10 @@ billion_ind_codes(
 
 \item{include_covariates}{Logical, whether or not to include covariates when getting
 the Billions indicator codes.}
+
+\item{include_calculated}{Logical, whether or not to include variables calculated
+from within the package when getting the Billion indicator codes. Useful
+for UHC average service coverage.}
 }
 \value{
 Character vector of indicator names.

@@ -97,7 +97,8 @@ assert_ind_ids <- function(ind_ids, billion) {
 #' being used.
 #'
 #' @inheritParams transform_hpop_data
-#' @param year Column name of column with year.
+#' @inheritParams calculate_hpop_contributions
+#'
 assert_unique_rows <- function(df,
                                ind,
                                iso3,

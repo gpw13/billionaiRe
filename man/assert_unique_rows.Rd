@@ -14,7 +14,10 @@ country, year, and indicator.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
 
-\item{year}{Column name of column with year.}
+\item{year}{Column name of column with years.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

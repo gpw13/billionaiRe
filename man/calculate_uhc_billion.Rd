@@ -12,9 +12,9 @@ calculate_uhc_billion(
   transform_value = "transform_value",
   value = "value",
   scenario = NULL,
+  type_col = "type",
   source_col = "source",
   source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
-  type_col = "type",
   projected_year = 2020,
   ind_ids = billion_ind_codes("uhc")
 )
@@ -37,12 +37,12 @@ used to calculate contributions.}
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{type_col}{Column name of column to store type.}
+
 \item{source_col}{Column name of column to store source information.}
 
 \item{source}{Source to provide for calculated average service coverage and
 single measure.}
-
-\item{type_col}{Column name of column to store type.}
 
 \item{projected_year}{Year that calculated data will be regarded as projected.
 Years prior reported as estimated.}

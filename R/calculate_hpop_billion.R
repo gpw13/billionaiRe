@@ -3,11 +3,9 @@
 #' `calculate_hpop_billion()` calculates country-level HPOP Billion based on
 #' indicator level changes.
 #'
-#' @param change Column name of column with indicator-level change between base
-#'     year and end year.
-#'
 #' @inherit transform_hpop_data return details params
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams add_hpop_populations
 #'
 #' @export
 calculate_hpop_billion <- function(df,
@@ -69,7 +67,7 @@ calculate_hpop_billion <- function(df,
   keys <- keys[!is.null(keys)]
 
   # join back to change_df
-  change_df <- purrr::reduce(change_df_list, left_join, by = keys)
+  change_df <- purrr::reduce(change_df_list, dplyr::left_join, by = keys)
 
   # return Billions with the rest of the original data
   dplyr::bind_rows(df, change_df)

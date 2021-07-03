@@ -35,6 +35,7 @@ hpop_df %>%
   transform_hpop_data() %>%
   add_hpop_populations() %>%
   calculate_hpop_contributions(end_year = 2023) %>%
-  calculate_hpop_billion()
+  calculate_hpop_billion() %>%
+  dplyr::filter(stringr::str_detect(ind, "hpop_healthier"))
 ```
 
