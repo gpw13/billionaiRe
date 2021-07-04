@@ -42,12 +42,44 @@ calculate_hpop_contributions <- function(df,
   df <- dplyr::group_by(df, dplyr::across(dplyr::any_of(c(iso3, ind, scenario))))
 
   for (i in length(contribution)) {
-    df <- dplyr::mutate(df, !!sym(contribution[i]) := dplyr::case_when(
-      !(.data[[ind]] %in% ind_ids) ~ .data[[contribution[i]]],
-      !(.data[[year]] %in% !!end_year) ~ .data[[contribution[i]]],
-      TRUE ~ .data[[population]] * (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year]) / 100
-    ))
+    df <- dplyr::mutate(df, !!sym(contribution[i]) := calculate_hpop_contribution_vector(.data[[contribution[i]]],
+                                                                                         .data[[ind]],
+                                                                                         ind_ids,
+                                                                                         .data[[year]],
+                                                                                         !!start_year,
+                                                                                         !!end_year,
+                                                                                         .data[[transform_value[i]]],
+                                                                                         .data[[population]]))
   }
 
   dplyr::ungroup(df)
+}
+
+
+#' Calculate HPOP contribution in a vector
+#'
+#' Done this to avoid using [dplyr::case_when()]  because that evaluates all
+#' RHS arguments, which produces errors for indicators without sufficient data.
+#'
+#' @inheritParams calculate_hpop_contributions
+#' @param contribution Contribution vector
+#' @param ind Ind vector
+#' @param year Year vector
+#' @param pop Population vector
+#' @param transform_value Transformed value vector
+calculate_hpop_contribution_vector <- function(contribution,
+                                               ind,
+                                               ind_ids,
+                                               year,
+                                               start_year,
+                                               end_year,
+                                               transform_value,
+                                               pop) {
+  if (!any(ind %in% ind_ids)) {
+    contribution
+  } else {
+    ifelse(!(year %in% end_year),
+           contribution,
+           pop * (transform_value - transform_value[year == start_year]) / 100)
+  }
 }

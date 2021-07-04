@@ -33,12 +33,15 @@ calculate_hpop_billion <- function(df,
   change_df <- df %>%
     dplyr::filter(.data[[year]] %in% c(!!end_year, !!start_year),
                   .data[[ind]] %in% ind_ids) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+    dplyr::mutate(dplyr::across(dplyr::all_of(transform_value),
+                                calculate_hpop_change_vector,
+                                .data[[year]],
+                                !!start_year)) %>%
+    dplyr::ungroup() %>%
     dplyr::mutate(!!sym(ind) := ifelse(.data[[ind]] %in% ind_ids[c("wasting", "overweight")],
                                        "child_nutrition",
                                        .data[[ind]])) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
-    dplyr::mutate(dplyr::across(dplyr::all_of(transform_value),
-                                ~ .x - .x[.data[[year]] == !!start_year])) %>%
     dplyr::filter(.data[[year]] %in% !!end_year) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind, year)))) %>%
     dplyr::summarize(dplyr::across(transform_value,
@@ -149,3 +152,16 @@ generate_hpop_populations <- function(pop_year) {
     dplyr::full_join(billionaiRe::pop_links, by = c("_pop_group_temp" = "pop_group"))
 }
 
+
+#' @param transform_value Vector of transform values
+#' @param year Vector of years
+#' @param start_year Start year
+calculate_hpop_change_vector <- function(transform_value,
+                                         year,
+                                         start_year) {
+  if (start_year %in% year) {
+    transform_value - transform_value[year == start_year]
+  } else {
+    NA_real_
+  }
+}
