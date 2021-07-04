@@ -44,10 +44,10 @@ calculate_hpop_billion <- function(df,
                                        .data[[ind]])) %>%
     dplyr::filter(.data[[year]] %in% !!end_year) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind, year)))) %>%
-    dplyr::summarize(dplyr::across(transform_value,
+    dplyr::summarize(dplyr::across(dplyr::all_of(transform_value),
                                    ~ sum(.x, na.rm = TRUE)), # for child_nutrition
                      .groups = "drop") %>%
-    dplyr::rename_with(~contribution[which(transform_value == .x)], .cols = transform_value)
+    dplyr::rename_with(~contribution[which(transform_value == .x)], .cols = !!transform_value)
 
   # add population groups
 
@@ -65,12 +65,10 @@ calculate_hpop_billion <- function(df,
                                year = year,
                                scenario = scenario)
 
-  # remove scenario from keys if NULL
-  keys <- c(iso3, ind, year, scenario)
-  keys <- keys[!is.null(keys)]
-
   # join back to change_df
-  change_df <- purrr::reduce(change_df_list, dplyr::left_join, by = keys)
+  change_df <- purrr::reduce(change_df_list,
+                             dplyr::left_join,
+                             by = c(iso3, ind, year, scenario))
 
   # return Billions with the rest of the original data
   dplyr::bind_rows(df, change_df)
