@@ -16,12 +16,6 @@ transform_hep_data(
   source_col = "source",
   source = sprintf("WHO DDI flat extrapolation, \%s", format(Sys.Date(), "\%B \%Y")),
   ind_ids = billion_ind_codes("hep"),
-  cholera_latest_year = NULL,
-  meningitis_latest_year = NULL,
-  yellow_fever_latest_year = NULL,
-  ebola_latest_year = NULL,
-  covid_latest_year = NULL,
-  measles_latest_year = NULL,
   extrapolate_to = 2023
 )
 }
@@ -54,30 +48,6 @@ to the original name.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
-
-\item{cholera_latest_year}{Latest year to calculate rolling sum for cholera campaign
-data. From there, data is flat extrapolated. If \code{NULL}, uses the latest
-year with observations in the data.}
-
-\item{meningitis_latest_year}{Latest year to calculate rolling sum for meningitis campaign
-data. From there, data is flat extrapolated. If \code{NULL}, uses the latest
-year with observations in the data.}
-
-\item{yellow_fever_latest_year}{Latest year to calculate rolling sum for yellow
-fever campaign data. From there, data is flat extrapolated. If \code{NULL},
-uses the latest year with observations in the data.}
-
-\item{ebola_latest_year}{Latest year to calculate rolling sum for yellow
-fever campaign data. From there, data is flat extrapolated. If \code{NULL},
-uses the latest year with observations in the data.}
-
-\item{covid_latest_year}{Latest year to calculate rolling sum for yellow
-fever campaign data. From there, data is flat extrapolated. If \code{NULL},
-uses the latest year with observations in the data.}
-
-\item{measles_latest_year}{Latest year to calculate rolling sum for yellow
-fever campaign data. From there, data is flat extrapolated. If \code{NULL},
-uses the latest year with observations in the data.}
 
 \item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023}
 }

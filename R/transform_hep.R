@@ -17,24 +17,6 @@
 #' @param type_col Column name of column with type data.
 #' @param source Source to use for data that is projected within the transformation.
 #' @param year Column name of column with year data.
-#' @param cholera_latest_year Latest year to calculate rolling sum for cholera campaign
-#'     data. From there, data is flat extrapolated. If `NULL`, uses the latest
-#'     year with observations in the data.
-#' @param meningitis_latest_year Latest year to calculate rolling sum for meningitis campaign
-#'     data. From there, data is flat extrapolated. If `NULL`, uses the latest
-#'     year with observations in the data.
-#' @param yellow_fever_latest_year Latest year to calculate rolling sum for yellow
-#'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
-#'     uses the latest year with observations in the data.
-#' @param ebola_latest_year Latest year to calculate rolling sum for yellow
-#'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
-#'     uses the latest year with observations in the data.
-#' @param covid_latest_year Latest year to calculate rolling sum for yellow
-#'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
-#'     uses the latest year with observations in the data.
-#' @param measles_latest_year Latest year to calculate rolling sum for yellow
-#'     fever campaign data. From there, data is flat extrapolated. If `NULL`,
-#'     uses the latest year with observations in the data.
 #' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2023
 #'
 #' @return Data frame in long format.
@@ -51,12 +33,6 @@ transform_hep_data <- function(df,
                                source_col = "source",
                                source = sprintf("WHO DDI flat extrapolation, %s", format(Sys.Date(), "%B %Y")),
                                ind_ids = billion_ind_codes("hep"),
-                               cholera_latest_year = NULL,
-                               meningitis_latest_year = NULL,
-                               yellow_fever_latest_year = NULL,
-                               ebola_latest_year = NULL,
-                               covid_latest_year = NULL,
-                               measles_latest_year = NULL,
                                extrapolate_to = 2023) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
@@ -68,7 +44,7 @@ transform_hep_data <- function(df,
   df <- billionaiRe_add_columns(df, transform_value, NA_real_)
 
   new_df <- df %>%
-    dplyr::filter(!is.na(.data[[value]])) %>%
+    dplyr::filter(dplyr::if_any(value, ~ !is.na(.x))) %>%
     transform_prev_cmpgn_data(iso3,
                               year,
                               ind,
@@ -79,12 +55,6 @@ transform_hep_data <- function(df,
                               source_col,
                               source,
                               ind_ids,
-                              cholera_latest_year,
-                              meningitis_latest_year,
-                              yellow_fever_latest_year,
-                              ebola_latest_year,
-                              covid_latest_year,
-                              measles_latest_year,
                               extrapolate_to) %>%
     transform_prev_routine_data(iso3,
                                 year,
@@ -129,13 +99,13 @@ transform_prev_routine_data <- function(df,
   inf_val_names <- paste0("_inf_temp_", value)
 
   inf_df <- df %>%
-    dplyr::filter(.data[[ind]] %in% inf_ind) %>%
-    dplyr::select(dplyr::all_of(c(iso3, year, value))) %>%
-    dplyr::rename_with(~ inf_val_names[which(value == .x)], .cols = value)
+    dplyr::filter(.data[[ind]] %in% !!inf_ind) %>%
+    dplyr::select(dplyr::all_of(c(!!iso3,!!year, !!value))) %>%
+    dplyr::rename_with(~ inf_val_names[which(!!value == .x)], .cols = !!value)
 
   # join to main data frame
   num_df <- dplyr::left_join(df, inf_df, by = c(iso3, year)) %>%
-    dplyr::filter(.data[[ind]] %in% routine_inds)
+    dplyr::filter(.data[[ind]] %in% !!routine_inds)
 
   # for each value column, turn data into numerators
   for (i in 1:length(value)) {
@@ -143,14 +113,20 @@ transform_prev_routine_data <- function(df,
   }
 
   # rename ind names to be routine numerators and return with full data
-  # add transform value for routine indicators
-  num_df %>%
-    dplyr::select(-inf_val_names) %>%
+  final_df <- num_df %>%
+    dplyr::select(-!!inf_val_names) %>%
     dplyr::mutate(!!sym(ind) := routine_match[.data[[ind]]]) %>%
-    dplyr::bind_rows(df, .) %>%
-    dplyr::mutate(!!sym(transform_value) := ifelse(.data[[ind]] %in% c(routine_inds, routine_match),
-                                                   .data[[value]],
-                                                   .data[[transform_value]]))
+    dplyr::bind_rows(df, .)
+
+  # add transform value for routine indicators
+  for (i in 1:length(value)) {
+    final_df <- dplyr::mutate(final_df,
+                              !!sym(transform_value[i]) := ifelse(.data[[ind]] %in% c(routine_inds, routine_match),
+                                                                  .data[[value[i]]],
+                                                                  .data[[transform_value[i]]]))
+  }
+
+  final_df
 }
 
 #' Transform Prevent campaigns data
@@ -181,13 +157,7 @@ transform_prev_cmpgn_data <- function(df,
                                       source_col,
                                       source,
                                       ind_ids,
-                                      cholera_latest_year = NULL,
-                                      meningitis_latest_year = NULL,
-                                      yellow_fever_latest_year = NULL,
-                                      ebola_latest_year = NULL,
-                                      covid_latest_year = NULL,
-                                      measles_latest_year = NULL,
-                                      extrapolate_to = 2023) {
+                                      extrapolate_to) {
   ind_check <- c("meningitis_campaign_denom",
                  "meningitis_campaign_num",
                  "cholera_campaign_num",
@@ -201,92 +171,57 @@ transform_prev_cmpgn_data <- function(df,
                  "measles_campaign_num",
                  "measles_campaign_denom")
 
+  # split data frames to edit cmpgn_df and later join back up to old_df
   cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[ind_check])
+  old_df <- dplyr::filter(df, !(.data[[ind]] %in% ind_ids[ind_check]))
 
   if (nrow(cmpgn_df) == 0) {
     return(billionaiRe_add_columns(df, transform_value, NA_real_))
   }
 
-  yrs <- get_latest_year(cmpgn_df,
-                         ind,
-                         year,
-                         ind_ids,
-                         cholera_latest_year,
-                         meningitis_latest_year,
-                         yellow_fever_latest_year,
-                         ebola_latest_year,
-                         covid_latest_year,
-                         measles_latest_year)
+  # expand data frame with or without scenarios
+
+  if (!is.null(scenario)) {
+    exp_df <- tidyr::expand_grid(!!sym(iso3) := unique(cmpgn_df[[iso3]]),
+                                 !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
+                                 !!sym(ind) := unique(cmpgn_df[[ind]]),
+                                 !!sym(scenario) := unique(cmpgn_df[[scenario]]))
+  } else {
+    exp_df <- tidyr::expand_grid(!!sym(iso3) := unique(cmpgn_df[[iso3]]),
+                                 !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
+                                 !!sym(ind) := unique(cmpgn_df[[ind]]))
+  }
 
   # expand data frame to prepare for rolling sums
   new_df <- cmpgn_df %>%
-    dplyr::right_join(tidyr::expand_grid(!!sym(iso3) := unique(.[[iso3]]),
-                                         !!sym(year) := min(.[[year]]):extrapolate_to,
-                                         !!sym(ind) := unique(.[[ind]])),
-                      by = c(iso3, year, ind)) %>%
-    dplyr::group_by(dplyr::across(c(iso3, ind, scenario))) %>%
-    dplyr::filter(dplyr::if_any(value, ~ any(!is.na(.x)))) %>%
+    dplyr::right_join(exp_df,
+                      by = c(iso3, year, ind, scenario)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(!!iso3, !!ind, !!scenario)))) %>%
+    dplyr::filter(dplyr::if_any(!!value, ~ any(!is.na(.x)))) %>%
     dplyr::arrange(.data[[year]], .by_group = TRUE)
 
-  # rolling sums
+  # rolling sums and flat extrapolation from latest campaign value
 
   for (i in 1:length(value)) {
     new_df <- dplyr::mutate(new_df, !!sym(transform_value[i]) := dplyr::case_when(
-      .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] ~ zoo::rollapply(.data[[value[i]]],
-                                                                                                      3,
-                                                                                                      sum,
-                                                                                                      na.rm = T,
-                                                                                                      partial = T,
-                                                                                                      align = "right"),
-      .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] ~ zoo::rollapply(.data[[value[i]]],
-                                                                                                            10,
-                                                                                                            sum,
-                                                                                                            na.rm = T,
-                                                                                                            partial = TRUE,
-                                                                                                            align = "right"),
+      .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], 3),
+      .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], 10),
       .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom",
                                   "ebola_campaign_num", "ebola_campaign_denom",
                                   "covid_campaign_num", "covid_campaign_denom",
-                                  "measles_campaign_num", "measles_campaign_denom")] ~ zoo::rollapply(.data[[value[i]]],
-                                                                                                      length(.data[[value[i]]]),
-                                                                                                      sum,
-                                                                                                      na.rm = T,
-                                                                                                      partial = TRUE,
-                                                                                                      align = "right")
+                                  "measles_campaign_num", "measles_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], length(.data[[value[i]]]))
     ))
   }
 
-  # Extrapolate out latest values for each pathogen
-
-  pathogens <- list(ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")],
-                    ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")],
-                    ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom")],
-                    ind_ids[c("ebola_campaign_num", "ebola_campaign_denom")],
-                    ind_ids[c("covid_campaign_num", "covid_campaign_denom")],
-                    ind_ids[c("measles_campaign_num", "measles_campaign_denom")])
-
-  new_df <- billionaiRe_add_columns(new_df, c("_billionaiRe_type_temp", "_billionaiRe_source_temp"), NA_character_)
-
-  for (i in 1:length(pathogens)) {
-    new_df <- extrapolate_campaign_data(pathogens[[i]],
-                                        yrs[[i]],
-                                        new_df,
-                                        ind,
-                                        year,
-                                        transform_value,
-                                        source)
-  }
-
-  # Join up with original data frame
+  # Extrapolate out type and source for each pathogen
 
   new_df %>%
-    dplyr::ungroup() %>%
-    dplyr::bind_rows(dplyr::filter(df, !(.data[[ind]] %in% ind_ids[ind_check]))) %>%
-    dplyr::mutate(!!sym(type_col) := ifelse(is.na(.data[[type_col]]) & !is.na(.data[["_billionaiRe_type_temp"]]),
-                                        .data[["_billionaiRe_type_temp"]],
-                                        .data[[type_col]]),
-                  !!sym(source_col) := ifelse(is.na(.data[[source_col]]) & !is.na(.data[["_billionaiRe_source_temp"]]),
-                                              .data[["_billionaiRe_source_temp"]],
-                                              .data[[source_col]])) %>%
-    dplyr::select(-c("_billionaiRe_type_temp", "_billionaiRe_source_temp"))
+    dplyr::filter(dplyr::row_number() >= min(which(!is.na(.data[[type_col]])))) %>%
+    dplyr::mutate(!!sym(type_col) := dplyr::case_when(
+                    !is.na(.data[[type_col]]) ~ .data[[type_col]],
+                    dplyr::row_number() <= max(which(!is.na(.data[[value[i]]]))) ~ "reported",
+                    TRUE ~ "projected"
+                  ),
+                  !!sym(source_col) := unique(.data[[source_col]][!is.na(.data[[source_col]])])) %>%
+    dplyr::bind_rows(old_df, .)
 }
