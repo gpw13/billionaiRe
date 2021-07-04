@@ -153,6 +153,8 @@ generate_hpop_populations <- function(pop_year) {
 }
 
 
+#' Calculate the change for vectors, used in [calculate_hpop_billion()]
+#'
 #' @param transform_value Vector of transform values
 #' @param year Vector of years
 #' @param start_year Start year
