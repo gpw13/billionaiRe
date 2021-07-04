@@ -14,7 +14,7 @@ Authors@R: c(person(given = "Seth",
                     family = "Biondi", 
                     email = "biondin@who.int", 
                     role = c("aut")))
-Description: A package for applying methods to calculate Universal Health
+Description: Apply methods to calculate Universal Health
     Coverage, Healthier Populations, and Health Emergencies Protection Billions.
 URL: https://www.who.int/data/triple-billion-dashboard, 
      https://www.who.int/publications/m/item/thirteenth-general-programme-of-work-(gpw13)-methods-for-impact-measurement, 

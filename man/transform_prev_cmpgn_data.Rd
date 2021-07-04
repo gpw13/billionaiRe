@@ -41,7 +41,8 @@ used to calculate contributions.}
 
 \item{source_col}{Column name of column to store source information.}
 
-\item{source}{Source to use for data that is projected within the transformation.}
+\item{source}{Source to use for prevent data that is flat extrapolated
+that has more than one unique value.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

@@ -14,7 +14,7 @@ transform_hep_data(
   transform_glue = "transform_{value}",
   type_col = "type",
   source_col = "source",
-  source = sprintf("WHO DDI flat extrapolation, \%s", format(Sys.Date(), "\%B \%Y")),
+  source = "WUENIC/IVB/WHO Technical Programme",
   ind_ids = billion_ind_codes("hep"),
   extrapolate_to = 2023
 )
@@ -42,7 +42,8 @@ to the original name.}
 
 \item{source_col}{Column name of column to store source information.}
 
-\item{source}{Source to use for data that is projected within the transformation.}
+\item{source}{Source to use for prevent data that is flat extrapolated
+that has more than one unique value.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
