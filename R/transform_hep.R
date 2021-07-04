@@ -100,7 +100,8 @@ transform_prev_routine_data <- function(df,
 
   inf_df <- df %>%
     dplyr::filter(.data[[ind]] %in% !!inf_ind) %>%
-    dplyr::select(dplyr::all_of(c(!!iso3,!!year, !!value))) %>%
+    dplyr::select(dplyr::all_of(c(!!iso3, !!year, !!value))) %>%
+    dplyr::distinct() %>% # in case multiple surviving inf scenario data
     dplyr::rename_with(~ inf_val_names[which(!!value == .x)], .cols = !!value)
 
   # join to main data frame
@@ -214,7 +215,6 @@ transform_prev_cmpgn_data <- function(df,
   }
 
   # Extrapolate out type and source for each pathogen
-
   new_df %>%
     dplyr::filter(dplyr::row_number() >= min(which(!is.na(.data[[type_col]])))) %>%
     dplyr::mutate(!!sym(type_col) := dplyr::case_when(

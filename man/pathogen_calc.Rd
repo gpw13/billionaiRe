@@ -17,7 +17,7 @@ pathogen_calc(
   source_col,
   source,
   ind_ids,
-  multiply_surviving_infs = TRUE
+  multiply_surviving_infs
 )
 }
 \arguments{

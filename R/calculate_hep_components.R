@@ -95,7 +95,7 @@ prevent_calculations <- function(df,
                                  transform_value,
                                  ind_ids) {
 
-  df <- dplyr::group_by(df, dplyr::across(c(iso3, year, scenario)))
+  df <- dplyr::group_by(df, dplyr::across(c(!!iso3, !!year, !!scenario)))
 
   args <- list(name = ind_ids[c("meningitis", "meningitis_campaign", "yellow_fever", "yellow_fever_campaign", "cholera",
                                 "cholera_campaign", "polio", "measles", "measles_campaign", "covid",
@@ -175,14 +175,14 @@ pathogen_calc <- function(df,
                           source_col,
                           source,
                           ind_ids,
-                          multiply_surviving_infs = TRUE) {
+                          multiply_surviving_infs) {
   df <- dplyr::filter(df,
                       .data[[ind]] %in% c(numerators, denominators),
                       any(numerators %in% .data[[ind]]))
 
   if (multiply_surviving_infs) {
     df <- dplyr::mutate(df,
-                        dplyr::across(transform_value,
+                        dplyr::across(!!transform_value,
                                       ~ dplyr::case_when(
                                         .data[[ind]] == ind_ids["surviving_infants"] ~ .x * sum(unique(.data[[ind]][!is.na(.x)]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
                                         TRUE ~ .x
@@ -192,7 +192,7 @@ pathogen_calc <- function(df,
   df %>%
     dplyr::summarize(
       !!sym(type_col) := reduce_type(.data[[transform_value[1]]], .data[[type_col]]),
-      dplyr::across(transform_value,
+      dplyr::across(!!transform_value,
                     ~dplyr::case_when(
                       all(is.na(.x[.data[[ind]] %in% ind_ids[numerators]])) ~ NA_real_,
                       TRUE ~ 100 * sum(.x[.data[[ind]] %in% ind_ids[numerators]], na.rm = TRUE) /
@@ -229,7 +229,7 @@ calculate_hepi <- function(df,
                                               "espar")],
                   .data[[year]] >= earliest_year) %>%
     dplyr::group_by(dplyr::across(c(iso3, year, scenario))) %>%
-    dplyr::summarize(dplyr::across(transform_value,
+    dplyr::summarize(dplyr::across(!!transform_value,
                                    ~ mean(.x, na.rm = TRUE)),
                      !!sym(type_col) := ifelse(length(unique(.data[[type_col]][!is.na(.data[[type_col]])])) == 1,
                                            unique(.data[[type_col]][!is.na(.data[[type_col]])]),
