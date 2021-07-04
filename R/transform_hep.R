@@ -15,7 +15,8 @@
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @param type_col Column name of column with type data.
-#' @param source Source to use for data that is projected within the transformation.
+#' @param source Source to use for prevent data that is flat extrapolated
+#'     that has more than one unique value.
 #' @param year Column name of column with year data.
 #' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2023
 #'
@@ -31,7 +32,7 @@ transform_hep_data <- function(df,
                                transform_glue = "transform_{value}",
                                type_col = "type",
                                source_col = "source",
-                               source = sprintf("WHO DDI flat extrapolation, %s", format(Sys.Date(), "%B %Y")),
+                               source = "WUENIC/IVB/WHO Technical Programme",
                                ind_ids = billion_ind_codes("hep"),
                                extrapolate_to = 2023) {
   assert_columns(df, iso3, ind, value)
@@ -222,6 +223,8 @@ transform_prev_cmpgn_data <- function(df,
                     dplyr::row_number() <= max(which(!is.na(.data[[value[i]]]))) ~ "reported",
                     TRUE ~ "projected"
                   ),
-                  !!sym(source_col) := unique(.data[[source_col]][!is.na(.data[[source_col]])])) %>%
+                  !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
+                                              unique(.data[[source_col]][!is.na(.data[[source_col]])]),
+                                              !!source)) %>%
     dplyr::bind_rows(old_df, .)
 }
