@@ -1,3 +1,12 @@
+# billionaiRe 0.4.0
+* Updated all three Billions functions to produce data in long format for immediate
+upload to xMart.
+* Developed all three Billions to be calculated for various scenarios, defined in
+long format through a `scenario` column or in wide format by having multiple
+`value` columns.
+* Expanded HEP Billion to allow for the use of ebola, COVID, and measles campaign
+data within the Prevent indicator.
+
 # billionaiRe 0.3.0
 * Updated data loading functions so that all 3 xMart databases are available: unprojected
 data, projected data, and final input data for the Billions.
