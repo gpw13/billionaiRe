@@ -106,7 +106,7 @@ assert_unique_rows <- function(df,
                                scenario = NULL,
                                ind_ids) {
   ind_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids)
-  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(!!ind, !!iso3, !!year, !!scenario))))
+  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(ind, iso3, year, scenario))))
   if (nrow(ind_df) != nrow(dist_df)) {
     stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
          call. = FALSE)

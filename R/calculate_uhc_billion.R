@@ -41,21 +41,22 @@ calculate_uhc_billion <- function(df,
       .data[[ind]] == ind_ids["fh"] ~ "_fh_temp"))
 
   # calculate billion for each set of transform_value / value and join to original df
-  purrr::map2_dfr(transform_value,
-                  value,
-                  ~ calculate_uhc_billion_single(bill_df,
-                                                 year,
-                                                 iso3,
-                                                 ind,
-                                                 .x,
-                                                 .y,
-                                                 scenario,
-                                                 source_col,
-                                                 source,
-                                                 type_col,
-                                                 projected_year,
-                                                 ind_ids)) %>%
-    dplyr::bind_rows(df, .)
+  for (i in 1:length(value)) {
+    bill_df <- calculate_uhc_billion_single(bill_df,
+                                            year,
+                                            iso3,
+                                            ind,
+                                            transform_value[i],
+                                            value[i],
+                                            scenario,
+                                            source_col,
+                                            source,
+                                            type_col,
+                                            projected_year,
+                                            ind_ids)
+  }
+
+    dplyr::bind_rows(df, bill_df)
 }
 
 #' Calculate UHC Billion for one set of columns
