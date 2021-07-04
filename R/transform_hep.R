@@ -193,7 +193,13 @@ transform_prev_cmpgn_data <- function(df,
                  "cholera_campaign_num",
                  "cholera_campaign_denom",
                  "yellow_fever_campaign_num",
-                 "yellow_fever_campaign_denom")
+                 "yellow_fever_campaign_denom",
+                 "ebola_campaign_num",
+                 "ebola_campaign_denom",
+                 "covid_campaign_num",
+                 "covid_campaign_denom",
+                 "measles_campaign_num",
+                 "measles_campaign_denom")
 
   cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[ind_check])
 
@@ -219,7 +225,7 @@ transform_prev_cmpgn_data <- function(df,
                                          !!sym(ind) := unique(.[[ind]])),
                       by = c(iso3, year, ind)) %>%
     dplyr::group_by(dplyr::across(c(iso3, ind, scenario))) %>%
-    dplyr::filter(any(!is.na(.data[[value]]))) %>%
+    dplyr::filter(dplyr::if_any(value, ~ any(!is.na(.x)))) %>%
     dplyr::arrange(.data[[year]], .by_group = TRUE)
 
   # rolling sums
@@ -242,7 +248,7 @@ transform_prev_cmpgn_data <- function(df,
                                   "ebola_campaign_num", "ebola_campaign_denom",
                                   "covid_campaign_num", "covid_campaign_denom",
                                   "measles_campaign_num", "measles_campaign_denom")] ~ zoo::rollapply(.data[[value[i]]],
-                                                                                                      length(.x),
+                                                                                                      length(.data[[value[i]]]),
                                                                                                       sum,
                                                                                                       na.rm = T,
                                                                                                       partial = TRUE,
@@ -259,11 +265,11 @@ transform_prev_cmpgn_data <- function(df,
                     ind_ids[c("covid_campaign_num", "covid_campaign_denom")],
                     ind_ids[c("measles_campaign_num", "measles_campaign_denom")])
 
-  new_df <- billionaiRe_add_columns(df, c("_billionaiRe_type_temp", "_billionaiRe_source_temp"))
+  new_df <- billionaiRe_add_columns(new_df, c("_billionaiRe_type_temp", "_billionaiRe_source_temp"), NA_character_)
 
   for (i in 1:length(pathogens)) {
-    new_df <- extrapolate_campaign_data(pathogens[i],
-                                        yrs[i],
+    new_df <- extrapolate_campaign_data(pathogens[[i]],
+                                        yrs[[i]],
                                         new_df,
                                         ind,
                                         year,
@@ -272,13 +278,15 @@ transform_prev_cmpgn_data <- function(df,
   }
 
   # Join up with original data frame
+
   new_df %>%
-    dplyr::full_join(df, by = c(iso3, ind, year)) %>%
+    dplyr::ungroup() %>%
+    dplyr::bind_rows(dplyr::filter(df, !(.data[[ind]] %in% ind_ids[ind_check]))) %>%
     dplyr::mutate(!!sym(type_col) := ifelse(is.na(.data[[type_col]]) & !is.na(.data[["_billionaiRe_type_temp"]]),
                                         .data[["_billionaiRe_type_temp"]],
                                         .data[[type_col]]),
                   !!sym(source_col) := ifelse(is.na(.data[[source_col]]) & !is.na(.data[["_billionaiRe_source_temp"]]),
                                               .data[["_billionaiRe_source_temp"]],
                                               .data[[source_col]])) %>%
-    dplyr::select(-"_billionaiRe_type_temp")
+    dplyr::select(-c("_billionaiRe_type_temp", "_billionaiRe_source_temp"))
 }

@@ -12,23 +12,27 @@ extrapolate_campaign_data <- function(pathogen,
                                       year,
                                       transform_value,
                                       source) {
-  dplyr::mutate(df,
-                dplyr::across(transform_value,
-                              ~ dplyr::case_when(
-                                .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ .x,
-                                .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ .x[.data[[year]] == pathogen_year],
-                                TRUE ~ .x
-                              )),
-                "_billionaiRe_type_temp" := dplyr::case_when(
-                  .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ "reported",
-                  .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ "projected",
-                  TRUE ~ .data[["_billionaiRe_type_temp"]]
-                ),
-                "_billionaiRe_source_temp" := dplyr::case_when(
-                  .data[[ind]] %in% pathogen ~ !!source,
-                  TRUE ~ .data[["_billionaiRe_type_temp"]]
-                )) %>%
-    dplyr::arrange(.data[[year]], .by_group = TRUE) %>%
-    dplyr::filter(dplyr::across(transform_value,
-                                ~ dplyr::row_number() >= min(which(.x > 0), Inf))) # dropping rows before data exists
+  if (!is.null(pathogen_year)) {
+    dplyr::mutate(df,
+                  dplyr::across(transform_value,
+                                ~ dplyr::case_when(
+                                  .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ .x,
+                                  .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ .x[.data[[year]] == pathogen_year],
+                                  TRUE ~ .x
+                                )),
+                  "_billionaiRe_type_temp" := dplyr::case_when(
+                    .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ "reported",
+                    .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ "projected",
+                    TRUE ~ .data[["_billionaiRe_type_temp"]]
+                  ),
+                  "_billionaiRe_source_temp" := dplyr::case_when(
+                    .data[[ind]] %in% pathogen ~ !!source,
+                    TRUE ~ .data[["_billionaiRe_type_temp"]]
+                  )) %>%
+      dplyr::arrange(.data[[year]], .by_group = TRUE) %>%
+      dplyr::filter(dplyr::across(transform_value,
+                                  ~ dplyr::row_number() >= min(which(.x > 0), Inf))) # dropping rows before data exists
+  } else {
+    df
+  }
 }
