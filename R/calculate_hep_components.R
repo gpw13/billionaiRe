@@ -132,7 +132,7 @@ prevent_calculations <- function(df,
                                   ind_ids[c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom",
                                             "measles_campaign_denom", "ebola_campaign_denom", "covid_campaign_denom", "surviving_infants")]),
                multiply_surviving_infs = c(rep(FALSE, 13), TRUE),
-               max_value = c(rep(FALSE, 13), TRUE))
+               max_value = c(rep(Inf, 13), 100))
 
   purrr::pmap_dfr(args,
                   pathogen_calc,
