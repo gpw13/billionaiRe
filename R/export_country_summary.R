@@ -14,10 +14,10 @@
 #' @examples
 #' \dontrun{
 #' data <- load_billion_data("hpop")
-#' export_country_summary_xls(data, iso3 = "AFG")
+#' export_country_summary_xls(data, iso = "AFG")
 #' }
 export_country_summary_xls <- function(df,
-                                       iso3,
+                                       iso,
                                        start_year = 2018,
                                        end_year = 2019:2023,
                                        billion = c("hep", "hpop", "uhc", "all"),
@@ -29,16 +29,16 @@ export_country_summary_xls <- function(df,
   billion <- rlang::arg_match(billion)
 
   if(billion == "hep"){
-    export_hep_country_summary_xls(df, {{iso3}}, {{output_fldr}}, {{xls_template}})
+    export_hep_country_summary_xls(df, {{iso}}, {{output_fldr}}, {{xls_template}})
   }
   if(billion == "hpop"){
-    export_hpop_country_summary_xls(df, {{iso3}}, {{output_fldr}}, {{xls_template}})
+    export_hpop_country_summary_xls(df, {{iso}}, {{output_fldr}}, {{xls_template}})
   }
   if(billion == "uhc"){
-    export_uhc_country_summary_xls(df, {{iso3}}, {{output_fldr}}, {{xls_template}})
+    export_uhc_country_summary_xls(df, {{iso}}, {{output_fldr}}, {{xls_template}})
   }
   if(billion == "all"){
-    export_all_country_summary_xls(df, iso3)
+    export_all_country_summary_xls(df, iso)
   }
 }
 
@@ -50,12 +50,16 @@ export_country_summary_xls <- function(df,
 #' @export
 #'
 export_hep_country_summary_xls <- function(df,
-                                           iso3,
+                                           iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            ...){
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
+
+}
+
+write_main_df <- function(df, wb, start_row, start_col,start_year, end_year, sheet_name){
 
 }
 
@@ -68,7 +72,7 @@ export_hep_country_summary_xls <- function(df,
 #' @export
 #'
 export_hpop_country_summary_xls <- function(df,
-                                            iso3,
+                                            iso,
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             output_fldr = "outputs",
@@ -77,7 +81,7 @@ export_hpop_country_summary_xls <- function(df,
   assert_mart_columns(df)
 
   #get data frame
-  data_sheet_df <- summarise_HPOP_cntry_data(df, iso3, start_year = start_year,
+  data_sheet_df <- summarise_HPOP_cntry_data(df, iso, start_year = start_year,
                                               end_year = end_year,...)
   #load workbook
   wb <- openxlsx::loadWorkbook(xls_template)
@@ -86,7 +90,7 @@ export_hpop_country_summary_xls <- function(df,
                       x = "Country contribution to GPW13 Healthier Populations billion target",
                       startCol = 1, startRow = 2, colNames = FALSE)
 
-  country_name <- whoville::iso3_to_names(iso3, org = "who", type = "short", language = "en")
+  country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
   openxlsx::writeData(wb, sheet = "HPOPdata", x = country_name,
                       startCol = 1, startRow = 4)
 
@@ -119,7 +123,7 @@ export_hpop_country_summary_xls <- function(df,
 
   final_table <- data_sheet_df$ind_df %>%
     dplyr::bind_cols(empty_column, .name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
-    dplyr::left_join(data_sheet_df$df_iso3_raw, by = "ind") %>%
+    dplyr::left_join(data_sheet_df$df_iso_raw, by = "ind") %>%
     dplyr::bind_cols(empty_column, .name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
     dplyr::left_join(data_sheet_df$baseline_proj, by = "ind") %>%
     dplyr::bind_cols(empty_column, .name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
@@ -135,7 +139,7 @@ export_hpop_country_summary_xls <- function(df,
   openxlsx::writeData(wb, sheet = "HPOPdata", x = dplyr::select(data_sheet_df$hpop_billion,contribution),
                       startCol = 17, startRow = 9+nrow(final_table)+3, colNames = FALSE)
   openxlsx::writeFormula(wb, sheet = "HPOPdata",
-                         glue::glue("=(P{9+nrow(final_table)+5}/{wppdistro::get_population(iso3, year = end_year)})"),
+                         glue::glue("=(P{9+nrow(final_table)+5}/{wppdistro::get_population('iso3', year = end_year)})"),
                          startCol = 16,startRow = 9+nrow(final_table)+6)
 
   notes <- data.frame(`Notes:` =c(
@@ -266,9 +270,9 @@ export_hpop_country_summary_xls <- function(df,
 
   #Time series
 
-  timesseries_df <- data_sheet_df$df_iso3_pop %>%
+  timesseries_df <- data_sheet_df$df_iso_pop %>%
     tidyr::pivot_wider(
-      id_cols = c(iso3,
+      id_cols = c(iso,
                   ind),
       names_from = year,
       values_from = type
@@ -278,7 +282,7 @@ export_hpop_country_summary_xls <- function(df,
     dplyr::mutate(dplyr::across(tidyselect::everything(), ~ tidyr::replace_na(.x, 0))) %>%
     dplyr::select(-ind)
 
-  timesseries_styles <- timeseries_style(wb, iso3, timesseries_df, "HPOPTime Series")
+  timesseries_styles <- timeseries_style(wb, iso, timesseries_df, "HPOPTime Series")
   openxlsx::writeData(wb, sheet = "HPOPTime Series", x = "Values are in bold if reported; normal if estimated; and red if imputed/projected",
                       startCol = 2, startRow = 5+nrow(data_sheet_df$transformed_time_series)+1)
 
@@ -304,7 +308,7 @@ export_hpop_country_summary_xls <- function(df,
     dir.create(output_fldr)
   }
 
-  openxlsx::saveWorkbook(wb, glue::glue("{output_fldr}/GPW13_HPOP_billion_{iso3}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"), overwrite = TRUE)
+  openxlsx::saveWorkbook(wb, glue::glue("{output_fldr}/GPW13_HPOP_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"), overwrite = TRUE)
 
   return(wb)
 }
@@ -317,7 +321,7 @@ export_hpop_country_summary_xls <- function(df,
 #' @export
 #'
 export_uhc_country_summary_xls <- function(df,
-                                           iso3,
+                                           iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            output_fldr = "outputs",
@@ -336,7 +340,7 @@ export_uhc_country_summary_xls <- function(df,
 #' @export
 #'
 export_all_country_summary_xls <- function(df,
-                                           iso3,
+                                           iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            output_fldr = "outputs",

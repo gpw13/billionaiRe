@@ -6,7 +6,7 @@
 \usage{
 summarise_HPOP_cntry_data(
   df,
-  iso3,
+  iso,
   start_year = 2018,
   end_year = 2019:2023,
   ...
@@ -16,7 +16,7 @@ summarise_HPOP_cntry_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{ISO3 codes of country to export.}
+\item{iso}{ISO3 codes of country to export.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

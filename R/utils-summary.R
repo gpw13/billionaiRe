@@ -10,8 +10,8 @@
 #' @return data frame
 
 count_since <- function(df, year) {
-  billionaiRe:::assert_mart_columns(df)
-  billionaiRe:::assert_numeric(year)
+  assert_mart_columns(df)
+  assert_numeric(year)
 
   count_df <- df  %>%
     dplyr::filter(year >= year) %>%

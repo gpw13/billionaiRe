@@ -6,7 +6,7 @@
 \usage{
 export_country_summary_xls(
   df,
-  iso3,
+  iso,
   start_year = 2018,
   end_year = 2019:2023,
   billion = c("hep", "hpop", "uhc", "all"),
@@ -19,7 +19,7 @@ export_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{ISO3 codes of country to export.}
+\item{iso}{ISO3 codes of country to export.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
@@ -45,6 +45,6 @@ billions or for a specific billion.
 \examples{
 \dontrun{
 data <- load_billion_data("hpop")
-export_country_summary_xls(data, iso3 = "AFG")
+export_country_summary_xls(data, iso = "AFG")
 }
 }

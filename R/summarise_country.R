@@ -1,18 +1,8 @@
-summarise_sheet_indicator_list <- function(billion) {
-  billion <- rlang::arg_match(billion)
-  indicator_order_b <- indicator_order %>%
-    dplyr::filter(ind %in% billion_ind_codes(billion)) %>%
-    dplyr::arrange(order) %>%
-    dplyr::select(sdg, short_name, medium_name, unit_raw, )
-
-  return(indicator_order_b)
-}
-
 #' Summarise Excel sheet 'data' for HPOP country summary
 #'
 #' `summarise_HPOP_cntry_data` summarises the 'data' sgeet for the HPOP country summary.
 #'
-#' @param iso3 ISO3 codes of country to export.
+#' @param iso ISO3 codes of country to export.
 #' @param ... Additional arguments passed to `calculate_hpop_contributions` and
 #' `calculate_hpop_billion`. Use if you need to provide additional parameters to
 #' those functions.
@@ -24,7 +14,7 @@ summarise_sheet_indicator_list <- function(billion) {
 #' @export
 summarise_HPOP_cntry_data <-
   function(df,
-           iso3,
+           iso,
            start_year = 2018,
            end_year = 2019:2023,
            ...) {
@@ -32,15 +22,15 @@ summarise_HPOP_cntry_data <-
     assert_years(start_year, end_year)
 
     # Filter df for country, arrange indicators by order.
-    df_iso3 <- df %>%
-      dplyr::filter(iso3 == !!iso3) %>%
+    df_iso <- df %>%
+      dplyr::filter(iso3 == !!iso) %>%
       dplyr::left_join(dplyr::select(indicator_order, ind, order), by = "ind") %>%
       dplyr::arrange(order) %>%
       dplyr::select(-order)
 
 
     #Get unique indicators
-    unique_ind <- unique(df_iso3[["ind"]])
+    unique_ind <- unique(df_iso[["ind"]])
 
     # Data frame with indicators' order
     ind_df <- indicator_order %>%
@@ -49,7 +39,7 @@ summarise_HPOP_cntry_data <-
       dplyr::select(ind, transformed_name, unit_transformed)
 
     # Latest reported data
-    latest_reported <- df_iso3 %>%
+    latest_reported <- df_iso %>%
       transform_hpop_data() %>%
       dplyr::group_by(iso3, ind) %>%
       dplyr::filter(type %in% c("estimated", "reported")) %>%
@@ -59,9 +49,9 @@ summarise_HPOP_cntry_data <-
       dplyr::select(ind,value, transform_value, year, type, source)
 
     # Count data points since specified date
-    counts_2012 <- count_since(df_iso3, 2012) %>%
+    counts_2012 <- count_since(df_iso, 2012) %>%
       dplyr::select(-iso3)
-    counts_2000 <- count_since(df_iso3, 2000)%>%
+    counts_2000 <- count_since(df_iso, 2000)%>%
       dplyr::select(-iso3)
 
     # Join counts with latest reported data
@@ -70,11 +60,11 @@ summarise_HPOP_cntry_data <-
       dplyr::left_join(counts_2012, by = "ind")
 
     # df with HPOP pops
-    df_iso3_pop <- transform_hpop_data(df_iso3) %>%
+    df_iso_pop <- transform_hpop_data(df_iso) %>%
       add_hpop_populations(pop_year = end_year)
 
     # wider raw data (pre-transformation)
-    df_iso3_raw <- df_iso3 %>%
+    df_iso_raw <- df_iso %>%
       dplyr::filter(year %in% c(!!start_year, !!end_year)) %>%
       dplyr::select(ind, year, value) %>%
       dplyr::group_by(ind) %>%
@@ -85,7 +75,7 @@ summarise_HPOP_cntry_data <-
       )
 
     # Contribution to HPOP billion in wider format
-    baseline_proj <- df_iso3_pop %>%
+    baseline_proj <- df_iso_pop %>%
       dplyr::ungroup() %>%
       calculate_hpop_contributions(year = "year",start_year = start_year, end_year = end_year, iso3 = "iso3",...) %>%
       dplyr::filter(year %in% c(!!start_year, !!end_year)) %>%
@@ -126,7 +116,7 @@ summarise_HPOP_cntry_data <-
       )
 
     # Billions for HPOP
-    hpop_billion <- df_iso3_pop %>%
+    hpop_billion <- df_iso_pop %>%
       calculate_hpop_billion(start_year = start_year, end_year = end_year) %>%
       dplyr::filter(year %in% c(!!start_year, !!end_year)) %>%
       dplyr::group_by(ind) %>%
@@ -134,14 +124,14 @@ summarise_HPOP_cntry_data <-
       dplyr::select(ind, contribution) %>%
       dplyr::ungroup()
 
-    perc_pop_healthier <- hpop_billion[hpop_billion$ind == "hpop_healthier", "contribution"]/wppdistro::get_population(iso3, year = end_year)
+    perc_pop_healthier <- hpop_billion[hpop_billion$ind == "hpop_healthier", "contribution"]/wppdistro::get_population(iso, year = end_year)
 
     hpop_billion <- hpop_billion %>%
       dplyr::bind_rows(tibble::tibble(ind = "hpop_healthier_perc", contribution = perc_pop_healthier[[1]]))
 
     #transformed time series
     transformed_time_series <- dplyr::select(ind_df, - unit_transformed) %>%
-      dplyr::left_join(df_iso3_pop, by = "ind") %>%
+      dplyr::left_join(df_iso_pop, by = "ind") %>%
       dplyr::select(transformed_name, year, transform_value) %>%
       dplyr::arrange(year) %>%
       dplyr::group_by(transformed_name) %>%
@@ -151,11 +141,11 @@ summarise_HPOP_cntry_data <-
     final_tables <- list(
       "ind_df" = ind_df,
       "latest_reported" = latest_reported,
-      "df_iso3_raw" = df_iso3_raw,
+      "df_iso_raw" = df_iso_raw,
       "baseline_proj" = baseline_proj,
       "hpop_contrib" = hpop_contrib,
       "hpop_billion" = hpop_billion,
-      "df_iso3_pop" = df_iso3_pop,
+      "df_iso_pop" = df_iso_pop,
       "transformed_time_series" = transformed_time_series
     )
 
