@@ -2,6 +2,9 @@
 #'
 #' `calculate_uhc_billion()` calculates country-level UHC Billion based on
 #' indicator level data. Calculates it for each country-year combination in the provided data.
+#' In order to calculate average service coverage, and thus the overall Billion,
+#' all UHC indicators must be present for a given year. The only exception is
+#' insecticide treated nets, which need not be present.
 #'
 #' @inherit calculate_hpop_contributions params
 #' @inherit transform_uhc_data return details params
@@ -77,13 +80,12 @@ calculate_uhc_billion_single <- function(df,
   df %>%
     dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>% # nurses doctors already aggregated to hwf
     dplyr::group_by(dplyr::across(dplyr::any_of(c(year, iso3, scenario, "_billion_group_temp")))) %>%
-    dplyr::summarize(!!sym(transform_value) := mean(.data[[transform_value]], na.rm = TRUE),
+    dplyr::summarize(!!sym(transform_value) := billion_group_mean(.data[[ind]], .data[[transform_value]], !!ind_ids),
                      .groups = "drop") %>%
     tidyr::pivot_wider(names_from = "_billion_group_temp",
                        values_from = transform_value) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate("asc" := mean(dplyr::c_across(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp")),
-                                na.rm = TRUE)) %>%
+    dplyr::mutate("asc" := mean(dplyr::c_across(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp")))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate("uhc_sm" := .data[["asc"]] * (100 - .data[["_fh_temp"]]) / 100) %>%
     dplyr::select(-dplyr::any_of(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp", "_fh_temp"))) %>%
@@ -95,4 +97,32 @@ calculate_uhc_billion_single <- function(df,
                                             "estimated"),
                   !!sym(source_col) := !!source,
                   !!sym(value) := .data[[transform_value]])
+}
+
+#' Calculate average per Billion group
+#'
+#' Calculates average per Billion group, taking into account number of
+#' indicators available for use in the calculation. It returns NA (and thus NA when
+#' calculated as ASC) if any indicator is missing. The only exception is if
+#' insecticide treated nets is missing.
+#'
+#' @param ind Vector of inds
+#' @param transform_value Vector of transformed values
+#' @inheritParams calculate_uhc_billion
+billion_group_mean <- function(ind,
+                               transform_value,
+                               ind_ids) {
+  rmnch <- ind_ids[c("fp", "dtp3", "anc4", "pneumo")]
+  cd <- ind_ids[c("tb", "art", "uhc_sanitation")]
+  ncd <- ind_ids[c("uhc_tobacco", "bp", "fpg")]
+  sca <- ind_ids[c("beds", "hwf", "espar")]
+
+  chk <- sapply(list(rmnch, cd, ncd, sca),
+                function(x) all(x %in% ind))
+
+  if (any(chk)) {
+    mean(transform_value, na.rm = T)
+  } else {
+    NA_real_
+  }
 }
