@@ -107,3 +107,34 @@
 #'   \item{share_perc}{Share, as percent of total projected population in 2023.}
 #' }
 "country_shares"
+
+#' Indicator order
+#'
+#' A dataset containing analysis indicators from `indicator_df`
+#' combined with ordering number, and expended indicator definition to create
+#' good looking export files.
+#'
+#' @format A data frame with `r nrow("indicator_order")` rows and `r ncol(indicator_order)`
+#' variables:
+#' \describe{
+#'   \item{sdg}{Indicator code from SDG and attributed if not in SDG}
+#'   \item{short_name}{Short name of the indicator}
+#'   \item{unit_raw}{Unit of raw values for indicator}
+#'   \item{unit_transformed}{Unit of raw values for indicator}
+#'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
+#'   \item{transformed_name}{Name of indicator after transformation}
+#'   \item{ind}{Code of the indicator in billionaiRe}
+#'   \item{order}{Order of the indicators }
+#'   \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
+#'   \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
+#'   \item{gho_code}{GHO storage code for indicator}
+#'   \item{uhc}{Logical, is a UHC Billions indicator}
+#'   \item{hpop}{Logical, is an HPOP Billions indicator}
+#'   \item{hep}{Logical, is a HEP Billions indicator}
+#'   \item{covariate}{Logical, is the indicator just a covariate for the Billions}
+#'   \item{calculated}{Logical, is the indicator calculated within the package and thus not an input}
+#' }
+"indicator_order"
+
+
+
