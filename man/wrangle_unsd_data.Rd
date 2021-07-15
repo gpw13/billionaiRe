@@ -21,7 +21,7 @@ the source column is generated from the UNSD's \code{Source} column.}
 A data frame.
 }
 \description{
-\code{wrangle_gho_data()} takes data returned from the UNSD API, which should
+\code{wrangle_unsd_data()} takes data returned from the UNSD API, which should
 be obtained using \code{\link[goalie:sdg_data]{goalie::sdg_data()}}, and transforms it into data that is
 ready to be put into the xMart database and used within the billionaiRe
 package. Currently, providing source and type inputs these values into the
