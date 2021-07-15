@@ -4,18 +4,29 @@
 #' count the number of data points exists for each indicator in `df` since the
 #' specified `year`.
 #'
-#' @inheritParams transform_hpop_data
-#' @param year numeric
+#' @inheritParams summarize_hpop_country_data
+#' @param year_specified numeric
 #'
 #' @return data frame
 
-count_since <- function(df, year) {
-  assert_mart_columns(df)
-  assert_numeric(year)
+count_since <- function(df, year_specified, year, ind, iso3) {
+  assert_columns(df, year, ind, iso3)
+  assert_numeric(year_specified)
 
-  count_df <- df  %>%
-    dplyr::filter(year >= year) %>%
-    dplyr::group_by(iso3, ind) %>%
-    dplyr::summarise(!!rlang::sym(glue::glue("count_{year}")):= dplyr::n(), .groups = "drop")
+  count_df <- df %>%
+    dplyr::filter(.data[[year]] >= !!year_specified) %>%
+    dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
+    dplyr::summarise(!!rlang::sym(glue::glue("count_{year_specified}")) := dplyr::n(), .groups = "drop")
+}
 
+#' Get order of indicator
+#'
+#' @param ind character vector of indicators
+#'
+#' @return character vector
+
+get_ind_order <- function(ind){
+  data.frame(ind = ind) %>%
+    dplyr::left_join(billionaiRe::indicator_order, by = c(ind = "ind")) %>%
+    dplyr::pull("order")
 }
