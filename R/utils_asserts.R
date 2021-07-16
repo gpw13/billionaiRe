@@ -98,7 +98,7 @@ assert_ind_ids <- function(ind_ids, billion) {
 #' @param col_name string specifying the column to check
 assert_homogeneous_col<- function(df, col_name) {
 
-  if (length(unique(df[[col_name]]))) {
+  if (length(unique(df[[col_name]])) > 1) {
     stop(
       sprintf("This function should have only one unique value in the %s column.", col_name),
       call. = FALSE
