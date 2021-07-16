@@ -13,21 +13,30 @@
 #'     column is generated from the GHO's `DataSourceDim` column.
 #' @param type Character string of type to be provided to the data frame. If
 #'     `NULL`, the type column is just filled with `NA_character_`.
+#' @param ind Character string of the indicator to be provided to the data frame. If
+#'     `NULL`, the indicator is determined by applying the `convert_ind_codes` function
+#'     on the `IndicatorCode` field of the GHO data.
 #'
 #' @return A data frame.
 #'
 #' @export
 wrangle_gho_data <- function(df,
                              source = NULL,
-                             type = NULL) {
+                             type = NULL,
+                             ind = NULL) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)
 
-  df %>%
+  # Ensure that the data frame only pertains to a single indicator
+  assert_homogeneous_col(df, "IndicatorCode")
+
+  output = df %>%
     dplyr::transmute("iso3" := .data[["SpatialDim"]],
                      "year" := .data[["TimeDim"]],
-                     "ind" := convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "analysis_code"),
+                     "ind" := ifelse(is.null(ind),
+                                     convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "analysis_code"),
+                                     ind),
                      "value" := .data[["NumericValue"]],
                      "lower" := .data[["Low"]],
                      "upper" := .data[["High"]],
@@ -40,11 +49,19 @@ wrangle_gho_data <- function(df,
                      "other_detail" := .data[["Comments"]]) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
+
+  # Warn user if any of the rows don't specify an indicator
+  warning_col_missing_values(output, "ind", "any")
+
+  # Warn user if any of the rows don't specify a source
+  warning_col_missing_values(output, "source", "any")
+
+  output
 }
 
 #' Put UNSD data into billionaiRe format
 #'
-#' `wrangle_gho_data()` takes data returned from the UNSD API, which should
+#' `wrangle_unsd_data()` takes data returned from the UNSD API, which should
 #' be obtained using [goalie::sdg_data()], and transforms it into data that is
 #' ready to be put into the xMart database and used within the billionaiRe
 #' package. Currently, providing source and type inputs these values into the

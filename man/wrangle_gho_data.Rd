@@ -4,7 +4,7 @@
 \alias{wrangle_gho_data}
 \title{Put GHO data into billionaiRe format}
 \usage{
-wrangle_gho_data(df, source = NULL, type = NULL)
+wrangle_gho_data(df, source = NULL, type = NULL, ind = NULL)
 }
 \arguments{
 \item{df}{A data frame in GHO format, returned from \code{\link[ghost:gho_data]{ghost::gho_data()}}.}
@@ -15,6 +15,10 @@ column is generated from the GHO's \code{DataSourceDim} column.}
 
 \item{type}{Character string of type to be provided to the data frame. If
 \code{NULL}, the type column is just filled with \code{NA_character_}.}
+
+\item{ind}{Character string of the indicator to be provided to the data frame. If
+\code{NULL}, the indicator is determined by applying the \code{convert_ind_codes} function
+on the \code{IndicatorCode} field of the GHO data.}
 }
 \value{
 A data frame.

@@ -1,3 +1,8 @@
+# billionaiRe 0.4.1
+* Updated `wrangle_who_data` function with additional assertions and warnings
+* Updated `indicator_df.xlsx` and `indicator_df.rda` with the GHO code for
+measles_routine (WHS8_110)
+
 # billionaiRe 0.4.0
 * Updated all three Billions functions to produce data in long format for immediate
 upload to xMart.
