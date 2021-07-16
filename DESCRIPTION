@@ -18,7 +18,7 @@ Description: Apply methods to calculate Universal Health
     Coverage, Healthier Populations, and Health Emergencies Protection Billions.
 URL: https://www.who.int/data/triple-billion-dashboard, 
      https://www.who.int/publications/m/item/thirteenth-general-programme-of-work-(gpw13)-methods-for-impact-measurement, 
-     https://github.com/caldwellst/billionaiRe
+     https://github.com/gpw13/billionaiRe
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -40,9 +40,9 @@ Imports:
     glue,
     tibble
 Remotes: 
-    caldwellst/wppdistro,
-    caldwellst/whoville,
-    caldwellst/xmart4
+    gpw13/wppdistro,
+    gpw13/whoville,
+    gpw13/xmart4
 Depends: 
     R (>= 2.10)
 Suggests: 
