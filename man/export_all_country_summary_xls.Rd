@@ -19,7 +19,7 @@ export_all_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to export.}
+\item{iso}{ISO3 codes of country to summarize.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
@@ -31,7 +31,7 @@ country, year, and indicator.}
 
 \item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
 \code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions.}
+those functions}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.
