@@ -1,3 +1,7 @@
+# billionaiRe 0.4.2
+* Updated `indicator_df.xlsx` and `indicator_df.rda` with the GHO code for 
+polio_routine(WHS4_544).
+
 # billionaiRe 0.4.1
 * Updated `wrangle_who_data` function with additional assertions and warnings
 * Updated `indicator_df.xlsx` and `indicator_df.rda` with the GHO code for
