@@ -27,6 +27,6 @@ count_since <- function(df, year_specified, year, ind, iso3) {
 
 get_ind_order <- function(ind){
   data.frame(ind = ind) %>%
-    dplyr::left_join(billionaiRe::indicator_order, by = c(ind = "ind")) %>%
+    dplyr::left_join(billionaiRe::indicator_df, by = c(ind = "ind")) %>%
     dplyr::pull("order")
 }

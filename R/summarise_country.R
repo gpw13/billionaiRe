@@ -1,15 +1,14 @@
-#' Summarize Excel sheet 'data' for HPOP country summary
+#' Summarize data for HPOP country summary export
 #'
-#' `summarize_hpop_country_data` summarises the 'data' sgeet for the HPOP country summary.
+#' `summarize_hpop_country_data` summarizes the data for the HPOP country summary.
 #'
-#' @param iso ISO3 codes of country to export.
-#' @param ... Additional arguments passed to `calculate_hpop_contributions` and
-#' `calculate_hpop_billion`. Use if you need to provide additional parameters to
-#' those functions.
-#' @inherit calculate_hpop_contributions params
+#' @param iso ISO3 codes of country to summarize.
+#' @inheritParams calculate_hpop_contributions
+#' @inheritParams calculate_uhc_billion
+#' @inheritParams transform_hpop_data
 #'
 #' @return list of data frames to be used in the 'data' sheet of HPOP country summary
-#' export
+#' @export
 #'
 summarize_hpop_country_data <-
   function(df,
@@ -18,19 +17,24 @@ summarize_hpop_country_data <-
            iso3 = "iso3",
            ind = "ind",
            value = "value",
-           transform_glue = "transform_{value}",
-           type = "type",
-           source = "source",
+           transform_value = "transform_value",
+           contribution = "contribution",
+           population = "population",
+           scenario = NULL,
+           type_col = "type",
+           source_col = "source",
            ind_ids = billion_ind_codes("hpop"),
            start_year = 2018,
-           end_year = 2019:2023,
-           ...) {
-    assert_columns(df,year, iso3, ind, value, type, source)
+           end_year = 2019:2023) {
+
+    assert_columns(df,year, iso3, ind, value, transform_value,scenario, contribution, type_col, source_col, population)
     assert_mart_columns(df)
     assert_years(start_year, end_year)
+    assert_same_length(value, transform_value)
+    assert_same_length(value, contribution)
     wppdistro:::assert_iso3(iso)
 
-    transform_value <- glue::glue(transform_glue)
+    ### TODO: Add scenarios implementation
 
     # Filter df for country, arrange indicators by order.
     df_iso <- df %>%
@@ -41,22 +45,22 @@ summarize_hpop_country_data <-
     unique_ind <- unique(df_iso[[ind]])
 
     # Data frame with indicators' order
-    ind_df <- billionaiRe::indicator_order %>%
+    ind_df <- billionaiRe::indicator_df %>%
       dplyr::filter(.data[["ind"]] %in% !!unique_ind) %>%
       dplyr::select("ind", "transformed_name", "unit_transformed")
 
-    df_iso_tranf <- df_iso %>%
-      transform_hpop_data(iso3 = iso3, ind = ind, value = value,
-                          transform_glue = transform_glue, ind_ids = ind_ids)
+    # df_iso_tranf <- df_iso %>%
+    #   transform_hpop_data(iso3 = iso3, ind = ind, value = value,
+    #                       transform_glue = transform_glue, ind_ids = ind_ids)
 
     # Latest reported data
-    latest_reported <- df_iso_tranf %>%
+    latest_reported <- df_iso %>%
       dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
-      dplyr::filter(.data[[type]] %in% c("estimated", "reported")) %>%
-      dplyr::filter(.data[[year]] >= max(.data[[year]])) %>%
+      dplyr::filter(.data[[type_col]] %in% c("estimated", "reported"),
+                    .data[[year]] >= max(.data[[year]])) %>%
       dplyr::ungroup() %>%
-      dplyr::select(dplyr::all_of(c(!!ind, !!value, !!transform_value,!!year,
-                                    !!type, !!source, !!iso3)))
+      dplyr::select(dplyr::all_of(c(ind, value, transform_value,year,
+                                    type_col, source_col, iso3)))
 
     # Count data points since specified date
     counts_2012 <- count_since(df_iso, year_specified = 2012, year = year, ind = ind, iso3 = iso3)
@@ -67,103 +71,98 @@ summarize_hpop_country_data <-
       dplyr::left_join(counts_2000, by = c(ind, iso3 )) %>%
       dplyr::left_join(counts_2012, by = c(ind, iso3))
 
-
-    # wider raw data (pre-transformation)
-    df_iso_raw <- df_iso %>%
-      dplyr::filter(.data[[year]] %in% c(!!start_year, !!end_year)) %>%
-      dplyr::select(all_of(c(!!ind, !!year, !!value))) %>%
-      dplyr::group_by(!!rlang::sym(ind)) %>%
-      tidyr::pivot_wider(
-        names_from = year,
-        values_from = value,
-        names_prefix = "raw_"
-      )
-
-    # df with HPOP pops
-    df_iso_pop <- df_iso_tranf %>%
-      add_hpop_populations(pop_year = end_year,
-                           iso3 = iso3,
-                           ind = ind,
-                           population = "population",
-                           ind_ids = ind_ids)
-
-
-    # Contribution to HPOP billion in wider format
-    baseline_proj <- df_iso_pop %>%
-      calculate_hpop_contributions(year = year, start_year = start_year, end_year = end_year, iso3 = iso3, ...) %>%
-      dplyr::filter(.data[[year]] %in% c(!!start_year, !!end_year)) %>%
-      dplyr::select(
-        .data[[ind]],
-        .data[[year]],
-        .data[[transform_value]],
-        .data[["contribution"]],
-        .data[["population"]],
-        .data[[type]],
-        .data[[source]]
-      ) %>%
+    # Baseline and projected for end date data in wider format
+    baseline_proj <- df_iso %>%
+      dplyr::filter(.data[[year]] %in% c(!!start_year, max(!!end_year)),
+                    .data[[ind]] %in% ind_ids) %>%
+      dplyr::select(dplyr::all_of(c(
+        ind,
+        year,
+        value,
+        transform_value,
+        type_col,
+        source_col
+      ))) %>%
       dplyr::group_by(!!rlang::sym(ind)) %>%
       tidyr::pivot_wider(
         names_from = !!rlang::sym(year),
-        values_from = c("transform_value", "contribution", "population", .data[[type]], .data[[source]])
+        values_from = c(dplyr::all_of(c(value, transform_value)), .data[[type_col]], .data[[source_col]])
       )
 
-    hpop_contrib <- baseline_proj %>%
-      dplyr::mutate(!!sym(glue::glue("change_{transform_value}")) := as.numeric(.data[[glue::glue("{transform_value}_{end_year}")]])
-      - as.numeric(.data[[glue::glue("{transform_value}_{start_year}")]])) %>%
-      dplyr::rename(
-        contribution = glue::glue("contribution_{end_year}"),
-        population = glue::glue("population_{end_year}")
-      ) %>%
-      dplyr::select(
-        .data[[ind]],
-        glue::glue("change_{transform_value}"),
-        population,
-        contribution
-      ) %>%
-      dplyr::mutate(contribution_perc = contribution / population)
+    # Contribution of each indicator to billion
+    ### TODO: would benefit from custom function to calculate with double-counting
+    hpop_contrib <- df_iso %>%
+      dplyr::filter(.data[[year]] %in% c(!!max(end_year), !!start_year),
+                    .data[[ind]] %in% ind_ids) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+      dplyr::mutate(dplyr::across(dplyr::any_of(transform_value),
+                                  calculate_hpop_change_vector,
+                                  .data[[year]],
+                                  !!start_year, .names = "change_{.col}")) %>%
+      dplyr::filter(.data[[year]] == !!max(end_year)) %>%
+      dplyr::group_by(dplyr::across(c(!!iso3, !!scenario, !!ind))) %>%
+      dplyr::mutate(
+        tot_pop = wppdistro::get_population(!!iso, year = !!max(end_year)),
+        dplyr::across(c(!!glue::glue("change_{transform_value}")),
+                      ~ (.x/100)*population,
+                      .names = "ind_contrib_{.col}"),
+        dplyr::across(c(!!glue::glue("change_{transform_value}")),
+             ~((.x/100)*population)/tot_pop*100,
+             .names = "ind_contrib_perc_{.col}"
+             )) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(dplyr::all_of(c(!!ind,
+                                    !!glue::glue("change_{transform_value}"),
+                                    !!population,
+                                    !!glue::glue("ind_contrib_change_{transform_value}"),
+                                    !!glue::glue("ind_contrib_perc_change_{transform_value}"))))
 
-    baseline_proj <- baseline_proj %>%
-      dplyr::select(
-        ind,
-        dplyr::starts_with("transform_"),
-        dplyr::starts_with("type_"),
-        dplyr::starts_with("source")
-      )
-
-    # Billions for HPOP
-    hpop_billion <- df_iso_pop %>%
-      calculate_hpop_billion(year = year, start_year = start_year, end_year = end_year,
-                             iso3 = iso3, ind = ind, pop_year = end_year,
-                             transform_value =transform_value,
-                             ind_ids = ind_ids) %>%
-      dplyr::filter(.data[[year]] %in% c(!!start_year, !!end_year)) %>%
-      dplyr::group_by(.data[[ind]]) %>%
-      dplyr::filter(stringr::str_detect(.data[[ind]], "hpop_healthier")) %>%
-      dplyr::select(.data[[ind]], .data[["contribution"]]) %>%
+    # Contribution towards billion (all indicator) with double counting
+    dbl_counted_billion <- hpop_contrib %>%
+      dplyr::summarise(dplyr::across(dplyr::all_of(glue::glue("ind_contrib_change_{transform_value}")),
+                       ~ sum(.x[which(.x >=0)]), .names = "hpop_healthier_dbl_plus_{contribution}"),
+                       dplyr::across(dplyr::all_of(glue::glue("ind_contrib_change_{transform_value}")),
+                                     ~ sum(.x[which(.x <0)]), .names = "hpop_healthier_dbl_minus_{contribution}")
+                       ) %>%
+      tidyr::pivot_longer(cols = dplyr::ends_with(!!contribution),
+                          names_to = c("ind", "var"), names_pattern = "(hpop_healthier_dbl_plus|hpop_healthier_dbl_minus)_(.*)$") %>%
+      dplyr::group_by(dplyr::across(ind)) %>%
+      tidyr::pivot_wider(dplyr::everything(), values_from = "value", names_from = "var") %>%
       dplyr::ungroup()
 
-    perc_pop_healthier <- hpop_billion[hpop_billion$ind == "hpop_healthier", "contribution"] / wppdistro::get_population(iso, year = end_year)
+    dbl_healthier <- dbl_counted_billion %>%
+      dplyr::summarise(dplyr::across(dplyr::all_of(contribution),
+                                     ~ sum(.x))) %>%
+      dplyr::mutate("ind" := c("hpop_healthier_dbl","hpop_healthier_dbl_perc"), .before = 1)
 
-    hpop_billion <- hpop_billion %>%
-      dplyr::bind_rows(tibble::tibble(ind = "hpop_healthier_perc", contribution = perc_pop_healthier[[1]]))
+    #Binding frames together
+    dbl_counted_billion <- dbl_counted_billion %>%
+      dplyr::bind_rows(dbl_healthier) %>%
+      dplyr::rename_with()
+
+    # Contribution towards overall billion (all indicators)
+    hpop_billion <- df_iso %>%
+      dplyr::filter(.data[[year]] == c(!!max(end_year)),
+                    stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
+      dplyr::select(dplyr::all_of(c(!!ind, !!contribution))) %>%
+      dplyr::bind_rows(dbl_counted_billion)
 
     # transformed time series
     transformed_time_series <- dplyr::select(ind_df, -"unit_transformed") %>%
-      dplyr::left_join(df_iso_pop, by = "ind") %>%
-      dplyr::select(transformed_name, .data[[year]], .data[[transform_value]]) %>%
+      dplyr::left_join(df_iso, by = "ind") %>%
+      dplyr::select(c(.data[["transformed_name"]], .data[[year]], !!transform_value)) %>%
       dplyr::arrange(.data[[year]]) %>%
-      dplyr::group_by(transformed_name) %>%
-      tidyr::pivot_wider(values_from = transform_value, names_from = .data[[year]])
+      dplyr::group_by(.data[["transformed_name"]]) %>%
+      tidyr::pivot_wider(values_from = !!transform_value, names_from = .data[[year]])
 
-
+    #Final list of df to be returned
     final_tables <- list(
       "ind_df" = ind_df,
       "latest_reported" = latest_reported,
-      "df_iso_raw" = df_iso_raw,
       "baseline_proj" = baseline_proj,
       "hpop_contrib" = hpop_contrib,
       "hpop_billion" = hpop_billion,
-      "df_iso_pop" = df_iso_pop,
+      "df_iso" = df_iso,
       "transformed_time_series" = transformed_time_series
     )
 

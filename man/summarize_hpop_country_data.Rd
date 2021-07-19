@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_country.R
 \name{summarize_hpop_country_data}
 \alias{summarize_hpop_country_data}
-\title{Summarize Excel sheet 'data' for HPOP country summary}
+\title{Summarize data for HPOP country summary export}
 \usage{
 summarize_hpop_country_data(
   df,
@@ -11,26 +11,46 @@ summarize_hpop_country_data(
   iso3 = "iso3",
   ind = "ind",
   value = "value",
-  transform_glue = "transform_{value}",
-  type = "type",
-  source = "source",
+  transform_value = "transform_value",
+  contribution = "contribution",
+  population = "population",
+  scenario = NULL,
+  type_col = "type",
+  source_col = "source",
   ind_ids = billion_ind_codes("hpop"),
   start_year = 2018,
-  end_year = 2019:2023,
-  ...
+  end_year = 2019:2023
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to export.}
+\item{iso}{ISO3 codes of country to summarize.}
 
 \item{year}{Column name of column with years.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{value}{Column name of column with indicator values.}
+
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{contribution}{Glue specification used to transform \code{transform_value} column
+names into contribution column names. Defaults to replacing the string
+\code{"transform_value"} with \code{"contribution"}.}
+
+\item{population}{Column name of column with population figures.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{source_col}{Column name of column to store source information.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
@@ -40,15 +60,10 @@ be supplied as a named vector where the names correspond to the output of
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions.}
 }
 \value{
 list of data frames to be used in the 'data' sheet of HPOP country summary
-export
 }
 \description{
-\code{summarize_hpop_country_data} summarises the 'data' sgeet for the HPOP country summary.
+\code{summarize_hpop_country_data} summarizes the data for the HPOP country summary.
 }
