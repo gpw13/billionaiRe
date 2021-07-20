@@ -34,7 +34,7 @@ summarize_hpop_country_data <-
     assert_same_length(value, contribution)
     wppdistro:::assert_iso3(iso)
 
-    ### TODO: Add scenarios implementation
+    ### TODO: Add full scenarios implementation
 
     # Filter df for country, arrange indicators by order.
     df_iso <- df %>%
@@ -48,10 +48,6 @@ summarize_hpop_country_data <-
     ind_df <- billionaiRe::indicator_df %>%
       dplyr::filter(.data[["ind"]] %in% !!unique_ind) %>%
       dplyr::select("ind", "transformed_name", "unit_transformed")
-
-    # df_iso_tranf <- df_iso %>%
-    #   transform_hpop_data(iso3 = iso3, ind = ind, value = value,
-    #                       transform_glue = transform_glue, ind_ids = ind_ids)
 
 
     # Latest reported data
@@ -92,6 +88,7 @@ summarize_hpop_country_data <-
 
     # Contribution of each indicator to billion
     ### TODO: would benefit from custom function to calculate with double-counting
+    ### based on calculate_hpop_billion
     hpop_contrib <- df_iso %>%
       dplyr::filter(.data[[year]] %in% c(!!max(end_year), !!start_year),
                     .data[[ind]] %in% ind_ids) %>%
