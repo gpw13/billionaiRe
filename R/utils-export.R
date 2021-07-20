@@ -1,13 +1,13 @@
 timeseries_style <- function(wb, iso, font_df, b_sheet) {
-  #Change font of time series values based on indicator (Bold:reported, normal:estimated, faded: imputed/projected)
+  # Change font of time series values based on indicator (Bold:reported, normal:estimated, faded: imputed/projected)
 
-  c_font <- font_df %>% dplyr::filter(iso3 == iso)
+  c_font <- font_df %>% dplyr::filter(.data[["iso3"]] == !!iso)
   col <- colnames(font_df)
 
 
   for (j in 2:length(col)) {
     for (i in 1:dim(c_font)[1]) {
-      font = c_font[i, j]
+      font <- c_font[i, j]
 
       col <- j + 1
       row <- i + 5
@@ -77,7 +77,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
 }
 
 
-excel_styles <- function(){
+excel_styles <- function() {
   dark_blue_header <- openxlsx::createStyle(
     fontSize = 11,
     fontColour = "white",
@@ -102,27 +102,37 @@ excel_styles <- function(){
     borderStyle = "thin"
   )
 
-  wrapped_h <- openxlsx::createStyle(textDecoration = "bold",
-                                     wrapText = TRUE)
+  wrapped_h <- openxlsx::createStyle(
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
 
   bold <- openxlsx::createStyle(textDecoration = "bold")
 
-  title <- openxlsx::createStyle(textDecoration = "bold",
-                                 fontSize = 16)
+  title <- openxlsx::createStyle(
+    textDecoration = "bold",
+    fontSize = 16
+  )
 
-  sub_title <- openxlsx::createStyle(textDecoration = "bold",
-                                     fontSize = 12)
+  sub_title <- openxlsx::createStyle(
+    textDecoration = "bold",
+    fontSize = 12
+  )
 
-  normal_data_wrapped <- openxlsx::createStyle(fontSize = 8,
-                                               fgFill = "white",
-                                               border = "bottom",
-                                               numFmt = "0.00",
-                                               wrapText = TRUE)
+  normal_data_wrapped <- openxlsx::createStyle(
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0.00",
+    wrapText = TRUE
+  )
 
-  normal_data <- openxlsx::createStyle(fontSize = 8,
-                                       fgFill = "white",
-                                       border = "bottom",
-                                       numFmt = "0.00")
+  normal_data <- openxlsx::createStyle(
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0.00"
+  )
 
 
   white_bckgrd <- openxlsx::createStyle(

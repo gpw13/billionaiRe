@@ -201,4 +201,3 @@ assert_mart_columns <- function(df,
                                   "upload_detail")
 ){
   assert_columns(df, mart_cols)
-}
