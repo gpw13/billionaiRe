@@ -15,9 +15,9 @@ write_main_df(
 )
 }
 \arguments{
-\item{data_table}{data frame to be written}
+\item{data_table}{data frame to be written into the main data frame}
 
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{openxlsx workbook to to be edited.}
 
 \item{start_row}{numeric start row of the table in the excel sheet}
 
@@ -30,7 +30,7 @@ write_main_df(
 \item{sheet_name}{character name of the sheet to update}
 }
 \value{
-\code{openxslx} Workbook object. Output file is in \code{output_fldr}.
+
 }
 \description{
 Write the main data frame to the data sheet
