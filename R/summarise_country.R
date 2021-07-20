@@ -53,6 +53,7 @@ summarize_hpop_country_data <-
     #   transform_hpop_data(iso3 = iso3, ind = ind, value = value,
     #                       transform_glue = transform_glue, ind_ids = ind_ids)
 
+
     # Latest reported data
     latest_reported <- df_iso %>%
       dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
