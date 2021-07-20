@@ -38,7 +38,8 @@ Imports:
     purrr,
     zoo,
     glue,
-    tibble
+    tibble,
+    openxlsx
 Remotes: 
     gpw13/wppdistro,
     gpw13/whoville,
