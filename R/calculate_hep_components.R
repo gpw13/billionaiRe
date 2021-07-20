@@ -131,7 +131,8 @@ prevent_calculations <- function(df,
                                   ind_ids[c("ebola_campaign_denom")],
                                   ind_ids[c("meningitis_campaign_denom", "yellow_fever_campaign_denom", "cholera_campaign_denom",
                                             "measles_campaign_denom", "ebola_campaign_denom", "covid_campaign_denom", "surviving_infants")]),
-               multiply_surviving_infs = c(rep(FALSE, 13), TRUE))
+               multiply_surviving_infs = c(rep(FALSE, 13), TRUE),
+               max_value = c(rep(Inf, 13), 100))
 
   purrr::pmap_dfr(args,
                   pathogen_calc,
@@ -162,6 +163,7 @@ prevent_calculations <- function(df,
 #' @param denominators Indicator names for denominators.
 #' @param multiply_surviving_infs Logical, multiple surviving infant population by
 #'     number of routine vaccines in numerator.
+#' @param max_value Maximum value the calculated pathogen value can take.
 #'
 pathogen_calc <- function(df,
                           name,
@@ -175,7 +177,8 @@ pathogen_calc <- function(df,
                           source_col,
                           source,
                           ind_ids,
-                          multiply_surviving_infs) {
+                          multiply_surviving_infs,
+                          max_value) {
   df <- dplyr::filter(df,
                       .data[[ind]] %in% c(numerators, denominators),
                       any(numerators %in% .data[[ind]]))
@@ -202,7 +205,10 @@ pathogen_calc <- function(df,
       !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
                                   unique(.data[[source_col]][!is.na(.data[[source_col]])]),
                                   !!source),
-      .groups = "drop")
+      .groups = "drop") %>%
+    dplyr::mutate(dplyr::across(!!transform_value,
+                                pmin,
+                                !!max_value))
 }
 
 #' Calculate HEPI

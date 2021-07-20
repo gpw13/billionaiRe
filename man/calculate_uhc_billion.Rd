@@ -58,6 +58,9 @@ Data frame in long format.
 \description{
 \code{calculate_uhc_billion()} calculates country-level UHC Billion based on
 indicator level data. Calculates it for each country-year combination in the provided data.
+In order to calculate average service coverage, and thus the overall Billion,
+all UHC indicators must be present for a given year. The only exception is
+insecticide treated nets, which need not be present.
 }
 \details{
 For more details on the UHC Billion calculation process and how this function
