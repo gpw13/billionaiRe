@@ -5,7 +5,7 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 98 rows and 16 variables:
+A data frame with 98 rows and 8 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
@@ -15,14 +15,6 @@ A data frame with 98 rows and 16 variables:
 \item{hep}{Logical, is a HEP Billions indicator}
 \item{covariate}{Logical, is the indicator just a covariate for the Billions}
 \item{calculated}{Logical, is the indicator calculated within the package and thus not an input}
-\item{sdg}{Indicator code from SDG and attributed if not in SDG}
-\item{short_name}{Short name of the indicator}
-\item{unit_raw}{Unit of raw values for indicator}
-\item{unit_transformed}{Unit of raw values for indicator}
-\item{medium_name}{Medium length name of indicator (typically used for tables)}
-\item{transformed_name}{Name of indicator after transformation}
-\item{ind}{Code of the indicator in billionaiRe}
-\item{order}{Order of the indicators}
 }
 }
 \usage{
