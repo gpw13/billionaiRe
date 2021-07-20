@@ -26,6 +26,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
             border = "bottom"
           )
         )
+
       } else if (font == "estimated") {
         openxlsx::addStyle(
           wb,
@@ -40,6 +41,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
             border = "bottom"
           )
         )
+
       } else if (font %in% c("projected", "imputed")) {
         openxlsx::addStyle(
           wb,

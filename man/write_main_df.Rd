@@ -18,7 +18,6 @@ write_main_df(
 \item{data_table}{data frame to be written}
 
 \item{wb}{openxlsx workbook to be edited.}
-
 \item{start_row}{numeric start row of the table in the excel sheet}
 
 \item{start_col}{numeric start row of the table in the excel sheet}

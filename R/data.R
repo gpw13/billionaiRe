@@ -115,4 +115,3 @@
 #'   \item{share_perc}{Share, as percent of total projected population in 2023.}
 #' }
 "country_shares"
-

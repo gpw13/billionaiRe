@@ -65,9 +65,10 @@ export_hep_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
-                                           ...) {
+                                           ...){
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
+
 }
 
 #' Export country summary to Excel for HPOP billion
