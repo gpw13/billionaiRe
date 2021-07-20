@@ -91,6 +91,21 @@ assert_ind_ids <- function(ind_ids, billion) {
   }
 }
 
+
+#' Assert that the data frame only has one value (is homogeneous) for a given column
+#'
+#' @param df input data frame
+#' @param col_name string specifying the column to check
+assert_homogeneous_col<- function(df, col_name) {
+
+  if (length(unique(df[[col_name]])) > 1) {
+    stop(
+      sprintf("This function should have only one unique value in the %s column.", col_name),
+      call. = FALSE
+    )
+  }
+}
+
 #' Assert unique rows of df
 #'
 #' Makes sure there are distinct rows for each ind, iso3, year, and scenario if
@@ -139,6 +154,31 @@ assert_years <- function(start_year, end_year) {
   }
 }
 
+
+#' Warn user when any/all of the row are missing values for the the specified column
+#'
+#' @param df Input data frame
+#' @param col_name string specifying the name of column
+#' @param how string specifying whether to check for any/all missing values
+warning_col_missing_values <- function(df,
+                                       col_name,
+                                       how) {
+
+  if (how == "any") {
+    if (any(is.na(df[[col_name]]))) {
+      warning(sprintf("Some of the rows are missing a %s value.",
+                      col_name),
+              call. = FALSE)
+    }
+  } else {
+    if (all(is.na(df[[col_name]]))) {
+      warning(sprintf("All of the rows are missing a %s value.",
+                      col_name),
+              call. = FALSE)
+    }
+  }
+}
+
 #' Assert that xMart4 columns for billions exist in data frame
 #'
 #' @param df Data frame following structure exported by `billionaiRe::load_billion_data()`
@@ -162,4 +202,3 @@ assert_mart_columns <- function(df,
 ){
   assert_columns(df, mart_cols)
 }
-

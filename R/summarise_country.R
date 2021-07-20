@@ -34,7 +34,7 @@ summarize_hpop_country_data <-
     assert_same_length(value, contribution)
     wppdistro:::assert_iso3(iso)
 
-    ### TODO: Add scenarios implementation
+    ### TODO: Add full scenarios implementation
 
     # Filter df for country, arrange indicators by order.
     df_iso <- df %>%
@@ -49,9 +49,6 @@ summarize_hpop_country_data <-
       dplyr::filter(.data[["ind"]] %in% !!unique_ind) %>%
       dplyr::select("ind", "transformed_name", "unit_transformed")
 
-    # df_iso_tranf <- df_iso %>%
-    #   transform_hpop_data(iso3 = iso3, ind = ind, value = value,
-    #                       transform_glue = transform_glue, ind_ids = ind_ids)
 
     # Latest reported data
     latest_reported <- df_iso %>%
@@ -91,6 +88,7 @@ summarize_hpop_country_data <-
 
     # Contribution of each indicator to billion
     ### TODO: would benefit from custom function to calculate with double-counting
+    ### based on calculate_hpop_billion
     hpop_contrib <- df_iso %>%
       dplyr::filter(.data[[year]] %in% c(!!max(end_year), !!start_year),
                     .data[[ind]] %in% ind_ids) %>%
@@ -117,42 +115,27 @@ summarize_hpop_country_data <-
                                     !!glue::glue("ind_contrib_change_{transform_value}"),
                                     !!glue::glue("ind_contrib_perc_change_{transform_value}"))))
 
-    # Contribution towards billion (all indicator) with double counting
-    dbl_counted_billion <- hpop_contrib %>%
-      dplyr::summarise(dplyr::across(dplyr::all_of(glue::glue("ind_contrib_change_{transform_value}")),
-                       ~ sum(.x[which(.x >=0)]), .names = "hpop_healthier_dbl_plus_{contribution}"),
-                       dplyr::across(dplyr::all_of(glue::glue("ind_contrib_change_{transform_value}")),
-                                     ~ sum(.x[which(.x <0)]), .names = "hpop_healthier_dbl_minus_{contribution}")
-                       ) %>%
-      tidyr::pivot_longer(cols = dplyr::ends_with(!!contribution),
-                          names_to = c("ind", "var"), names_pattern = "(hpop_healthier_dbl_plus|hpop_healthier_dbl_minus)_(.*)$") %>%
-      dplyr::group_by(dplyr::across(ind)) %>%
-      tidyr::pivot_wider(dplyr::everything(), values_from = "value", names_from = "var") %>%
-      dplyr::ungroup()
-
-    dbl_healthier <- dbl_counted_billion %>%
-      dplyr::summarise(dplyr::across(dplyr::all_of(contribution),
-                                     ~ sum(.x))) %>%
-      dplyr::mutate("ind" := c("hpop_healthier_dbl","hpop_healthier_dbl_perc"), .before = 1)
-
-    #Binding frames together
-    dbl_counted_billion <- dbl_counted_billion %>%
-      dplyr::bind_rows(dbl_healthier) %>%
-      dplyr::rename_with()
 
     # Contribution towards overall billion (all indicators)
     hpop_billion <- df_iso %>%
       dplyr::filter(.data[[year]] == c(!!max(end_year)),
                     stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
       dplyr::select(dplyr::all_of(c(!!ind, !!contribution))) %>%
-      dplyr::bind_rows(dbl_counted_billion)
+      dplyr::distinct() %>%
+      dplyr::mutate("dbl_cntd" := dplyr::case_when(
+        stringr::str_detect(.data[[ind]], "dbl_cntd$") ~ "dbl_cntd",
+        TRUE ~ "not_dbl_cntd"),
+        !!sym(ind) := stringr::str_remove(.data[[ind]], "_dbl_cntd")) %>%
+      dplyr::group_by(!!sym(ind)) %>%
+      tidyr::pivot_wider( values_from = !!contribution, names_from = "dbl_cntd",
+                         names_glue = "{.value}_{dbl_cntd}")
 
     # transformed time series
-    transformed_time_series <- dplyr::select(ind_df, -"unit_transformed") %>%
-      dplyr::left_join(df_iso, by = "ind") %>%
-      dplyr::select(c(.data[["transformed_name"]], .data[[year]], !!transform_value)) %>%
+    transformed_time_series <- df_iso %>%
+      dplyr::select(c(.data[[ind]], .data[[year]], !!transform_value)) %>%
+      dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
       dplyr::arrange(.data[[year]]) %>%
-      dplyr::group_by(.data[["transformed_name"]]) %>%
+      dplyr::group_by(.data[[ind]]) %>%
       tidyr::pivot_wider(values_from = !!transform_value, names_from = .data[[year]])
 
     #Final list of df to be returned

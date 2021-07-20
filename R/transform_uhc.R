@@ -53,6 +53,7 @@ transform_uhc_single <- function(df,
   if (!(transform_col %in% names(df))) {
     df[[transform_col]] <- NA_real_
   }
+
   dplyr::mutate(df,
                 !!sym(transform_col) := dplyr::case_when(
                   is.na(.data[[value]]) ~ .data[[transform_col]],
