@@ -139,6 +139,30 @@ assert_years <- function(start_year, end_year) {
   }
 }
 
+#' Warn user when any/all of the row are missing values for the the specified column
+#'
+#' @param df Input data frame
+#' @param col_name string specifying the name of column
+#' @param how string specifying whether to check for any/all missing values
+warning_col_missing_values <- function(df,
+                                       col_name,
+                                       how) {
+
+  if (how == "any") {
+    if (any(is.na(df[[col_name]]))) {
+      warning(sprintf("Some of the rows are missing a %s value.",
+                      col_name),
+              call. = FALSE)
+    }
+  } else {
+    if (all(is.na(df[[col_name]]))) {
+      warning(sprintf("All of the rows are missing a %s value.",
+                      col_name),
+              call. = FALSE)
+    }
+  }
+}
+
 #' Assert that xMart4 columns for billions exist in data frame
 #'
 #' @param df Data frame following structure exported by `billionaiRe::load_billion_data()`
