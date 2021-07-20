@@ -13,10 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-# billionaiRe <a href='https://github.com/caldwellst/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# billionaiRe <a href='https://github.com/gpw13/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
-[![R build status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
+[![R build status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
 <!-- badges: end -->
 
 The goal of billionaiRe is to provide an easy interface for using long format
@@ -27,7 +27,7 @@ data to calculate the World Health Organization's Triple Billions.
 You can install billionaiRe from [GitHub](https://github.com/) with:
 
 ```  r
-remotes::install_github("caldwellst/billionaiRe", build_vignettes = TRUE)
+remotes::install_github("gpw13/billionaiRe", build_vignettes = TRUE)
 ```
 
 You will need to have already installed the wppdistro package, which is stored in

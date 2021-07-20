@@ -19,7 +19,8 @@ export_uhc_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to export.}
+\item{iso}{ISO3 codes of country to summarize.}
+
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

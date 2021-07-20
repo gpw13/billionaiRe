@@ -43,7 +43,7 @@ calculate_hep_billion <- function(df,
                                               "detect_respond",
                                               "espar",
                                               "hep_idx")],
-                  .data[[year]] %in% c(start_year, end_year)) %>%
+                  .data[[year]] %in% c(!!start_year, !!end_year)) %>%
     dplyr::mutate("_pop_temp" := wppdistro::get_population(.data[[iso3]], pop_year))
 
   bill_df <- billionaiRe_add_columns(bill_df, contribution, NA_real_)

@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# billionaiRe <a href='https://github.com/caldwellst/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# billionaiRe <a href='https://github.com/gpw13/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/caldwellst/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/caldwellst/billionaiRe/actions)
+status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
 <!-- badges: end -->
 
 The goal of billionaiRe is to provide an easy interface for using long
@@ -18,7 +18,7 @@ Billions.
 You can install billionaiRe from [GitHub](https://github.com/) with:
 
 ``` r
-remotes::install_github("caldwellst/billionaiRe", build_vignettes = TRUE)
+remotes::install_github("gpw13/billionaiRe", build_vignettes = TRUE)
 ```
 
 You will need to have already installed the wppdistro package, which is
@@ -102,12 +102,11 @@ uhc_df %>%
   dplyr::filter(ind %in% c("uhc_sm", "asc", "fh"),
                 year == 2023)
 #> # A tibble: 3 x 8
-#> # Groups:   iso3, ind [3]
 #>   iso3   year ind    value transform_value type    source           contribution
 #>   <chr> <dbl> <chr>  <dbl>           <dbl> <chr>   <chr>                   <dbl>
 #> 1 AFG    2023 fh      25.4            25.4 <NA>    <NA>                 2963536.
 #> 2 AFG    2023 asc     45.6            45.6 projec… WHO DDI calcula…     1607136.
-#> 3 AFG    2023 uhc_sm  34.0            34.0 projec… WHO DDI calcula…      -38238.
+#> 3 AFG    2023 uhc_sm  NA              NA   projec… WHO DDI calcula…          NA
 ```
 
 ## HEP Billion calculation
@@ -149,6 +148,6 @@ hep_df %>%
 #>   <chr> <dbl> <chr>    <dbl> <chr>  <chr>               <dbl> <dbl>        <dbl>
 #> 1 AFG    2023 espar     51.2 Proje… <NA>                 51.2     3     4680802.
 #> 2 AFG    2023 detect_…  91   Proje… <NA>                 91       5     2084062.
-#> 3 AFG    2023 prevent   NA   Proje… WHO DDI,…           153.      5    16561556.
-#> 4 AFG    2023 hep_idx   NA   Proje… WHO DDI,…            98.5     5    23326420.
+#> 3 AFG    2023 prevent   NA   Proje… WHO DDI,…           100       5           0 
+#> 4 AFG    2023 hep_idx   NA   Proje… WHO DDI,…            80.7     4     6764864.
 ```

@@ -32,7 +32,7 @@ calculate_hpop_billion <- function(df,
 
   change_df <- df %>%
     dplyr::filter(.data[[year]] %in% c(!!end_year, !!start_year),
-                  .data[[ind]] %in% ind_ids) %>%
+                  .data[[ind]] %in% !!ind_ids) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
     dplyr::mutate(dplyr::across(dplyr::all_of(transform_value),
                                 calculate_hpop_change_vector,
