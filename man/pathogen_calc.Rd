@@ -17,7 +17,8 @@ pathogen_calc(
   source_col,
   source,
   ind_ids,
-  multiply_surviving_infs
+  multiply_surviving_infs,
+  max_value
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{multiply_surviving_infs}{Logical, multiple surviving infant population by
 number of routine vaccines in numerator.}
+
+\item{max_value}{Maximum value the calculated pathogen value can take.}
 }
 \description{
 Using numerators and denominators pre-supplied for each ISO3 and year,

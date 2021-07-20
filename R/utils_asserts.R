@@ -202,4 +202,3 @@ assert_mart_columns <- function(df,
 ){
   assert_columns(df, mart_cols)
 }
-
