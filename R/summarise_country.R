@@ -39,7 +39,8 @@ summarize_hpop_country_data <-
     # Filter df for country, arrange indicators by order.
     df_iso <- df %>%
       dplyr::filter(.data[[iso3]] == !!iso) %>%
-      dplyr::arrange(get_ind_order(.data[[ind]]))
+      dplyr::arrange(get_ind_order(.data[[ind]]),
+                     .data[[year]])
 
     # Get unique indicators
     unique_ind <- unique(df_iso[[ind]])
@@ -52,9 +53,9 @@ summarize_hpop_country_data <-
 
     # Latest reported data
     latest_reported <- df_iso %>%
+      dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
       dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
-      dplyr::filter(.data[[type_col]] %in% c("estimated", "reported"),
-                    .data[[year]] >= max(.data[[year]])) %>%
+      dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
       dplyr::ungroup() %>%
       dplyr::select(dplyr::all_of(c(ind, value, transform_value,year,
                                     type_col, source_col, iso3)))
@@ -134,7 +135,6 @@ summarize_hpop_country_data <-
     transformed_time_series <- df_iso %>%
       dplyr::select(c(.data[[ind]], .data[[year]], !!transform_value)) %>%
       dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
-      dplyr::arrange(.data[[year]]) %>%
       dplyr::group_by(.data[[ind]]) %>%
       tidyr::pivot_wider(values_from = !!transform_value, names_from = .data[[year]])
 
