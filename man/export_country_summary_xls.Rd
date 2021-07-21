@@ -19,8 +19,7 @@ export_country_summary_xls(
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
   output_fldr = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx",
-  ...
+  xls_template = "data-raw/CountrySummary_template.xlsx"
 )
 }
 \arguments{
@@ -58,10 +57,6 @@ be supplied as a named vector where the names correspond to the output of
 \item{output_fldr}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.

@@ -76,7 +76,8 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
   }
 }
 
-
+#' Stores styles to be used in excel outputs
+#'
 excel_styles <- function() {
   dark_blue_header <- openxlsx::createStyle(
     fontSize = 11,
@@ -85,14 +86,14 @@ excel_styles <- function() {
     wrapText = T,
     fgFill = "#1E7FB8",
     valign = "center",
-    halign = "center",
+    halign = "left",
     border = c("top", "bottom", "left", "right"),
     borderStyle = "thin"
   )
 
 
   light_blue_header <- openxlsx::createStyle(
-    fontSize = 10,
+    fontSize = 9,
     textDecoration = "bold",
     wrapText = T,
     fgFill = "#B0CAD6",
@@ -120,6 +121,15 @@ excel_styles <- function() {
   )
 
   normal_data_wrapped <- openxlsx::createStyle(
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0.00",
+    wrapText = TRUE
+  )
+
+  normal_data_wrapped_bold <- openxlsx::createStyle(
+    textDecoration = "bold",
     fontSize = 8,
     fgFill = "white",
     border = "bottom",
@@ -159,8 +169,65 @@ excel_styles <- function() {
     normal_data = normal_data,
     white_bckgrd = white_bckgrd,
     normal_data_wrapped = normal_data_wrapped,
+    normal_data_wrapped_bold = normal_data_wrapped_bold,
     vertical_txt = vertical_txt
   )
 
   return(excel_styles)
+}
+
+#' Create empty (no rows) data frame from a character vector
+#'
+#' Used in openxlsx-based function to go around limitation of writing only data
+#' frames and thus in long. This allows to write in long.
+#'
+#' @param vec character vector
+
+vec2emptyDF <- function(vec){
+  stopifnot(is.character(vec))
+  df <-data.frame(matrix(ncol = length(vec), nrow = 0))
+  names(df) <- vec
+
+  return(df)
+}
+
+#' Set column width based on type of column in data frame for openxlsx export
+#'
+#' @inherit write_main_df
+#' @inherit transform_hpop_data
+#'
+
+get_col_width <- function(df, value, transform_value, type_col, source_col,
+                          start_year, end_year){
+  medium_width <- 24
+  value_width <- 11
+  source_width <- 49
+  names_df <- names(df)
+  value_regex <- c(glue::glue("^{value}_{start_year}$"),
+                   glue::glue("^{value}_{max(end_year)}$"),
+                   glue::glue("^{value}$"),
+                   glue::glue("^{transform_value}_{start_year}$"),
+                   glue::glue("^{transform_value}_{max(end_year)}$"),
+                   glue::glue("^{transform_value}$"),
+                   glue::glue("{type_col}"),
+                   "year", "unit_transformed")
+  value_cols <- sort(unlist(lapply(value_regex, grep, names_df)))
+  names_df[value_cols] <- value_width
+
+  medium_length_regex <- c("transformed_name",
+                           glue::glue("^change_{transform_value}"),
+                           glue::glue("^ind_contrib_change_{transform_value}"),
+                           glue::glue("^ind_contrib_perc_change_{transform_value}"),
+                                      "^count_", "population")
+  medium_cols <- sort(unlist(lapply(medium_length_regex, grep, names_df)))
+  names_df[medium_cols] <- medium_width
+
+  source_cols <-sort(unlist(lapply(source_col, grep, names_df)))
+  names_df[source_cols] <- source_width
+
+  names_df <- as.numeric(names_df)
+
+  assert_same_length(names_df[!is.na(names_df)],names(df))
+  return(names_df)
+
 }

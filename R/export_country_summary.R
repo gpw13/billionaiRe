@@ -8,9 +8,6 @@
 #' @param output_fldr Folder path to where the Excel files should be written
 #' @param xls_template Path to the Excel template to be used.
 #' @param sheet_prefix Character prefix to add in front of export sheets
-#' @param ... Additional arguments passed to `calculate_hpop_contributions` and
-#' `calculate_hpop_billion`. Use if you need to provide additional parameters to
-#' those functions
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_fldr`.
 #' @export
@@ -34,8 +31,7 @@ export_country_summary_xls <- function(df,
                                        end_year = 2019:2023,
                                        sheet_prefix = "HPOP",
                                        output_fldr = "outputs",
-                                       xls_template = "data-raw/CountrySummary_template.xlsx",
-                                       ...) {
+                                       xls_template = "data-raw/CountrySummary_template.xlsx") {
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
   billion <- rlang::arg_match(billion)
@@ -64,8 +60,7 @@ export_country_summary_xls <- function(df,
 export_hep_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
-                                           end_year = 2019:2023,
-                                           ...){
+                                           end_year = 2019:2023){
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
 
@@ -74,49 +69,52 @@ export_hep_country_summary_xls <- function(df,
 #' Export country summary to Excel for HPOP billion
 #'
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
-#'
+#' @param list_df list object with dataframes to be used by function. Typically
+#' comes from `summarize_hpop_country_data`. Names of the data frames should follow
+#' the
 #' @inherit export_country_summary_xls return details params
 #'
 #' @export
 #'
-export_hpop_country_summary_xls <- function(df,
+export_hpop_country_summary_xls <- function(list_df,
                                             iso,
-                                            year = "year",
                                             iso3 = "iso3",
+                                            year = "year",
                                             ind = "ind",
                                             value = "value",
                                             transform_value = "transform_value",
                                             type_col = "type",
                                             source_col = "source",
-                                            ind_ids = billion_ind_codes("hpop"),
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
                                             output_fldr = "outputs",
-                                            xls_template = "data-raw/CountrySummary_template.xlsx",
-                                            ...) {
-  assert_columns(df,year, iso3, ind, value, type_col, source_col)
+                                            xls_template = "data-raw/CountrySummary_template.xlsx") {
+  assert_summarize(list_df)
   assert_years(start_year, end_year)
   wppdistro:::assert_iso3(iso)
 
   data_sheet <- glue::glue("{sheet_prefix}data")
 
-  # get data frame
-  data_sheet_df <- summarize_hpop_country_data(df,
-                                               iso,
-                                               year = year,
-                                               iso3 = iso3,
-                                               ind = ind,
-                                               value = value,
-                                               transform_value= transform_value,
-                                               type_col = type_col,
-                                               source_col = source_col,
-                                               ind_ids = billion_ind_codes("hpop"),
-                                               start_year = start_year,
-                                               end_year = end_year,
-                                               ...)
+  final_table <- list_df$ind_df %>%
+    dplyr::left_join(list_df$baseline_proj, by = "ind") %>%
+    dplyr::left_join(list_df$hpop_contrib, by = "ind") %>%
+    dplyr::left_join(list_df$latest_reported, by = "ind") %>%
+    dplyr::select(-.data[[ind]], -.data[[iso3]])
+
+
   # load workbook
-  wb <- openxlsx::loadWorkbook(xls_template)
+  wb <- openxlsx::createWorkbook()
+
+  openxlsx::addWorksheet(wb, sheetName = data_sheet)
+
+  # White background
+  openxlsx::addStyle(wb,
+                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
+                     rows = c(1:(8 + nrow(final_table) + 6+5)),
+                     cols = c(1:(ncol(final_table)+3)), gridExpand = TRUE
+  )
+
   # Write title
   openxlsx::writeData(wb,
                       sheet = data_sheet,
@@ -124,136 +122,47 @@ export_hpop_country_summary_xls <- function(df,
                       startCol = 1, startRow = 2, colNames = FALSE
   )
 
-  country_name <- whoville::iso3_to_names(iso, org = "who", type_col = "short", language = "en")
-  openxlsx::writeData(wb,
-                      sheet = data_sheet, x = country_name,
-                      startCol = 1, startRow = 4
-  )
+  country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
+  openxlsx::writeData(wb,sheet = data_sheet, x = country_name,
+                      startCol = 1, startRow = 4)
 
   # Write tables
-  empty_column <- data.frame(empty = rep(NA, nrow(data_sheet_df$ind_df)))
 
-  final_table <- data_sheet_df$ind_df %>%
-    dplyr::bind_cols(empty_column, .name_repair = ~ vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
-    dplyr::left_join(data_sheet_df$df_iso_raw, by = "ind") %>%
-    dplyr::bind_cols(empty_column, .name_repair = ~ vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
-    dplyr::left_join(data_sheet_df$baseline_proj, by = "ind") %>%
-    dplyr::bind_cols(empty_column, .name_repair = ~ vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
-    dplyr::left_join(data_sheet_df$hpop_contrib, by = "ind") %>%
-    dplyr::bind_cols(empty_column, .name_repair = ~ vec_as_names(..., repair = "unique", quiet = TRUE)) %>%
-    dplyr::left_join(data_sheet_df$latest_reported, by = "ind") %>%
-    dplyr::select(-ind)
+  final_table <- list_df$ind_df %>%
+    dplyr::left_join(list_df$baseline_proj, by = "ind") %>%
+    dplyr::left_join(list_df$hpop_contrib, by = "ind") %>%
+    dplyr::left_join(list_df$latest_reported, by = "ind") %>%
+    dplyr::select(-.data[[ind]], -.data[[iso3]])
 
   wb <- write_main_df(final_table, wb,
-                start_row = 6, start_col = 4, start_year = start_year, end_year = end_year,
-                sheet_name = data_sheet
-  )
+                start_row = 6, start_col = 1, start_year = start_year,
+                end_year = end_year, sheet_name = data_sheet, value = value,
+                transform_value = transform_value, type_col = type_col,
+                source_col = source_col)
 
   end_main_table <- 8+nrow(final_table)
 
-  write_hpop_billion_contrib(dplyr::select(data_sheet_df$hpop_billion, "contribution"),
-                             wb,
-                             start_row =end_main_table+2 , start_col = 14,
+  wb <- write_hpop_billion_contrib(dplyr::select(list_df$hpop_billion, -.data[[ind]]),
+                             wb, value,
+                             start_row =end_main_table+2 , start_col = 7,
                              start_year = start_year, end_year = end_year,
                              sheet_name = data_sheet)
 
-  # HERE HERE HERE
-
   notes <- data.frame(`Notes:` = c(
-    "values might be slightly different than dashboard values because of rounding.",
+    "Values might be slightly different than dashboard values because of rounding.",
     "For more information, please refer to the GPW13 dashboard, section 'Reference', which includes the Impact Measurement Framework, the Methods Report, the Metadata and the Summary of Methods:",
     "https://portal.who.int/triplebillions/PowerBIDashboards/HealthierPopulations"
   ))
 
-  openxlsx::writeData(wb,
-                      sheet = "HPOPdata", x = notes,
-                      startCol = 1, startRow = 9 + nrow(final_table) + 1, colNames = TRUE,
-                      headerStyle = excel_styles()$bold
-  )
+  wb <- write_notes_data(notes, wb,
+                         sheet_name = data_sheet,
+                         start_row = end_main_table + 2,
+                         start_col = 1,
+                         end_col = 5)
 
-  # Style output
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c(1:((9 + nrow(final_table) + 1 + 12))),
-                     cols = c(1:27), gridExpand = TRUE
-  )
-
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$title,
-                     rows = c(2), cols = c(1)
-  )
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$sub_title,
-                     rows = c(4), cols = c(1)
-  )
-
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$dark_blue_header,
-                     rows = c(9 + nrow(final_table) + 1), cols = c(14:17)
-  )
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$dark_blue_header,
-                     rows = c(9 + nrow(final_table) + 2), cols = c(14:15)
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$light_blue_header,
-                     rows = c(9 + nrow(final_table) + 2), cols = c(16:17)
-  )
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = openxlsx::createStyle(numFmt = "PERCENTAGE", textDecoration = "bold"),
-                     rows = 9 + nrow(final_table) + 6, cols = c(16:17)
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$bold,
-                     rows = 9 + nrow(final_table) + 6, cols = c(14:15)
-  )
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$normal_data,
-                     rows = c((9 + nrow(final_table) + 1 + 1):(9 + nrow(final_table) + 1 + 1 + nrow(notes))), cols = c(1)
-  )
-
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c(1:5),
-                     cols = c(2:26), gridExpand = TRUE
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c(1:(9 + nrow(final_table) + 1 + 12)),
-                     cols = c(26:27), gridExpand = TRUE
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c((9 + nrow(final_table) + 1 + 7):(9 + nrow(final_table) + 1 + 12)),
-                     cols = c(1:27), gridExpand = TRUE
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c(9 + nrow(final_table)),
-                     cols = c(1:27)
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c((9 + nrow(final_table)):(9 + nrow(final_table) + 1 + 12)),
-                     cols = c(2:13), gridExpand = T
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$normal_data,
-                     rows = c((8 + nrow(final_table) + 4):(8 + nrow(final_table) + 6)), cols = c(14:15),
-                     gridExpand = TRUE
-  )
-  openxlsx::mergeCells(wb, "HPOPdata", cols = c(14:15), rows = 9 + nrow(final_table) + 4)
-  openxlsx::mergeCells(wb, "HPOPdata", cols = c(14:15), rows = 9 + nrow(final_table) + 5)
-  openxlsx::mergeCells(wb, "HPOPdata", cols = c(14:15), rows = 9 + nrow(final_table) + 6)
-
+  # HERE HERE HERE
   # indicator list
-  nice_indicator_list <- dplyr::select(data_sheet_df$ind_df, "ind") %>%
+  nice_indicator_list <- dplyr::select(list_df$ind_df, "ind") %>%
     dplyr::left_join(billionaiRe::indicator_df, by = c("ind")) %>%
     dplyr::select("sdg", "short_name", "medium_name", "unit_raw", "transformed_name", "unit_transformed") %>%
     dplyr::rename(
@@ -283,7 +192,7 @@ export_hpop_country_summary_xls <- function(df,
 
   # Time series
 
-  timesseries_df <- data_sheet_df$df_iso_pop %>%
+  timesseries_df <- list_df$df_iso_pop %>%
     tidyr::pivot_wider(
       id_cols = c(
         iso,
@@ -302,11 +211,11 @@ export_hpop_country_summary_xls <- function(df,
   timesseries_styles <- timeseries_style(wb, iso, timesseries_df, "HPOPTime Series")
   openxlsx::writeData(wb,
                       sheet = "HPOPTime Series", x = "Values are in bold if reported; normal if estimated; and red if imputed/projected",
-                      startCol = 2, startRow = 5 + nrow(data_sheet_df$transformed_time_series) + 1
+                      startCol = 2, startRow = 5 + nrow(list_df$transformed_time_series) + 1
   )
 
   openxlsx::writeData(wb,
-                      sheet = "HPOPTime Series", x = data_sheet_df$transformed_time_series,
+                      sheet = "HPOPTime Series", x = list_df$transformed_time_series,
                       startCol = 2, startRow = 5, headerStyle = excel_styles()$light_blue_header
   )
   openxlsx::addStyle(wb,
@@ -319,7 +228,7 @@ export_hpop_country_summary_xls <- function(df,
   )
   openxlsx::addStyle(wb,
                      sheet = "HPOPTime Series", style = excel_styles()$normal_data,
-                     rows = c(6:(nrow(data_sheet_df$transformed_time_series) + 5 + 1)), cols = c(2),
+                     rows = c(6:(nrow(list_df$transformed_time_series) + 5 + 1)), cols = c(2),
                      gridExpand = TRUE
   )
 
@@ -331,7 +240,7 @@ export_hpop_country_summary_xls <- function(df,
 
 
   # Write workbook
-  last_update <- data_sheet_df$latest_reported
+  last_update <- list_df$latest_reported
 
   if (!dir.exists(output_fldr)) {
     dir.create(output_fldr)
@@ -354,8 +263,7 @@ export_uhc_country_summary_xls <- function(df,
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            output_fldr = "outputs",
-                                           xls_template = "data-raw/CountrySummary_template.xlsx",
-                                           ...) {
+                                           xls_template = "data-raw/CountrySummary_template.xlsx") {
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
 }
@@ -372,8 +280,7 @@ export_all_country_summary_xls <- function(df,
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            output_fldr = "outputs",
-                                           xls_template = "data-raw/CountrySummary_template.xlsx",
-                                           ...) {
+                                           xls_template = "data-raw/CountrySummary_template.xlsx") {
   requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
 }

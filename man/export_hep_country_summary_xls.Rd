@@ -8,8 +8,7 @@ export_hep_country_summary_xls(
   df,
   iso,
   start_year = 2018,
-  end_year = 2019:2023,
-  ...
+  end_year = 2019:2023
 )
 }
 \arguments{
@@ -21,10 +20,6 @@ country, year, and indicator.}
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.

@@ -7,6 +7,7 @@
 write_hpop_billion_contrib(
   data_table,
   wb,
+  value,
   start_row,
   start_col,
   start_year,
@@ -18,6 +19,8 @@ write_hpop_billion_contrib(
 \item{data_table}{data frame to be written}
 
 \item{wb}{openxlsx workbook to be edited.}
+
+\item{value}{Column name of column with indicator values.}
 
 \item{start_row}{numeric start row of the table in the excel sheet}
 

@@ -11,8 +11,7 @@ export_all_country_summary_xls(
   start_year = 2018,
   end_year = 2019:2023,
   output_fldr = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx",
-  ...
+  xls_template = "data-raw/CountrySummary_template.xlsx"
 )
 }
 \arguments{
@@ -28,10 +27,6 @@ country, year, and indicator.}
 \item{output_fldr}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.

@@ -4,15 +4,7 @@
 \alias{write_notes_data}
 \title{Write notes for data sheet}
 \usage{
-write_notes_data(
-  data_table,
-  wb,
-  start_row,
-  start_col,
-  start_year,
-  end_year,
-  sheet_name
-)
+write_notes_data(data_table, wb, start_row, start_col, end_col, sheet_name)
 }
 \arguments{
 \item{data_table}{data frame to be written}
@@ -23,9 +15,7 @@ write_notes_data(
 
 \item{start_col}{numeric start row of the table in the excel sheet}
 
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_col}{integer indicating where the columns should stop being merged}
 
 \item{sheet_name}{character name of the sheet to update}
 }

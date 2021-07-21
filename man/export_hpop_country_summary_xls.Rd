@@ -5,33 +5,32 @@
 \title{Export country summary to Excel for HPOP billion}
 \usage{
 export_hpop_country_summary_xls(
-  df,
+  list_df,
   iso,
-  year = "year",
   iso3 = "iso3",
+  year = "year",
   ind = "ind",
   value = "value",
   transform_value = "transform_value",
   type_col = "type",
   source_col = "source",
-  ind_ids = billion_ind_codes("hpop"),
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
   output_fldr = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx",
-  ...
+  xls_template = "data-raw/CountrySummary_template.xlsx"
 )
 }
 \arguments{
-\item{df}{Data frame in long format, where 1 row corresponds to a specific
-country, year, and indicator.}
+\item{list_df}{list object with dataframes to be used by function. Typically
+comes from \code{summarize_hpop_country_data}. Names of the data frames should follow
+the}
 
 \item{iso}{ISO3 codes of country to summarize.}
 
-\item{year}{Column name of column with years.}
-
 \item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with years.}
 
 \item{ind}{Column name of column with indicator names.}
 
@@ -44,11 +43,6 @@ used to calculate contributions.}
 
 \item{source_col}{Column name of column to store source information.}
 
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
@@ -58,10 +52,6 @@ be supplied as a named vector where the names correspond to the output of
 \item{output_fldr}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.
