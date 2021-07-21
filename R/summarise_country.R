@@ -61,8 +61,8 @@ summarize_hpop_country_data <-
                                     type_col, source_col, iso3)))
 
     # Count data points since specified date
-    counts_2012 <- count_since(df_iso, year_specified = 2012, year = year, ind = ind, iso3 = iso3)
-    counts_2000 <- count_since(df_iso, year_specified = 2000, year = year, ind = ind, iso3 = iso3)
+    counts_2012 <- count_since(df_iso, year_specified = 2012, year = year, ind = ind, iso3 = iso3, type_col = type_col)
+    counts_2000 <- count_since(df_iso, year_specified = 2000, year = year, ind = ind, iso3 = iso3, type_col = type_col)
 
     # Join counts with latest reported data
     latest_reported <- latest_reported %>%
@@ -88,8 +88,6 @@ summarize_hpop_country_data <-
       )
 
     # Contribution of each indicator to billion
-    ### TODO: would benefit from custom function to calculate with double-counting
-    ### based on calculate_hpop_billion
     hpop_contrib <- df_iso %>%
       dplyr::filter(.data[[year]] %in% c(!!max(end_year), !!start_year),
                     .data[[ind]] %in% ind_ids) %>%

@@ -4,7 +4,7 @@
 \alias{count_since}
 \title{Count number of data points since specified date}
 \usage{
-count_since(df, year_specified, year, ind, iso3)
+count_since(df, year_specified, year, ind, iso3, type_col)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -17,6 +17,8 @@ country, year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{type_col}{Column name of column to store type.}
 }
 \value{
 data frame

@@ -9,13 +9,14 @@
 #'
 #' @return data frame
 
-count_since <- function(df, year_specified, year, ind, iso3) {
-  assert_columns(df, year, ind, iso3)
+count_since <- function(df, year_specified, year, ind, iso3, type_col) {
+  assert_columns(df, year, ind, iso3, type_col)
   assert_numeric(year_specified)
 
-  count_df <- df %>%
-    dplyr::filter(.data[[year]] >= !!year_specified) %>%
+  df %>%
+    dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
+    dplyr::filter(.data[[year]] >= !!year_specified) %>%
     dplyr::summarise(!!rlang::sym(glue::glue("count_{year_specified}")) := dplyr::n(), .groups = "drop")
 }
 
