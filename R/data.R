@@ -13,6 +13,14 @@
 #'   \item{hep}{Logical, is a HEP Billions indicator}
 #'   \item{covariate}{Logical, is the indicator just a covariate for the Billions}
 #'   \item{calculated}{Logical, is the indicator calculated within the package and thus not an input}
+#'   \item{sdg}{Indicator code from SDG and attributed if not in SDG}
+#'   \item{short_name}{Short name of the indicator}
+#'   \item{unit_raw}{Unit of raw values for indicator}
+#'   \item{unit_transformed}{Unit of raw values for indicator}
+#'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
+#'   \item{transformed_name}{Name of indicator after transformation}
+#'   \item{ind}{Code of the indicator in billionaiRe}
+#'   \item{order}{Order of the indicators}
 #' }
 "indicator_df"
 

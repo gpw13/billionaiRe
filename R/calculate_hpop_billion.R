@@ -97,11 +97,23 @@ calculate_hpop_billion_single <- function(change,
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
     dplyr::summarize("hpop_healthier_plus" := sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * .data[["_pos_temp"]]),
                      "hpop_healthier_minus" := -sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * !.data[["_pos_temp"]]),
+                     "hpop_healthier_plus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * .data[["_pos_temp"]]),
+                     "hpop_healthier_minus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * !.data[["_pos_temp"]]),
+                     "total_pop" := sum(.data[["_pop_group_population_temp"]]),
                      .groups = "drop") %>%
-    dplyr::mutate("hpop_healthier" := .data[["hpop_healthier_plus"]] + .data[["hpop_healthier_minus"]]) %>%
+    dplyr::mutate("hpop_healthier" := .data[["hpop_healthier_plus"]] + .data[["hpop_healthier_minus"]],
+                  "hpop_healthier_perc" := .data[["hpop_healthier"]]/.data[["total_pop"]]*100,
+                  "hpop_healthier_dbl_cntd" := .data[["hpop_healthier_plus_dbl_cntd"]] + .data[["hpop_healthier_minus_dbl_cntd"]],
+                  "hpop_healthier_perc_dbl_cntd" := .data[["hpop_healthier_dbl_cntd"]]/.data[["total_pop"]]*100,
+    ) %>%
     tidyr::pivot_longer(dplyr::all_of(c("hpop_healthier_plus",
                                         "hpop_healthier_minus",
-                                        "hpop_healthier")),
+                                        "hpop_healthier",
+                                        "hpop_healthier_perc",
+                                        "hpop_healthier_plus_dbl_cntd",
+                                        "hpop_healthier_minus_dbl_cntd",
+                                        "hpop_healthier_dbl_cntd",
+                                        "hpop_healthier_perc_dbl_cntd")),
                         names_to = ind,
                         values_to = change)
 }
@@ -165,3 +177,5 @@ calculate_hpop_change_vector <- function(transform_value,
     NA_real_
   }
 }
+
+

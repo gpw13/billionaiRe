@@ -178,3 +178,27 @@ warning_col_missing_values <- function(df,
     }
   }
 }
+
+#' Assert that xMart4 columns for billions exist in data frame
+#'
+#' @param df Data frame following structure exported by `billionaiRe::load_billion_data()`
+#' @param mart_cols Name of xmart4 columns to be checked
+assert_mart_columns <- function(df,
+                                mart_cols = c(
+                                  "iso3",
+                                  "year",
+                                  "ind",
+                                  "upload_date",
+                                  "value",
+                                  "lower",
+                                  "upper",
+                                  "use_dash",
+                                  "use_calc",
+                                  "source",
+                                  "type",
+                                  "type_detail",
+                                  "other_detail",
+                                  "upload_detail")
+){
+  assert_columns(df, mart_cols)
+}
