@@ -127,7 +127,8 @@ summarize_hpop_country_data <-
         !!sym(ind) := stringr::str_remove(.data[[ind]], "_dbl_cntd")) %>%
       dplyr::group_by(!!sym(ind)) %>%
       tidyr::pivot_wider( values_from = !!contribution, names_from = "dbl_cntd",
-                         names_glue = "{.value}_{dbl_cntd}")
+                         names_glue = "{.value}_{dbl_cntd}") %>%
+      dplyr::ungroup()
 
     # transformed time series
     transformed_time_series <- df_iso %>%
