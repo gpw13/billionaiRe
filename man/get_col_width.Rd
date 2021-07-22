@@ -15,8 +15,7 @@ get_col_width(
 )
 }
 \arguments{
-\item{df}{Data frame in long format, where 1 row corresponds to a specific
-country, year, and indicator.}
+\item{df}{data frame to be written}
 
 \item{value}{Column name of column with indicator values.}
 

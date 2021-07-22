@@ -4,7 +4,10 @@
 \alias{excel_styles}
 \title{Stores styles to be used in excel outputs}
 \usage{
-excel_styles()
+excel_styles(font = "Helvetica")
+}
+\arguments{
+\item{font}{character name with the name of the font to use.}
 }
 \description{
 Stores styles to be used in excel outputs

@@ -93,61 +93,56 @@ export_hpop_country_summary_xls <- function(list_df,
   assert_summarize(list_df)
   assert_years(start_year, end_year)
   wppdistro:::assert_iso3(iso)
-
-  data_sheet <- glue::glue("{sheet_prefix}data")
-
-  final_table <- list_df$ind_df %>%
-    dplyr::left_join(list_df$baseline_proj, by = "ind") %>%
-    dplyr::left_join(list_df$hpop_contrib, by = "ind") %>%
-    dplyr::left_join(list_df$latest_reported, by = "ind") %>%
-    dplyr::select(-.data[[ind]], -.data[[iso3]])
-
+  assert_list(list_df$transformed_time_series)
 
   # load workbook
-  wb <- openxlsx::createWorkbook()
+  wb <- openxlsx::loadWorkbook(xls_template)
 
-  openxlsx::addWorksheet(wb, sheetName = data_sheet)
+  # data sheet
+  data_sheet <- glue::glue("{sheet_prefix}_data")
+  openxlsx::renameWorksheet(wb, sheet = "data", newName = data_sheet)
 
-  # White background
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPdata", style = excel_styles()$white_bckgrd,
-                     rows = c(1:(8 + nrow(final_table) + 6+5)),
-                     cols = c(1:(ncol(final_table)+3)), gridExpand = TRUE
-  )
+  latest_update_ind <- list_df$df_iso %>%
+    dplyr::group_by(.data[[ind]]) %>%
+    dplyr::select(.data[[ind]], .data[["upload_date"]]) %>%
+    dplyr::filter(.data[["upload_date"]] == max(.data[["upload_date"]])) %>%
+    dplyr::distinct()
 
-  # Write title
-  openxlsx::writeData(wb,
-                      sheet = data_sheet,
-                      x = "Country contribution to GPW13 Healthier Populations billion target",
-                      startCol = 1, startRow = 2, colNames = FALSE
-  )
-
-  country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
-  openxlsx::writeData(wb,sheet = data_sheet, x = country_name,
-                      startCol = 1, startRow = 4)
-
-  # Write tables
-
-  final_table <- list_df$ind_df %>%
-    dplyr::left_join(list_df$baseline_proj, by = "ind") %>%
-    dplyr::left_join(list_df$hpop_contrib, by = "ind") %>%
-    dplyr::left_join(list_df$latest_reported, by = "ind") %>%
+  main_df <- list_df$ind_df %>%
+    dplyr::left_join(list_df$baseline_proj, by = ind) %>%
+    dplyr::left_join(latest_update_ind, by = ind) %>%
+    dplyr::left_join(list_df$hpop_contrib, by = ind) %>%
+    dplyr::left_join(list_df$latest_reported, by = ind) %>%
     dplyr::select(-.data[[ind]], -.data[[iso3]])
 
-  wb <- write_main_df(final_table, wb,
+  ## White background
+  openxlsx::addStyle(wb,
+                     sheet = data_sheet, style = excel_styles()$white_bckgrd,
+                     rows = c(1:(8 + nrow(main_df) + 6+5)),
+                     cols = c(1:(ncol(main_df)+3)), gridExpand = TRUE
+  )
+
+  ## Write header
+  wb <- write_sheet_header(wb, sheet_name = data_sheet,
+                           billion_long = "Healthier Population",
+                           iso, start_col = 1, start_row = 2)
+
+  # Write main table
+
+  wb <- write_main_df(main_df, wb,
                 start_row = 6, start_col = 1, start_year = start_year,
                 end_year = end_year, sheet_name = data_sheet, value = value,
                 transform_value = transform_value, type_col = type_col,
                 source_col = source_col)
 
-  end_main_table <- 8+nrow(final_table)
+  end_main_table <- 8+nrow(main_df)
 
   wb <- write_hpop_billion_contrib(dplyr::select(list_df$hpop_billion, -.data[[ind]]),
                              wb, value,
                              start_row =end_main_table+2 , start_col = 7,
                              start_year = start_year, end_year = end_year,
                              sheet_name = data_sheet)
-
+  # Write notes
   notes <- data.frame(`Notes:` = c(
     "Values might be slightly different than dashboard values because of rounding.",
     "For more information, please refer to the GPW13 dashboard, section 'Reference', which includes the Impact Measurement Framework, the Methods Report, the Metadata and the Summary of Methods:",
@@ -160,9 +155,12 @@ export_hpop_country_summary_xls <- function(list_df,
                          start_col = 1,
                          end_col = 5)
 
-  # HERE HERE HERE
-  # indicator list
-  nice_indicator_list <- dplyr::select(list_df$ind_df, "ind") %>%
+  # indicator list sheet
+  indicator_sheet <- glue::glue("{sheet_prefix}_Indicator List")
+  openxlsx::addWorksheet(wb, indicator_sheet)
+  openxlsx::removeWorksheet(wb, "Indicator List")
+
+  nice_indicator_df <- dplyr::select(list_df$ind_df, .data[[ind]]) %>%
     dplyr::left_join(billionaiRe::indicator_df, by = c("ind")) %>%
     dplyr::select("sdg", "short_name", "medium_name", "unit_raw", "transformed_name", "unit_transformed") %>%
     dplyr::rename(
@@ -174,81 +172,30 @@ export_hpop_country_summary_xls <- function(list_df,
       "Transformed unit" = "unit_transformed"
     )
 
-  openxlsx::writeData(wb,
-                      sheet = "HPOPIndicator List", x = nice_indicator_list,
-                      startCol = 2, startRow = 4
-  )
+  wb <- write_indicator_list_sheet(nice_indicator_df, wb, sheet_name = indicator_sheet,
+                                   start_row = 2 , start_col = 2)
 
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPIndicator List", style = excel_styles()$dark_blue_header,
-                     rows = 4, cols = c(2:7)
-  )
-
-  # Inter update
-  openxlsx::writeData(wb,
-                      sheet = "HPOPInter", x = c(start_year, end_year),
-                      startCol = 3, startRow = 2, colNames = TRUE
-  )
 
   # Time series
+  timeseries_sheet <- glue::glue("{sheet_prefix}_Time Series")
+  openxlsx::addWorksheet(wb, timeseries_sheet)
+  openxlsx::removeWorksheet(wb, "Time Series")
+  wb <- write_timeseries_sheet(list_df$transformed_time_series, wb,
+                               sheet_name = timeseries_sheet,
+                               start_col = 1, start_row = 1,
+                               transform_value= transform_value,
+                               df_ind = list_df$ind_df, ind = ind)
 
-  timesseries_df <- list_df$df_iso_pop %>%
-    tidyr::pivot_wider(
-      id_cols = c(
-        iso,
-        ind
-      ),
-      names_from = year,
-      values_from = type_col
-    ) %>%
-    dplyr::rename_with(
-      ~ paste0("year_", .x),
-      dplyr::matches("[0-9]{4}")
-    ) %>%
-    dplyr::mutate(dplyr::across(dplyr::everything(), ~ tidyr::replace_na(.x, 0))) %>%
-    dplyr::select(-ind)
-
-  timesseries_styles <- timeseries_style(wb, iso, timesseries_df, "HPOPTime Series")
-  openxlsx::writeData(wb,
-                      sheet = "HPOPTime Series", x = "Values are in bold if reported; normal if estimated; and red if imputed/projected",
-                      startCol = 2, startRow = 5 + nrow(list_df$transformed_time_series) + 1
-  )
-
-  openxlsx::writeData(wb,
-                      sheet = "HPOPTime Series", x = list_df$transformed_time_series,
-                      startCol = 2, startRow = 5, headerStyle = excel_styles()$light_blue_header
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPTime Series", style = excel_styles()$dark_blue_header,
-                     rows = 4, cols = 3:26
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPTime Series", style = excel_styles()$dark_blue_header,
-                     rows = 4:5, cols = 2
-  )
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPTime Series", style = excel_styles()$normal_data,
-                     rows = c(6:(nrow(list_df$transformed_time_series) + 5 + 1)), cols = c(2),
-                     gridExpand = TRUE
-  )
-
-  # Chart
-  openxlsx::addStyle(wb,
-                     sheet = "HPOPChart", style = excel_styles()$vertical_txt,
-                     rows = 22, cols = 3:19
-  )
-
+  openxlsx::removeWorksheet(wb, "Inter")
+  openxlsx::removeWorksheet(wb, "Chart")
 
   # Write workbook
-  last_update <- list_df$latest_reported
-
   if (!dir.exists(output_fldr)) {
     dir.create(output_fldr)
   }
 
   openxlsx::saveWorkbook(wb, glue::glue("{output_fldr}/GPW13_HPOP_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"), overwrite = TRUE)
 
-  return(wb)
 }
 
 #' Export country summary to Excel for UHC billion

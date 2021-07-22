@@ -1,8 +1,14 @@
-timeseries_style <- function(wb, iso, font_df, b_sheet) {
+#' Style data based on type of data
+#'
+#' @inherit write_main_df
+#' @inherit export_country_summary_xls
+
+style_data_type <- function(df, wb, iso, sheet_name, start_col, start_row, type_col) {
+  # HERE HERE HERE
   # Change font of time series values based on indicator (Bold:reported, normal:estimated, faded: imputed/projected)
 
-  c_font <- font_df %>% dplyr::filter(.data[["iso3"]] == !!iso)
-  col <- colnames(font_df)
+  c_font <- df %>% dplyr::filter(.data[["iso3"]] == !!iso)
+  col <- colnames(df)
 
 
   for (j in 2:length(col)) {
@@ -14,7 +20,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
       if (font == "reported") {
         openxlsx::addStyle(
           wb,
-          sheet = b_sheet,
+          sheet = sheet_name,
           rows = row,
           cols = col,
           style = openxlsx::createStyle(
@@ -30,7 +36,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
       } else if (font == "estimated") {
         openxlsx::addStyle(
           wb,
-          sheet = b_sheet,
+          sheet = sheet_name,
           rows = row,
           cols = col,
           style = openxlsx::createStyle(
@@ -45,7 +51,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
       } else if (font %in% c("projected", "imputed")) {
         openxlsx::addStyle(
           wb,
-          sheet = b_sheet,
+          sheet = sheet_name,
           rows = row,
           cols = col,
           style = openxlsx::createStyle(
@@ -60,7 +66,7 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
       } else {
         openxlsx::addStyle(
           wb,
-          sheet = b_sheet,
+          sheet = sheet_name,
           rows = row,
           cols = col,
           style = openxlsx::createStyle(
@@ -78,8 +84,11 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
 
 #' Stores styles to be used in excel outputs
 #'
-excel_styles <- function() {
+#'@param font character name with the name of the font to use.
+#'
+excel_styles <- function(font = "Helvetica") {
   dark_blue_header <- openxlsx::createStyle(
+    fontName = font,
     fontSize = 11,
     fontColour = "white",
     textDecoration = "bold",
@@ -93,6 +102,7 @@ excel_styles <- function() {
 
 
   light_blue_header <- openxlsx::createStyle(
+    fontName = font,
     fontSize = 9,
     textDecoration = "bold",
     wrapText = T,
@@ -104,6 +114,7 @@ excel_styles <- function() {
   )
 
   wrapped_h <- openxlsx::createStyle(
+    fontName = font,
     textDecoration = "bold",
     wrapText = TRUE
   )
@@ -111,16 +122,19 @@ excel_styles <- function() {
   bold <- openxlsx::createStyle(textDecoration = "bold")
 
   title <- openxlsx::createStyle(
+    fontName = font,
     textDecoration = "bold",
     fontSize = 16
   )
 
   sub_title <- openxlsx::createStyle(
+    fontName = font,
     textDecoration = "bold",
     fontSize = 12
   )
 
-  normal_data_wrapped <- openxlsx::createStyle(
+  normal_data_wrapped_dec <- openxlsx::createStyle(
+    fontName = font,
     fontSize = 8,
     fgFill = "white",
     border = "bottom",
@@ -128,7 +142,8 @@ excel_styles <- function() {
     wrapText = TRUE
   )
 
-  normal_data_wrapped_bold <- openxlsx::createStyle(
+  normal_data_wrapped_bold_dec <- openxlsx::createStyle(
+    fontName = font,
     textDecoration = "bold",
     fontSize = 8,
     fgFill = "white",
@@ -137,20 +152,77 @@ excel_styles <- function() {
     wrapText = TRUE
   )
 
-  normal_data <- openxlsx::createStyle(
+  normal_data_dec <- openxlsx::createStyle(
+    fontName = font,
     fontSize = 8,
     fgFill = "white",
     border = "bottom",
     numFmt = "0.00"
   )
 
+  normal_data_wrapped_int <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0",
+    wrapText = TRUE
+  )
+
+  normal_data_wrapped_bold_int <- openxlsx::createStyle(
+    fontName = font,
+    textDecoration = "bold",
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0",
+    wrapText = TRUE
+  )
+
+  normal_data_int <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "0"
+  )
+
+  normal_data_wrapped_date <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "DATE",
+    wrapText = TRUE
+  )
+
+  normal_data_wrapped_bold_date <- openxlsx::createStyle(
+    fontName = font,
+    textDecoration = "bold",
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "DATE",
+    wrapText = TRUE
+  )
+
+  normal_data_date <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    numFmt = "DATE"
+  )
+
 
   white_bckgrd <- openxlsx::createStyle(
+    fontName = font,
     fgFill = "white",
     borderColour = "white"
   )
 
   vertical_txt <- openxlsx::createStyle(
+    fontName = font,
     textRotation = 90,
     fontSize = 8,
     fgFill = "white",
@@ -166,14 +238,60 @@ excel_styles <- function() {
     light_blue_header = light_blue_header,
     dark_blue_header = dark_blue_header,
     wrapped_h = wrapped_h,
-    normal_data = normal_data,
     white_bckgrd = white_bckgrd,
-    normal_data_wrapped = normal_data_wrapped,
-    normal_data_wrapped_bold = normal_data_wrapped_bold,
+    normal_data_dec = normal_data_dec,
+    normal_data_wrapped_dec = normal_data_wrapped_dec,
+    normal_data_wrapped_bold_dec = normal_data_wrapped_bold_dec,
+    normal_data_int = normal_data_int,
+    normal_data_wrapped_int = normal_data_wrapped_int,
+    normal_data_wrapped_bold_int = normal_data_wrapped_bold_int,
+    normal_data_date = normal_data_date,
+    normal_data_wrapped_date = normal_data_wrapped_date,
+    normal_data_wrapped_bold_date = normal_data_wrapped_bold_date,
     vertical_txt = vertical_txt
   )
 
   return(excel_styles)
+}
+#' Style data according to its type
+#'
+#' @inheritParams write_main_df
+#' @inheritParams openxlsx::addStyle
+#'
+style_data <- function(df, wb, sheet_name ,
+                       rows,
+                       cols){
+
+  for(i in seq(ncol(df))){
+    if(dplyr::type_sum(df[[i]]) == "dbl"){
+      openxlsx::addStyle(
+        wb,
+        sheet = sheet_name,
+        style = excel_styles()$normal_data_wrapped_dec,
+        rows = rows,
+        cols = cols[i],
+        gridExpand = TRUE
+      )
+    }else if(dplyr::type_sum(df[[i]]) == "date"){
+      openxlsx::addStyle(
+        wb,
+        sheet = sheet_name,
+        style = excel_styles()$normal_data_wrapped_date,
+        rows = rows,
+        cols = cols[i],
+        gridExpand = TRUE
+      )
+    }else{
+      openxlsx::addStyle(
+        wb,
+        sheet = sheet_name,
+        style = excel_styles()$normal_data_wrapped_int,
+        rows = rows,
+        cols = cols[i],
+        gridExpand = TRUE
+      )
+    }
+  }
 }
 
 #' Create empty (no rows) data frame from a character vector
@@ -210,7 +328,7 @@ get_col_width <- function(df, value, transform_value, type_col, source_col,
                    glue::glue("^{transform_value}_{max(end_year)}$"),
                    glue::glue("^{transform_value}$"),
                    glue::glue("{type_col}"),
-                   "year", "unit_transformed")
+                   "year", "unit_transformed", "upload_date")
   value_cols <- sort(unlist(lapply(value_regex, grep, names_df)))
   names_df[value_cols] <- value_width
 

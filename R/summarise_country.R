@@ -40,7 +40,8 @@ summarize_hpop_country_data <-
     df_iso <- df %>%
       dplyr::filter(.data[[iso3]] == !!iso) %>%
       dplyr::arrange(get_ind_order(.data[[ind]]),
-                     .data[[year]])
+                     .data[[year]]) %>%
+      dplyr::mutate(dplyr::across(c(!!population, !!year), as.integer))
 
     # Get unique indicators
     unique_ind <- unique(df_iso[[ind]])
@@ -132,10 +133,21 @@ summarize_hpop_country_data <-
 
     # transformed time series
     transformed_time_series <- df_iso %>%
-      dplyr::select(c(.data[[ind]], .data[[year]], !!transform_value)) %>%
       dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
-      dplyr::group_by(.data[[ind]]) %>%
-      tidyr::pivot_wider(values_from = !!transform_value, names_from = .data[[year]])
+      dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!transform_value) %>%
+      dplyr::group_by(.data[[ind]], .data[[year]],.data[[type_col]]) %>%
+      tidyr::pivot_longer(!!transform_value, names_to = "transformed_value", values_to = "value") %>%
+      dplyr::group_by(sym("transformed_value")) %>%
+      dplyr::group_split()
+
+    transformed_time_series_out <- list()
+    for(i in seq(length(transformed_time_series))){
+      transformed_time_series_out[[i]] <- transformed_time_series[[i]] %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(.data[[ind]]) %>%
+        tidyr::pivot_wider(-.data[[type_col]], names_from = year, values_from = value )
+      names(transformed_time_series_out)[i] <- unique(transformed_time_series_out[[i]][["transformed_value"]])
+    }
 
     #Final list of df to be returned
     final_tables <- list(
@@ -145,7 +157,7 @@ summarize_hpop_country_data <-
       "hpop_contrib" = hpop_contrib,
       "hpop_billion" = hpop_billion,
       "df_iso" = df_iso,
-      "transformed_time_series" = transformed_time_series
+      "transformed_time_series" = transformed_time_series_out
     )
 
     return(final_tables)

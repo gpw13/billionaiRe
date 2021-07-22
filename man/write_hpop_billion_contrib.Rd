@@ -5,7 +5,7 @@
 \title{Write the HPOP billion contribution box}
 \usage{
 write_hpop_billion_contrib(
-  data_table,
+  df,
   wb,
   value,
   start_row,
@@ -16,7 +16,7 @@ write_hpop_billion_contrib(
 )
 }
 \arguments{
-\item{data_table}{data frame to be written}
+\item{df}{data frame to be written}
 
 \item{wb}{openxlsx workbook to be edited.}
 

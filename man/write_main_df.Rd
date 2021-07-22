@@ -5,7 +5,7 @@
 \title{Write the main data frame to the data sheet}
 \usage{
 write_main_df(
-  data_table,
+  df,
   wb,
   start_row,
   start_col,
@@ -19,7 +19,7 @@ write_main_df(
 )
 }
 \arguments{
-\item{data_table}{data frame to be written}
+\item{df}{data frame to be written}
 
 \item{wb}{openxlsx workbook to be edited.}
 
