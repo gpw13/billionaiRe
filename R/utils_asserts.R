@@ -12,6 +12,23 @@ assert_columns <- function(df, ...) {
   }
 }
 
+#' Assert that argument exists
+#'
+#' Check that a given argument exists and is not NA or NULL. Useful for functions
+#' where an argument is required for the rest of the code to work.
+#'
+#' @param x argument to check
+#'
+#' @examples
+assert_arg_exists <- function(x) {
+  if ( is.na(x) | is.null(x) ) {
+    stop(
+      sprintf("The %s argument is required and cannot be NA or NULL", deparse(substitute(x))),
+      call. = FALSE
+    )
+  }
+}
+
 #' Assert that arguments passed in are length 1 character vectors
 #'
 #' @param ... Character vectors to check
@@ -160,9 +177,7 @@ assert_years <- function(start_year, end_year) {
 #' @param df Input data frame
 #' @param col_name string specifying the name of column
 #' @param how string specifying whether to check for any/all missing values
-warning_col_missing_values <- function(df,
-                                       col_name,
-                                       how) {
+warning_col_missing_values <- function(df, col_name, how) {
 
   if (how == "any") {
     if (any(is.na(df[[col_name]]))) {
