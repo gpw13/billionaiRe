@@ -13,7 +13,6 @@
 #' those functions
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_fldr`.
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -22,6 +21,7 @@
 #' }
 export_country_summary_xls <- function(df,
                                        iso,
+                                       billion = c("hpop", "hep", "uhc", "all"),
                                        year = "year",
                                        iso3 = "iso3",
                                        ind = "ind",
@@ -36,7 +36,6 @@ export_country_summary_xls <- function(df,
                                        output_fldr = "outputs",
                                        xls_template = "data-raw/CountrySummary_template.xlsx",
                                        ...) {
-  requireNamespace("billionaiRe", quietly = TRUE)
   assert_mart_columns(df)
   billion <- rlang::arg_match(billion)
 
@@ -59,8 +58,6 @@ export_country_summary_xls <- function(df,
 #' `export_hep_country_summary_xls` Export a country-specific for HEP billion.
 #'
 #' @inherit export_country_summary_xls return details params
-#' @export
-#'
 export_hep_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
@@ -92,12 +89,11 @@ export_hpop_country_summary_xls <- function(df,
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
-                                            output_fldr = "outputs",
-                                            xls_template = "data-raw/CountrySummary_template.xlsx",
+                                            output_folder = "outputs",
                                             ...) {
   assert_columns(df,year, iso3, ind, value, type_col, source_col)
   assert_years(start_year, end_year)
-  wppdistro:::assert_iso3(iso)
+  assert_who_iso(iso)
 
   data_sheet <- glue::glue("{sheet_prefix}data")
 
@@ -116,7 +112,12 @@ export_hpop_country_summary_xls <- function(df,
                                                end_year = end_year,
                                                ...)
   # load workbook
-  wb <- openxlsx::loadWorkbook(xls_template)
+  wb_file <- system.file("extdata",
+                         "country_summary_template.xlsx",
+                         package = "billionaiRe")
+
+  wb <- openxlsx::loadWorkbook(wb_file)
+
   # Write title
   openxlsx::writeData(wb,
                       sheet = data_sheet,
@@ -149,18 +150,20 @@ export_hpop_country_summary_xls <- function(df,
                 sheet_name = data_sheet
   )
 
-  end_main_table <- 8+nrow(final_table)
+  end_main_table <- 8 + nrow(final_table)
 
   write_hpop_billion_contrib(dplyr::select(data_sheet_df$hpop_billion, "contribution"),
                              wb,
-                             start_row =end_main_table+2 , start_col = 14,
-                             start_year = start_year, end_year = end_year,
+                             start_row = end_main_table + 2,
+                             start_col = 14,
+                             start_year = start_year,
+                             end_year = end_year,
                              sheet_name = data_sheet)
 
   # HERE HERE HERE
 
   notes <- data.frame(`Notes:` = c(
-    "values might be slightly different than dashboard values because of rounding.",
+    "Values might be slightly different than dashboard values because of rounding.",
     "For more information, please refer to the GPW13 dashboard, section 'Reference', which includes the Impact Measurement Framework, the Methods Report, the Metadata and the Summary of Methods:",
     "https://portal.who.int/triplebillions/PowerBIDashboards/HealthierPopulations"
   ))
@@ -199,6 +202,7 @@ export_hpop_country_summary_xls <- function(df,
                      sheet = "HPOPdata", style = excel_styles()$dark_blue_header,
                      rows = c(9 + nrow(final_table) + 2), cols = c(14:15)
   )
+
   openxlsx::addStyle(wb,
                      sheet = "HPOPdata", style = excel_styles()$light_blue_header,
                      rows = c(9 + nrow(final_table) + 2), cols = c(16:17)
@@ -346,9 +350,6 @@ export_hpop_country_summary_xls <- function(df,
 #' `export_uhc_country_summary_xls` Export a country-specific for UHC billion.
 #'
 #' @inherit export_country_summary_xls return details params
-#'
-#' @export
-#'
 export_uhc_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
@@ -364,8 +365,6 @@ export_uhc_country_summary_xls <- function(df,
 #' `export_all_country_summary_xls` Export a country-specific for all billions.
 #'
 #' @inherit export_country_summary_xls return details params
-#'
-#' @export
 #'
 export_all_country_summary_xls <- function(df,
                                            iso,
