@@ -18,8 +18,6 @@ assert_columns <- function(df, ...) {
 #' where an argument is required for the rest of the code to work.
 #'
 #' @param x argument to check
-#'
-#' @examples
 assert_arg_exists <- function(x) {
   if ( is.na(x) | is.null(x) ) {
     stop(

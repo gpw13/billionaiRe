@@ -38,8 +38,8 @@ has_xmart_cols <- function(df) {
 save_wrangled_output <- function(df, ind) {
   if (has_xmart_cols(df)) {
     df %>%
-      select(xmart_cols()) %>%
-      write_csv(
+      dplyr::select(xmart_cols()) %>%
+      readr::write_csv(
         sprintf("output/%s_output.csv", ind),
         na=""
       )

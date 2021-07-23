@@ -1,3 +1,10 @@
+# billionaiRe 0.4.3
+* Added `wrangled_rural_urban_gho_data()` with functionality to supplant `wrangle_gho_data()`
+for indicators where the data has an additional RESIDENCEAREATYPE dimension with possible values
+of `TOTL`, `URB` and `RUR`.
+* Added `xmart_cols()`, `has_xmart_cols()`, `save_wrangled_output()` utility functions
+for easier wrangling of data updates.
+
 # billionaiRe 0.4.2
 * Updated `indicator_df.xlsx` and `indicator_df.rda` with the GHO code for 
 polio_routine(WHS4_544).
