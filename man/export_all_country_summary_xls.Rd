@@ -10,7 +10,7 @@ export_all_country_summary_xls(
   iso,
   start_year = 2018,
   end_year = 2019:2023,
-  output_fldr = "outputs",
+  output_folder = "outputs",
   xls_template = "data-raw/CountrySummary_template.xlsx"
 )
 }
@@ -18,18 +18,14 @@ export_all_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to summarize.}
+\item{iso}{ISO3 code of country to summarize.}
 
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
-
-\item{output_fldr}{Folder path to where the Excel files should be written}
+\item{output_folder}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}
 }
 \value{
-\code{openxslx} Workbook object. Output file is in \code{output_fldr}.
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
 Export country summary to Excel for all billions.

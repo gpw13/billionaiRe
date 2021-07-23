@@ -46,46 +46,6 @@ style_data_type_timesseries <- function(df, wb, sheet_name, start_col, start_row
   }
 }
 
-#' Style data according to its type
-#'
-#' @inheritParams write_main_df
-#' @inheritParams openxlsx::addStyle
-#'
-style_data <- function(df, wb, sheet_name ,
-                       rows,
-                       cols){
-
-  for(i in seq(ncol(df))){
-    if(dplyr::type_sum(df[[i]]) == "dbl"){
-      openxlsx::addStyle(
-        wb,
-        sheet = sheet_name,
-        style = excel_styles()$normal_data_wrapped_dec,
-        rows = rows,
-        cols = cols[i],
-        gridExpand = TRUE
-      )
-    }else if(dplyr::type_sum(df[[i]]) == "date"){
-      openxlsx::addStyle(
-        wb,
-        sheet = sheet_name,
-        style = excel_styles()$normal_data_wrapped_date,
-        rows = rows,
-        cols = cols[i],
-        gridExpand = TRUE
-      )
-    }else{
-      openxlsx::addStyle(
-        wb,
-        sheet = sheet_name,
-        style = excel_styles()$normal_data_wrapped_int,
-        rows = rows,
-        cols = cols[i],
-        gridExpand = TRUE
-      )
-    }
-  }
-}
 
 #' Create empty (no rows) data frame from a character vector
 #'

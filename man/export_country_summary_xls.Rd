@@ -7,6 +7,7 @@
 export_country_summary_xls(
   df,
   iso,
+  billion = c("hpop", "hep", "uhc", "all"),
   year = "year",
   iso3 = "iso3",
   ind = "ind",
@@ -18,17 +19,15 @@ export_country_summary_xls(
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
-  output_fldr = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx"
+  output_folder = "outputs",
+  ...
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to summarize.}
-
-\item{year}{Column name of column with years.}
+\item{iso}{ISO3 code of country to summarize.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
 
@@ -36,30 +35,19 @@ country, year, and indicator.}
 
 \item{value}{Column name of column with indicator values.}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
-used to calculate contributions.}
-
-\item{type_col}{Column name of column to store type.}
-
-\item{source_col}{Column name of column to store source information.}
-
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
-
 \item{sheet_prefix}{Character prefix to add in front of export sheets}
 
-\item{output_fldr}{Folder path to where the Excel files should be written}
+\item{output_folder}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}
 }
 \value{
-\code{openxslx} Workbook object. Output file is in \code{output_fldr}.
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
 \code{export_country_summary_xls} Export a country-specific for all three

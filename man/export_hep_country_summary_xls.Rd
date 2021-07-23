@@ -15,14 +15,10 @@ export_hep_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to summarize.}
-
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{iso}{ISO3 code of country to summarize.}
 }
 \value{
-\code{openxslx} Workbook object. Output file is in \code{output_fldr}.
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
 \code{export_hep_country_summary_xls} Export a country-specific for HEP billion.
