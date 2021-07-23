@@ -10,7 +10,6 @@
 #' @param sheet_prefix Character prefix to add in front of export sheets
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_fldr`.
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -19,6 +18,7 @@
 #' }
 export_country_summary_xls <- function(df,
                                        iso,
+                                       billion = c("hpop", "hep", "uhc", "all"),
                                        year = "year",
                                        iso3 = "iso3",
                                        ind = "ind",
@@ -31,8 +31,13 @@ export_country_summary_xls <- function(df,
                                        end_year = 2019:2023,
                                        sheet_prefix = "HPOP",
                                        output_fldr = "outputs",
+<<<<<<< HEAD
                                        xls_template = "data-raw/CountrySummary_template.xlsx") {
   requireNamespace("billionaiRe", quietly = TRUE)
+=======
+                                       xls_template = "data-raw/CountrySummary_template.xlsx",
+                                       ...) {
+>>>>>>> fc3e37b819b69c287d22d7339eb799846103b36d
   assert_mart_columns(df)
   billion <- rlang::arg_match(billion)
 
@@ -55,8 +60,6 @@ export_country_summary_xls <- function(df,
 #' `export_hep_country_summary_xls` Export a country-specific for HEP billion.
 #'
 #' @inherit export_country_summary_xls return details params
-#' @export
-#'
 export_hep_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
@@ -88,15 +91,26 @@ export_hpop_country_summary_xls <- function(list_df,
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
-                                            output_fldr = "outputs",
-                                            xls_template = "data-raw/CountrySummary_template.xlsx") {
-  assert_summarize(list_df)
+
+                                            output_folder = "outputs",
+                                            ...) {
+  assert_columns(df,year, iso3, ind, value, type_col, source_col)
   assert_years(start_year, end_year)
-  wppdistro:::assert_iso3(iso)
-  assert_list(list_df$transformed_time_series)
+  assert_who_iso(iso)
 
   # load workbook
-  wb <- openxlsx::loadWorkbook(xls_template)
+  wb_file <- system.file("extdata",
+                         "country_summary_template.xlsx",
+                         package = "billionaiRe")
+
+  wb <- openxlsx::loadWorkbook(wb_file)
+
+  # Write title
+  openxlsx::writeData(wb,
+                      sheet = data_sheet,
+                      x = "Country contribution to GPW13 Healthier Populations billion target",
+                      startCol = 1, startRow = 2, colNames = FALSE
+  )
 
   # data sheet
   data_sheet <- glue::glue("{sheet_prefix}_data")
@@ -202,9 +216,6 @@ export_hpop_country_summary_xls <- function(list_df,
 #' `export_uhc_country_summary_xls` Export a country-specific for UHC billion.
 #'
 #' @inherit export_country_summary_xls return details params
-#'
-#' @export
-#'
 export_uhc_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
@@ -219,8 +230,6 @@ export_uhc_country_summary_xls <- function(df,
 #' `export_all_country_summary_xls` Export a country-specific for all billions.
 #'
 #' @inherit export_country_summary_xls return details params
-#'
-#' @export
 #'
 export_all_country_summary_xls <- function(df,
                                            iso,

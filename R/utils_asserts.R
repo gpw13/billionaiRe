@@ -61,7 +61,8 @@ assert_string <- function(x, n) {
                    deparse(substitute(x)),
                    n,
                    class(x),
-                   lx))
+                   lx),
+           call. = FALSE)
     }
   }
 }
@@ -179,28 +180,20 @@ warning_col_missing_values <- function(df,
   }
 }
 
-#' Assert that xMart4 columns for billions exist in data frame
+#' Asserts that provided ISO is valid
 #'
-#' @param df Data frame following structure exported by `billionaiRe::load_billion_data()`
-#' @param mart_cols Name of xmart4 columns to be checked
-assert_mart_columns <- function(df,
-                                mart_cols = c(
-                                  "iso3",
-                                  "year",
-                                  "ind",
-                                  "upload_date",
-                                  "value",
-                                  "lower",
-                                  "upper",
-                                  "use_dash",
-                                  "use_calc",
-                                  "source",
-                                  "type",
-                                  "type_detail",
-                                  "other_detail",
-                                  "upload_detail")
-){
-  assert_columns(df, mart_cols)
+#' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
+#' using [whoville::is_who_member()].
+#'
+#' @param iso Single ISO3 code
+assert_who_iso <- function(iso) {
+  assert_string(iso, 1)
+  if (!whoville::is_who_member(iso)) {
+    stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
+                 All valid codes are available through `whoville::who_member_states()`."),
+         call. = FALSE)
+
+  }
 }
 
 

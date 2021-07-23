@@ -1,8 +1,9 @@
 #' Summarize data for HPOP country summary export
 #'
-#' `summarize_hpop_country_data` summarizes the data for the HPOP country summary.
+#' `summarize_hpop_country_data()` summarizes the data for the HPOP country summary
+#' Excel file. It is used within [export_hpop_country_summary_xls()].
 #'
-#' @param iso ISO3 codes of country to summarize.
+#' @param iso ISO3 code of country to summarize.
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams transform_hpop_data
@@ -27,12 +28,11 @@ summarize_hpop_country_data <-
            start_year = 2018,
            end_year = 2019:2023) {
 
-    assert_columns(df,year, iso3, ind, value, transform_value,scenario, contribution, type_col, source_col, population)
-    assert_mart_columns(df)
+    assert_columns(df, year, iso3, ind, value, transform_value, scenario, contribution, type_col, source_col, population)
     assert_years(start_year, end_year)
     assert_same_length(value, transform_value)
     assert_same_length(value, contribution)
-    wppdistro:::assert_iso3(iso)
+    assert_who_iso(iso3)
 
     ### TODO: Add full scenarios implementation
 
