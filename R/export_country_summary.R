@@ -175,16 +175,16 @@ export_hpop_country_summary_xls <- function(list_df,
   wb <- write_indicator_list_sheet(nice_indicator_df, wb, sheet_name = indicator_sheet,
                                    start_row = 2 , start_col = 2)
 
-
   # Time series
   timeseries_sheet <- glue::glue("{sheet_prefix}_Time Series")
   openxlsx::addWorksheet(wb, timeseries_sheet)
   openxlsx::removeWorksheet(wb, "Time Series")
-  wb <- write_timeseries_sheet(list_df$transformed_time_series, wb,
+  wb <- write_timeseries_sheet(list_df$df_iso, wb,
                                sheet_name = timeseries_sheet,
                                start_col = 1, start_row = 1,
                                transform_value= transform_value,
-                               df_ind = list_df$ind_df, ind = ind)
+                               df_ind = list_df$ind_df, ind = ind,
+                               year = year, type_col = type_col)
 
   openxlsx::removeWorksheet(wb, "Inter")
   openxlsx::removeWorksheet(wb, "Chart")

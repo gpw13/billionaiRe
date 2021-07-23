@@ -474,22 +474,31 @@ write_indicator_list_sheet <- function(df, wb, sheet_name,
 
 write_timeseries_sheet <- function(df, wb, sheet_name,
                                    start_row, start_col, transform_value,
-                                   df_ind, ind){
+                                   df_ind, ind, year, type_col){
 
-  # timesseries_styles <- timeseries_style(wb, iso, df, sheet_name)
+  transformed_time_series <- df %>%
+    dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
+    dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!transform_value) %>%
+    dplyr::group_by(.data[[ind]], .data[[year]],.data[[type_col]]) %>%
+    tidyr::pivot_longer(c(!!transform_value), names_to = "transformed_value", values_to = "value") %>%
+    dplyr::mutate(!!sym("transformed_value") := factor(!!sym("transformed_value"), levels = !!transform_value)) %>%
+    dplyr::group_by(!!sym("transformed_value")) %>%
+    dplyr::group_split()
 
-  # openxlsx::writeData(wb,
-  #                     sheet = sheet_name, x = "Values are in bold if reported; normal if estimated; and red if imputed/projected",
-  #                     startCol = 2, startRow = 5 + nrow(df) + 1
-  # )
 
-  for(i in seq_along(transform_value)){
-    this_df <- df_ind %>%
-      dplyr::left_join(df[[transform_value[i]]], by = ind) %>%
+  time_series_wide_out <- list()
+  for(i in seq(length(transformed_time_series))){
+    time_series_wide_out[[i]] <- transformed_time_series[[i]] %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by(.data[[ind]]) %>%
+      tidyr::pivot_wider(c(-.data[[type_col]]), names_from = .data[[year]], values_from = !!sym("value"))
+
+    time_series_wide <- df_ind %>%
+      dplyr::left_join(time_series_wide_out[[i]], by = ind) %>%
       dplyr::select(-sym("transformed_value"), -sym("unit_transformed"), -ind)
 
     if(i > 1){
-      nrows_sofar <- sum(unlist(lapply(1:(i-1), function(x)nrow(df[[x]])+2)))
+      nrows_sofar <- sum(unlist(lapply(1:(i-1), function(x)nrow(time_series_wide_out[[x]])+2)))
       start_row_new <-  start_row + nrows_sofar + (2*(i-1))
     }else{
       start_row_new <- start_row
@@ -501,27 +510,27 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
     openxlsx::mergeCells(wb, sheet = sheet_name,
                          cols = start_col, rows = start_row_new:(start_row_new+1))
     openxlsx::writeData(wb, sheet = sheet_name,
-                        x = vec2emptyDF(glue::glue("Time series: {transform_value[i]}")),
+                        x = vec2emptyDF(glue::glue("Time serie: {transform_value[i]}")),
                         startCol = start_col+1, startRow = start_row_new,
                         colNames = TRUE
     )
     openxlsx::mergeCells(wb, sheet = sheet_name,
-                         cols = (start_col+1):(ncol(this_df)+1), rows = start_row_new)
+                         cols = (start_col+1):(ncol(time_series_wide)+1), rows = start_row_new)
 
-    years_list <- names(this_df)[2:ncol(this_df)]
+    years_list <- names(time_series_wide)[2:ncol(time_series_wide)]
     openxlsx::writeData(wb, sheet = sheet_name,
                         x = vec2emptyDF(years_list),
                         startCol = start_col+1, startRow = start_row_new+1,
                         colNames = TRUE
     )
     openxlsx::writeData(wb,
-                        sheet = sheet_name, x = this_df,
+                        sheet = sheet_name, x = time_series_wide,
                         startCol = start_col, startRow = start_row_new + 2,
                         colNames = FALSE
     )
     openxlsx::addStyle(wb,
                        sheet = sheet_name, style = excel_styles()$dark_blue_header,
-                       rows =start_row_new, cols = c(start_col:(ncol(this_df)+1))
+                       rows =start_row_new, cols = c(start_col:(ncol(time_series_wide)+1))
     )
     openxlsx::addStyle(wb,
                        sheet = sheet_name, style = excel_styles()$dark_blue_header,
@@ -529,29 +538,42 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
     )
     openxlsx::addStyle(wb,
                        sheet = sheet_name, style = excel_styles()$light_blue_header,
-                       rows = c((start_row_new+1)), cols = c((start_col+1):(ncol(this_df)+1)),
+                       rows = c((start_row_new+1)), cols = c((start_col+1):(ncol(time_series_wide)+1)),
                        gridExpand = TRUE
     )
     openxlsx::addStyle(wb,
                        sheet = sheet_name, style = excel_styles()$normal_data_wrapped_dec,
-                       rows = c((start_row_new+2):(start_row_new+nrow(this_df)+1)), cols = c(start_col:(ncol(this_df)+1)),
+                       rows = c((start_row_new+2):(start_row_new+nrow(time_series_wide)+1)), cols = c(start_col:(ncol(time_series_wide)+1)),
                        gridExpand = TRUE
     )
+    style_data_type_timesseries(df = transformed_time_series[[i]], wb, sheet_name, start_col, start_row = start_row_new + 2, ind, type_col, year = year)
+
   }
   openxlsx::setColWidths(
     wb,
     sheet = sheet_name,
     cols = start_col,
-    widths = "auto",
+    widths = 23,
     ignoreMergedCells = FALSE
   )
   openxlsx::setColWidths(
     wb,
     sheet = sheet_name,
-    cols = (start_col+1):(ncol(this_df)+1),
+    cols = (start_col+1):(ncol(time_series_wide)+1),
     widths = 6,
     ignoreMergedCells = FALSE
   )
+  nrows_final <- sum(unlist(lapply(1:(length(transformed_time_series)), function(x)nrow(time_series_wide_out[[x]])+2)))
+  start_row_final <-  start_row + nrows_final + (2*(length(transformed_time_series)-1))
 
+  openxlsx::writeData(wb, sheet = sheet_name,
+                      x = "* Values are in bold if reported; normal if estimated; and faded if imputed/projected",
+                      startRow = start_row_final + 2,
+                      startCol = start_col)
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$normal_data_int,
+                     rows = start_row_final + 2,
+                     cols = start_col, gridExpand = TRUE
+  )
   return(wb)
 }

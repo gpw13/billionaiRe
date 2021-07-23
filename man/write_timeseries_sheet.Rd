@@ -12,7 +12,9 @@ write_timeseries_sheet(
   start_col,
   transform_value,
   df_ind,
-  ind
+  ind,
+  year,
+  type_col
 )
 }
 \arguments{
@@ -32,6 +34,10 @@ used to calculate contributions.}
 \item{df_ind}{data frame containing information on indicators}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{year}{Column name of column with years.}
+
+\item{type_col}{Column name of column to store type.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_fldr}.
