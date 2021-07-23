@@ -30,21 +30,14 @@ calculate_hpop_billion <- function(df,
 
   # calculate the change
 
-  change_df <- df %>%
-    dplyr::filter(.data[[year]] %in% c(!!end_year, !!start_year),
-                  .data[[ind]] %in% !!ind_ids) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
-    dplyr::mutate(dplyr::across(dplyr::all_of(transform_value),
-                                calculate_hpop_change_vector,
-                                .data[[year]],
-                                !!start_year)) %>%
+  change_df <- c %>%
     dplyr::ungroup() %>%
     dplyr::mutate(!!sym(ind) := ifelse(.data[[ind]] %in% ind_ids[c("wasting", "overweight")],
                                        "child_nutrition",
                                        .data[[ind]])) %>%
     dplyr::filter(.data[[year]] %in% !!end_year) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind, year)))) %>%
-    dplyr::summarize(dplyr::across(dplyr::all_of(transform_value),
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(!!iso3, !!scenario, !!ind, !!year)))) %>%
+    dplyr::summarize(dplyr::across(dplyr::all_of(!!transform_value),
                                    ~ sum(.x, na.rm = TRUE)), # for child_nutrition
                      .groups = "drop") %>%
     dplyr::rename_with(~contribution[which(transform_value == .x)], .cols = !!transform_value)
