@@ -137,7 +137,7 @@ summarize_hpop_country_data <-
       dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!transform_value) %>%
       dplyr::group_by(.data[[ind]], .data[[year]],.data[[type_col]]) %>%
       tidyr::pivot_longer(!!transform_value, names_to = "transformed_value", values_to = "value") %>%
-      dplyr::group_by(sym("transformed_value")) %>%
+      dplyr::group_by(!!sym("transformed_value")) %>%
       dplyr::group_split()
 
     transformed_time_series_out <- list()
