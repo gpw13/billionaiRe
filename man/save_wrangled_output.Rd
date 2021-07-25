@@ -11,7 +11,16 @@ save_wrangled_output(df, ind)
 
 \item{ind}{string name of the indicator}
 }
+\value{
+a data frame. This is the modified dataframe that's saved to disk if
+the data frame has all the columns expected by xMart. Otherwise, it simply return
+the input data frame.
+}
 \description{
 Helper functions that saves a wrangled output data frame to the disk if it has
 the correct columns as required by the Triple Billions xMart tables.
+}
+\details{
+The function returns a data frame (like \code{readr::write_csv()}) in order to allow
+it to work with pipes better.
 }

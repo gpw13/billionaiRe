@@ -31,19 +31,27 @@ has_xmart_cols <- function(df) {
 #' Helper functions that saves a wrangled output data frame to the disk if it has
 #' the correct columns as required by the Triple Billions xMart tables.
 #'
+#' The function returns a data frame (like `readr::write_csv()`) in order to allow
+#' it to work with pipes better.
+#'
 #' @param df data frame the output
 #' @param ind string name of the indicator
+#'
+#' @return a data frame. This is the modified dataframe that's saved to disk if
+#' the data frame has all the columns expected by xMart. Otherwise, it simply return
+#' the input data frame.
 #'
 #' @export
 save_wrangled_output <- function(df, ind) {
   if (has_xmart_cols(df)) {
-    df %>%
+    output_df = df %>%
+      dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
-      readr::write_csv(
-        sprintf("output/%s_output.csv", ind),
-        na=""
-      )
+      readr::write_csv(sprintf("output/%s_output.csv", ind), na="")
+
+    return(output_df)
   } else {
     warning("The output data frame did not have the correct columns. The output was not saved to disk.")
+    return(df)
   }
 }
