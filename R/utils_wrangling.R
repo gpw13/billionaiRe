@@ -35,7 +35,7 @@ has_xmart_cols <- function(df) {
 #' it to work with pipes better.
 #'
 #' @param df data frame the output
-#' @param ind string name of the indicator
+#' @param path the path where the output should be saved
 #'
 #' @return a data frame. This is the modified dataframe that's saved to disk if
 #' the data frame has all the columns expected by xMart. Otherwise, it simply return

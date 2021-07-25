@@ -9,7 +9,7 @@ save_wrangled_output(df, path)
 \arguments{
 \item{df}{data frame the output}
 
-\item{ind}{string name of the indicator}
+\item{path}{the path where the output should be saved}
 }
 \value{
 a data frame. This is the modified dataframe that's saved to disk if
