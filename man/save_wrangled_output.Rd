@@ -4,7 +4,7 @@
 \alias{save_wrangled_output}
 \title{Save the output to disk after ensuring column specs}
 \usage{
-save_wrangled_output(df, ind)
+save_wrangled_output(df, path)
 }
 \arguments{
 \item{df}{data frame the output}

@@ -44,10 +44,10 @@ Wrangle GHO data with TOTL/RUR/URB dimensions
 \section{TODO}{
 
 \itemize{
-\item Convert to more generic \code{unspool_gho_dim} function which can
-work with any other \code{DimType}, and not just TOTL/RUR/URB
+\item Convert to more generic \code{unspool_gho_dim} function which can work with any
+other \code{DimType}, and not just TOTL/RUR/URB.
 \item Re-write to make it work better with \code{wrangle_gho_data} to avoid the significant amount
-of redundant logic. This means that eventually, users may do
+of redundant logic. This means that, eventually, users may do
 \code{gho_data(.) \%>\% unspool_gho_dim(.) \%>\% wrangle_gho_data(.)}
 }
 }

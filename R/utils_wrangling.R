@@ -42,12 +42,15 @@ has_xmart_cols <- function(df) {
 #' the input data frame.
 #'
 #' @export
-save_wrangled_output <- function(df, ind) {
+save_wrangled_output <- function(df, path) {
+  assert_df(df)
+  assert_string(path, 1)
+
   if (has_xmart_cols(df)) {
     output_df = df %>%
       dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
-      readr::write_csv(sprintf("output/%s_output.csv", ind), na="")
+      readr::write_csv(path, na="")
 
     return(output_df)
   } else {

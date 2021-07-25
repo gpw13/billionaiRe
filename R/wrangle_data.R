@@ -80,10 +80,10 @@ wrangle_gho_data <- function(df,
 #' @return A data frame
 #'
 #' @section TODO:
-#' * Convert to more generic `unspool_gho_dim` function which can
-#' work with any other `DimType`, and not just TOTL/RUR/URB
+#' * Convert to more generic `unspool_gho_dim` function which can work with any
+#' other `DimType`, and not just TOTL/RUR/URB.
 #' * Re-write to make it work better with `wrangle_gho_data` to avoid the significant amount
-#' of redundant logic. This means that eventually, users may do
+#' of redundant logic. This means that, eventually, users may do
 #' `gho_data(.) %>% unspool_gho_dim(.) %>% wrangle_gho_data(.)`
 #' @export
 wrangle_rural_urban_gho_data <- function(df,
