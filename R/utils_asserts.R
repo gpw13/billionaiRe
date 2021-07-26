@@ -207,27 +207,3 @@ assert_list <- function(df) {
          call. = FALSE)
   }
 }
-
-
-#' Assert that summarize_hpop_country_data output data are present
-#'
-#' @param df Data frame following structure exported by `summarize_hpop_country_data()`
-#' @param dfs character vector with names of data frame to be found in output
-assert_summarize <- function(df,
-                             dfs = c(
-                               "ind_df",
-                               "latest_reported",
-                               "baseline_proj",
-                               "hpop_contrib",
-                               "hpop_billion",
-                               "df_iso",
-                               "transformed_time_series")){
-  assert_list(df)
-
-  bad_list <- dfs[!(dfs %in% names(df))]
-  if (length(bad_list) > 0) {
-    stop(sprintf("Data frame(s) %s are not in the list",
-                 paste(bad_list, collapse = ", ")),
-         call. = FALSE)
-  }
-}
