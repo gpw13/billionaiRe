@@ -16,6 +16,10 @@ export_hep_country_summary_xls(
 country, year, and indicator.}
 
 \item{iso}{ISO3 code of country to summarize.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

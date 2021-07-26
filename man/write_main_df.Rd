@@ -27,9 +27,20 @@ write_main_df(
 
 \item{start_col}{numeric start row of the table in the excel sheet}
 
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+
 \item{sheet_name}{character name of the sheet to update}
 
 \item{value}{Column name of column with indicator values.}
+
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{source_col}{Column name of column to store source information.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

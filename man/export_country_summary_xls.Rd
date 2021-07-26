@@ -29,16 +29,29 @@ country, year, and indicator.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
+\item{year}{Column name of column with years.}
+
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
 
 \item{value}{Column name of column with indicator values.}
 
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{source_col}{Column name of column to store source information.}
+
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
 \item{sheet_prefix}{Character prefix to add in front of export sheets}
 

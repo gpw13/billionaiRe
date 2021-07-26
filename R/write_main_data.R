@@ -157,13 +157,11 @@ write_main_df <-
       colNames = FALSE
     )
 
-    style_hpop_data(df, wb, sheet_name,
+    style_hpop_main_data(df, wb, sheet_name,
                     start_row,
                     start_col,
-                    nrow_main_df = nrow(df),
-                    ncol_main_df = ncol(df),
-                    l_paired_list_sentences = length(paired_list_sentences),
-                    l_contrib_header = length(contrib_headers))
+                    length_baseline_header = length(paired_list_sentences),
+                    length_contrib_header = length(contrib_headers))
 
     openxlsx::setColWidths(
       wb,
@@ -173,7 +171,6 @@ write_main_df <-
                              start_year, end_year),
       ignoreMergedCells = FALSE
     )
-
 
     return(wb)
   }

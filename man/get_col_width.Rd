@@ -18,6 +18,17 @@ get_col_width(
 \item{df}{data frame to be written}
 
 \item{value}{Column name of column with indicator values.}
+
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{source_col}{Column name of column to store source information.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

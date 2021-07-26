@@ -1,13 +1,13 @@
 #' Write times series sheet
 #'
 #' @inherit write_main_df
-#' @param df_ind data frame containing information on indicators
+#' @param ind_df data frame containing information on indicators
 #' @inherit export_hpop_country_summary_xls
 #'
 
-write_timeseries_sheet <- function(df, wb, sheet_name,
+write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
                                    start_row, start_col, transform_value,
-                                   df_ind, ind, year, type_col){
+                                   ind_df, ind, year, type_col){
 
   transformed_time_series <- df %>%
     dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
@@ -18,17 +18,16 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
     dplyr::group_by(!!sym("transformed_value")) %>%
     dplyr::group_split()
 
-
   time_series_wide_out <- list()
-  for(i in seq(length(transformed_time_series))){
+  for(i in seq(transformed_time_series)){
     time_series_wide_out[[i]] <- transformed_time_series[[i]] %>%
       dplyr::ungroup() %>%
       dplyr::group_by(.data[[ind]]) %>%
       tidyr::pivot_wider(c(-.data[[type_col]]), names_from = .data[[year]], values_from = !!sym("value"))
 
-    time_series_wide <- df_ind %>%
+    time_series_wide <- dplyr::select(ind_df, "ind", "transformed_name") %>%
       dplyr::left_join(time_series_wide_out[[i]], by = ind) %>%
-      dplyr::select(-sym("transformed_value"), -sym("unit_transformed"), -ind)
+      dplyr::select(-sym("transformed_value"),-ind)
 
     if(i > 1){
       nrows_sofar <- sum(unlist(lapply(1:(i-1), function(x)nrow(time_series_wide_out[[x]])+2)))
@@ -40,16 +39,11 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
     openxlsx::writeData(wb, sheet = sheet_name, x = "Transformed indicator",
                         startCol = start_col, startRow = start_row_new
     )
-    openxlsx::mergeCells(wb, sheet = sheet_name,
-                         cols = start_col, rows = start_row_new:(start_row_new+1))
     openxlsx::writeData(wb, sheet = sheet_name,
                         x = vec2emptyDF(glue::glue("Time serie: {transform_value[i]}")),
                         startCol = start_col+1, startRow = start_row_new,
                         colNames = TRUE
     )
-    openxlsx::mergeCells(wb, sheet = sheet_name,
-                         cols = (start_col+1):(ncol(time_series_wide)+1), rows = start_row_new)
-
     years_list <- names(time_series_wide)[2:ncol(time_series_wide)]
     openxlsx::writeData(wb, sheet = sheet_name,
                         x = vec2emptyDF(years_list),
@@ -61,26 +55,9 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
                         startCol = start_col, startRow = start_row_new + 2,
                         colNames = FALSE
     )
-    openxlsx::addStyle(wb,
-                       sheet = sheet_name, style = excel_styles()$dark_blue_header,
-                       rows =start_row_new, cols = c(start_col:(ncol(time_series_wide)+1))
-    )
-    openxlsx::addStyle(wb,
-                       sheet = sheet_name, style = excel_styles()$dark_blue_header,
-                       rows = start_row_new:(start_row_new+1), cols = start_col
-    )
-    openxlsx::addStyle(wb,
-                       sheet = sheet_name, style = excel_styles()$light_blue_header,
-                       rows = c((start_row_new+1)), cols = c((start_col+1):(ncol(time_series_wide)+1)),
-                       gridExpand = TRUE
-    )
-    openxlsx::addStyle(wb,
-                       sheet = sheet_name, style = excel_styles()$normal_data_wrapped_dec,
-                       rows = c((start_row_new+2):(start_row_new+nrow(time_series_wide)+1)), cols = c(start_col:(ncol(time_series_wide)+1)),
-                       gridExpand = TRUE
-    )
-    style_data_type_timesseries(df = transformed_time_series[[i]], wb, sheet_name, start_col, start_row = start_row_new + 2, ind, type_col, year = year)
-
+    wb <- style_hpop_timeseries(df = df, wb, sheet_name,
+                                start_row = start_row_new, start_col = start_col,
+                                ind, year, type_col, df_wide = time_series_wide)
   }
   openxlsx::setColWidths(
     wb,
@@ -110,3 +87,4 @@ write_timeseries_sheet <- function(df, wb, sheet_name,
   )
   return(wb)
 }
+

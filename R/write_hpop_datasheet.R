@@ -1,7 +1,7 @@
 #' Write data sheet
 #'
 #'
-write_data_sheet_HPOP <- function(df, wb, sheet_name, start_year, end_year, value,year,
+write_hpop_datasheet <- function(df, wb, sheet_name, start_year, end_year, value,year,
                              iso3,iso,ind,population,scenario,ind_ids,
                              transform_value, type_col, source_col,
                              contribution){
@@ -11,13 +11,6 @@ write_data_sheet_HPOP <- function(df, wb, sheet_name, start_year, end_year, valu
                                  ind_ids, start_year,end_year) %>%
     dplyr::select(-.data[[iso3]])
 
-
-  # Set white background
-  openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$white_bckgrd,
-                     rows = c(1:(8 + nrow_main_df + 6+5)),
-                     cols = c(1:(nrow_main_df+3)), gridExpand = TRUE
-  )
 
   ## Write header
   wb <- write_sheet_header(wb, sheet_name = sheet_name,
@@ -107,37 +100,8 @@ write_hpop_billion_contrib <- function(df,
                       sheet = sheet_name, x = df,
                       startCol = start_col+2, startRow = start_row+2, colNames = FALSE
   )
-  # Merge cells
-  for(i in start_row:(start_row+5)){
-    openxlsx::mergeCells(wb, sheet_name, cols = c(start_col:(start_col +1)), rows = i)
-  }
-  openxlsx::mergeCells(wb, sheet_name, cols = c((start_col +2):(start_col +1+ ncol(df))), rows = start_row)
 
-  # Styles
-  openxlsx::addStyle(wb, sheet = sheet_name,
-                     style = excel_styles()$dark_blue_header,
-                     rows = start_row,
-                     cols = start_col:(start_col +1+ ncol(df)))
-  openxlsx::addStyle(wb, sheet = sheet_name,
-                     style = excel_styles()$dark_blue_header,
-                     rows = start_row + 1,
-                     cols = start_col:(start_col + 1))
-  openxlsx::addStyle(wb, sheet = sheet_name,
-                     style = excel_styles()$light_blue_header,
-                     rows = start_row+1,
-                     cols = (start_col):(start_col+1+ncol(df)),
-                     gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet_name,
-                     style = excel_styles()$normal_data_wrapped_dec,
-                     rows = (start_row+2):(start_row+1+nrow(df)),
-                     cols = (start_col):(start_col+1+ncol(df)),
-                     gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet_name,
-                     style = excel_styles()$normal_data_wrapped_bold_dec,
-                     rows = (start_row+4):(start_row+1+nrow(df)),
-                     cols = (start_col):(start_col+1+ncol(df)),
-                     gridExpand = TRUE)
-  return(wb)
+  style_hpop_billion_contribution(df, wb, sheet_name, start_row, start_col)
 }
 
 #' Write notes for data sheet
@@ -155,20 +119,9 @@ write_notes_data <- function(df,
   openxlsx::writeData(wb, sheet = sheet_name,
                       x = df,
                       startCol = start_col,
-                      startRow = start_row,
-                      headerStyle = excel_styles()$bold)
+                      startRow = start_row)
 
-  for(i in seq(nrow(df)-1)){
-    openxlsx::mergeCells(wb, sheet = sheet_name,
-                         cols = 1:end_col,
-                         rows = (start_row+1+i))
-  }
-
-  openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$normal_data_int,
-                     rows = (start_row+1):(start_row+nrow(df)),
-                     cols = c(1:end_col), gridExpand = TRUE
-  )
+  wb <- style_notes_data(df, wb, sheet_name, start_row, start_col, nrow_notes = nrow(df), end_col)
 
   return(wb)
 }
@@ -188,16 +141,7 @@ write_sheet_header <- function(wb, sheet_name, billion_long, iso, start_col, sta
   openxlsx::writeData(wb,sheet = sheet_name, x = country_name,
                       startCol = start_col, startRow = start_row + 2)
 
-  openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$title,
-                     rows = start_row,
-                     cols = start_col
-  )
-  openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$sub_title,
-                     rows = start_row,
-                     cols = start_col, gridExpand = TRUE
-  )
+  wb <- style_header(wb, sheet_name, start_row = start_row, start_col = start_col)
 
   return(wb)
 

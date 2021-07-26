@@ -20,6 +20,10 @@ country, year, and indicator.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+
 \item{output_folder}{Folder path to where the Excel files should be written}
 
 \item{xls_template}{Path to the Excel template to be used.}

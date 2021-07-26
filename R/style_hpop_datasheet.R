@@ -1,21 +1,32 @@
-style_hpop_data <- function(df, wb, sheet_name,
+#' Style HPOP data sheet
+#'
+#' Applies styles to the data worksheet for country summary outputs
+#'
+#' @inheritParams write_main_df
+#' @param length_baseline_header integer with length of the baseline sub-header
+#' @param length_contrib_header integer with length of the billion's contributions
+#'  sub-header
+#'
+
+style_hpop_main_data <- function(df, wb, sheet_name,
                             start_row,
                             start_col,
-                            nrow_main_df,
-                            ncol_main_df,
-                            l_paired_list_sentences,
-                            l_contrib_header
+                            length_baseline_header,
+                            length_contrib_header
                             ) {
-  # HERE HERE HERE DOCUMENT!!
+
+  nrow_main_df <- nrow(df)
+  ncol_main_df <- ncol(df)
+
   start_row_subH <- start_row + 1
   start_row_subH_low <- start_row + 2
   start_row_data <- start_row + 3
 
   start_col_baseline <- start_col + 2
-  start_col_baseline_trans <- start_col_baseline + l_paired_list_sentences
-  start_col_baseline_type <- start_col_baseline_trans +  l_paired_list_sentences
+  start_col_baseline_trans <- start_col_baseline + length_baseline_header
+  start_col_baseline_type <- start_col_baseline_trans +  length_baseline_header
   start_col_contrib <- start_col_baseline_type + 5
-  start_col_latest <- start_col_contrib + l_contrib_header
+  start_col_latest <- start_col_contrib + length_contrib_header
 
   cols_headers <- c(start_col:(start_col_baseline-1),
                     start_col_baseline: (start_col_contrib-1),
@@ -124,8 +135,52 @@ style_hpop_data <- function(df, wb, sheet_name,
 
   style_data(df,
              wb, sheet_name = sheet_name,
-             rows = c(start_row_data:(nrow_main_df)),
+             rows = c(start_row_data:(start_row_data+nrow_main_df -1)),
              cols = cols_headers)
+
+  return(wb)
+}
+
+#' Style HPOP billion contribution all indicators summary box
+#'
+#' @inheritParams style_hpop_main_data
+#'
+
+style_hpop_billion_contribution <- function(df, wb, sheet_name,
+                                            start_row,
+                                            start_col){
+
+  # Merge cells
+  for(i in start_row:(start_row+5)){
+    openxlsx::mergeCells(wb, sheet_name, cols = c(start_col:(start_col +1)), rows = i)
+  }
+  openxlsx::mergeCells(wb, sheet_name, cols = c((start_col +2):(start_col +1+ ncol(df))), rows = start_row)
+
+  # Styles
+  openxlsx::addStyle(wb, sheet = sheet_name,
+                     style = excel_styles()$dark_blue_header,
+                     rows = start_row,
+                     cols = start_col:(start_col +1+ ncol(df)))
+  openxlsx::addStyle(wb, sheet = sheet_name,
+                     style = excel_styles()$dark_blue_header,
+                     rows = start_row + 1,
+                     cols = start_col:(start_col + 1))
+  openxlsx::addStyle(wb, sheet = sheet_name,
+                     style = excel_styles()$light_blue_header,
+                     rows = start_row+1,
+                     cols = (start_col):(start_col+1+ncol(df)),
+                     gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet_name,
+                     style = excel_styles()$normal_data_wrapped_dec,
+                     rows = (start_row+2):(start_row+1+nrow(df)),
+                     cols = (start_col):(start_col+1+ncol(df)),
+                     gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet_name,
+                     style = excel_styles()$normal_data_wrapped_bold_dec,
+                     rows = (start_row+4):(start_row+1+nrow(df)),
+                     cols = (start_col):(start_col+1+ncol(df)),
+                     gridExpand = TRUE)
+  return(wb)
 }
 
 #' Style data according to its type
@@ -169,3 +224,47 @@ style_data <- function(df, wb, sheet_name ,
   }
 }
 
+#' Style worksheet header
+#'
+#' `style_header` styles the title and sub-title of the worksheet header.
+#' @inherit style_hpop_main_data
+#'
+
+style_header <- function(wb, sheet_name, start_row, start_col){
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$title,
+                     rows = start_row,
+                     cols = start_col
+  )
+
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$sub_title,
+                     rows = start_row +2 ,
+                     cols = start_col, gridExpand = TRUE
+  )
+
+  return(wb)
+}
+
+#' Styles data worksheet notes
+#'
+#' @inherit style_hpop_main_data
+#' @param  nrow_notes integer with number of rows in the notes data frame being
+#'    styled
+#' @param end_col integer indicating where the columns should stop being merged
+
+style_notes_data <- function(df, wb, sheet_name, start_row, start_col, nrow_notes, end_col){
+  for(i in seq(nrow_notes)){
+    openxlsx::mergeCells(wb, sheet = sheet_name,
+                         cols = 1:end_col,
+                         rows = (start_row+1+i))
+  }
+
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$normal_data_int,
+                     rows = (start_row+1):(start_row+nrow(df)),
+                     cols = c(1:end_col), gridExpand = TRUE
+  )
+
+  return(wb)
+}

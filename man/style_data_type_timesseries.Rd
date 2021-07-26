@@ -27,6 +27,10 @@ style_data_type_timesseries(
 \item{start_row}{numeric start row of the table in the excel sheet}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{year}{Column name of column with years.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

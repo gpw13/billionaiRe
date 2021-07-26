@@ -4,13 +4,20 @@
 \alias{timeseries_style}
 \title{Change font of time series values}
 \usage{
-timeseries_style(wb, iso, font_df, b_sheet)
+timeseries_style(df, wb, sheet_name, start_row, start_col, ind, year, type_col)
 }
 \arguments{
-\item{b_sheet}{}
-}
-\value{
+\item{df}{data frame to be written}
 
+\item{wb}{openxlsx workbook to be edited.}
+
+\item{sheet_name}{character name of the sheet to update}
+
+\item{start_row}{numeric start row of the table in the excel sheet}
+
+\item{start_col}{numeric start row of the table in the excel sheet}
+
+\item{type_col}{Column name of column to store type.}
 }
 \description{
 \code{timeseries_style()} changes the font of time series values based on the

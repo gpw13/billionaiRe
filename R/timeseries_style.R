@@ -7,23 +7,30 @@
 #' * normal: estimated
 #' * faded: imputed or projected
 #'
-#' @param wb
-#' @param iso
-#' @param font_df
-#' @param b_sheet
+#' @inheritParams write_main_df
 #'
-#' @return
-timeseries_style <- function(wb, iso, font_df, b_sheet) {
-  c_font <- font_df %>% dplyr::filter(.data[["iso3"]] == !!iso)
+timeseries_style <- function(df, wb, sheet_name, start_row, start_col, ind, year, type_col) {
 
-  args <- list("type" = list("reported", c("projected", "imputed"), TRUE),
-               "fontColour" = list(NULL, "red", NULL),
-               "textDecoration" = list("bold", NULL, NULL))
+  wide_df <- df %>%
+    dplyr::select(.data[[ind]],.data[[year]], .data[[type_col]]) %>%
+    dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
+    dplyr::ungroup() %>%
+    dplyr::group_by(.data[[ind]]) %>%
+    tidyr::pivot_wider(names_from = .data[[year]], values_from = .data[[type_col]]) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(dplyr::across(dplyr::everything(), tidyr::replace_na, ""))
+
+  args <- list("type" = list("reported", "projected", "imputed", ""),
+               "fontColour" = list(NULL, "grey", "grey", NULL),
+               "textDecoration" = list("bold", NULL, NULL, NULL))
 
   purrr::pwalk(args,
                type_styler,
                wb = wb,
-               c_font = c_font)
+               df = wide_df,
+               sheet_name = sheet_name,
+               start_row = start_row,
+               start_col = start_col)
 }
 
 
@@ -34,22 +41,23 @@ timeseries_style <- function(wb, iso, font_df, b_sheet) {
 #' around [openxlsx::addStyle()] and [openxlsx::createStyle()].
 #'
 #' @inheritParams timeseries_style
-#' @param rows Rows to apply style to, passed to [openxlsx::add_style()].
-#' @param cols Columns to apply style to, passed to [openxlsx::add_style()].
+#' @param rows Rows to apply style to, passed to `openxlsx::add_style()`.
+#' @param cols Columns to apply style to, passed to `openxlsx::add_style()`.
 #' @param fontColour Font colour, passed to [openxlsx::createStyle()].
 #' @param textDecoration Font decoration, passed to [openxlsx::createStyle()].
 add_style_wrapper <- function(wb,
-                              b_sheet,
+                              sheet_name,
                               rows,
                               cols,
                               fontColour,
                               textDecoration) {
   openxlsx::addStyle(
     wb,
-    sheet = b_sheet,
+    sheet = sheet_name,
     rows = rows,
     cols = cols,
     style = openxlsx::createStyle(
+      fontName = "Helvetica",
       fontColour = fontColour,
       textDecoration = textDecoration,
       fontSize = 8,
@@ -64,20 +72,24 @@ add_style_wrapper <- function(wb,
 #' @inheritParams add_style_wrapper
 #' @inheritParams timeseries_style
 type_styler <- function(wb,
-                        b_sheet,
-                        c_font,
+                        sheet_name,
+                        df,
                         type,
+                        start_row,
+                        start_col,
+                        ind,
                         fontColour,
                         textDecoration) {
   # map across matching row/column values
-  inds <- which(c_font == type, arr.ind = TRUE)
+  inds <- which(df == type, arr.ind = TRUE)
   inds_list <- split(inds[,2], inds[,1])
+
   purrr::iwalk(inds_list,
                ~ add_style_wrapper(
                  wb = wb,
-                 b_sheet = b_sheet,
-                 rows = as.numeric(.y) + 5,
-                 cols = .x + 1,
+                 sheet_name = sheet_name,
+                 rows = as.numeric(.y) + start_row,
+                 cols = .x + start_col-1,
                  fontColour = fontColour,
                  textDecoration = textDecoration
                ))
