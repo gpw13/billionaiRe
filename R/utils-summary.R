@@ -4,7 +4,7 @@
 #' count the number of data points exists for each indicator in `df` since the
 #' specified `year`.
 #'
-#' @inheritParams summarize_hpop_country_data
+#' @inheritParams summarize_hpop_data
 #' @param year_specified numeric
 #'
 #' @return data frame

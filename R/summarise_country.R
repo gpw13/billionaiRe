@@ -44,7 +44,8 @@ summarize_hpop_data <-
       dplyr::group_by(.data[[iso3]]) %>%
       dplyr::distinct(.data[[ind]]) %>%
       dplyr::left_join(billionaiRe::indicator_df, by = c(ind)) %>%
-      dplyr::select(.data[[iso3]],"ind", "transformed_name", "unit_transformed")
+      dplyr::select(.data[[iso3]],"ind", "transformed_name", "unit_transformed") %>%
+      dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier"))
 
 
     # Latest reported data
