@@ -4,6 +4,8 @@ for indicators where the data has an additional RESIDENCEAREATYPE dimension with
 of `TOTL`, `URB` and `RUR`.
 * Added `xmart_cols()`, `has_xmart_cols()`, `save_wrangled_output()` utility functions
 for easier wrangling of data updates.
+* Full Billions data table added to `load_billion_data()`, allowing user to directly
+download latest Billions data and resultant calculations.
 
 # billionaiRe 0.4.2
 * Updated `indicator_df.xlsx` and `indicator_df.rda` with the GHO code for 
