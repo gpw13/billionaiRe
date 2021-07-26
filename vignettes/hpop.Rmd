@@ -20,7 +20,7 @@ the billionaiRe package:
 * `transform_hpop_data()` to transform raw values into normalized values used within the calculations.
 * `add_hpop_populations()` to get relevant population groups for each country and indicator.
 * `calculate_hpop_contributions()` to calculate indicator level changes and contributions to the Billion.
-* `calculate_hpop_billion()` to calculate country-level Billion, adjusting for double counting.
+* `calculate_hpop_billion()` to calculate indicator level changes, country-level Billion, adjusting for double counting, and all contributions.
 
 Run in sequence, these can calculate the entire HPOP Billion, or they can be run separately
 to produce different outputs as required. Details on the inputs of each function are
@@ -34,7 +34,6 @@ library(billionaiRe)
 hpop_df %>%
   transform_hpop_data() %>%
   add_hpop_populations() %>%
-  calculate_hpop_contributions(end_year = 2023) %>%
   calculate_hpop_billion() %>%
   dplyr::filter(stringr::str_detect(ind, "hpop_healthier"))
 ```

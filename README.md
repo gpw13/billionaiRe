@@ -45,8 +45,9 @@ available through the billionaiRe package:
     country and indicator.
 -   `calculate_hpop_contributions()` to calculate indicator level
     changes and contributions to the Billion.
--   `calculate_hpop_billion()` to calculate country-level Billion,
-    adjusting for double counting.
+-   `calculate_hpop_billion()` to calculate indicator level changes,
+    country-level Billion, adjusting for double counting, and all
+    contributions.
 
 Run in sequence, these can calculate the entire HPOP Billion, or they
 can be run separately to produce different outputs as required. Details
@@ -61,15 +62,18 @@ library(billionaiRe)
 hpop_df %>%
   transform_hpop_data() %>%
   add_hpop_populations() %>%
-  calculate_hpop_contributions(end_year = 2023) %>%
   calculate_hpop_billion() %>%
   dplyr::filter(stringr::str_detect(ind, "hpop_healthier"))
-#> # A tibble: 3 x 7
+#> # A tibble: 6 x 8
 #>   iso3   year ind                  value transform_value population contribution
 #>   <chr> <dbl> <chr>                <dbl>           <dbl>      <dbl>        <dbl>
 #> 1 AFG    2023 hpop_healthier_plus     NA              NA         NA    25608812.
 #> 2 AFG    2023 hpop_healthier_minus    NA              NA         NA   -35897603.
 #> 3 AFG    2023 hpop_healthier          NA              NA         NA   -10288791.
+#> 4 AFG    2023 hpop_healthier_plus…    NA              NA         NA    30125312.
+#> 5 AFG    2023 hpop_healthier_minu…    NA              NA         NA   -69269569.
+#> 6 AFG    2023 hpop_healthier_dbl_…    NA              NA         NA   -39144257.
+#> # … with 1 more variable: contribution_percent <dbl>
 ```
 
 ## UHC Billion calculation
@@ -101,12 +105,13 @@ uhc_df %>%
   calculate_uhc_contribution(end_year = 2023) %>%
   dplyr::filter(ind %in% c("uhc_sm", "asc", "fh"),
                 year == 2023)
-#> # A tibble: 3 x 8
+#> # A tibble: 3 x 9
 #>   iso3   year ind    value transform_value type    source           contribution
 #>   <chr> <dbl> <chr>  <dbl>           <dbl> <chr>   <chr>                   <dbl>
 #> 1 AFG    2023 fh      25.4            25.4 <NA>    <NA>                 2963536.
 #> 2 AFG    2023 asc     45.6            45.6 projec… WHO DDI calcula…     1607136.
-#> 3 AFG    2023 uhc_sm  NA              NA   projec… WHO DDI calcula…          NA
+#> 3 AFG    2023 uhc_sm  34.0            34.0 projec… WHO DDI calcula…      -38238.
+#> # … with 1 more variable: contribution_percent <dbl>
 ```
 
 ## HEP Billion calculation
