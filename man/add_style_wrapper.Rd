@@ -4,14 +4,16 @@
 \alias{add_style_wrapper}
 \title{Generate a style with variable color or bolding}
 \usage{
-add_style_wrapper(wb, b_sheet, rows, cols, fontColour, textDecoration)
+add_style_wrapper(wb, sheet_name, rows, cols, fontColour, textDecoration)
 }
 \arguments{
-\item{b_sheet}{}
+\item{wb}{openxlsx workbook to be edited.}
 
-\item{rows}{Rows to apply style to, passed to \code{\link[openxlsx:add_style]{openxlsx::add_style()}}.}
+\item{sheet_name}{character name of the sheet to update}
 
-\item{cols}{Columns to apply style to, passed to \code{\link[openxlsx:add_style]{openxlsx::add_style()}}.}
+\item{rows}{Rows to apply style to, passed to \code{openxlsx::add_style()}.}
+
+\item{cols}{Columns to apply style to, passed to \code{openxlsx::add_style()}.}
 
 \item{fontColour}{Font colour, passed to \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}}.}
 
