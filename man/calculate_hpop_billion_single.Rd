@@ -4,10 +4,22 @@
 \alias{calculate_hpop_billion_single}
 \title{Calculate the HPOP Billion for one column of change}
 \usage{
-calculate_hpop_billion_single(change, df, iso3, ind, year, scenario)
+calculate_hpop_billion_single(
+  change,
+  contribution,
+  df,
+  iso3,
+  ind,
+  year,
+  pop_year,
+  scenario
+)
 }
 \arguments{
 \item{change}{Column name of column with change value}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
 
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
@@ -17,6 +29,8 @@ country, year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{year}{Column name of column with years.}
+
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

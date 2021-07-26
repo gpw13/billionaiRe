@@ -39,9 +39,11 @@ country, year, and indicator.}
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
-\item{contribution}{Glue specification used to transform \code{transform_value} column
-names into contribution column names. Defaults to replacing the string
-\code{"transform_value"} with \code{"contribution"}.}
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
