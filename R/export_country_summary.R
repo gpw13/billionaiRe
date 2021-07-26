@@ -3,7 +3,7 @@
 #' `export_country_summary_xls` Export a country-specific for all three
 #' billions or for a specific billion.
 #'
-#' @inheritParams summarize_hpop_country_data
+#' @inheritParams summarize_hpop_data
 #' @inheritParams transform_hpop_data
 #' @param iso ISO3 code of country to summarize.
 #' @param output_folder Folder path to where the Excel files should be written
@@ -93,14 +93,15 @@ export_hpop_country_summary_xls <- function(df,
   assert_who_iso(iso)
 
   df_iso <- df %>%
-    dplyr::filter(.data[[iso3]] == iso)
+    dplyr::filter(.data[[iso3]] == iso) %>%
+    dplyr::arrange(get_ind_order(.data[[ind]]),
+                   .data[[year]])
 
   unique_ind <- unique(df_iso[[ind]])
 
   ind_df <- billionaiRe::indicator_df %>%
     dplyr::filter(.data[["ind"]] %in% !!unique_ind) %>%
     dplyr::select("ind", "transformed_name", "unit_transformed")
-
 
   # load workbook
   wb_file <- system.file("extdata",
@@ -113,7 +114,7 @@ export_hpop_country_summary_xls <- function(df,
   data_sheet <- glue::glue("{sheet_prefix}_data")
   openxlsx::renameWorksheet(wb, sheet = "data", newName = data_sheet)
 
-  wb <- write_data_sheet_HPOP(df = df_iso, wb, sheet_name = data_sheet, start_year, end_year, value,year,
+  wb <- write_hpop_datasheet(df = df_iso, wb, sheet_name = data_sheet, start_year, end_year, value,year,
                          iso3,iso,ind,population,scenario,ind_ids,
                          transform_value, type_col, source_col, contribution)
 
@@ -141,11 +142,11 @@ export_hpop_country_summary_xls <- function(df,
   timeseries_sheet <- glue::glue("{sheet_prefix}_Time Series")
   openxlsx::addWorksheet(wb, timeseries_sheet)
   openxlsx::removeWorksheet(wb, "Time Series")
-  wb <- write_timeseries_sheet(df_iso, wb,
+  wb <- write_hpop_timeseries_sheet(df_iso, wb,
                                sheet_name = timeseries_sheet,
                                start_col = 1, start_row = 1,
                                transform_value= transform_value,
-                               df_ind = ind_df, ind = ind,
+                               ind_df = ind_df, ind = ind,
                                year = year, type_col = type_col)
 
   openxlsx::removeWorksheet(wb, "Inter")
