@@ -15,6 +15,7 @@ calculate_uhc_contribution(
   transform_value = "transform_value",
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
+  contribution_pct = paste0(contribution, "_percent"),
   scenario = NULL,
   ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)
 )
@@ -54,9 +55,10 @@ be supplied as a named vector where the names correspond to the output of
 Data frame in long format.
 }
 \description{
-\code{calculate_uhc_contribution()} calculates country-level UHC contributions based on
-indicator level data. Calculates it for each country-year combination in the provided data,
-and for specific scenarios if specified.
+\code{calculate_uhc_contribution()} calculates country-level UHC contributions, in
+total population and percents, based on indicator level data. Calculates it
+for each country-year combination in the provided data, and for specific
+scenarios if specified.
 }
 \details{
 For more details on the UHC Billion calculation process and how this function
