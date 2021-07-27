@@ -6,7 +6,7 @@
 \usage{
 calculate_hpop_billion_change(
   df,
-  change = "contribution_pct",
+  change = "contribution_percent",
   contribution = "contribution",
   ind = "ind",
   iso3 = "iso3",

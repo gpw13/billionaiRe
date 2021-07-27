@@ -70,7 +70,7 @@ calculate_hpop_billion <- function(df,
 #'
 #' @export
 calculate_hpop_billion_change <- function(df,
-                                          change = "contribution_pct",
+                                          change = "contribution_percent",
                                           contribution = "contribution",
                                           ind = "ind",
                                           iso3 = "iso3",
