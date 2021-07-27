@@ -75,6 +75,7 @@ calculate_hpop_billion_change <- function(df,
                                           ind = "ind",
                                           iso3 = "iso3",
                                           year = "year",
+                                          population = "population",
                                           end_year = 2019:2023,
                                           pop_year = 2023,
                                           scenario = NULL,
@@ -82,7 +83,7 @@ calculate_hpop_billion_change <- function(df,
   assert_columns(df, change, ind, iso3, year, scenario)
   assert_ind_ids(ind_ids, "hpop")
 
-  df <- billionaiRe_add_columns(df, contribution, NA_real_)
+  df <- billionaiRe_add_columns(df, c(contribution, population), NA_real_)
 
   # only calculate Billion using relevant indicators and years and correct for child nutrition
 
@@ -105,22 +106,29 @@ calculate_hpop_billion_change <- function(df,
 
   # calculate billions for each contribution column
 
-  change_df_list <- purrr::map2(change,
-                                contribution,
-                                calculate_hpop_billion_single,
-                                df = change_df,
-                                iso3 = iso3,
-                                ind = ind,
-                                year = year,
-                                pop_year = pop_year,
-                                scenario = scenario)
+  bill_df_list <- purrr::map2(change,
+                              contribution,
+                              calculate_hpop_billion_single,
+                              df = change_df,
+                              iso3 = iso3,
+                              ind = ind,
+                              year = year,
+                              pop_year = pop_year,
+                              scenario = scenario)
 
-  # join back to change_df
-  change_df <- purrr::reduce(change_df_list,
-                             dplyr::left_join,
-                             by = c(iso3, ind, year, scenario))
+  # join back together
+  bill_df <- purrr::reduce(bill_df_list,
+                           dplyr::left_join,
+                           by = c(iso3, ind, year, scenario))
 
-  change_df
+  # add population column (adding here instead of in calc_single() to not generate multiple columns)
+  bill_df <- dplyr::mutate(bill_df,
+                           !!sym(population) := wppdistro::get_population(
+                             .data[[iso3]],
+                             year = !!pop_year)
+  )
+
+  bill_df
 }
 
 #' Calculate the HPOP Billion for one column of change
