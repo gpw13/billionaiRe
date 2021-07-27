@@ -16,6 +16,7 @@ calculate_hpop_contributions(
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
   contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   scenario = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
@@ -44,6 +45,10 @@ values. Must be the same length as \code{transform_value}.}
 
 \item{contribution_pct}{Column name of column(s) to store contribution (percent)
 values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
