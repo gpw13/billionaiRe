@@ -4,7 +4,14 @@
 \alias{summarize_hpop_billion_contribution}
 \title{Summarize HPOP billion contributions for all indicators}
 \usage{
-summarize_hpop_billion_contribution(df, year, end_year, ind, contribution)
+summarize_hpop_billion_contribution(
+  df,
+  year,
+  end_year,
+  ind,
+  contribution,
+  contribution_pct
+)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -16,9 +23,11 @@ country, year, and indicator.}
 
 \item{ind}{Column name of column with indicator names.}
 
-\item{contribution}{Glue specification used to transform \code{transform_value} column
-names into contribution column names. Defaults to replacing the string
-\code{"transform_value"} with \code{"contribution"}.}
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
 }
 \value{
 data frame with summarized data

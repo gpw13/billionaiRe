@@ -7,7 +7,7 @@
 write_sheet_header(wb, sheet_name, billion_long, iso, start_col, start_row)
 }
 \arguments{
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{\code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

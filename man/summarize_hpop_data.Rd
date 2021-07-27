@@ -11,6 +11,10 @@ summarize_hpop_data(
   ind = "ind",
   value = "value",
   transform_value = "transform_value",
+  contribution = stringr::str_replace(transform_value, "transform_value",
+    "contribution"),
+  contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   population = "population",
   scenario = NULL,
   type_col = "type",
@@ -34,6 +38,16 @@ country, year, and indicator.}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{population}{Column name of column with population figures.}
 

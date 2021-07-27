@@ -17,12 +17,13 @@ export_hpop_country_summary_xls(
   source_col = "source",
   population = "population",
   contribution = "contribution",
+  contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
   output_folder = "outputs",
-  ind_ids = billion_ind_codes("hpop"),
-  ...
+  ind_ids = billion_ind_codes("hpop")
 )
 }
 \arguments{
@@ -42,9 +43,24 @@ country, year, and indicator.}
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
 \item{type_col}{Column name of column to store type.}
 
 \item{source_col}{Column name of column to store source information.}
+
+\item{population}{Column name of column with population figures.}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

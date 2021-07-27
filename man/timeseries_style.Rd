@@ -9,13 +9,17 @@ timeseries_style(df, wb, sheet_name, start_row, start_col, ind, year, type_col)
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{\code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
 \item{start_row}{numeric start row of the table in the excel sheet}
 
 \item{start_col}{numeric start row of the table in the excel sheet}
+
+\item{ind}{Column name of column with indicator names.}
+
+\item{year}{Column name of column with years.}
 
 \item{type_col}{Column name of column to store type.}
 }

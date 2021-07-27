@@ -9,7 +9,11 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
                                    start_row, start_col, transform_value,
                                    ind_df, ind, year, type_col){
 
+
+  # TODO: Simplify function to purrr-like walk rather than looping
+
   transformed_time_series <- df %>%
+    dplyr::ungroup() %>%
     dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
     dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!transform_value) %>%
     dplyr::group_by(.data[[ind]], .data[[year]],.data[[type_col]]) %>%

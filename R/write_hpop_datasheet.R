@@ -1,14 +1,45 @@
 #' Write data sheet
 #'
+#' `write_hpop_datasheet` write all the content and styling found in the HPOP data sheet
 #'
-write_hpop_datasheet <- function(df, wb, sheet_name, start_year, end_year, value,year,
-                             iso3,iso,ind,population,scenario,ind_ids,
-                             transform_value, type_col, source_col,
-                             contribution){
+#' @inherit export_country_summary_xls
+#' @inherit write_main_df
+#'
+write_hpop_datasheet <- function(df, wb, sheet_name,iso,
+                                 start_year = 2018,
+                                 end_year = 2019:2023,
+                                 value = "value",
+                                 year = "year",
+                                 iso3 = "iso3",
+                                 ind = "ind",
+                                 population = "population",
+                                 scenario = NULL,
+                                 ind_ids = billion_ind_codes("hpop"),
+                                 transform_value = "transform_value",
+                                 type_col = "type",
+                                 source_col = "source",
+                                 contribution = "contribution",
+                                 contribution_pct = paste0(contribution, "_percent"),
+                                 contribution_pct_pop_total = paste0(contribution, "_percent_pop_total")
+                                 ){
+
   # Get main data frame for data sheet
-  main_df <- summarize_hpop_data(df, year = year, iso3, ind, value, transform_value,
-                                 population, scenario, type_col, source_col,
-                                 ind_ids, start_year,end_year) %>%
+  main_df <- summarize_hpop_data(df = df,
+                                 year = year,
+                                 iso3 = iso3,
+                                 ind = ind,
+                                 value = value,
+                                 transform_value = transform_value,
+                                 contribution = contribution,
+                                 contribution_pct = contribution_pct,
+                                 contribution_pct_pop_total = contribution_pct_pop_total,
+                                 population = population,
+                                 scenario = scenario,
+                                 type_col = type_col,
+                                 source_col = source_col,
+                                 ind_ids = ind_ids,
+                                 start_year = start_year,
+                                 end_year = end_year) %>%
     dplyr::select(-.data[[iso3]])
 
 
@@ -18,18 +49,23 @@ write_hpop_datasheet <- function(df, wb, sheet_name, start_year, end_year, value
                            iso, start_col = 1, start_row = 2)
 
   # Write main table
-
   wb <- write_main_df(main_df, wb,
                       start_row = 6, start_col = 1, start_year = start_year,
+                      year = year,
                       end_year = end_year, sheet_name = sheet_name, value = value,
                       transform_value = transform_value, type_col = type_col,
-                      source_col = source_col)
+                      source_col = source_col,
+                      contribution = contribution,
+                      contribution_pct = contribution_pct,
+                      contribution_pct_pop_total = contribution_pct_pop_total)
 
   end_main_table <- 8+nrow(main_df)
 
+  # Get the HPOP billion contribution table
   df_hpop_contrib <- summarize_hpop_billion_contribution(df,year = year,
                                                          end_year = end_year,ind = ind,
-                                                         contribution = contribution)
+                                                         contribution = contribution,
+                                                         contribution_pct = contribution_pct)
 
 
   wb <- write_hpop_billion_contrib(dplyr::select(df_hpop_contrib, -.data[[ind]]),

@@ -10,8 +10,7 @@ export_all_country_summary_xls(
   iso,
   start_year = 2018,
   end_year = 2019:2023,
-  output_folder = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx"
+  output_folder = "outputs"
 )
 }
 \arguments{
@@ -25,8 +24,6 @@ country, year, and indicator.}
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
 \item{output_folder}{Folder path to where the Excel files should be written}
-
-\item{xls_template}{Path to the Excel template to be used.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

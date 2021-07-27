@@ -18,7 +18,7 @@ write_hpop_billion_contrib(
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{\code{openxlsx} workbook to be edited.}
 
 \item{value}{Column name of column with indicator values.}
 

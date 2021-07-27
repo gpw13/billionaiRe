@@ -9,7 +9,7 @@ write_notes_data(df, wb, start_row, start_col, end_col, sheet_name)
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{\code{openxlsx} workbook to be edited.}
 
 \item{start_row}{numeric start row of the table in the excel sheet}
 

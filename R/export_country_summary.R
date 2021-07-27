@@ -3,11 +3,12 @@
 #' `export_country_summary_xls` Export a country-specific for all three
 #' billions or for a specific billion.
 #'
-#' @inheritParams summarize_hpop_data
+#' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#' @inheritParams calculate_uhc_billion
 #' @param iso ISO3 code of country to summarize.
+#' @param billion Billion indicator names to return, either "hep", "hpop", "uhc", or "all".
 #' @param output_folder Folder path to where the Excel files should be written
-#' @param xls_template Path to the Excel template to be used.
 #' @param sheet_prefix Character prefix to add in front of export sheets
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_folder`.
@@ -25,29 +26,33 @@ export_country_summary_xls <- function(df,
                                        ind = "ind",
                                        value = "value",
                                        transform_value = "transform_value",
+                                       scenario = NULL,
                                        type_col = "type",
                                        source_col = "source",
+                                       population = "population",
+                                       contribution = "contribution",
+                                       contribution_pct = paste0(contribution, "_percent"),
+                                       contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
                                        ind_ids = billion_ind_codes("hpop"),
                                        start_year = 2018,
                                        end_year = 2019:2023,
                                        sheet_prefix = "HPOP",
-                                       output_folder = "outputs",
-                                       ...) {
-  assert_mart_columns(df)
+                                       output_folder = "outputs") {
   billion <- rlang::arg_match(billion)
 
-  if (billion == "hep") {
-    export_hep_country_summary_xls(df, {{ iso }}, {{ output_folder }}, {{ xls_template }})
-  }
-  if (billion == "hpop") {
-    export_hpop_country_summary_xls(df, {{ iso }}, {{ output_folder }}, {{ xls_template }})
-  }
-  if (billion == "uhc") {
-    export_uhc_country_summary_xls(df, {{ iso }}, {{ output_folder }}, {{ xls_template }})
-  }
-  if (billion == "all") {
-    export_all_country_summary_xls(df, iso)
-  }
+  #TODO: To be completed as a wrapper function
+  # if (billion == "hep") {
+  #   export_hep_country_summary_xls()
+  # }
+  # if (billion == "hpop") {
+  #   export_hpop_country_summary_xls()
+  # }
+  # if (billion == "uhc") {
+  #   export_uhc_country_summary_xls()
+  # }
+  # if (billion == "all") {
+  #   export_all_country_summary_xls()
+  # }
 }
 
 #' Export country summary to Excel for HEP billion$
@@ -59,7 +64,6 @@ export_hep_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
                                            end_year = 2019:2023){
-  assert_mart_columns(df)
 
 }
 
@@ -67,6 +71,7 @@ export_hep_country_summary_xls <- function(df,
 #'
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
 #' @inherit export_country_summary_xls return details params
+#'
 #'
 #' @export
 #'
@@ -82,21 +87,27 @@ export_hpop_country_summary_xls <- function(df,
                                             source_col = "source",
                                             population = "population",
                                             contribution = "contribution",
+                                            contribution_pct = paste0(contribution, "_percent"),
+                                            contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
                                             output_folder = "outputs",
-                                            ind_ids = billion_ind_codes("hpop"),
-                                            ...) {
-  assert_columns(df,year, iso3, ind, value,transform_value, type_col, source_col)
+                                            ind_ids = billion_ind_codes("hpop")) {
+  assert_columns(df,year, iso3, ind, value,transform_value,contribution, type_col, source_col)
   assert_years(start_year, end_year)
   assert_who_iso(iso)
+  assert_same_length(value, transform_value)
+  assert_same_length(value, contribution)
+
+  #Get country specific data frame
 
   df_iso <- df %>%
     dplyr::filter(.data[[iso3]] == iso) %>%
     dplyr::arrange(get_ind_order(.data[[ind]]),
                    .data[[year]])
 
+  #Indicator data frame to make sure the order of indicators is correct
   unique_ind <- unique(df_iso[[ind]])
 
   ind_df <- billionaiRe::indicator_df %>%
@@ -114,9 +125,13 @@ export_hpop_country_summary_xls <- function(df,
   data_sheet <- glue::glue("{sheet_prefix}_data")
   openxlsx::renameWorksheet(wb, sheet = "data", newName = data_sheet)
 
-  wb <- write_hpop_datasheet(df = df_iso, wb, sheet_name = data_sheet, start_year, end_year, value,year,
-                         iso3,iso,ind,population,scenario,ind_ids,
-                         transform_value, type_col, source_col, contribution)
+  wb <- write_hpop_datasheet(df = df_iso, wb = wb, sheet_name = data_sheet,
+                             start_year = start_year, end_year = end_year, value =value,year = year,
+                             iso3 = iso3,iso = iso,ind = ind ,population = population ,scenario =scenario,
+                             ind_ids = ind_ids, transform_value = transform_value, type_col = type_col,
+                             source_col = source_col, contribution = contribution,
+                             contribution_pct = paste0(contribution, "_percent"),
+                             contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"))
 
   # indicator list sheet
   indicator_sheet <- glue::glue("{sheet_prefix}_Indicator List")
@@ -149,15 +164,30 @@ export_hpop_country_summary_xls <- function(df,
                                ind_df = ind_df, ind = ind,
                                year = year, type_col = type_col)
 
-  openxlsx::removeWorksheet(wb, "Inter")
-  openxlsx::removeWorksheet(wb, "Chart")
+  # Inter sheet (data for Chart)
+
+  wb <- write_hpop_inter(wb, sheet_name = "Inter", data_sheet_name = data_sheet,
+                         ind_df, start_year, end_year, start_col = 1, start_row = 2,
+                         start_col_data = 1, start_row_data = 9,
+                         transform_value)
+
+  ## Hidding Inter
+  if(openxlsx::sheetVisibility(wb)[grep("Inter", openxlsx::sheets(wb))] != "hidden"){
+    suppressWarnings(openxlsx::sheetVisibility(wb)[grep("Inter", openxlsx::sheets(wb))] <- "hidden")
+  }
+
+
+  # Flip titles graph
+  openxlsx::addStyle(wb, sheet = "Chart", rows = 22, cols = (3:(2+nrow(ind_df))),
+                     style = excel_styles()$vertical_txt)
 
   # Write workbook
   if (!dir.exists(output_folder)) {
     dir.create(output_folder)
   }
 
-  openxlsx::saveWorkbook(wb, glue::glue("{output_folder}/GPW13_HPOP_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"), overwrite = TRUE)
+  openxlsx::saveWorkbook(wb,
+                         glue::glue("{output_folder}/GPW13_HPOP_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"), overwrite = TRUE)
 
 }
 
@@ -169,9 +199,9 @@ export_uhc_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
-                                           output_folder = "outputs",
-                                           xls_template = "data-raw/CountrySummary_template.xlsx") {
-  assert_mart_columns(df)
+                                           output_folder = "outputs"
+                                           ) {
+  # Fill in
 }
 
 #' Export country summary to Excel for all billions.
@@ -183,7 +213,6 @@ export_all_country_summary_xls <- function(df,
                                            iso,
                                            start_year = 2018,
                                            end_year = 2019:2023,
-                                           output_folder = "outputs",
-                                           xls_template = "data-raw/CountrySummary_template.xlsx") {
-  assert_mart_columns(df)
+                                           output_folder = "outputs") {
+  # Fill in
 }

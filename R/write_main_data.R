@@ -1,7 +1,7 @@
 #' Write the main data frame to the data sheet
 #'
 #' @param df data frame to be written
-#' @param wb openxlsx workbook to be edited.
+#' @param wb `openxlsx` workbook to be edited.
 #' @param start_row numeric start row of the table in the excel sheet
 #' @param start_col numeric start row of the table in the excel sheet
 #' @param sheet_name character name of the sheet to update
@@ -14,11 +14,16 @@ write_main_df <-
            start_col,
            start_year,
            end_year,
+           year,
            sheet_name,
            value,
            transform_value,
            type_col,
-           source_col) {
+           source_col,
+           contribution,
+           contribution_pct,
+           contribution_pct_pop_total,
+           ind) {
 
 
     start_row_subH <- start_row + 1
@@ -167,7 +172,8 @@ write_main_df <-
       wb,
       sheet = sheet_name,
       cols = start_col:ncol(df),
-      widths = get_col_width(df, value, transform_value, type_col, source_col,
+      widths = get_col_width_hpop(df, value, transform_value, type_col, source_col,
+                             contribution, contribution_pct, contribution_pct_pop_total, year,
                              start_year, end_year),
       ignoreMergedCells = FALSE
     )

@@ -9,7 +9,7 @@ style_indicator_list_sheet(df, wb, sheet_name, start_row, start_col)
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{openxlsx workbook to be edited.}
+\item{wb}{\code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
