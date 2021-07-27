@@ -11,6 +11,7 @@ calculate_hpop_billion_change(
   ind = "ind",
   iso3 = "iso3",
   year = "year",
+  population = "population",
   end_year = 2019:2023,
   pop_year = 2023,
   scenario = NULL,
@@ -31,6 +32,8 @@ values. Must be the same length as \code{transform_value}.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{year}{Column name of column with years.}
+
+\item{population}{Column name of column with population figures.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
