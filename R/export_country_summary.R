@@ -165,20 +165,19 @@ export_hpop_country_summary_xls <- function(df,
                                year = year, type_col = type_col)
 
   # Inter sheet (data for Chart)
-
-  wb <- write_hpop_inter(wb, sheet_name = "Inter", data_sheet_name = data_sheet,
+  wb <- write_hpop_inter(wb, sheet_name = "HPOP_Inter", data_sheet_name = data_sheet,
                          ind_df, start_year, end_year, start_col = 1, start_row = 2,
                          start_col_data = 1, start_row_data = 9,
                          transform_value)
 
   ## Hidding Inter
-  if(openxlsx::sheetVisibility(wb)[grep("Inter", openxlsx::sheets(wb))] != "hidden"){
-    suppressWarnings(openxlsx::sheetVisibility(wb)[grep("Inter", openxlsx::sheets(wb))] <- "hidden")
+  if(openxlsx::sheetVisibility(wb)[grep("HPOP_Inter", openxlsx::sheets(wb))] != "hidden"){
+    suppressWarnings(openxlsx::sheetVisibility(wb)[grep("HPOP_Inter", openxlsx::sheets(wb))] <- "hidden")
   }
 
 
   # Flip titles graph
-  openxlsx::addStyle(wb, sheet = "Chart", rows = 22, cols = (3:(2+nrow(ind_df))),
+  openxlsx::addStyle(wb, sheet = "HPOP_Chart", rows = 22, cols = (3:(2+nrow(ind_df))),
                      style = excel_styles()$vertical_txt)
 
   # Write workbook
