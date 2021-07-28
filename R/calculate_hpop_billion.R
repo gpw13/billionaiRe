@@ -56,7 +56,8 @@ calculate_hpop_billion <- function(df,
                                              ind_ids = ind_ids)
 
   # return Billions with the rest of the original data
-  dplyr::bind_rows(contr_df, change_df)
+  dplyr::bind_rows(contr_df, change_df) %>%
+    dplyr::ungroup()
 }
 
 #' Calculate the HPOP Billion using columns of change
