@@ -20,6 +20,7 @@ add_hpop_populations <- function(df,
   assert_columns(df, iso3, ind)
   assert_string(population, 1)
   assert_ind_ids(ind_ids, "hpop")
+  assert_numeric(pop_year)
 
   # add population column if it doesn't already exist
   df <- billionaiRe_add_columns(df, population, NA_real_)

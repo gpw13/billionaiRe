@@ -76,7 +76,8 @@ assert_string <- function(x, n) {
                    deparse(substitute(x)),
                    n,
                    class(x),
-                   lx))
+                   lx),
+           call. = FALSE)
     }
   }
 }
@@ -189,5 +190,33 @@ warning_col_missing_values <- function(df, col_name, how) {
                       col_name),
               call. = FALSE)
     }
+  }
+}
+
+#' Asserts that provided ISO is valid
+#'
+#' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
+#' using [whoville::is_who_member()].
+#'
+#' @param iso Single ISO3 code
+assert_who_iso <- function(iso) {
+  assert_string(iso, 1)
+  if (!whoville::is_who_member(iso)) {
+    stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
+                 All valid codes are available through `whoville::who_member_states()`."),
+         call. = FALSE)
+
+  }
+}
+
+
+#' Assert that `df` is a list
+#'
+#' @param df Supposed list
+assert_list <- function(df) {
+  if (!is.list(df)) {
+    stop(sprintf("`df` must be a list, not a %s.",
+                 class(df)[1]),
+         call. = FALSE)
   }
 }

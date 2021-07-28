@@ -19,6 +19,7 @@ calculate_hpop_billion <- function(df,
                                    transform_value = "transform_value",
                                    contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                    contribution_pct = paste0(contribution, "_percent"),
+                                   contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
                                    scenario = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind, year, transform_value)
@@ -39,6 +40,7 @@ calculate_hpop_billion <- function(df,
                                            transform_value = transform_value,
                                            contribution = contribution,
                                            contribution_pct = contribution_pct,
+                                           contribution_pct_pop_total = contribution_pct_pop_total,
                                            scenario = scenario,
                                            ind_ids = ind_ids)
 
@@ -54,7 +56,8 @@ calculate_hpop_billion <- function(df,
                                              ind_ids = ind_ids)
 
   # return Billions with the rest of the original data
-  dplyr::bind_rows(contr_df, change_df)
+  dplyr::bind_rows(contr_df, change_df) %>%
+    dplyr::ungroup()
 }
 
 #' Calculate the HPOP Billion using columns of change
@@ -241,3 +244,5 @@ calculate_hpop_change_vector <- function(transform_value,
     NA_real_
   }
 }
+
+

@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 inst/doc
-
+test/
+outputs/
+~$*.xls*
+inst/extdata/archive
