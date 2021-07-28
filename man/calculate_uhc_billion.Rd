@@ -11,7 +11,7 @@ calculate_uhc_billion(
   ind = "ind",
   transform_value = "transform_value",
   value = "value",
-  scenario = NULL,
+  scenario = "scenario",
   type_col = "type",
   source_col = "source",
   source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
