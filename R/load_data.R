@@ -11,10 +11,15 @@
 #' landing page linked above.
 #'
 #' @param billion Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".
-#' @param mart_table Name of xMart4 table in the GPW13 mart to load data from. Currently,
-#'     pulls from the full input data to the Billions by default, but can also pull
-#'     from the table containing data needing DDI infilling and projections or
-#'     those already infilled and projected by technical programmes.
+#' @param mart_table Name of xMart4 table in the GPW13 mart to load data from.
+#' * `full_data`: Full Billions data with transformed values, contributions,
+#' and all calculations available. (default)
+#' * `raw_data`: Raw input Billions data, that has yet to be transformed or
+#' calculated upon, but has been fully projected.
+#' * `proj_data`: Raw input Billions data that has been projected by the
+#' technical programme(s).
+#' * `unproj_data`: Raw input Billions that has has not been projected by the
+#' technical programme(s) and needs projection by DDI.
 #' @param date_filter One of `NULL`, "latest", or a single date string. The date
 #'     string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 #'     If a date is provided, will only take values loaded on or prior to that
@@ -33,7 +38,7 @@
 #'
 #' @export
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              mart_table = c("full_ind", "unproj_data", "proj_data"),
+                              mart_table = c("full_data", "raw_data", "unproj_data", "proj_data"),
                               date_filter = "latest",
                               na_rm = TRUE,
                               format = c("none", "csv", "streaming"),
@@ -41,7 +46,10 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
   mart_table <- rlang::arg_match(mart_table)
-  mart_match <- c("full_ind" = "RAW_INDICATOR", "unproj_data" = "RAW_UNPROJ_DATA", "proj_data" = "RAW_PROJ_DATA")
+  mart_match <- c("full_data" = "FULL_BILLIONS",
+                  "raw_data" = "RAW_INDICATOR",
+                  "unproj_data" = "RAW_UNPROJ_DATA",
+                  "proj_data" = "RAW_PROJ_DATA")
   mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
   format <- rlang::arg_match(format)
@@ -57,8 +65,8 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
 #' @noRd
 filter_billion_inds <- function(df, billion) {
   if (billion != "all") {
-    inds <- billion_ind_codes(billion, include_covariates = TRUE)
-    df <- dplyr::filter(df, .data[["ind"]] %in% inds)
+    inds <- billion_ind_codes(billion, include_covariates = TRUE, include_calculated = TRUE)
+    df <- dplyr::filter(df, .data[["ind"]] %in% !!inds)
   }
   df
 }
@@ -76,7 +84,7 @@ filter_billion_date <- function(df, date_filter) {
         warning("`date_filter` is before the first upload date of the Billions data, returning an empty data frame.",
                 call. = FALSE)
       }
-      df <- dplyr::filter(df, .data[["upload_date"]] <= date_filter)
+      df <- dplyr::filter(df, .data[["upload_date"]] <= !!date_filter)
     }
     df <- dplyr::filter(df, .data[["upload_date"]] == max(.data[["upload_date"]], -Inf))
     df <- dplyr::ungroup(df)

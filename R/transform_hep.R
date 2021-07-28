@@ -217,10 +217,10 @@ transform_prev_cmpgn_data <- function(df,
 
   # Extrapolate out type and source for each pathogen
   new_df %>%
-    dplyr::filter(dplyr::row_number() >= min(which(!is.na(.data[[type_col]])))) %>%
+    dplyr::filter(dplyr::row_number() >= min(which(!is.na(.data[[type_col]])), Inf)) %>%
     dplyr::mutate(!!sym(type_col) := dplyr::case_when(
                     !is.na(.data[[type_col]]) ~ .data[[type_col]],
-                    dplyr::row_number() <= max(which(!is.na(.data[[value[i]]]))) ~ "reported",
+                    dplyr::row_number() <= max(which(!is.na(.data[[value[i]]])), -Inf) ~ "reported",
                     TRUE ~ "projected"
                   ),
                   !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
