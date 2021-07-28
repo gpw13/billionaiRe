@@ -14,6 +14,7 @@ calculate_hep_billion(
   level = stringr::str_replace(transform_value, "transform_value", "level"),
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
+  contribution_pct = paste0(contribution, "_percent"),
   start_year = 2018,
   end_year = 2019:2023,
   pop_year = 2023,
@@ -39,9 +40,11 @@ used to calculate contributions.}
 \item{level}{Column name of column(s) with indicator levels. Should be same length
 as \code{transform_value}.}
 
-\item{contribution}{Glue specification used to transform \code{transform_value} column
-names into contribution column names. Defaults to replacing the string
-\code{"transform_value"} with \code{"contribution"}.}
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

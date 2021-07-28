@@ -11,10 +11,13 @@ calculate_hpop_billion(
   end_year = 2019:2023,
   iso3 = "iso3",
   ind = "ind",
+  population = "population",
   pop_year = 2023,
   transform_value = "transform_value",
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
+  contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   scenario = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
@@ -33,14 +36,22 @@ country, year, and indicator.}
 
 \item{ind}{Column name of column with indicator names.}
 
+\item{population}{Column name of column with population figures.}
+
 \item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
-\item{contribution}{Glue specification used to transform \code{transform_value} column
-names into contribution column names. Defaults to replacing the string
-\code{"transform_value"} with \code{"contribution"}.}
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

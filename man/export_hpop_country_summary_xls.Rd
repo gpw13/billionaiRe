@@ -7,31 +7,34 @@
 export_hpop_country_summary_xls(
   df,
   iso,
-  year = "year",
   iso3 = "iso3",
+  year = "year",
   ind = "ind",
   value = "value",
   transform_value = "transform_value",
+  scenario = NULL,
   type_col = "type",
   source_col = "source",
-  ind_ids = billion_ind_codes("hpop"),
+  population = "population",
+  contribution = "contribution",
+  contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
-  output_fldr = "outputs",
-  xls_template = "data-raw/CountrySummary_template.xlsx",
-  ...
+  output_folder = "outputs",
+  ind_ids = billion_ind_codes("hpop")
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso}{ISO3 codes of country to summarize.}
-
-\item{year}{Column name of column with years.}
+\item{iso}{ISO3 code of country to summarize.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with years.}
 
 \item{ind}{Column name of column with indicator names.}
 
@@ -40,14 +43,24 @@ country, year, and indicator.}
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
 \item{type_col}{Column name of column to store type.}
 
 \item{source_col}{Column name of column to store source information.}
 
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
+\item{population}{Column name of column with population figures.}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
@@ -55,16 +68,15 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{sheet_prefix}{Character prefix to add in front of export sheets}
 
-\item{output_fldr}{Folder path to where the Excel files should be written}
+\item{output_folder}{Folder path to where the Excel files should be written}
 
-\item{xls_template}{Path to the Excel template to be used.}
-
-\item{...}{Additional arguments passed to \code{calculate_hpop_contributions} and
-\code{calculate_hpop_billion}. Use if you need to provide additional parameters to
-those functions}
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
-\code{openxslx} Workbook object. Output file is in \code{output_fldr}.
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.

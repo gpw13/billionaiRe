@@ -79,7 +79,7 @@ calculate_uhc_billion_single <- function(df,
                                          ind_ids) {
   df %>%
     dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>% # nurses doctors already aggregated to hwf
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(year, iso3, scenario, "_billion_group_temp")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(!!year, !!iso3, !!scenario, "_billion_group_temp")))) %>%
     dplyr::summarize(!!sym(transform_value) := billion_group_mean(.data[[ind]], .data[[transform_value]], !!ind_ids),
                      .groups = "drop") %>%
     tidyr::pivot_wider(names_from = "_billion_group_temp",
@@ -116,8 +116,9 @@ billion_group_mean <- function(ind,
   cd <- ind_ids[c("tb", "art", "uhc_sanitation")]
   ncd <- ind_ids[c("uhc_tobacco", "bp", "fpg")]
   sca <- ind_ids[c("beds", "hwf", "espar")]
+  fh <- ind_ids["fh"]
 
-  chk <- sapply(list(rmnch, cd, ncd, sca),
+  chk <- sapply(list(rmnch, cd, ncd, sca, fh),
                 function(x) all(x %in% ind))
 
   if (any(chk)) {

@@ -9,5 +9,6 @@
 ^data-raw$
 ^\.github$
 ^test$
+^outputs$
 
 

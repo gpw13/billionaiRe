@@ -6,7 +6,7 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
-  mart_table = c("full_ind", "unproj_data", "proj_data"),
+  mart_table = c("full_data", "raw_data", "unproj_data", "proj_data"),
   date_filter = "latest",
   na_rm = TRUE,
   format = c("none", "csv", "streaming"),
@@ -16,10 +16,17 @@ load_billion_data(
 \arguments{
 \item{billion}{Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".}
 
-\item{mart_table}{Name of xMart4 table in the GPW13 mart to load data from. Currently,
-pulls from the full input data to the Billions by default, but can also pull
-from the table containing data needing DDI infilling and projections or
-those already infilled and projected by technical programmes.}
+\item{mart_table}{Name of xMart4 table in the GPW13 mart to load data from.
+\itemize{
+\item \code{full_data}: Full Billions data with transformed values, contributions,
+and all calculations available. (default)
+\item \code{raw_data}: Raw input Billions data, that has yet to be transformed or
+calculated upon, but has been fully projected.
+\item \code{proj_data}: Raw input Billions data that has been projected by the
+technical programme(s).
+\item \code{unproj_data}: Raw input Billions that has has not been projected by the
+technical programme(s) and needs projection by DDI.
+}}
 
 \item{date_filter}{One of \code{NULL}, "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".

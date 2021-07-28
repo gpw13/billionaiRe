@@ -1,25 +1,23 @@
 #' Summarize data for HPOP country summary export
 #'
-#' `summarize_hpop_country_data()` summarizes the data for the HPOP country summary
+#' `summarize_hpop_data()` summarizes the data for the HPOP country summary
 #' Excel file. It is used within [export_hpop_country_summary_xls()].
 #'
-#' @param iso ISO3 code of country to summarize.
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams transform_hpop_data
 #'
 #' @return list of data frames to be used in the 'data' sheet of HPOP country summary
-#' @export
 #'
-summarize_hpop_country_data <-
-  function(df,
-           iso,
+summarize_hpop_data <- function(df,
            year = "year",
            iso3 = "iso3",
            ind = "ind",
            value = "value",
            transform_value = "transform_value",
-           contribution = "contribution",
+           contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
+           contribution_pct = paste0(contribution, "_percent"),
+           contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
            population = "population",
            scenario = NULL,
            type_col = "type",
@@ -28,31 +26,32 @@ summarize_hpop_country_data <-
            start_year = 2018,
            end_year = 2019:2023) {
 
-    assert_columns(df, year, iso3, ind, value, transform_value, scenario, contribution, type_col, source_col, population)
+    assert_columns(df, year, iso3, ind, value, transform_value, scenario, type_col, source_col, population)
     assert_years(start_year, end_year)
     assert_same_length(value, transform_value)
-    assert_same_length(value, contribution)
-    assert_who_iso(iso3)
 
-    ### TODO: Add full scenarios implementation
+    ### TODO: Check full scenarios implementation
 
-    # Filter df for country, arrange indicators by order.
-    df_iso <- df %>%
-      dplyr::filter(.data[[iso3]] == !!iso) %>%
+    # Arrange indicators by order.
+    df <- df %>%
       dplyr::arrange(get_ind_order(.data[[ind]]),
-                     .data[[year]])
+                     .data[[year]]) %>%
+      dplyr::mutate(dplyr::across(c(!!population, !!year), as.integer))
 
     # Get unique indicators
-    unique_ind <- unique(df_iso[[ind]])
+    unique_ind <- unique(df[[ind]])
 
     # Data frame with indicators' order
-    ind_df <- billionaiRe::indicator_df %>%
-      dplyr::filter(.data[["ind"]] %in% !!unique_ind) %>%
-      dplyr::select("ind", "transformed_name", "unit_transformed")
+    ind_df <- df %>%
+      dplyr::group_by(.data[[iso3]]) %>%
+      dplyr::distinct(.data[[ind]]) %>%
+      dplyr::left_join(billionaiRe::indicator_df, by = c(ind)) %>%
+      dplyr::select(.data[[iso3]],"ind", "transformed_name", "unit_transformed") %>%
+      dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier"))
 
 
     # Latest reported data
-    latest_reported <- df_iso %>%
+    latest_reported <- df %>%
       dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
       dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
       dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
@@ -61,8 +60,8 @@ summarize_hpop_country_data <-
                                     type_col, source_col, iso3)))
 
     # Count data points since specified date
-    counts_2012 <- count_since(df_iso, year_specified = 2012, year = year, ind = ind, iso3 = iso3, type_col = type_col)
-    counts_2000 <- count_since(df_iso, year_specified = 2000, year = year, ind = ind, iso3 = iso3, type_col = type_col)
+    counts_2012 <- count_since(df, year_specified = 2012, year = year, ind = ind, iso3 = iso3, type_col = type_col)
+    counts_2000 <- count_since(df, year_specified = 2000, year = year, ind = ind, iso3 = iso3, type_col = type_col)
 
     # Join counts with latest reported data
     latest_reported <- latest_reported %>%
@@ -70,7 +69,7 @@ summarize_hpop_country_data <-
       dplyr::left_join(counts_2012, by = c(ind, iso3))
 
     # Baseline and projected for end date data in wider format
-    baseline_proj <- df_iso %>%
+    baseline_proj <- df %>%
       dplyr::filter(.data[[year]] %in% c(!!start_year, max(!!end_year)),
                     .data[[ind]] %in% ind_ids) %>%
       dplyr::select(dplyr::all_of(c(
@@ -79,74 +78,79 @@ summarize_hpop_country_data <-
         value,
         transform_value,
         type_col,
-        source_col
+        source_col,
+        iso3
       ))) %>%
-      dplyr::group_by(!!rlang::sym(ind)) %>%
+      dplyr::group_by(!!rlang::sym(ind), !!rlang::sym(iso3)) %>%
       tidyr::pivot_wider(
         names_from = !!rlang::sym(year),
         values_from = c(dplyr::all_of(c(value, transform_value)), .data[[type_col]], .data[[source_col]])
       )
 
     # Contribution of each indicator to billion
-    hpop_contrib <- df_iso %>%
-      dplyr::filter(.data[[year]] %in% c(!!max(end_year), !!start_year),
-                    .data[[ind]] %in% ind_ids) %>%
-      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
-      dplyr::mutate(dplyr::across(dplyr::any_of(transform_value),
-                                  calculate_hpop_change_vector,
-                                  .data[[year]],
-                                  !!start_year, .names = "change_{.col}")) %>%
-      dplyr::filter(.data[[year]] == !!max(end_year)) %>%
-      dplyr::group_by(dplyr::across(c(!!iso3, !!scenario, !!ind))) %>%
-      dplyr::mutate(
-        tot_pop = wppdistro::get_population(!!iso, year = !!max(end_year)),
-        dplyr::across(c(!!glue::glue("change_{transform_value}")),
-                      ~ (.x/100)*population,
-                      .names = "ind_contrib_{.col}"),
-        dplyr::across(c(!!glue::glue("change_{transform_value}")),
-             ~((.x/100)*population)/tot_pop*100,
-             .names = "ind_contrib_perc_{.col}"
-             )) %>%
+    hpop_contrib <- df %>%
+      dplyr::filter(.data[[year]] == max(end_year)) %>%
+      dplyr::select(dplyr::all_of(c(iso3, ind , contribution_pct, population, contribution, contribution_pct_pop_total)))
+
+    latest_update_ind <- df %>%
+      dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
+      dplyr::select(.data[[iso3]],.data[[ind]], .data[["upload_date"]]) %>%
+      dplyr::filter(.data[["upload_date"]] == max(.data[["upload_date"]])) %>%
+      dplyr::distinct()
+
+    main_df <- ind_df %>%
+      dplyr::left_join(baseline_proj, by = c(ind, iso3)) %>%
+      dplyr::left_join(latest_update_ind, by = c(ind, iso3)) %>%
+      dplyr::left_join(hpop_contrib, by = c(ind, iso3)) %>%
+      dplyr::left_join(latest_reported, by = c(ind, iso3)) %>%
       dplyr::ungroup() %>%
-      dplyr::select(dplyr::all_of(c(!!ind,
-                                    !!glue::glue("change_{transform_value}"),
-                                    !!population,
-                                    !!glue::glue("ind_contrib_change_{transform_value}"),
-                                    !!glue::glue("ind_contrib_perc_change_{transform_value}"))))
+      dplyr::select(-.data[[ind]])
 
-
-    # Contribution towards overall billion (all indicators)
-    hpop_billion <- df_iso %>%
-      dplyr::filter(.data[[year]] == c(!!max(end_year)),
-                    stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
-      dplyr::select(dplyr::all_of(c(!!ind, !!contribution))) %>%
-      dplyr::distinct() %>%
-      dplyr::mutate("dbl_cntd" := dplyr::case_when(
-        stringr::str_detect(.data[[ind]], "dbl_cntd$") ~ "dbl_cntd",
-        TRUE ~ "not_dbl_cntd"),
-        !!sym(ind) := stringr::str_remove(.data[[ind]], "_dbl_cntd")) %>%
-      dplyr::group_by(!!sym(ind)) %>%
-      tidyr::pivot_wider( values_from = !!contribution, names_from = "dbl_cntd",
-                         names_glue = "{.value}_{dbl_cntd}") %>%
-      dplyr::ungroup()
-
-    # transformed time series
-    transformed_time_series <- df_iso %>%
-      dplyr::select(c(.data[[ind]], .data[[year]], !!transform_value)) %>%
-      dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
-      dplyr::group_by(.data[[ind]]) %>%
-      tidyr::pivot_wider(values_from = !!transform_value, names_from = .data[[year]])
-
-    #Final list of df to be returned
-    final_tables <- list(
-      "ind_df" = ind_df,
-      "latest_reported" = latest_reported,
-      "baseline_proj" = baseline_proj,
-      "hpop_contrib" = hpop_contrib,
-      "hpop_billion" = hpop_billion,
-      "df_iso" = df_iso,
-      "transformed_time_series" = transformed_time_series
-    )
-
-    return(final_tables)
+    return(main_df)
   }
+
+
+#' Summarize HPOP billion contributions for all indicators
+#'
+#' @inherit summarize_hpop_data
+#' @inherit calculate_hpop_contributions
+#'
+#' @return data frame with summarized data
+summarize_hpop_billion_contribution <- function(df,year, end_year,ind, contribution, contribution_pct){
+
+  assert_columns(df, year, ind, contribution)
+
+  hpop_healthier <- df %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data[[year]] == c(!!max(end_year)),
+                  stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
+    dplyr::select(dplyr::all_of(c(!!ind, !!contribution))) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate("dbl_cntd" := dplyr::case_when(
+      stringr::str_detect(.data[[ind]], "dbl_cntd$") ~ "dbl_cntd",
+      TRUE ~ "not_dbl_cntd"),
+      !!sym(ind) := stringr::str_remove(.data[[ind]], "_dbl_cntd")) %>%
+    dplyr::group_by(!!sym(ind)) %>%
+    tidyr::pivot_wider( values_from = !!contribution, names_from = "dbl_cntd",
+                        names_glue = "{.value}_{dbl_cntd}") %>%
+    dplyr::ungroup()
+
+  hpop_perc_healthier <- df %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate("dbl_cntd" := dplyr::case_when(
+      stringr::str_detect(.data[[ind]], "dbl_cntd$") ~ "dbl_cntd",
+      TRUE ~ "not_dbl_cntd"),
+      !!sym(ind) := stringr::str_remove(.data[[ind]], "_dbl_cntd")) %>%
+    dplyr::filter(.data[[year]] == c(!!max(end_year)),
+                  stringr::str_detect(.data[[ind]], "^hpop_healthier$")) %>%
+    dplyr::select(dplyr::all_of(c(!!ind, !!contribution_pct, "dbl_cntd"))) %>%
+    dplyr::distinct() %>%
+    dplyr::group_by(!!sym(ind)) %>%
+    tidyr::pivot_wider( values_from = !!contribution_pct, names_from = "dbl_cntd",
+                        names_glue = "{.value}_{dbl_cntd}") %>%
+    dplyr::ungroup() %>%
+    dplyr::rename_with(~ names(hpop_healthier))
+
+  dplyr::bind_rows(hpop_healthier, hpop_perc_healthier)
+
+}
