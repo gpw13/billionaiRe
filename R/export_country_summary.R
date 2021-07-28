@@ -1,3 +1,60 @@
+#' Export all countries summaries to Excel
+#'
+#' `export_all_countries_summaries_xls` Export summaries of all countries for the three
+#' billions or for a specific billion.
+#'
+#' @inheritParams export_country_summary_xls
+#'
+#' @return `openxslx` Workbook object. Output file is in `output_folder`.
+#'
+#' @export
+#'
+export_all_countries_summaries_xls <- function(df,
+                                   billion = c("hpop", "hep", "uhc", "all"),
+                                   year = "year",
+                                   iso3 = "iso3",
+                                   ind = "ind",
+                                   value = "value",
+                                   transform_value = "transform_value",
+                                   scenario = NULL,
+                                   type_col = "type",
+                                   source_col = "source",
+                                   population = "population",
+                                   contribution = "contribution",
+                                   contribution_pct = paste0(contribution, "_percent"),
+                                   contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                   ind_ids = billion_ind_codes("hpop"),
+                                   start_year = 2018,
+                                   end_year = 2019:2023,
+                                   output_folder = "outputs") {
+
+  billion <- rlang::arg_match(billion)
+
+  unique_iso3s <- unique(df[[iso3]])
+
+  if (billion == "hpop") {
+    purrr::map(unique_iso3s, ~ export_hpop_country_summary_xls(df = df,
+                                                               iso = .x,
+                                                               iso3 = iso3,
+                                                               year = year,
+                                                               ind = ind,
+                                                               value = value,
+                                                               transform_value = transform_value,
+                                                               scenario = scenario,
+                                                               type_col = type_col,
+                                                               source_col = source_col,
+                                                               population = population,
+                                                               contribution = contribution,
+                                                               contribution_pct = contribution_pct,
+                                                               contribution_pct_pop_total = contribution_pct_pop_total,
+                                                               start_year = start_year,
+                                                               end_year = end_year,
+                                                               sheet_prefix = "HPOP",
+                                                               output_folder = output_folder,
+                                                               ind_ids = ind_ids))
+  }
+}
+
 #' Export country summary to Excel
 #'
 #' `export_country_summary_xls` Export a country-specific for all three
@@ -9,15 +66,11 @@
 #' @param iso ISO3 code of country to summarize.
 #' @param billion Billion indicator names to return, either "hep", "hpop", "uhc", or "all".
 #' @param output_folder Folder path to where the Excel files should be written
-#' @param sheet_prefix Character prefix to add in front of export sheets
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_folder`.
 #'
-#' @examples
-#' \dontrun{
-#' data <- load_billion_data("hpop")
-#' export_country_summary_xls(data, iso = "AFG")
-#' }
+#' @export
+
 export_country_summary_xls <- function(df,
                                        iso,
                                        billion = c("hpop", "hep", "uhc", "all"),
@@ -36,7 +89,6 @@ export_country_summary_xls <- function(df,
                                        ind_ids = billion_ind_codes("hpop"),
                                        start_year = 2018,
                                        end_year = 2019:2023,
-                                       sheet_prefix = "HPOP",
                                        output_folder = "outputs") {
   billion <- rlang::arg_match(billion)
 
@@ -44,9 +96,27 @@ export_country_summary_xls <- function(df,
   # if (billion == "hep") {
   #   export_hep_country_summary_xls()
   # }
-  # if (billion == "hpop") {
-  #   export_hpop_country_summary_xls()
-  # }
+  if (billion == "hpop") {
+    export_hpop_country_summary_xls(df = df,
+                                    iso = iso,
+                                    iso3 = iso3,
+                                    year = year,
+                                    ind = ind,
+                                    value = value,
+                                    transform_value = transform_value,
+                                    scenario = scenario,
+                                    type_col = type_col,
+                                    source_col = source_col,
+                                    population = population,
+                                    contribution = contribution,
+                                    contribution_pct = contribution_pct,
+                                    contribution_pct_pop_total = contribution_pct_pop_total,
+                                    start_year = start_year,
+                                    end_year = end_year,
+                                    sheet_prefix = "HPOP",
+                                    output_folder = output_folder,
+                                    ind_ids = ind_ids)
+  }
   # if (billion == "uhc") {
   #   export_uhc_country_summary_xls()
   # }
@@ -71,6 +141,7 @@ export_hep_country_summary_xls <- function(df,
 #'
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
 #' @inherit export_country_summary_xls return details params
+#' @param sheet_prefix Character prefix to add in front of export sheets
 #'
 #'
 #' @export

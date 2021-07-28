@@ -81,9 +81,3 @@ as \code{transform_value}.}
 \description{
 \code{write_hpop_datasheet} write all the content and styling found in the HPOP data sheet
 }
-\examples{
-\dontrun{
-data <- load_billion_data("hpop")
-export_country_summary_xls(data, iso = "AFG")
-}
-}
