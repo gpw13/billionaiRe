@@ -2,29 +2,40 @@
 #'
 #'@param font character name with the name of the font to use.
 #'
-excel_styles <- function(font = "Helvetica") {
+excel_styles <- function(font = "Calibri") {
+
+  uhc_main_color <- "#00A173"
+  uhc_light_color <- "#66C6AB"
+  uhc_light2_color <- "#A3DCCC"
+  hep_main_color <- "#002D5F"
+  hep_light_color <- "#66819f"
+  hep_light2_color <- "#D1D9EB"
+  hpop_main_color <- "#008DCA"
+  hpop_light_color <- "B2DCEF"
+
   dark_blue_header <- openxlsx::createStyle(
     fontName = font,
-    fontSize = 11,
+    fontSize = 10,
     fontColour = "white",
     textDecoration = "bold",
     wrapText = T,
     fgFill = "#1E7FB8",
     valign = "center",
-    halign = "left",
+    halign = "center",
     border = c("top", "bottom", "left", "right"),
-    borderStyle = "thin"
+    borderStyle = c("thin","thin", "double", "double"),
+    borderColour = c("blakc", "black", "white", "white")
   )
 
 
   light_blue_header <- openxlsx::createStyle(
     fontName = font,
-    fontSize = 9,
+    fontSize = 8,
     textDecoration = "bold",
     wrapText = T,
     fgFill = "#B0CAD6",
     valign = "center",
-    halign = "left",
+    halign = "center",
     border = "bottom",
     borderStyle = "thin"
   )
@@ -46,7 +57,7 @@ excel_styles <- function(font = "Helvetica") {
   sub_title <- openxlsx::createStyle(
     fontName = font,
     textDecoration = "bold",
-    fontSize = 12
+    fontSize = 14
   )
 
   normal_data_wrapped_dec <- openxlsx::createStyle(

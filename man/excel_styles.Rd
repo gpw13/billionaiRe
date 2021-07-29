@@ -4,7 +4,7 @@
 \alias{excel_styles}
 \title{Stores styles to be used in excel outputs}
 \usage{
-excel_styles(font = "Helvetica")
+excel_styles(font = "Calibri")
 }
 \arguments{
 \item{font}{character name with the name of the font to use.}
