@@ -5,7 +5,7 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 98 rows and 16 variables:
+A data frame with 101 rows and 17 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
@@ -23,6 +23,7 @@ A data frame with 98 rows and 16 variables:
 \item{transformed_name}{Name of indicator after transformation}
 \item{ind}{Code of the indicator in billionaiRe}
 \item{order}{Order of the indicators}
+\item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
 }
 }
 \usage{

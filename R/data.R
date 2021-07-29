@@ -21,6 +21,7 @@
 #'   \item{transformed_name}{Name of indicator after transformation}
 #'   \item{ind}{Code of the indicator in billionaiRe}
 #'   \item{order}{Order of the indicators}
+#'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
 #' }
 "indicator_df"
 
