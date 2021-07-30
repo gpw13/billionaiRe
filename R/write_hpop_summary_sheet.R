@@ -1,12 +1,12 @@
 #' Write data sheet
 #'
-#' `write_hpop_datasheet` write all the content and styling found in the HPOP data sheet
+#' `write_hpop_summary_sheet` write all the content and styling found in the HPOP data sheet
 #'
 #' @inherit export_country_summary_xls
 #' @inherit write_main_df
 #' @param ind_df data frame containing the indicators in the correct order and format to be used.
 #'
-write_hpop_datasheet <- function(df, wb, sheet_name,iso,
+write_hpop_summary_sheet <- function(df, wb, sheet_name,iso,
                                  start_year = 2018,
                                  end_year = 2019:2023,
                                  value = "value",
@@ -26,30 +26,27 @@ write_hpop_datasheet <- function(df, wb, sheet_name,iso,
                                  ){
   # TODO: Split summarize_hpop_data into even smaller functions for each "module" of the main summary sheet.
   # Get main data frame for data sheet
-  main_df <- summarize_hpop_data(df = df,
-                                 year = year,
-                                 iso3 = iso3,
-                                 ind = ind,
-                                 value = value,
-                                 transform_value = transform_value,
-                                 contribution = contribution,
-                                 contribution_pct = contribution_pct,
-                                 contribution_pct_pop_total = contribution_pct_pop_total,
-                                 population = population,
-                                 scenario = scenario,
-                                 type_col = type_col,
-                                 source_col = source_col,
-                                 ind_ids = ind_ids,
-                                 start_year = start_year,
-                                 end_year = end_year,
-                                 ind_df = ind_df) %>%
-    dplyr::select(-.data[[iso3]])
+  # main_df <- summarize_hpop_data(df = df,
+  #                                year = year,
+  #                                iso3 = iso3,
+  #                                ind = ind,
+  #                                value = value,
+  #                                transform_value = transform_value,
+  #                                contribution = contribution,
+  #                                contribution_pct = contribution_pct,
+  #                                contribution_pct_pop_total = contribution_pct_pop_total,
+  #                                population = population,
+  #                                scenario = scenario,
+  #                                type_col = type_col,
+  #                                source_col = source_col,
+  #                                ind_ids = ind_ids,
+  #                                start_year = start_year,
+  #                                end_year = end_year,
+  #                                ind_df = ind_df) %>%
+  #   dplyr::select(-.data[[iso3]])
 
-
-  # TODO: Below is a quick fix for indicators list, but this should be done in summarize_hpop_data and similar functions
-  main_df <- dplyr::left_join(ind_df, main_df, by = c("short_name")) %>%
-    dplyr::select(-.data[[ind]])
-
+  indicators <- ind_df %>%
+    dplyr::select("ind","sdg", "short_name")
 
   ## Write header
   wb <- write_sheet_header(wb, sheet_name = sheet_name,
@@ -174,16 +171,19 @@ write_notes_data <- function(df,
 #' @inherit write_notes_data
 #' @inherit export_hpop_country_summary_xls
 #' @param billion_long character Long name of the billion to be written
-write_sheet_header <- function(wb, sheet_name, billion_long, iso, start_col, start_row){
+write_sheet_header_hpop_summary <- function(wb, sheet_name, billion_long, iso, start_col, start_row){
   openxlsx::writeData(wb,
                       sheet = sheet_name,
-                      x = glue::glue("Country contribution to GPW13 {billion_long} billion target"),
+                      x = glue::glue("Country contribution to GPW13 {billion_long} billion"),
                       startCol = start_col, startRow = start_row, colNames = FALSE
   )
 
   country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
   openxlsx::writeData(wb,sheet = sheet_name, x = country_name,
                       startCol = start_col, startRow = start_row + 2)
+
+  openxlsx::writeData(wb, sheet = sheet_name,
+                      )
 
   wb <- style_header(wb, sheet_name, start_row = start_row, start_col = start_col)
 

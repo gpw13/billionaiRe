@@ -183,8 +183,7 @@ export_hpop_country_summary_xls <- function(df,
 
   #Indicator data frame to make sure the order of indicators is correct
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("hpop") == TRUE, !is.na(!!sym("ind")), !!sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind)) %>%
-    dplyr::select("ind", "short_name")
+    dplyr::filter(!!sym("hpop") == TRUE, !is.na(!!sym("ind")), !!sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind))
 
   # load workbook
   wb_file <- system.file("extdata",
@@ -197,7 +196,7 @@ export_hpop_country_summary_xls <- function(df,
   data_sheet <- glue::glue("{sheet_prefix}_data")
   openxlsx::renameWorksheet(wb, sheet = "data", newName = data_sheet)
 
-  wb <- write_hpop_datasheet(df = df_iso, wb = wb, sheet_name = data_sheet,
+  wb <- write_hpop_summary_sheet(df = df_iso, wb = wb, sheet_name = data_sheet,
                              start_year = start_year, end_year = end_year, value =value,year = year,
                              iso3 = iso3,iso = iso,ind = ind ,population = population ,scenario =scenario,
                              ind_ids = ind_ids, transform_value = transform_value, type_col = type_col,
