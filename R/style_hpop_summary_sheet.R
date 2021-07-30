@@ -229,7 +229,7 @@ style_data <- function(df, wb, sheet_name ,
 #' `style_header` styles the title and sub-title of the worksheet header.
 #' @inherit style_hpop_main_data
 #'
-style_header <- function(wb, sheet_name, start_row, start_col){
+style_header_hpop_summary_sheet <- function(wb, sheet_name, start_row, start_col){
   openxlsx::addStyle(wb,
                      sheet = sheet_name, style = excel_styles()$title,
                      rows = start_row,
@@ -241,6 +241,18 @@ style_header <- function(wb, sheet_name, start_row, start_col){
                      rows = start_row +2 ,
                      cols = start_col, gridExpand = TRUE
   )
+
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$normal_text,
+                     rows = c(start_row +3:start_row+4) ,
+                     cols = start_col, gridExpand = TRUE
+  )
+
+  openxlsx::addStyle(wb,
+                     sheet = sheet_name, style = excel_styles()$bold_hpop_blue_background_2dp,
+                     rows = c((start_row+3):(start_row+4)),
+                     cols = c((start_col + 5):(start_col+6))
+                     )
 
   return(wb)
 }

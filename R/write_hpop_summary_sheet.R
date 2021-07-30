@@ -49,7 +49,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name,iso,
     dplyr::select("ind","sdg", "short_name")
 
   ## Write header
-  wb <- write_sheet_header(wb, sheet_name = sheet_name,
+  wb <- write_sheet_header_hpop_summary(wb, sheet_name = sheet_name,
                            billion_long = "Healthier Population",
                            iso, start_col = 1, start_row = 2)
 
@@ -171,7 +171,7 @@ write_notes_data <- function(df,
 #' @inherit write_notes_data
 #' @inherit export_hpop_country_summary_xls
 #' @param billion_long character Long name of the billion to be written
-write_sheet_header_hpop_summary <- function(wb, sheet_name, billion_long, iso, start_col, start_row){
+write_sheet_header_hpop_summary <- function(wb, sheet_name, billion_long, iso, start_col, start_row, end_year,value, boxes_bounds){
   openxlsx::writeData(wb,
                       sheet = sheet_name,
                       x = glue::glue("Country contribution to GPW13 {billion_long} billion"),
@@ -183,7 +183,17 @@ write_sheet_header_hpop_summary <- function(wb, sheet_name, billion_long, iso, s
                       startCol = start_col, startRow = start_row + 2)
 
   openxlsx::writeData(wb, sheet = sheet_name,
-                      )
+                      x = c(glue::glue("Projected number of newly healthier lives by {max(end_year)}"),
+                            glue::glue("% of country population projected to be newly healthier by {max(end_year)}")),
+                      startCol = start_col, startRow = start_row + 3)
+
+  openxlsx::writeFormula(wb, sheet = sheet_name,
+                         x = c(glue::glue("={openxlsx::int2col(boxes_bounds$contribution['start_col']+2)}{boxes_bounds$billion_contribution['end_row']-1}/1000"),
+                               glue::glue("={openxlsx::int2col(boxes_bounds$contribution['start_col']+2)}{boxes_bounds$billion_contribution['end_row']}")),
+                         startRow = start_row + 3,
+                         startCol = start_col + 5
+  )
+
 
   wb <- style_header(wb, sheet_name, start_row = start_row, start_col = start_col)
 
