@@ -40,13 +40,17 @@ wrangle_gho_data <- function(df,
                      "value" := .data[["NumericValue"]],
                      "lower" := .data[["Low"]],
                      "upper" := .data[["High"]],
+                     "use_dash" := TRUE,
+                     "use_calc" := TRUE,
                      "source" := ifelse(is.null(source),
                                         .data[["DataSourceDim"]],
                                         source),
                      "type" := ifelse(is.null(type),
                                       NA_character_,
                                       type),
-                     "other_detail" := .data[["Comments"]]) %>%
+                     "type_detail" := NA,
+                     "other_detail" := .data[["Comments"]],
+                     "upload_detai" := NA) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 
