@@ -6,32 +6,32 @@
 #'
 
 write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
-                                   start_row, start_col, transform_value,
+                                   start_row, start_col, value,
                                    ind_df, ind, year, type_col){
 
 
   # TODO: Simplify function to purrr-like walk rather than looping
 
-  transformed_time_series <- df %>%
+  time_series <- df %>%
     dplyr::ungroup() %>%
     dplyr::filter(!stringr::str_detect(.data[[ind]], "^hpop_healthier")) %>%
-    dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!transform_value) %>%
+    dplyr::select(.data[[ind]],.data[[year]],.data[[type_col]],!!value) %>%
     dplyr::group_by(.data[[ind]], .data[[year]],.data[[type_col]]) %>%
-    tidyr::pivot_longer(c(!!transform_value), names_to = "transformed_value", values_to = "value") %>%
-    dplyr::mutate(!!sym("transformed_value") := factor(!!sym("transformed_value"), levels = !!transform_value)) %>%
-    dplyr::group_by(!!sym("transformed_value")) %>%
+    tidyr::pivot_longer(c(!!value), names_to = "value_mod", values_to = "value") %>%
+    dplyr::mutate(!!sym("value_mod") := factor(!!sym("value_mod"), levels = !!value)) %>%
+    dplyr::group_by(!!sym("value_mod")) %>%
     dplyr::group_split()
 
   time_series_wide_out <- list()
-  for(i in seq(transformed_time_series)){
-    time_series_wide_out[[i]] <- transformed_time_series[[i]] %>%
+  for(i in seq(time_series)){
+    time_series_wide_out[[i]] <- time_series[[i]] %>%
       dplyr::ungroup() %>%
       dplyr::group_by(.data[[ind]]) %>%
       tidyr::pivot_wider(c(-.data[[type_col]]), names_from = .data[[year]], values_from = !!sym("value"))
 
-    time_series_wide <- dplyr::select(ind_df, "ind", "transformed_name") %>%
+    time_series_wide <- dplyr::select(ind_df, "ind", "short_name") %>%
       dplyr::left_join(time_series_wide_out[[i]], by = ind) %>%
-      dplyr::select(-sym("transformed_value"),-ind)
+      dplyr::select(-sym("value_mod"),-ind)
 
     if(i > 1){
       nrows_sofar <- sum(unlist(lapply(1:(i-1), function(x)nrow(time_series_wide_out[[x]])+2)))
@@ -40,11 +40,11 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
       start_row_new <- start_row
     }
 
-    openxlsx::writeData(wb, sheet = sheet_name, x = "Transformed indicator",
+    openxlsx::writeData(wb, sheet = sheet_name, x = "Indicator",
                         startCol = start_col, startRow = start_row_new
     )
     openxlsx::writeData(wb, sheet = sheet_name,
-                        x = vec2emptyDF(glue::glue("Time serie: {transform_value[i]}")),
+                        x = vec2emptyDF(glue::glue("Time serie: {value[i]}")),
                         startCol = start_col+1, startRow = start_row_new,
                         colNames = TRUE
     )
@@ -77,8 +77,8 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
     widths = 6,
     ignoreMergedCells = FALSE
   )
-  nrows_final <- sum(unlist(lapply(1:(length(transformed_time_series)), function(x)nrow(time_series_wide_out[[x]])+2)))
-  start_row_final <-  start_row + nrows_final + (2*(length(transformed_time_series)-1))
+  nrows_final <- sum(unlist(lapply(1:(length(time_series)), function(x)nrow(time_series_wide_out[[x]])+2)))
+  start_row_final <-  start_row + nrows_final + (2*(length(time_series)-1))
 
   openxlsx::writeData(wb, sheet = sheet_name,
                       x = "* Values are in bold if reported; normal if estimated; and faded if imputed/projected",

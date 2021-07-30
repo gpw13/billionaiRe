@@ -23,7 +23,7 @@ write_hpop_inter <- function(wb,
 
     # Write indicators
     openxlsx::writeData(wb, sheet_name, startCol = start_col, startRow = start_row+1,
-                        x = data.frame(ind_df[,"transformed_name"]), colNames = FALSE)
+                        x = data.frame(ind_df[,"short_name"]), colNames = FALSE)
 
     # start_year formulae
     ## start_year header

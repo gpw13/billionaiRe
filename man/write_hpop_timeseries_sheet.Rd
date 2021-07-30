@@ -10,7 +10,7 @@ write_hpop_timeseries_sheet(
   sheet_name,
   start_row,
   start_col,
-  transform_value,
+  value,
   ind_df,
   ind,
   year,
@@ -28,8 +28,7 @@ write_hpop_timeseries_sheet(
 
 \item{start_col}{numeric start row of the table in the excel sheet}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
-used to calculate contributions.}
+\item{value}{Column name of column with indicator values.}
 
 \item{ind_df}{data frame containing information on indicators}
 

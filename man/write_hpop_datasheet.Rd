@@ -23,7 +23,8 @@ write_hpop_datasheet(
   source_col = "source",
   contribution = "contribution",
   contribution_pct = paste0(contribution, "_percent"),
-  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total")
+  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+  ind_df
 )
 }
 \arguments{
@@ -74,6 +75,8 @@ values. Must be the same length as \code{transform_value}.}
 \item{contribution_pct_pop_total}{Column name of column(s) to store contribution
 (percent of total population of the country) values. Must be the same length
 as \code{transform_value}.}
+
+\item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

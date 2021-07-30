@@ -278,7 +278,7 @@ get_col_width_hpop <- function(df, value, transform_value, type_col, source_col,
                                contribution, contribution_pct, contribution_pct_pop_total,
                                year,
                                start_year, end_year){
-  medium_width <- 24
+  medium_width <- 14
   value_width <- 11
   source_width <- 49
   names_df <- names(df)
@@ -289,11 +289,11 @@ get_col_width_hpop <- function(df, value, transform_value, type_col, source_col,
                    glue::glue("^{transform_value}_{max(end_year)}$"),
                    glue::glue("^{transform_value}$"),
                    glue::glue("{type_col}"),
-                   glue::glue("{year}"), "unit_transformed", "upload_date")
+                   glue::glue("{year}"), "upload_date")
   value_cols <- sort(unlist(lapply(value_regex, grep, names_df)))
   names_df[value_cols] <- value_width
 
-  medium_length_regex <- c("transformed_name",
+  medium_length_regex <- c("short_name",
                            glue::glue("^change_{transform_value}"),
                            glue::glue("^{contribution_pct}$"),
                            glue::glue("^{contribution}$"),

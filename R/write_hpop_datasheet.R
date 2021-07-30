@@ -4,6 +4,7 @@
 #'
 #' @inherit export_country_summary_xls
 #' @inherit write_main_df
+#' @param ind_df data frame containing the indicators in the correct order and format to be used.
 #'
 write_hpop_datasheet <- function(df, wb, sheet_name,iso,
                                  start_year = 2018,
@@ -20,9 +21,10 @@ write_hpop_datasheet <- function(df, wb, sheet_name,iso,
                                  source_col = "source",
                                  contribution = "contribution",
                                  contribution_pct = paste0(contribution, "_percent"),
-                                 contribution_pct_pop_total = paste0(contribution, "_percent_pop_total")
+                                 contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                 ind_df
                                  ){
-
+  # TODO: Split summarize_hpop_data into even smaller functions for each "module" of the main summary sheet.
   # Get main data frame for data sheet
   main_df <- summarize_hpop_data(df = df,
                                  year = year,
@@ -39,8 +41,14 @@ write_hpop_datasheet <- function(df, wb, sheet_name,iso,
                                  source_col = source_col,
                                  ind_ids = ind_ids,
                                  start_year = start_year,
-                                 end_year = end_year) %>%
+                                 end_year = end_year,
+                                 ind_df = ind_df) %>%
     dplyr::select(-.data[[iso3]])
+
+
+  # TODO: Below is a quick fix for indicators list, but this should be done in summarize_hpop_data and similar functions
+  main_df <- dplyr::left_join(ind_df, main_df, by = c("short_name")) %>%
+    dplyr::select(-.data[[ind]])
 
 
   ## Write header

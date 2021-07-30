@@ -8,6 +8,7 @@
 export_all_country_summary_xls(
   df,
   iso,
+  iso3 = "iso3",
   start_year = 2018,
   end_year = 2019:2023,
   output_folder = "outputs"
@@ -18,6 +19,8 @@ export_all_country_summary_xls(
 country, year, and indicator.}
 
 \item{iso}{ISO3 code of country to summarize.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
