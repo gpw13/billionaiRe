@@ -5,4 +5,4 @@
 inst/doc
 test/
 outputs/
-
+~$*.xls*
