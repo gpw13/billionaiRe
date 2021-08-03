@@ -90,7 +90,7 @@ save_wrangled_output <- function(df, path) {
       dplyr::arrange(.data[["iso3"]], .data[["year"]]) %>%
       readr::write_csv(path, na = "")
 
-    print("Output saved to disk.")
+    message("Output saved to disk.")
     return(output_df)
   } else {
     warning("The output data frame did not have the correct columns. The output was not saved to disk.")
