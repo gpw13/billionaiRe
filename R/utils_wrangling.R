@@ -6,10 +6,11 @@
 #' @return character vector
 #' @export
 xmart_cols <- function() {
-  c("iso3", "year","ind", "value", "lower", "upper", "use_dash", "use_calc",
-    "source", "type", "type_detail", "other_detail", "upload_detail")
+  c(
+    "iso3", "year", "ind", "value", "lower", "upper", "use_dash", "use_calc",
+    "source", "type", "type_detail", "other_detail", "upload_detail"
+  )
 }
-
 
 #' Check data frame for xMart4 columns
 #'
@@ -22,9 +23,40 @@ xmart_cols <- function() {
 #' @return bool
 #' @export
 has_xmart_cols <- function(df) {
-  identical( sort(names(df)), sort(xmart_cols()) )
+  identical(sort(names(df)), sort(xmart_cols()))
 }
 
+#' Add missing rows for xMart upload
+#'
+#' Compares the rows in a given data frame to the existing xMart data. If the data frame
+#' is missing any combinations of `c(iso3, ind, year)` found in xMart, it appends
+#' these rows to the data frame,with NA values for `value, upper, lower, source, type`
+#' and `other_detail`.
+#'
+#' @param df data frame
+#' @param billion the Billion that the indicator belongs to
+#' @param ind the GPW13 code for the indicator
+#'
+#' @return a data frame
+#' @export
+add_missing_xmart_rows <- function(df, billion, ind) {
+  exist_df = load_billion_data(billion, "proj_data") %>%
+    dplyr::filter(ind == ind) %>%
+    dplyr::select(xmart_cols())
+
+  anti_df = dplyr::anti_join(exist_df, df, by = c("iso3", "ind", "year")) %>%
+    dplyr::mutate(
+      dplyr::across(c("value", "lower", "upper", "source", "type", "other_detail"), ~ NA)
+    )
+
+  if (nrow(anti_df) > 0) {
+    final_df <- dplyr::bind_rows(df, anti_df)
+  } else {
+    final_df <- df
+  }
+
+  final_df
+}
 
 #' Save the output to disk after ensuring column specs
 #'
@@ -47,11 +79,11 @@ save_wrangled_output <- function(df, path) {
   assert_string(path, 1)
 
   if (has_xmart_cols(df)) {
-    output_df = df %>%
+    output_df <- df %>%
       dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
       dplyr::arrange(.data[["iso3"]], .data[["year"]]) %>%
-      readr::write_csv(path, na="")
+      readr::write_csv(path, na = "")
 
     print("Output saved to disk.")
     return(output_df)
