@@ -35,13 +35,18 @@ has_xmart_cols <- function(df) {
 #'
 #' @param df data frame
 #' @param billion the Billion that the indicator belongs to
-#' @param ind the GPW13 code for the indicator
+#' @param ind_code the GPW13 code for the indicator
+#' @param projected boolean value indicating where the indicator has already been
+#' projected by the technical programme
 #'
 #' @return a data frame
 #' @export
-add_missing_xmart_rows <- function(df, billion, ind) {
-  exist_df = load_billion_data(billion, "proj_data") %>%
-    dplyr::filter(ind == ind) %>%
+add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
+
+  proj = ifelse(projected == TRUE, "proj_data", "unproj_data")
+
+  exist_df = load_billion_data(billion, proj) %>%
+    dplyr::filter(.data[["ind"]] == ind_code) %>%
     dplyr::select(xmart_cols())
 
   anti_df = dplyr::anti_join(exist_df, df, by = c("iso3", "ind", "year")) %>%

@@ -4,14 +4,17 @@
 \alias{add_missing_xmart_rows}
 \title{Add missing rows for xMart upload}
 \usage{
-add_missing_xmart_rows(df, billion, ind)
+add_missing_xmart_rows(df, billion, ind_code, projected)
 }
 \arguments{
 \item{df}{data frame}
 
 \item{billion}{the Billion that the indicator belongs to}
 
-\item{ind}{the GPW13 code for the indicator}
+\item{ind_code}{the GPW13 code for the indicator}
+
+\item{projected}{boolean value indicating where the indicator has already been
+projected by the technical programme}
 }
 \value{
 a data frame
