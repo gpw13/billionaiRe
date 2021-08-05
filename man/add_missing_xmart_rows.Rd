@@ -11,7 +11,7 @@ add_missing_xmart_rows(df, billion, ind_code, projected)
 
 \item{billion}{the Billion that the indicator belongs to}
 
-\item{ind_code}{the GPW13 code for the indicator}
+\item{ind_code}{the GPW13 code for the indicator(s)}
 
 \item{projected}{boolean value indicating where the indicator has already been
 projected by the technical programme}
