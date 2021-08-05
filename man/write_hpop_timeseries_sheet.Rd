@@ -38,9 +38,6 @@ write_hpop_timeseries_sheet(
 
 \item{type_col}{Column name of column to store type.}
 }
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
-}
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.
 }

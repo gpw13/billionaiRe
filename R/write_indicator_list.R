@@ -42,6 +42,7 @@ write_indicator_list_sheet <- function(wb, sheet_name,
 #' @inherit style_hpop_indicators
 #' @inherit style_header_hpop_summary_sheet
 #' @inherit write_indicator_list_sheet
+#' @param df data frame with the indicators to be styled
 #' @param end_col integer identifying end column.
 #' @param end_row integer identifying end row.
 

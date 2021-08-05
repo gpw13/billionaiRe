@@ -78,9 +78,6 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 }
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
-}
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.
 }

@@ -15,6 +15,8 @@ style_indicator_list_sheet(
 )
 }
 \arguments{
+\item{df}{data frame with the indicators to be styled}
+
 \item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}

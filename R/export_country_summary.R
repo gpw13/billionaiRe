@@ -161,7 +161,7 @@ export_hep_country_summary_xls <- function(df,
 #' Export country summary to Excel for HPOP billion
 #'
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
-#' @inherit export_country_summary_xls return details params
+#' @inheritParams export_country_summary_xls
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @param sheet_prefix Character prefix to add in front of export sheets
 #'
@@ -294,7 +294,6 @@ export_uhc_country_summary_xls <- function(df,
   # data sheet
   data_sheet <- glue::glue("{sheet_prefix}_data")
 
-  wb <- write_uhc_summary_sheet()
 
 }
 
