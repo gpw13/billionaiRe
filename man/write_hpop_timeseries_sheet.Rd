@@ -20,13 +20,13 @@ write_hpop_timeseries_sheet(
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{\code{openxlsx} workbook to be edited.}
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
-\item{start_row}{numeric start row of the table in the excel sheet}
+\item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
-\item{start_col}{numeric start row of the table in the excel sheet}
+\item{start_col}{integer start col of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
 \item{value}{Column name of column with indicator values.}
 

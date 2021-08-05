@@ -4,21 +4,18 @@
 \alias{write_indicator_list_sheet}
 \title{Write indicator list sheet}
 \usage{
-write_indicator_list_sheet(df, wb, sheet_name, start_row, start_col)
+write_indicator_list_sheet(wb, sheet_name, billion, start_row, start_col)
 }
 \arguments{
-\item{df}{data frame to be written}
-
-\item{wb}{\code{openxlsx} workbook to be edited.}
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
-\item{start_row}{numeric start row of the table in the excel sheet}
+\item{billion}{Billion indicator names to return, either "hep", "hpop", "uhc", or "all".}
 
-\item{start_col}{numeric start row of the table in the excel sheet}
-}
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
+\item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
+
+\item{start_col}{integer start col of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 }
 \description{
 Write indicator list sheet

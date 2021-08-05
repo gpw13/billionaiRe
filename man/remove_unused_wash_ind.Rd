@@ -12,5 +12,6 @@ remove_unused_wash_ind(ind_list, correct_wash)
 \item{correct_wash}{character vector with the exact indicators to keep for WASH}
 }
 \description{
-\code{remove_unused_wash_ind} removes
+\code{remove_unused_wash_ind} removes unused WASH indicators from indicator list to
+provide a clean list to be printed.
 }

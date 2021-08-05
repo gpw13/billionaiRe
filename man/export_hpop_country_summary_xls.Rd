@@ -6,6 +6,7 @@
 \usage{
 export_hpop_country_summary_xls(
   df,
+  wb,
   iso,
   iso3 = "iso3",
   year = "year",
@@ -29,6 +30,8 @@ export_hpop_country_summary_xls(
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
+
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{iso}{ISO3 code of country to summarize.}
 

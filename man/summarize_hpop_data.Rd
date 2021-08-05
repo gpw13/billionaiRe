@@ -21,8 +21,7 @@ summarize_hpop_data(
   source_col = "source",
   ind_ids = billion_ind_codes("hpop"),
   start_year = 2018,
-  end_year = 2019:2023,
-  ind_df
+  end_year = 2019:2023
 )
 }
 \arguments{
@@ -67,8 +66,6 @@ be supplied as a named vector where the names correspond to the output of
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
-
-\item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 }
 \value{
 list of data frames to be used in the 'data' sheet of HPOP country summary

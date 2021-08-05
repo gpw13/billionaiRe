@@ -7,14 +7,17 @@
 style_header_hpop_summary_sheet(wb, sheet_name, start_row, start_col)
 }
 \arguments{
-\item{wb}{\code{openxlsx} workbook to be edited.}
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
-\item{start_row}{numeric start row of the table in the excel sheet}
+\item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
-\item{start_col}{numeric start row of the table in the excel sheet}
+\item{start_col}{integer start col of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
+}
+\value{
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
-\code{style_header} styles the title and sub-title of the worksheet header.
+\code{style_header_hpop_summary_sheet} styles the title and sub-title of the worksheet header.
 }

@@ -13,38 +13,34 @@ write_hpop_inter(
   end_year,
   start_col,
   start_row,
-  start_col_data = 1,
-  start_row_data = 9,
-  transform_value
+  transform_value,
+  summary_bounds
 )
 }
 \arguments{
-\item{wb}{\code{openxlsx} workbook to be edited.}
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
 \item{data_sheet_name}{character Name of the data sheet}
 
-\item{ind_df}{data frame containing information on indicators}
+\item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
-\item{start_col}{numeric start row of the table in the excel sheet}
+\item{start_col}{integer start col of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
-\item{start_row}{numeric start row of the table in the excel sheet}
-
-\item{start_col_data}{integer Start column of the data frame in the data sheet}
-
-\item{start_row_data}{integer Start row of the data frame in the data sheet}
+\item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
-}
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
+
+\item{summary_bounds}{named list with boxes bounds of the different data 'boxes'
+present in the summary sheet. Used to identify where data sits in Excel sheet
+dynamically.}
 }
 \description{
-\code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.
+Write Inter sheet for HPOP
 }
