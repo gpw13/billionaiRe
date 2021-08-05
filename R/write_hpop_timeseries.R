@@ -1,14 +1,19 @@
 #' Write times series sheet
 #'
-#' @inherit write_main_df
+#' @inherit write_baseline_projection_hpop_summary
 #' @param ind_df data frame containing information on indicators
 #' @inherit export_hpop_country_summary_xls
+#' @inheritParams style_header_hpop_summary_sheet
 #'
 
 write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
                                    start_row, start_col, value,
                                    ind_df, ind, year, type_col){
 
+  openxlsx::writeData(wb, sheet_name,
+                      x = "Time Series",
+                      startCol = start_col,
+                      startRow = 2)
 
   # TODO: Simplify function to purrr-like walk rather than looping
 
@@ -44,7 +49,7 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
                         startCol = start_col, startRow = start_row_new
     )
     openxlsx::writeData(wb, sheet = sheet_name,
-                        x = vec2emptyDF(glue::glue("Time serie: {value[i]}")),
+                        x = vec2emptyDF(glue::glue("Time serie: Raw {value[i]}*")),
                         startCol = start_col+1, startRow = start_row_new,
                         colNames = TRUE
     )
@@ -61,13 +66,13 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
     )
     wb <- style_hpop_timeseries(df = df, wb, sheet_name,
                                 start_row = start_row_new, start_col = start_col,
-                                ind, year, type_col, df_wide = time_series_wide)
+                                ind, year, type_col, df_wide = time_series_wide, ind_df)
   }
   openxlsx::setColWidths(
     wb,
     sheet = sheet_name,
     cols = start_col,
-    widths = 23,
+    widths = 27.18,
     ignoreMergedCells = FALSE
   )
   openxlsx::setColWidths(
