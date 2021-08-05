@@ -15,7 +15,8 @@ vec2emptyDF <- function(vec){
 
 #' Removes unused WASH indicator from indicator list
 #'
-#' `remove_unused_wash_ind` removes
+#' `remove_unused_wash_ind` removes unused WASH indicators from indicator list to
+#' provide a clean list to be printed.
 #'
 #' @param ind_list character vector containing the list of indicator to be treated
 #' @param correct_wash character vector with the exact indicators to keep for WASH
@@ -31,5 +32,17 @@ remove_unused_wash_ind <- function(ind_list, correct_wash){
 convert_wash_name<-function(ind_list) {
   ind_list <- stringr::str_replace(ind_list, "^water.*", "water")
   ind_list <- stringr::str_replace(ind_list, "^hpop_sanitation.*", "hpop_sanitation")
-  return(ind)
+  return(ind_list)
+}
+
+#' Force merge cell
+#'
+#' `mergeCellForced` wraps around [openxlsx::removeCellMerge()] and [openxlsx::mergeCells()]
+#' to merge cells if there are merged cell in the specified range.
+#'
+#' @inheritParams openxlsx::mergeCells
+
+mergeCellForced <- function(wb, sheet, cols, rows){
+  openxlsx::removeCellMerge(wb, sheet, cols, rows)
+  openxlsx::mergeCells(wb, sheet, cols, rows)
 }
