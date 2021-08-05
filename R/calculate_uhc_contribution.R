@@ -20,7 +20,7 @@ calculate_uhc_contribution <- function(df,
                                        transform_value = "transform_value",
                                        contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                        contribution_pct = paste0(contribution, "_percent"),
-                                       scenario = NULL,
+                                       scenario = "scenario",
                                        ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)) {
   assert_columns(df, year, iso3, ind, scenario, transform_value)
   assert_same_length(transform_value, contribution)
