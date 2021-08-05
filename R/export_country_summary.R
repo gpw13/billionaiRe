@@ -32,8 +32,17 @@ export_all_countries_summaries_xls <- function(df,
 
   unique_iso3s <- unique(df[[iso3]])
 
+  wb <- write_permanent_sheets(billion, start_col = 2, start_row = 3)
+
   if (billion == "hpop") {
+
+    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")]
+    for(i in seq_along(sheets_to_remove)){
+      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
+    }
+
     purrr::map(unique_iso3s, ~ export_hpop_country_summary_xls(df = df,
+                                                               wb = wb,
                                                                iso = .x,
                                                                iso3 = iso3,
                                                                year = year,
@@ -51,7 +60,7 @@ export_all_countries_summaries_xls <- function(df,
                                                                end_year = end_year,
                                                                sheet_prefix = "HPOP",
                                                                output_folder = output_folder,
-                                                               ind_ids = ind_ids))
+                                                               ind_ids = billion_ind_codes("hpop")))
   }
 }
 
@@ -92,12 +101,18 @@ export_country_summary_xls <- function(df,
                                        output_folder = "outputs") {
   billion <- rlang::arg_match(billion)
 
+  wb <- write_permanent_sheets(billion, start_col = 2, start_row = 3)
   #TODO: To be completed as a wrapper function
   # if (billion == "hep") {
   #   export_hep_country_summary_xls()
   # }
   if (billion == "hpop") {
+    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")]
+    for(i in seq_along(sheets_to_remove)){
+      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
+    }
     export_hpop_country_summary_xls(df = df,
+                                    wb = wb,
                                     iso = iso,
                                     iso3 = iso3,
                                     year = year,
@@ -115,7 +130,8 @@ export_country_summary_xls <- function(df,
                                     end_year = end_year,
                                     sheet_prefix = "HPOP",
                                     output_folder = output_folder,
-                                    ind_ids = ind_ids)
+                                    ind_ids = billion_ind_codes("hpop"))
+
   }
   # if (billion == "uhc") {
   #   export_uhc_country_summary_xls()
@@ -123,6 +139,11 @@ export_country_summary_xls <- function(df,
   # if (billion == "all") {
   #   export_all_country_summary_xls()
   # }
+
+  sheets_hidden <- grep( "_Inter$", openxlsx::sheets(wb))
+  for(i in sheets_hidden){
+    openxlsx::sheetVisibility(wb)[sheets_hidden] <- "hidden"
+  }
 }
 
 #' Export country summary to Excel for HEP billion$
@@ -141,12 +162,11 @@ export_hep_country_summary_xls <- function(df,
 #'
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
 #' @inherit export_country_summary_xls return details params
+#' @inheritParams write_baseline_projection_hpop_summary
 #' @param sheet_prefix Character prefix to add in front of export sheets
 #'
-#'
-#' @export
-#'
 export_hpop_country_summary_xls <- function(df,
+                                            wb,
                                             iso,
                                             iso3 = "iso3",
                                             year = "year",
@@ -177,79 +197,43 @@ export_hpop_country_summary_xls <- function(df,
     dplyr::ungroup() %>%
     dplyr::filter(.data[[iso3]] == iso) %>%
     dplyr::arrange(get_ind_order(.data[[ind]]),
-                   .data[[year]])
+                   .data[[year]]) %>%
+    dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~round(.x, digits = 2)))
 
   water_sanitation_ind <- unlist(unique(stringr::str_extract_all(df_iso[[ind]], "water.*|hpop_sanitation.*")))
 
   #Indicator data frame to make sure the order of indicators is correct
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("hpop") == TRUE, !is.na(!!sym("ind")), !!sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind))
+    dplyr::filter(!!rlang::sym("hpop") == TRUE, !is.na(!!rlang::sym("ind")),
+                  !!rlang::sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind))
 
-  # load workbook
-  wb_file <- system.file("extdata",
-                         "country_summary_template.xlsx",
-                         package = "billionaiRe")
+  # summary sheet
+  summary_sheet <- glue::glue("{sheet_prefix}_summary")
 
-  wb <- openxlsx::loadWorkbook(wb_file)
-
-  # data sheet
-  data_sheet <- glue::glue("{sheet_prefix}_data")
-  openxlsx::renameWorksheet(wb, sheet = "data", newName = data_sheet)
-
-  wb <- write_hpop_summary_sheet(df = df_iso, wb = wb, sheet_name = data_sheet,
+  wb <- write_hpop_summary_sheet(df = df_iso, wb = wb, sheet_name = summary_sheet,
                              start_year = start_year, end_year = end_year, value =value,year = year,
-                             iso3 = iso3,iso = iso,ind = ind ,population = population ,scenario =scenario,
-                             ind_ids = ind_ids, transform_value = transform_value, type_col = type_col,
+                             iso3 = iso3,iso = iso,ind = ind ,population = population,
+                             transform_value = transform_value, type_col = type_col,
                              source_col = source_col, contribution = contribution,
                              contribution_pct = contribution_pct,
                              contribution_pct_pop_total = contribution_pct_pop_total,
                              ind_df)
 
-  # indicator list sheet
-  indicator_sheet <- glue::glue("{sheet_prefix}_Indicator List")
-  openxlsx::addWorksheet(wb, indicator_sheet)
-  openxlsx::removeWorksheet(wb, "Indicator List")
-
-  nice_indicator_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("hpop") == TRUE, !is.na(!!sym("ind")), !!sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], c("water", "hpop_sanitation"))) %>%
-    dplyr::mutate("short_name" := dplyr::case_when(
-      .data[["short_name"]] == "Safely Managed Water" ~ paste0("Safely Managed Water*"),
-      .data[["short_name"]] == "Safely Managed Sanitation" ~ paste0("Safely Managed Sanitation*"),
-      TRUE ~ .data[["short_name"]]
-    )) %>%
-    dplyr::select("sdg", "short_name", "medium_name", "unit_raw", "transformed_name", "unit_transformed") %>%
-    dplyr::rename(
-      "Indicator code" = "sdg",
-      "Short Name" = "short_name",
-      "Name" = "medium_name",
-      "Unit pre-tranformation" = "unit_raw",
-      "Transformed name" = "transformed_name",
-      "Transformed unit" = "unit_transformed"
-    )
-
-  wb <- write_indicator_list_sheet(nice_indicator_df, wb, sheet_name = indicator_sheet,
-                                   start_row = 2 , start_col = 2)
-
   # Time series
   timeseries_sheet <- glue::glue("{sheet_prefix}_Time Series")
-  openxlsx::addWorksheet(wb, timeseries_sheet)
-  openxlsx::removeWorksheet(wb, "Time Series")
-  wb <- write_hpop_timeseries_sheet(df_iso, wb,
+
+  wb <- write_hpop_timeseries_sheet(df = df_iso, wb,
                                sheet_name = timeseries_sheet,
-                               start_col = 1, start_row = 1,
+                               start_col = 2, start_row = 4,
                                value = value,
                                ind_df = ind_df, ind = ind,
                                year = year, type_col = type_col)
 
-  # Inter sheet (data for Chart)
-  wb <- write_hpop_inter(wb, sheet_name = "HPOP_Inter", data_sheet_name = data_sheet,
-                         ind_df, start_year, end_year, start_col = 1, start_row = 2,
-                         start_col_data = 1, start_row_data = 9,
-                         transform_value)
-
   # Flip titles graph
   openxlsx::addStyle(wb, sheet = "HPOP_Chart", rows = 22, cols = (3:(2+nrow(ind_df))),
                      style = excel_styles()$vertical_txt)
+
+
 
   # Write workbook
   if (!dir.exists(output_folder)) {
@@ -264,7 +248,7 @@ export_hpop_country_summary_xls <- function(df,
 #' Export country summary to Excel for UHC billion
 #' `export_uhc_country_summary_xls` Export a country-specific for UHC billion.
 #'
-#' @inherit export_country_summary_xls return details params
+#' @inherit export_hpop_country_summary_xls return details params
 #' @export
 export_uhc_country_summary_xls <- function(df,
                                            iso,
@@ -310,14 +294,7 @@ export_uhc_country_summary_xls <- function(df,
   # data sheet
   data_sheet <- glue::glue("{sheet_prefix}_data")
 
-  wb <- write_uhc_datasheet(df = df_iso, wb = wb, sheet_name = data_sheet,
-                             start_year = start_year, end_year = end_year, value =value,year = year,
-                             iso3 = iso3,iso = iso,ind = ind ,population = population ,scenario =scenario,
-                             ind_ids = ind_ids, transform_value = transform_value, type_col = type_col,
-                             source_col = source_col, contribution = contribution,
-                             contribution_pct = contribution_pct,
-                             contribution_pct_pop_total = contribution_pct_pop_total,
-                             ind_df)
+  wb <- write_uhc_summary_sheet()
 
 }
 
