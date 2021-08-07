@@ -338,6 +338,25 @@ excel_styles <- function(font = "Calibri") {
     fontColour = "grey"
   )
 
+  bold_uhc_hR_2dp <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fgFill = uhc_light_color,
+    textDecoration = "bold",
+    numFmt = "0.00",
+    halign = "right"
+  )
+
+  bold_uhc_hL_2dp <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fgFill = uhc_light_color,
+    textDecoration = "bold",
+    numFmt = "0.00",
+    halign = "left"
+  )
+
+
   bold_hpop_blue_hR_2dp <- openxlsx::createStyle(
     fontName = font,
     fontSize = 10,
@@ -355,6 +374,55 @@ excel_styles <- function(font = "Calibri") {
     numFmt = "0.00",
     halign = "left"
   )
+
+  uhc_main_data_header <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fontColour = "white",
+    fgFill = uhc_main_color,
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  uhc_main_data_header_left_align <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fontColour = "white",
+    fgFill = uhc_main_color,
+    halign = "left",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  uhc_sec_data_header <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  uhc_sec_data_header_border_left_align <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "left",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE,
+    border = "bottom",
+    borderColour = "black",
+    borderStyle = "thin"
+  )
+
+
 
   hpop_main_data_header <- openxlsx::createStyle(
     fontName = font,
@@ -419,6 +487,10 @@ excel_styles <- function(font = "Calibri") {
   excel_styles <- list(
     title = title,
     sub_title = sub_title,
+    uhc_main_data_header = uhc_main_data_header,
+    uhc_main_data_header_left_align = uhc_main_data_header_left_align,
+    uhc_sec_data_header = uhc_sec_data_header,
+    uhc_sec_data_header_border_left_align = uhc_sec_data_header_border_left_align,
     hpop_main_data_header = hpop_main_data_header,
     hpop_sec_data_header = hpop_sec_data_header,
     hpop_sec_data_header_border = hpop_sec_data_header_border,
@@ -456,7 +528,9 @@ excel_styles <- function(font = "Calibri") {
     normal_text_no_border = normal_text_no_border,
     bold_text_no_border = bold_text_no_border,
     normal_data_int_faded_black_border = normal_data_int_faded_black_border,
-    bold_data_dec_black_border = bold_data_dec_black_border
+    bold_data_dec_black_border = bold_data_dec_black_border,
+    bold_uhc_hR_2dp = bold_uhc_hR_2dp,
+    bold_uhc_hL_2dp = bold_uhc_hL_2dp
   )
 
   return(excel_styles)

@@ -272,7 +272,7 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds){
   return(wb)
 }
 
-#' Style worksheet header
+#' Style HPOP summary worksheet header
 #'
 #' `style_header_hpop_summary_sheet` styles the title and sub-title of the worksheet header.
 #' @param start_row integer start row of styling. Passed to [openxlsx::addStyle()]

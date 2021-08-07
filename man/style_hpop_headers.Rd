@@ -2,8 +2,10 @@
 % Please edit documentation in R/style_headers.R
 \name{style_hpop_headers}
 \alias{style_hpop_headers}
-\title{Style table headers}
+\title{Style table headers for HPOP}
 \usage{
+style_hpop_headers(wb, sheet_name, bounds)
+
 style_hpop_headers(wb, sheet_name, bounds)
 }
 \arguments{
@@ -27,4 +29,6 @@ Must have the following named elements:
 }
 \description{
 Used within \code{style_hpop_indicators()}, \code{style_hpop_latest()}
+
+Used within \code{style_data_headers_uhc_summary()}
 }

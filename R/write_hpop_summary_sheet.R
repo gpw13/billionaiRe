@@ -143,7 +143,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name,iso,
   return(wb)
 }
 
-#' Write and style sheet header
+#' Write and style HPOP summary sheet header
 #' @inherit write_baseline_projection_hpop_summary
 #' @inherit export_hpop_country_summary_xls
 #' @inherit style_header_hpop_summary_sheet

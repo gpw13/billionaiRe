@@ -1,4 +1,4 @@
-#' Style table headers
+#' Style table headers for HPOP
 #'
 #' Used within `style_hpop_indicators()`, `style_hpop_latest()`
 #'
@@ -27,6 +27,43 @@ style_hpop_headers <- function(wb, sheet_name, bounds){
     wb,
     sheet = sheet_name,
     style = excel_styles()$hpop_sec_data_header,
+    rows =  (bounds["start_row"]+1):(bounds["start_row"]+2),
+    cols = bounds["start_col"]:(bounds["end_col"]),
+    gridExpand = TRUE
+  )
+
+  return(wb)
+}
+
+#' Style table headers for UHC
+#'
+#' Used within `style_data_headers_uhc_summary()`
+#'
+#' @inherit write_latest_reported_hpop_summary
+#'
+
+style_hpop_headers <- function(wb, sheet_name, bounds){
+
+  mergeCellForced(wb, sheet = sheet_name,
+                  rows = bounds["start_row"],
+                  cols = bounds["start_col"]: bounds["end_col"])
+
+  openxlsx::addStyle(
+    wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_main_data_header,
+    rows = bounds["start_row"],
+    cols = bounds["start_col"]:bounds["end_col"],
+    gridExpand = TRUE
+  )
+  purrr::map(c(bounds["start_col"]:bounds["end_col"]), ~ mergeCellForced(wb, sheet = sheet_name,
+                                                                         rows = (bounds["start_row"]+1):(bounds["start_row"]+2),
+                                                                         cols = .x))
+
+  openxlsx::addStyle(
+    wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_sec_data_header,
     rows =  (bounds["start_row"]+1):(bounds["start_row"]+2),
     cols = bounds["start_col"]:(bounds["end_col"]),
     gridExpand = TRUE
