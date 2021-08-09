@@ -126,8 +126,11 @@ write_latest_reported_hpop_summary <- function(df,
 #' @param df data frame to be written
 #' @param wb [openxlsx::createWorkbook()] workbook to be edited.
 #' @param sheet_name character name of the sheet to update
-#' @inherit write_latest_reported_hpop_summary
+#' @param start_year Base year for contribution calculation, defaults to 2018.
+#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2023.
 #' @inheritParams export_hpop_country_summary_xls
+#' @inheritParams write_latest_reported_hpop_summary
+#'
 
 write_baseline_projection_hpop_summary <- function(df,
            wb,
