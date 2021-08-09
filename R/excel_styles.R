@@ -524,6 +524,18 @@ excel_styles <- function(font = "Calibri") {
     halign = "left",
     valign = "center",
     textDecoration = "bold",
+    numFmt = "0.0"
+  )
+
+  uhc_pillar_average_text <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = "#D9D9D9",
+    halign = "right",
+    valign = "center",
+    textDecoration = c("bold", "italic"),
+    numFmt = "TEXT"
   )
 
   excel_styles <- list(
@@ -533,6 +545,8 @@ excel_styles <- function(font = "Calibri") {
     uhc_main_data_header_left_align = uhc_main_data_header_left_align,
     uhc_sec_data_header = uhc_sec_data_header,
     uhc_sec_data_header_border_left_align = uhc_sec_data_header_border_left_align,
+    uhc_pillar_average_data = uhc_pillar_average_data,
+    uhc_pillar_average_text = uhc_pillar_average_text,
     hpop_main_data_header = hpop_main_data_header,
     hpop_sec_data_header = hpop_sec_data_header,
     hpop_sec_data_header_border = hpop_sec_data_header_border,

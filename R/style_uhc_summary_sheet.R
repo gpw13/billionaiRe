@@ -177,12 +177,12 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
                    cols = boxes_bounds[["baseline_projection_data"]]['start_col']:boxes_bounds[["baseline_projection_data"]]['end_col'])
 
   openxlsx::addStyle(wb, sheet_name,
-                     style = openxlsx::createStyle(fgFill = "grey"),
+                     style = excel_styles()$uhc_pillar_average_data,
                      rows = boxes_bounds[[pillar]]['end_row'],
                      cols = boxes_bounds[[pillar]]['start_col']:boxes_bounds[[pillar]]['end_col'])
 
   openxlsx::addStyle(wb, sheet_name,
-                     style = openxlsx::createStyle(textDecoration = "bold", halign = "right"),
+                     style = excel_styles()$uhc_pillar_average_text,
                      rows = boxes_bounds[[pillar]]['end_row'],
                      cols = boxes_bounds[[pillar]]['start_col']+1,
                      gridExpand = TRUE)
