@@ -312,10 +312,11 @@ export_uhc_country_summary_xls <- function(df,
     dplyr::ungroup() %>%
     dplyr::filter(.data[[iso3]] == iso) %>%
     dplyr::arrange(get_ind_order(.data[[ind]]),
-                   .data[[year]])
+                   .data[[year]]) %>%
+    dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~round(.x, digits = 2)))
 
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("uhc") == TRUE, !is.na(!!sym("ind")))
+    dplyr::filter(!!sym("uhc") == TRUE)
 
   # data sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")
@@ -327,11 +328,11 @@ export_uhc_country_summary_xls <- function(df,
                                 start_year = 2018,
                                 end_year = 2019:2023,
                                 value = "value",
+                                transform_value = "transform_value",
                                 year = "year",
                                 iso3 = "iso3",
                                 ind = "ind",
                                 population = "population",
-                                transform_value = "transform_value",
                                 type_col = "type",
                                 source_col = "source",
                                 ind_df)

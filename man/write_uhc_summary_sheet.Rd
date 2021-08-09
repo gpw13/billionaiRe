@@ -12,11 +12,11 @@ write_uhc_summary_sheet(
   start_year = 2018,
   end_year = 2019:2023,
   value = "value",
+  transform_value = "transform_value",
   year = "year",
   iso3 = "iso3",
   ind = "ind",
   population = "population",
-  transform_value = "transform_value",
   type_col = "type",
   source_col = "source",
   ind_df
@@ -34,6 +34,9 @@ to a specific year, and indicator.}
 
 \item{value}{Column name of column with indicator values.}
 
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
 \item{year}{Column name of column with years.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
@@ -41,9 +44,6 @@ to a specific year, and indicator.}
 \item{ind}{Column name of column with indicator names.}
 
 \item{population}{Column name of column with population figures.}
-
-\item{transform_value}{Column name of column(s) with transformed indicator values,
-used to calculate contributions.}
 
 \item{type_col}{Column name of column to store type.}
 

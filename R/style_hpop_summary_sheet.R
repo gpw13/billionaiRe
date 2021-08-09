@@ -92,7 +92,6 @@ style_hpop_baseline_projection <- function(wb, sheet_name, bounds, data_type){
   )
 
   #TODO: adapt to take more than one value (at the moment if length(value) >1, cells merging and styling won't work)
-  #### HERE HERE HERE test below lines
   mergeCellForced(wb, sheet = sheet_name,
                   rows = bounds['start_row']+1,
                   cols = c(bounds['start_col']:(bounds['start_col']+1))

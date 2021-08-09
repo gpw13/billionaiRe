@@ -12,11 +12,11 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name,iso,
                                      start_year = 2018,
                                      end_year = 2019:2023,
                                      value = "value",
+                                     transform_value = "transform_value",
                                      year = "year",
                                      iso3 = "iso3",
                                      ind = "ind",
                                      population = "population",
-                                     transform_value = "transform_value",
                                      type_col = "type",
                                      source_col = "source",
                                      ind_df){
@@ -70,8 +70,10 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name,iso,
   )
 
   wb <- write_sheet_header_uhc_summary(wb, sheet_name, iso, end_year,value, boxes_bounds)
-  #HERE hERE hERE
+
   wb <- write_data_headers_uhc_summary(wb, sheet_name, value, boxes_bounds, start_year, end_year)
+
+  wb <- write_RMNCH_uhc_summary(df, wb, sheet_name,value,transform_value, boxes_bounds, start_year, end_year,ind, ind_df, year, type_col, source_col, iso3)
 
   return(wb)
 }
@@ -107,7 +109,7 @@ write_sheet_header_uhc_summary <- function(wb, sheet_name, iso, end_year,value, 
   )
 
 
-  wb <- style_header_uhc_summary_sheet(wb, sheet_name, bounds = boxes_bounds$sheet_header)
+  wb <- style_header_uhc_summary_sheet(wb, sheet_name, boxes_bounds = boxes_bounds)
 
   return(wb)
 

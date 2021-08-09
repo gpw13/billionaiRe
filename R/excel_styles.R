@@ -239,6 +239,30 @@ excel_styles <- function(font = "Calibri") {
     halign = "left",
     wrapText = TRUE
   )
+  normal_text_wrapped_vCentered <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    numFmt = "TEXT",
+    halign = "left",
+    valign = "center",
+    wrapText = TRUE
+  )
+
+  normal_text_wrapped_vCentered_black_border <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    numFmt = "TEXT",
+    halign = "left",
+    valign = "center",
+    wrapText = TRUE,
+    borderStyle = "thin",
+    borderColour = "black",
+    border = "bottom"
+  )
 
   normal_text_wrapped_black_border <- openxlsx::createStyle(
     fontName = font,
@@ -422,7 +446,15 @@ excel_styles <- function(font = "Calibri") {
     borderStyle = "thin"
   )
 
-
+  uhc_pillar_header <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fontColour = "black",
+    fgFill = uhc_light2_color,
+    halign = "left",
+    valign = "center",
+    textDecoration = "bold",
+  )
 
   hpop_main_data_header <- openxlsx::createStyle(
     fontName = font,
@@ -484,6 +516,16 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  uhc_pillar_average_data <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = "#D9D9D9",
+    halign = "left",
+    valign = "center",
+    textDecoration = "bold",
+  )
+
   excel_styles <- list(
     title = title,
     sub_title = sub_title,
@@ -530,7 +572,10 @@ excel_styles <- function(font = "Calibri") {
     normal_data_int_faded_black_border = normal_data_int_faded_black_border,
     bold_data_dec_black_border = bold_data_dec_black_border,
     bold_uhc_hR_2dp = bold_uhc_hR_2dp,
-    bold_uhc_hL_2dp = bold_uhc_hL_2dp
+    bold_uhc_hL_2dp = bold_uhc_hL_2dp,
+    uhc_pillar_header = uhc_pillar_header,
+    normal_text_wrapped_vCentered = normal_text_wrapped_vCentered,
+    normal_text_wrapped_vCentered_black_border = normal_text_wrapped_vCentered_black_border
   )
 
   return(excel_styles)
