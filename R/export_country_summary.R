@@ -344,7 +344,7 @@ export_uhc_country_summary_xls <- function(df,
     dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
 
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("uhc") == TRUE)
+    dplyr::filter(.data[["uhc"]])
 
   # data sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")

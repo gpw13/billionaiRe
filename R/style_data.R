@@ -65,7 +65,7 @@ style_data <- function(data_type, wb, sheet_name,
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
 #' @param col Column to apply style to.
-style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered"),
+style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered", "formula"),
                               wb,
                               sheet_name,
                               rows,

@@ -17,7 +17,7 @@ count_since <- function(df, year_specified, year, ind, iso3, type_col) {
     dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
     dplyr::filter(.data[[year]] >= !!year_specified) %>%
-    dplyr::summarise(!!rlang::sym(glue::glue("count_{year_specified}")) := dplyr::n(), .groups = "drop")
+    dplyr::summarise(!!sym(glue::glue("count_{year_specified}")) := dplyr::n(), .groups = "drop")
 }
 
 #' Get order of indicator
@@ -70,9 +70,9 @@ get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, tra
       ind, year, value, transform_value, type_col,
       source_col, iso3
     ))) %>%
-    dplyr::group_by(!!rlang::sym(ind), !!rlang::sym(iso3)) %>%
+    dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     tidyr::pivot_wider(
-      names_from = !!rlang::sym(year),
+      names_from = .data[[year]],
       values_from = c(dplyr::all_of(c(value, transform_value)), .data[[type_col]], .data[[source_col]])
     ) %>%
     dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%

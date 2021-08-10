@@ -56,17 +56,17 @@ calculate_hpop_contributions <- function(df,
   for (i in seq(contribution)) {
     df <- dplyr::mutate(
       df,
-      !!rlang::sym(contribution_pct[i]) := ifelse(
+      !!sym(contribution_pct[i]) := ifelse(
         !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
         .data[[contribution_pct[i]]],
         (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year])
       ),
-      !!rlang::sym(contribution[i]) := ifelse(
+      !!sym(contribution[i]) := ifelse(
         !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
         .data[[contribution[i]]],
         .data[[population]] * .data[[contribution_pct[i]]] / 100
       ),
-      !!rlang::sym(contribution_pct_total_pop[i]) := ifelse(
+      !!sym(contribution_pct_total_pop[i]) := ifelse(
         !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
         .data[[contribution_pct_total_pop[i]]],
         .data[[contribution[i]]] / .data[["total_pop"]] * 100

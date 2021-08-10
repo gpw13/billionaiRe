@@ -157,7 +157,6 @@ write_sheet_header_uhc_summary <- function(wb, sheet_name, iso, end_year, value,
     startCol = boxes_bounds$sheet_header["start_col"] + 4
   )
 
-
   wb <- style_header_uhc_summary_sheet(wb, sheet_name, boxes_bounds = boxes_bounds)
 
   return(wb)

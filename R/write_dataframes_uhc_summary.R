@@ -93,10 +93,12 @@ write_data_boxes_uhc_summary <- function(df, pillar = c("RMNCH", "infec_diseases
   pillar <- rlang::arg_match(pillar)
 
   ind_df_pillar <- ind_df %>%
-    dplyr::filter(!!sym("pillar") %in% !!pillar)
+    dplyr::filter(.data[["pillar"]] %in% !!pillar)
 
   df_pillar <- df %>%
     dplyr::filter(.data[[ind]] %in% unique(ind_df_pillar[["ind"]]))
+
+  show_hiv <- ifelse(sum(df_pillar[df_pillar[, "ind"] == "art", "use_dash"]) == 0, FALSE, TRUE)
 
   pillar_latest_reported <- df_pillar %>%
     get_latest_reported_df(iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df_pillar) %>%
@@ -109,13 +111,15 @@ write_data_boxes_uhc_summary <- function(df, pillar = c("RMNCH", "infec_diseases
 
   pillar_baseline_projection <- df_pillar %>%
     get_baseline_projection_df(iso3, ind, type_col, year, value, transform_value, start_year, end_year, source_col, ind_df_pillar) %>%
-    dplyr::mutate(dplyr::across(c(!!sym(glue::glue("transform_value_{start_year}")), !!sym(glue::glue("transform_value_{max(end_year)}"))), ~NA)) %>%
+    dplyr::mutate(dplyr::across(c(.data[[glue::glue("transform_value_{start_year}")]], .data[[glue::glue("transform_value_{max(end_year)}")]]), ~NA)) %>%
     dplyr::mutate(empty21 = NA, .after = "empty2") %>%
     dplyr::mutate(dir_change = as_excel_formula(glue::glue('=IF(OR(ISBLANK({col_raw_end_year}{pillar_data_rows}),ISBLANK({col_raw_start_year}{pillar_data_rows})),"",{col_raw_end_year}{pillar_data_rows}-{col_raw_start_year}{pillar_data_rows})')), .after = "empty2")
 
   if (pillar %in% c("RMNCH", "infec_diseases")) {
     pillar_latest_reported <- dplyr::select(pillar_latest_reported, -.data[[ind]])
+
     pillar_baseline_projection <- dplyr::select(pillar_baseline_projection, -.data[[ind]], -.data[[iso3]])
+
     openxlsx::writeData(wb, sheet_name,
       x = pillar_latest_reported,
       startRow = boxes_bounds[[pillar]]["start_row"] + 1,
@@ -183,8 +187,6 @@ write_data_boxes_uhc_summary <- function(df, pillar = c("RMNCH", "infec_diseases
       startRow = boxes_bounds[[pillar]]["end_row"]
     )
   }
-  # HERE HERE HERE function returns text type (numFmt in openxlsx::createStyle)
-  # for formula, which breaks their proper formatting in Excel if somebody double click in the cell
 
   wb <- style_uhc_pillar(wb, sheet_name,
     boxes_bounds = boxes_bounds,
@@ -192,7 +194,8 @@ write_data_boxes_uhc_summary <- function(df, pillar = c("RMNCH", "infec_diseases
       latest_reported = get_data_type(pillar_latest_reported),
       baseline_projection = get_data_type(pillar_baseline_projection)
     ),
-    pillar = pillar
+    pillar = pillar,
+    show_hiv = show_hiv
   )
 
   return(wb)

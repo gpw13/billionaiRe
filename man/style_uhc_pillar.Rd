@@ -9,7 +9,8 @@ style_uhc_pillar(
   sheet_name,
   boxes_bounds,
   data_type,
-  pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access")
+  pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
+  show_hiv = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ types. Passed to \code{style_data()}}
 \item NCD
 \item service
 }}
+
+\item{show_hiv}{Boolean TRUE if HIV data should be displayed.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

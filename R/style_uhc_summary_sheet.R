@@ -164,11 +164,13 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
 #' * infectious
 #' * NCD
 #' * service
+#' @param show_hiv Boolean TRUE if HIV data should be displayed.
 #' @inherit style_header_hpop_summary_sheet
 #' @inherit write_sheet_header_hpop_summary
 
 style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
-                             pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access")) {
+                             pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
+                             show_hiv = FALSE) {
   pillar <- rlang::arg_match(pillar)
 
   openxlsx::addStyle(wb, sheet_name,
@@ -215,7 +217,6 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
     rows = boxes_bounds[[pillar]]["end_row"],
     cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
   )
-
 
   openxlsx::addStyle(wb, sheet_name,
     style = excel_styles()$uhc_pillar_average_text,
