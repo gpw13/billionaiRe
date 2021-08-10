@@ -1,4 +1,4 @@
-#' Style table headers
+#' Style table headers for HPOP
 #'
 #' Used within `style_hpop_indicators()`, `style_hpop_latest()`
 #'

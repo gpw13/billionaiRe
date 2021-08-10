@@ -4,9 +4,11 @@
 #' @inheritParams style_header_hpop_summary_sheet
 #' @inheritParams export_all_countries_summaries_xls
 #'
-write_indicator_list_sheet <- function(wb, sheet_name,
+write_indicator_list_sheet <- function(wb,
+                                       sheet_name,
                                        billion,
-                                       start_row, start_col) {
+                                       start_row,
+                                       start_col) {
   if (billion == "all") {
     billion <- c("hpop", "hep", "uhc")
   }
@@ -15,14 +17,16 @@ write_indicator_list_sheet <- function(wb, sheet_name,
     sheet = "Indicator List",
     startRow = start_row
   ) %>%
-    dplyr::filter(!!sym("Billion") %in% toupper(billion))
+    dplyr::filter(.data[["Billion"]] %in% toupper(billion))
 
   names(indicator_list) <- stringr::str_replace_all(names(indicator_list), "\\.", " ")
 
   ## Write indicator list
   openxlsx::writeData(wb,
-    sheet = sheet_name, x = indicator_list,
-    startCol = start_col, startRow = start_row
+    sheet = sheet_name,
+    x = indicator_list,
+    startCol = start_col,
+    startRow = start_row
   )
 
   openxlsx::deleteData(wb,
@@ -33,7 +37,9 @@ write_indicator_list_sheet <- function(wb, sheet_name,
   )
 
   wb <- style_indicator_list_sheet(
-    df = indicator_list, wb = wb, sheet_name, start_row, start_col,
+    df = indicator_list,
+    wb = wb, sheet_name,
+    start_row, start_col,
     end_col = start_col + ncol(indicator_list) - 1,
     end_row = start_row + nrow(indicator_list)
   )
@@ -50,8 +56,13 @@ write_indicator_list_sheet <- function(wb, sheet_name,
 #' @param df data frame with the indicators to be styled
 #' @param end_col integer identifying end column.
 #' @param end_row integer identifying end row.
-
-style_indicator_list_sheet <- function(df, wb, sheet_name, start_row, end_row, start_col, end_col) {
+style_indicator_list_sheet <- function(df,
+                                       wb,
+                                       sheet_name,
+                                       start_row,
+                                       end_row,
+                                       start_col,
+                                       end_col) {
   openxlsx::addStyle(wb,
     sheet = sheet_name,
     style = excel_styles()$title,
@@ -60,7 +71,8 @@ style_indicator_list_sheet <- function(df, wb, sheet_name, start_row, end_row, s
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = openxlsx::createStyle(
+    sheet = sheet_name,
+    style = openxlsx::createStyle(
       fontName = "Calibri",
       fontColour = "white",
       fontSize = 10,
@@ -68,7 +80,8 @@ style_indicator_list_sheet <- function(df, wb, sheet_name, start_row, end_row, s
       borderStyle = "thin",
       fgFill = "grey"
     ),
-    rows = start_row, cols = c(start_col:(end_col))
+    rows = start_row,
+    cols = c(start_col:(end_col))
   )
 
   args <- list(
@@ -93,7 +106,6 @@ style_indicator_list_sheet <- function(df, wb, sheet_name, start_row, end_row, s
     style = excel_styles()$white_bckgrd,
     gridExpand = T
   )
-
 
   return(wb)
 }

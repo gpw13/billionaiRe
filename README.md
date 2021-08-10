@@ -64,16 +64,17 @@ hpop_df %>%
   add_hpop_populations() %>%
   calculate_hpop_billion() %>%
   dplyr::filter(stringr::str_detect(ind, "hpop_healthier"))
-#> # A tibble: 6 x 8
+#> # A tibble: 6 x 9
 #>   iso3   year ind                  value transform_value population contribution
 #>   <chr> <dbl> <chr>                <dbl>           <dbl>      <dbl>        <dbl>
-#> 1 AFG    2023 hpop_healthier_plus     NA              NA         NA    25608812.
-#> 2 AFG    2023 hpop_healthier_minus    NA              NA         NA   -35897603.
-#> 3 AFG    2023 hpop_healthier          NA              NA         NA   -10288791.
-#> 4 AFG    2023 hpop_healthier_plus…    NA              NA         NA    30125312.
-#> 5 AFG    2023 hpop_healthier_minu…    NA              NA         NA   -69269569.
-#> 6 AFG    2023 hpop_healthier_dbl_…    NA              NA         NA   -39144257.
-#> # … with 1 more variable: contribution_percent <dbl>
+#> 1 AFG    2023 hpop_healthier_plus     NA              NA   41681232    25608812.
+#> 2 AFG    2023 hpop_healthier_minus    NA              NA   41681232   -35897603.
+#> 3 AFG    2023 hpop_healthier          NA              NA   41681232   -10288791.
+#> 4 AFG    2023 hpop_healthier_plus~    NA              NA   41681232    30125312.
+#> 5 AFG    2023 hpop_healthier_minu~    NA              NA   41681232   -69269569.
+#> 6 AFG    2023 hpop_healthier_dbl_~    NA              NA   41681232   -39144257.
+#> # ... with 2 more variables: contribution_percent <dbl>,
+#> #   contribution_percent_total_pop <dbl>
 ```
 
 ## UHC Billion calculation
@@ -106,12 +107,12 @@ uhc_df %>%
   dplyr::filter(ind %in% c("uhc_sm", "asc", "fh"),
                 year == 2023)
 #> # A tibble: 3 x 9
-#>   iso3   year ind    value transform_value type    source           contribution
-#>   <chr> <dbl> <chr>  <dbl>           <dbl> <chr>   <chr>                   <dbl>
-#> 1 AFG    2023 fh      25.4            25.4 <NA>    <NA>                 2963536.
-#> 2 AFG    2023 asc     45.6            45.6 projec… WHO DDI calcula…     1607136.
-#> 3 AFG    2023 uhc_sm  34.0            34.0 projec… WHO DDI calcula…      -38238.
-#> # … with 1 more variable: contribution_percent <dbl>
+#>   iso3   year ind    value transform_value type      source         contribution
+#>   <chr> <dbl> <chr>  <dbl>           <dbl> <chr>     <chr>                 <dbl>
+#> 1 AFG    2023 fh      25.4            25.4 <NA>      <NA>               2963536.
+#> 2 AFG    2023 asc     45.6            45.6 projected WHO DDI calcu~     1607136.
+#> 3 AFG    2023 uhc_sm  34.0            34.0 projected WHO DDI calcu~      -38238.
+#> # ... with 1 more variable: contribution_percent <dbl>
 ```
 
 ## HEP Billion calculation
@@ -148,11 +149,12 @@ hep_df %>%
                            "detect_respond",
                            "hep_idx"),
                 year == 2023)
-#> # A tibble: 4 x 9
-#>   iso3   year ind      value type   source    transform_value level contribution
-#>   <chr> <dbl> <chr>    <dbl> <chr>  <chr>               <dbl> <dbl>        <dbl>
-#> 1 AFG    2023 espar     51.2 Proje… <NA>                 51.2     3     4680802.
-#> 2 AFG    2023 detect_…  91   Proje… <NA>                 91       5     2084062.
-#> 3 AFG    2023 prevent   NA   Proje… WHO DDI,…           100       5           0 
-#> 4 AFG    2023 hep_idx   NA   Proje… WHO DDI,…            80.7     4     6764864.
+#> # A tibble: 4 x 10
+#>   iso3   year ind            value type       source transform_value level contribution
+#>   <chr> <dbl> <chr>          <dbl> <chr>      <chr>            <dbl> <dbl>        <dbl>
+#> 1 AFG    2023 espar           51.2 Projection <NA>              51.2     3     4680802.
+#> 2 AFG    2023 detect_respond  91   Projection <NA>              91       5     2084062.
+#> 3 AFG    2023 prevent         NA   Projection WHO D~           100       5           0 
+#> 4 AFG    2023 hep_idx         NA   Projection WHO D~            80.7     4     6764864.
+#> # ... with 1 more variable: contribution_percent <dbl>
 ```

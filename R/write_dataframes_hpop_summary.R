@@ -82,7 +82,7 @@ write_latest_reported_hpop_summary <- function(df,
   latest_reported <- ind_df[, "ind"] %>%
     dplyr::left_join(latest_reported, by = c("ind" = ind)) %>%
     dplyr::left_join(counts_years, by = c(iso3, ind)) %>%
-    dplyr::select(-!!sym(ind), -!!sym(iso3))
+    dplyr::select(-.data[[ind]], -.data[[iso3]])
 
   openxlsx::writeData(
     wb,
@@ -157,9 +157,9 @@ write_baseline_projection_hpop_summary <- function(df,
       ind, year, value, transform_value, type_col,
       source_col, iso3
     ))) %>%
-    dplyr::group_by(!!rlang::sym(ind), !!rlang::sym(iso3)) %>%
+    dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     tidyr::pivot_wider(
-      names_from = !!rlang::sym(year),
+      names_from = .data[[year]],
       values_from = c(dplyr::all_of(c(value, transform_value)), .data[[type_col]], .data[[source_col]])
     ) %>%
     dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
@@ -169,7 +169,7 @@ write_baseline_projection_hpop_summary <- function(df,
 
   baseline_proj <- ind_df[, "ind"] %>%
     dplyr::left_join(baseline_proj, by = c("ind" = ind)) %>%
-    dplyr::select(-!!sym(iso3), -!!sym("ind"))
+    dplyr::select(.data[[iso3]], -.data[["ind"]])
 
   openxlsx::writeData(
     wb,
@@ -317,7 +317,7 @@ write_billion_contribution_hpop_summary <- function(df,
       stringr::str_detect(.data[[ind]], "^hpop_healthier$")
     ) %>%
     dplyr::select(!!ind, !!contribution_pct) %>%
-    dplyr::rename(!!sym(contribution) := !!sym(contribution_pct))
+    dplyr::rename(!!sym(contribution) := .data[[contribution_pc]])
 
   hpop_billion_contribution <- dplyr::bind_rows(hpop_billion_contribution, hpop_billion_contribution_pct) %>%
     dplyr::select(-!!ind)

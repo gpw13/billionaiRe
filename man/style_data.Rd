@@ -8,7 +8,8 @@ style_data(data_type, wb, sheet_name, rows, cols)
 }
 \arguments{
 \item{data_type}{character vector of class(es) of the data to be styled.
-Can be one of "numeric", "integer", "Date", "character", or "character_centered"}
+Can be one of "numeric", "integer", "Date", "character", "character_centered",
+or "formula".}
 
 \item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 

@@ -12,3 +12,4 @@
 ^outputs$
 
 
+^\.pre-commit-config\.yaml$

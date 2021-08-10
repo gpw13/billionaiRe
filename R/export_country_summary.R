@@ -79,7 +79,6 @@ export_all_countries_summaries_xls <- function(df,
 #' @return `openxslx` Workbook object. Output file is in `output_folder`.
 #'
 #' @export
-
 export_country_summary_xls <- function(df,
                                        iso,
                                        billion = c("hpop", "hep", "uhc", "all"),
@@ -94,7 +93,7 @@ export_country_summary_xls <- function(df,
                                        population = "population",
                                        contribution = "contribution",
                                        contribution_pct = paste0(contribution, "_percent"),
-                                       contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                       contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                        ind_ids = billion_ind_codes("hpop"),
                                        start_year = 2018,
                                        end_year = 2019:2023,
@@ -126,7 +125,7 @@ export_country_summary_xls <- function(df,
       population = population,
       contribution = contribution,
       contribution_pct = contribution_pct,
-      contribution_pct_pop_total = contribution_pct_pop_total,
+      contribution_pct_total_pop = contribution_pct_total_pop,
       start_year = start_year,
       end_year = end_year,
       sheet_prefix = "HPOP",
@@ -134,9 +133,32 @@ export_country_summary_xls <- function(df,
       ind_ids = billion_ind_codes("hpop")
     )
   }
-  # if (billion == "uhc") {
-  #   export_uhc_country_summary_xls()
-  # }
+  if (billion == "uhc") {
+    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^HPOP|^HEP")]
+    for (i in seq_along(sheets_to_remove)) {
+      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
+    }
+
+    export_uhc_country_summary_xls(df,
+      wb,
+      iso,
+      iso3 = "iso3",
+      year = "year",
+      ind = "ind",
+      value = "value",
+      transform_value = "transform_value",
+      scenario = NULL,
+      type_col = "type",
+      source_col = "source",
+      population = "population",
+      contribution = "contribution",
+      start_year = 2018,
+      end_year = 2019:2023,
+      sheet_prefix = "UHC",
+      output_folder = "outputs",
+      ind_ids = billion_ind_codes("uhc")
+    )
+  }
   # if (billion == "all") {
   #   export_all_country_summary_xls()
   # }
@@ -145,6 +167,16 @@ export_country_summary_xls <- function(df,
   for (i in sheets_hidden) {
     openxlsx::sheetVisibility(wb)[sheets_hidden] <- "hidden"
   }
+
+  # Write workbook
+  if (!dir.exists(output_folder)) {
+    dir.create(output_folder)
+  }
+
+  openxlsx::saveWorkbook(wb,
+    glue::glue("{output_folder}/GPW13_{billion}_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"),
+    overwrite = TRUE
+  )
 }
 
 #' Export country summary to Excel for HEP billion$
@@ -180,50 +212,71 @@ export_hpop_country_summary_xls <- function(df,
                                             population = "population",
                                             contribution = "contribution",
                                             contribution_pct = paste0(contribution, "_percent"),
-                                            contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                            contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
                                             output_folder = "outputs",
                                             ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, year, iso3, ind, value, transform_value, contribution, scenario, type_col, source_col)
+  assert_columns(df, year, iso3, ind, value, transform_value, contribution, population, contribution_pct, contribution_pct_total_pop, scenario, type_col, source_col)
   assert_years(start_year, end_year)
   assert_who_iso(iso)
   assert_same_length(value, transform_value)
   assert_same_length(value, contribution)
+  assert_same_length(contribution, contribution_pct)
+  assert_same_length(contribution, contribution_pct_total_pop)
+
+  # TODO: Big chunks of HPOP export functions are static (length(value) == 1). If required, it would be nice to have it dynamic.
+  ## Adding a stop for now to avoid issues for now.
+  stopifnot("export_hpop_country_summary_xls:
+  value, transform_value, and contribution must be of length 1 at the moment.
+  If you need to run with mutliple values, please run function multiple times" = length(value) == 1)
+
 
   # Get country specific data frame
 
   df_iso <- df %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data[[iso3]] == iso) %>%
+    dplyr::filter(.data[[iso3]] == !!iso) %>%
     dplyr::arrange(
       get_ind_order(.data[[ind]]),
       .data[[year]]
     ) %>%
     dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
 
-  water_sanitation_ind <- unlist(unique(stringr::str_extract_all(df_iso[[ind]], "water.*|hpop_sanitation.*")))
+  water_sanitation_ind <- ind_ids[stringr::str_detect(names(ind_ids), "^water|^hpop_sanitation")]
 
-  # Indicator data frame to make sure the order of indicators is correct
+  # indicator data frame to make sure the order of indicators is correct
+  # remove wash/sanitation indicators not in data
   ind_df <- billionaiRe::indicator_df %>%
     dplyr::filter(
-      !!rlang::sym("hpop") == TRUE, !is.na(!!rlang::sym("ind")),
-      !!rlang::sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind)
+      .data[["hpop"]],
+      !is.na(.data[["ind"]]),
+      !((.data[["ind"]] %in% !!water_sanitation_ind) & !(.data[["ind"]] %in% unique(df_iso[[!!ind]])))
     )
 
   # summary sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")
 
   wb <- write_hpop_summary_sheet(
-    df = df_iso, wb = wb, sheet_name = summary_sheet,
-    start_year = start_year, end_year = end_year, value = value, year = year,
-    iso3 = iso3, iso = iso, ind = ind, population = population,
-    transform_value = transform_value, type_col = type_col,
-    source_col = source_col, contribution = contribution,
+    df = df_iso,
+    wb = wb,
+    sheet_name = summary_sheet,
+    start_year = start_year,
+    end_year = end_year,
+    value = value,
+    year = year,
+    iso3 = iso3,
+    iso = iso,
+    ind = ind,
+    population = population,
+    transform_value = transform_value,
+    type_col = type_col,
+    source_col = source_col,
+    contribution = contribution,
     contribution_pct = contribution_pct,
-    contribution_pct_pop_total = contribution_pct_pop_total,
-    ind_df
+    contribution_pct_total_pop = contribution_pct_total_pop,
+    ind_df = ind_df
   )
 
   # Time series
@@ -245,24 +298,15 @@ export_hpop_country_summary_xls <- function(df,
   )
 
 
-
-  # Write workbook
-  if (!dir.exists(output_folder)) {
-    dir.create(output_folder)
-  }
-
-  openxlsx::saveWorkbook(wb,
-    glue::glue("{output_folder}/GPW13_HPOP_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"),
-    overwrite = TRUE
-  )
+  return(wb)
 }
 
 #' Export country summary to Excel for UHC billion
 #' `export_uhc_country_summary_xls` Export a country-specific for UHC billion.
 #'
 #' @inherit export_hpop_country_summary_xls return details params
-#' @export
 export_uhc_country_summary_xls <- function(df,
+                                           wb,
                                            iso,
                                            iso3 = "iso3",
                                            year = "year",
@@ -274,18 +318,22 @@ export_uhc_country_summary_xls <- function(df,
                                            source_col = "source",
                                            population = "population",
                                            contribution = "contribution",
-                                           contribution_pct = paste0(contribution, "_percent"),
-                                           contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
                                            start_year = 2018,
                                            end_year = 2019:2023,
                                            sheet_prefix = "UHC",
                                            output_folder = "outputs",
-                                           ind_ids = billion_ind_codes("hpop")) {
+                                           ind_ids = billion_ind_codes("uhc")) {
   assert_columns(df, year, iso3, ind, value, transform_value, contribution, scenario, type_col, source_col)
   assert_years(start_year, end_year)
   assert_who_iso(iso)
   assert_same_length(value, transform_value)
   assert_same_length(value, contribution)
+
+  # TODO: The whole of UHC export functions are static (length(value) == 1). If required, it would be nice to have it dynamic.
+  ## Adding a stop for now to avoid issues for now.
+  stopifnot("export_uhc_country_summary_xls:
+  value, transform_value, and contribution must be of length 1 at the moment.
+  If you need to run with mutliple values, please run function multiple times" = length(value) == 1)
 
   df_iso <- df %>%
     dplyr::ungroup() %>%
@@ -293,21 +341,34 @@ export_uhc_country_summary_xls <- function(df,
     dplyr::arrange(
       get_ind_order(.data[[ind]]),
       .data[[year]]
-    )
+    ) %>%
+    dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
 
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!sym("uhc") == TRUE, !is.na(!!sym("ind"))) %>%
-    dplyr::select("ind", "short_name", "medium_name", "pillar")
-
-  wb_file <- system.file("extdata",
-    "country_summary_template.xlsx",
-    package = "billionaiRe"
-  )
-
-  wb <- openxlsx::loadWorkbook(wb_file)
+    dplyr::filter(.data[["uhc"]])
 
   # data sheet
-  data_sheet <- glue::glue("{sheet_prefix}_data")
+  summary_sheet <- glue::glue("{sheet_prefix}_summary")
+
+  wb <- write_uhc_summary_sheet(
+    df = df_iso,
+    wb = wb,
+    sheet_name = summary_sheet,
+    iso = iso,
+    start_year = 2018,
+    end_year = 2019:2023,
+    value = "value",
+    transform_value = "transform_value",
+    year = "year",
+    iso3 = "iso3",
+    ind = "ind",
+    population = "population",
+    type_col = "type",
+    source_col = "source",
+    ind_df
+  )
+
+  return(wb)
 }
 
 #' Export country summary to Excel for all billions.

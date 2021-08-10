@@ -7,6 +7,7 @@
 \usage{
 export_uhc_country_summary_xls(
   df,
+  wb,
   iso,
   iso3 = "iso3",
   year = "year",
@@ -18,18 +19,18 @@ export_uhc_country_summary_xls(
   source_col = "source",
   population = "population",
   contribution = "contribution",
-  contribution_pct = paste0(contribution, "_percent"),
-  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "UHC",
   output_folder = "outputs",
-  ind_ids = billion_ind_codes("hpop")
+  ind_ids = billion_ind_codes("uhc")
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
+
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
@@ -55,13 +56,6 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{contribution}{Column name of column(s) to store contribution (population)
 values. Must be the same length as \code{transform_value}.}
-
-\item{contribution_pct}{Column name of column(s) to store contribution (percent)
-values. Must be the same length as \code{transform_value}.}
-
-\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
-(percent of total population of the country) values. Must be the same length
-as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

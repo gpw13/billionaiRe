@@ -94,7 +94,6 @@ style_hpop_baseline_projection <- function(wb, sheet_name, bounds, data_type) {
   )
 
   # TODO: adapt to take more than one value (at the moment if length(value) >1, cells merging and styling won't work)
-  #### HERE HERE HERE test below lines
   mergeCellForced(wb,
     sheet = sheet_name,
     rows = bounds["start_row"] + 1,
@@ -308,7 +307,7 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds) {
   return(wb)
 }
 
-#' Style worksheet header
+#' Style HPOP summary worksheet header
 #'
 #' `style_header_hpop_summary_sheet` styles the title and sub-title of the worksheet header.
 #' @param start_row integer start row of styling. Passed to [openxlsx::addStyle()]
@@ -318,32 +317,38 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds) {
 #'
 style_header_hpop_summary_sheet <- function(wb, sheet_name, start_row, start_col) {
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$title,
+    sheet = sheet_name,
+    style = excel_styles()$title,
     rows = start_row,
     cols = start_col
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$sub_title,
+    sheet = sheet_name,
+    style = excel_styles()$sub_title,
     rows = start_row + 2,
     cols = start_col
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_text_10p,
+    sheet = sheet_name,
+    style = excel_styles()$normal_text_10p,
     rows = c((start_row + 3):(start_row + 5)),
-    cols = start_col, gridExpand = TRUE
+    cols = start_col,
+    gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$bold_hpop_blue_hR_2dp,
+    sheet = sheet_name,
+    style = excel_styles()$bold_hpop_blue_hR_2dp,
     rows = (start_row + 3):(start_row + 5),
     cols = (start_col + 4),
     gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$bold_hpop_blue_hL_2dp,
+    sheet = sheet_name,
+    style = excel_styles()$bold_hpop_blue_hL_2dp,
     rows = (start_row + 3):(start_row + 5),
     cols = (start_col + 5),
     gridExpand = TRUE

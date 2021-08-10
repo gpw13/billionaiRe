@@ -2,7 +2,7 @@
 % Please edit documentation in R/style_hpop_summary_sheet.R
 \name{style_header_hpop_summary_sheet}
 \alias{style_header_hpop_summary_sheet}
-\title{Style worksheet header}
+\title{Style HPOP summary worksheet header}
 \usage{
 style_header_hpop_summary_sheet(wb, sheet_name, start_row, start_col)
 }

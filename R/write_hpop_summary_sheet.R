@@ -166,7 +166,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
   return(wb)
 }
 
-#' Write and style sheet header
+#' Write and style HPOP summary sheet header
 #' @inherit write_baseline_projection_hpop_summary
 #' @inherit export_hpop_country_summary_xls
 #' @inherit style_header_hpop_summary_sheet
@@ -182,8 +182,10 @@ write_sheet_header_hpop_summary <- function(wb, sheet_name, iso, start_col, star
   country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
   country_pop_end_year <- wppdistro::get_population(iso, year = max(end_year))
   openxlsx::writeData(wb,
-    sheet = sheet_name, x = country_name,
-    startCol = start_col, startRow = start_row + 2
+    sheet = sheet_name,
+    x = country_name,
+    startCol = start_col,
+    startRow = start_row + 2
   )
 
   openxlsx::writeData(wb,
