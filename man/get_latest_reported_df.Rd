@@ -12,7 +12,8 @@ get_latest_reported_df(
   year,
   value,
   transform_value = NULL,
-  source_col
+  source_col,
+  ind_df
 )
 }
 \arguments{

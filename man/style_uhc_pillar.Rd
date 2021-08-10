@@ -2,27 +2,36 @@
 % Please edit documentation in R/style_uhc_summary_sheet.R
 \name{style_uhc_pillar}
 \alias{style_uhc_pillar}
-\title{Style UHC Pillars (RMNCH, infectious diseases, etc.) summary sheet}
+\title{Style UHC Pillars summary sheet}
 \usage{
 style_uhc_pillar(
   wb,
   sheet_name,
   boxes_bounds,
   data_type,
-  pillar = c("RMHCH", "infectious", "NCD", "service")
+  pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access")
 )
 }
 \arguments{
+\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+
+\item{sheet_name}{character name of the sheet to update}
+
+\item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
+
 \item{data_type}{named list with latest_reported and baseline_projection data
 types. Passed to \code{style_data()}}
 
 \item{pillar}{character Pillar identifying the pillar to style. Must be one of
 \itemize{
-\item RMHCH
+\item RMNCH
 \item infectious
 \item NCD
 \item service
 }}
+}
+\value{
+\code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
 \code{style_uhc_pillar()} styles the UHC Pillars (RMNCH, infectious diseases, etc.)

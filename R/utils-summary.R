@@ -38,8 +38,8 @@ get_ind_order <- function(ind){
 #' or reported data. Used in write functions.
 #'
 #' @inherit export_hpop_country_summary_xls
-get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transform_value = NULL, source_col){
-  df %>%
+get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df){
+  df <- df %>%
     dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
     dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
@@ -47,6 +47,11 @@ get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transfo
     dplyr::select(dplyr::all_of(c(ind, value,transform_value, year,
                                   type_col, source_col))) %>%
     dplyr::mutate(!!sym(year) := as.integer(.data[[year]]))
+
+  df <- ind_df[,"ind"] %>%
+    dplyr::left_join(df, by = c("ind" = ind))
+
+  return(df)
 }
 
 #' Get baseline and projections data frame for specified dates
@@ -56,8 +61,8 @@ get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transfo
 #'
 #' @inherit export_hpop_country_summary_xls
 
-get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, transform_value,start_year, end_year, source_col){
-  df %>%
+get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, transform_value,start_year, end_year, source_col, ind_df){
+  df <- df %>%
     dplyr::filter(.data[[year]] %in% c(!!start_year, max(!!end_year))) %>%
     dplyr::select(dplyr::all_of(c(ind, year, value, transform_value, type_col,
                                   source_col, iso3))) %>%
@@ -71,4 +76,7 @@ get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, tra
     dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}")) %>%
     dplyr::ungroup()
 
+  df <- ind_df[,"ind"] %>%
+    dplyr::left_join(df, by = c("ind" = ind))
+  return(df)
 }

@@ -10,6 +10,8 @@ style_header_uhc_summary_sheet(wb, sheet_name, boxes_bounds)
 \item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
+
+\item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

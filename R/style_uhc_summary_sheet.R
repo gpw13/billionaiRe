@@ -46,6 +46,7 @@ style_header_uhc_summary_sheet <- function(wb, sheet_name, boxes_bounds){
 #' summary worksheet: indicators, latetest reported, and baseline/projection headers
 #'
 #' @inherit style_header_hpop_summary_sheet
+#' @inheritParams write_sheet_header_hpop_summary
 style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds){
 
 
@@ -135,7 +136,7 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds){
   return(wb)
 }
 
-#' Style UHC Pillars (RMNCH, infectious diseases, etc.) summary sheet
+#' Style UHC Pillars summary sheet
 #'
 #' `style_uhc_pillar()` styles the UHC Pillars (RMNCH, infectious diseases, etc.)
 #'  box/section of the UHC summary sheet. Used within `write_RMNCH_uhc_summary()`.
@@ -143,13 +144,18 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds){
 #' @param data_type named list with latest_reported and baseline_projection data
 #' types. Passed to `style_data()`
 #' @param pillar character Pillar identifying the pillar to style. Must be one of
-#' * RMHCH
+#' * RMNCH
 #' * infectious
 #' * NCD
 #' * service
+#' @inherit style_header_hpop_summary_sheet
+#' @inherit write_sheet_header_hpop_summary
 
 style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
-                             pillar = c("RMHCH", "infectious", "NCD", "service")){
+                             pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access")){
+
+  pillar <- rlang::arg_match(pillar)
+
   openxlsx::addStyle(wb, sheet_name,
                      style = excel_styles()$uhc_pillar_header,
                      rows = boxes_bounds[[pillar]]["start_row"],
@@ -179,7 +185,13 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
   openxlsx::addStyle(wb, sheet_name,
                      style = excel_styles()$uhc_pillar_average_data,
                      rows = boxes_bounds[[pillar]]['end_row'],
-                     cols = boxes_bounds[[pillar]]['start_col']:boxes_bounds[[pillar]]['end_col'])
+                     cols = boxes_bounds[[pillar]]['start_col']:boxes_bounds[["latest_reported_data"]]['end_col'])
+
+  openxlsx::addStyle(wb, sheet_name,
+                     style = excel_styles()$uhc_pillar_average_data,
+                     rows = boxes_bounds[[pillar]]['end_row'],
+                     cols = boxes_bounds[["baseline_projection_data"]]['start_col']:boxes_bounds[["baseline_projection_data"]]['end_col'])
+
 
   openxlsx::addStyle(wb, sheet_name,
                      style = excel_styles()$uhc_pillar_average_text,

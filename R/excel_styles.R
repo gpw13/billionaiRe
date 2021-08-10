@@ -292,7 +292,6 @@ excel_styles <- function(font = "Calibri") {
     fgFill = "white",
     border = "bottom",
     borderColour = "grey",
-    numFmt = "TEXT",
     halign = "left"
   )
   normal_text_faded <- openxlsx::createStyle(
@@ -313,7 +312,6 @@ excel_styles <- function(font = "Calibri") {
     fgFill = "white",
     border = "bottom",
     borderColour = "black",
-    numFmt = "TEXT",
     halign = "left"
   )
 
@@ -521,7 +519,7 @@ excel_styles <- function(font = "Calibri") {
     fontSize = 8,
     fontColour = "black",
     fgFill = "#D9D9D9",
-    halign = "left",
+    halign = "center",
     valign = "center",
     textDecoration = "bold",
     numFmt = "0.0"

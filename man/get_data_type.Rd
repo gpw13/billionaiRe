@@ -9,6 +9,9 @@ get_data_type(df)
 \arguments{
 \item{df}{data frame to be tested}
 }
+\value{
+character vector with the data_type of data frame columns
+}
 \description{
 Gets the type of data for styling purposes. Can be either:
 \itemize{

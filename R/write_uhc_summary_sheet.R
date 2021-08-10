@@ -4,6 +4,7 @@
 #'  summary sheet. Used within `export_uhc_country_summary_xls()`
 #'
 #' @inherit export_country_summary_xls
+#' @inheritParams write_uhc_summary_sheet
 #' @param df Data frame in long format filtered for a specific country, where 1 row corresponds
 #'    to a specific year, and indicator.
 #' @param ind_df data frame containing the indicators in the correct order and format to be used.
@@ -39,19 +40,19 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name,iso,
                          start_row = 9,
                          end_row = 42
                        ),
-                       RMHCH = c(start_col = 1,
+                       RMNCH = c(start_col = 1,
                                  end_col = 21,
                                  start_row = 12,
                                  end_row = 17),
-                       infectious = c(start_col = 1,
+                       infec_diseases = c(start_col = 1,
                               end_col = 21,
                               start_row = 18,
                               end_row = 23),
-                       NCD = c(start_col = 1,
+                       ncd = c(start_col = 1,
                                end_col = 21,
                                start_row = 24,
                                end_row = 28),
-                       service = c(start_col = 1,
+                       service_cap_access = c(start_col = 1,
                                    end_col = 21,
                                    start_row = 29,
                                    end_row = 35),
@@ -73,8 +74,25 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name,iso,
 
   wb <- write_data_headers_uhc_summary(wb, sheet_name, value, boxes_bounds, start_year, end_year)
 
-  wb <- write_RMNCH_uhc_summary(df, wb, sheet_name,value,transform_value, boxes_bounds, start_year, end_year,ind, ind_df, year, type_col, source_col, iso3)
+  pillars <- c("RMNCH", "infec_diseases", "ncd", "service_cap_access")
 
+  for(i in seq_along(pillars)){
+    wb <- write_data_boxes_uhc_summary(df = df,
+                                       pillar = pillars[i],
+                                       wb = wb,
+                                       sheet_name = sheet_name,
+                                       value = value,
+                                       transform_value = transform_value,
+                                       boxes_bounds = boxes_bounds,
+                                       start_year = start_year,
+                                       end_year = end_year,
+                                       ind = ind,
+                                       ind_df = ind_df,
+                                       year = year,
+                                       type_col = type_col,
+                                       source_col = source_col,
+                                       iso3 = iso3)
+  }
   return(wb)
 }
 

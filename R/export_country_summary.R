@@ -336,6 +336,8 @@ export_uhc_country_summary_xls <- function(df,
                                 type_col = "type",
                                 source_col = "source",
                                 ind_df)
+
+  return(wb)
 }
 
 #' Export country summary to Excel for all billions.

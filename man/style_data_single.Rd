@@ -5,7 +5,8 @@
 \title{Style data single data column according to its type}
 \usage{
 style_data_single(
-  data_type = c("numeric", "integer", "Date", "character", "character_centered"),
+  data_type = c("numeric", "integer", "Date", "character", "character_centered",
+    "formula"),
   wb,
   sheet_name,
   rows,
@@ -14,7 +15,7 @@ style_data_single(
 }
 \arguments{
 \item{data_type}{character vector of class(es) of the data to be styled.
-Can be one of "numeric", "integer", "Date", "character" or "character_centered"}
+Can be one of "numeric", "integer", "Date", "character", or "character_centered"}
 
 \item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
 
