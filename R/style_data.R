@@ -68,101 +68,48 @@ style_data <- function(data_type, wb, sheet_name,
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
 #' @param col Column to apply style to.
-style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered", "formula"), wb, sheet_name,
-                       rows, col){
+style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered"),
+                              wb,
+                              sheet_name,
+                              rows,
+                              col){
 
   data_type <- rlang::arg_match(data_type)
 
-  if(data_type %in% c("numeric", "formula")){
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_dec,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_dec_black_border,
-      rows = rows[length(rows)],
-      cols = col,
-      gridExpand = TRUE
-    )
-
-  }else if(data_type == "Date"){
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_date,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_date_black_border,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-
-  }else if(data_type == "integer"){
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_int,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_data_wrapped_int_black_border,
-      rows = rows[length(rows)],
-      cols = col,
-      gridExpand = TRUE
-    )
-  }else if(data_type == "character"){
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_text,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_text_black_border,
-      rows = rows[length(rows)],
-      cols = col,
-      gridExpand = TRUE
-    )
-  }else if(data_type == "character_centered"){
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_text_centered,
-      rows = rows,
-      cols = col,
-      gridExpand = TRUE
-    )
-    openxlsx::addStyle(
-      wb,
-      sheet = sheet_name,
-      style = excel_styles()$normal_text_centered_black_border,
-      rows = rows[length(rows)],
-      cols = col,
-      gridExpand = TRUE
-    )
+  if (data_type %in% c("numeric", "formula")) {
+    row_style <- excel_styles()$normal_data_wrapped_dec
+    final_row_style <- excel_styles()$normal_data_wrapped_dec_black_border
+  } else if (data_type == "Date") {
+    row_style <- excel_styles()$normal_data_wrapped_date
+    final_row_style <- excel_styles()$normal_data_wrapped_date_black_border
+  } else if (data_type == "integer") {
+    row_style <- excel_styles()$normal_data_wrapped_int
+    final_row_style <- excel_styles()$normal_data_wrapped_int_black_border
+  } else if (data_type == "character") {
+    row_style <- excel_styles()$normal_text
+    final_row_style <- excel_styles()$normal_text_black_border
+  } else if (data_type == "character_centered") {
+    row_style <- excel_styles()$normal_text_centered
+    final_row_style <- excel_styles()$normal_text_centered_black_border
   }
 
-  return(wb)
+  openxlsx::addStyle(
+    wb,
+    sheet = sheet_name,
+    style = row_style,
+    rows = rows,
+    cols = col,
+    gridExpand = TRUE
+  )
+  openxlsx::addStyle(
+    wb,
+    sheet = sheet_name,
+    style = final_row_style,
+    rows = rows[length(rows)],
+    cols = col,
+    gridExpand = TRUE
+  )
 
+  return(wb)
 }
 

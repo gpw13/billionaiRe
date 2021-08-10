@@ -22,7 +22,7 @@ export_all_countries_summaries_xls <- function(df,
                                    population = "population",
                                    contribution = "contribution",
                                    contribution_pct = paste0(contribution, "_percent"),
-                                   contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                    ind_ids = billion_ind_codes("hpop"),
                                    start_year = 2018,
                                    end_year = 2019:2023,
@@ -55,7 +55,7 @@ export_all_countries_summaries_xls <- function(df,
                                                                population = population,
                                                                contribution = contribution,
                                                                contribution_pct = contribution_pct,
-                                                               contribution_pct_pop_total = contribution_pct_pop_total,
+                                                               contribution_pct_total_pop = contribution_pct_total_pop,
                                                                start_year = start_year,
                                                                end_year = end_year,
                                                                sheet_prefix = "HPOP",
@@ -79,7 +79,6 @@ export_all_countries_summaries_xls <- function(df,
 #' @return `openxslx` Workbook object. Output file is in `output_folder`.
 #'
 #' @export
-
 export_country_summary_xls <- function(df,
                                        iso,
                                        billion = c("hpop", "hep", "uhc", "all"),
@@ -94,7 +93,7 @@ export_country_summary_xls <- function(df,
                                        population = "population",
                                        contribution = "contribution",
                                        contribution_pct = paste0(contribution, "_percent"),
-                                       contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                       contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                        ind_ids = billion_ind_codes("hpop"),
                                        start_year = 2018,
                                        end_year = 2019:2023,
@@ -125,7 +124,7 @@ export_country_summary_xls <- function(df,
                                     population = population,
                                     contribution = contribution,
                                     contribution_pct = contribution_pct,
-                                    contribution_pct_pop_total = contribution_pct_pop_total,
+                                    contribution_pct_total_pop = contribution_pct_total_pop,
                                     start_year = start_year,
                                     end_year = end_year,
                                     sheet_prefix = "HPOP",
@@ -210,17 +209,19 @@ export_hpop_country_summary_xls <- function(df,
                                             population = "population",
                                             contribution = "contribution",
                                             contribution_pct = paste0(contribution, "_percent"),
-                                            contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                            contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                             start_year = 2018,
                                             end_year = 2019:2023,
                                             sheet_prefix = "HPOP",
                                             output_folder = "outputs",
                                             ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df,year, iso3, ind, value,transform_value,contribution,scenario,type_col, source_col)
+  assert_columns(df, year, iso3, ind, value, transform_value, contribution, population, contribution_pct, contribution_pct_total_pop, scenario, type_col, source_col)
   assert_years(start_year, end_year)
   assert_who_iso(iso)
   assert_same_length(value, transform_value)
   assert_same_length(value, contribution)
+  assert_same_length(contribution, contribution_pct)
+  assert_same_length(contribution, contribution_pct_total_pop)
 
   #TODO: Big chunks of HPOP export functions are static (length(value) == 1). If required, it would be nice to have it dynamic.
   ## Adding a stop for now to avoid issues for now.
@@ -233,29 +234,41 @@ export_hpop_country_summary_xls <- function(df,
 
   df_iso <- df %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data[[iso3]] == iso) %>%
+    dplyr::filter(.data[[iso3]] == !!iso) %>%
     dplyr::arrange(get_ind_order(.data[[ind]]),
                    .data[[year]]) %>%
     dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~round(.x, digits = 2)))
 
-  water_sanitation_ind <- unlist(unique(stringr::str_extract_all(df_iso[[ind]], "water.*|hpop_sanitation.*")))
+  water_sanitation_ind <- ind_ids[stringr::str_detect(names(ind_ids), "^water|^hpop_sanitation")]
 
-  #Indicator data frame to make sure the order of indicators is correct
+  # indicator data frame to make sure the order of indicators is correct
+  # remove wash/sanitation indicators not in data
   ind_df <- billionaiRe::indicator_df %>%
-    dplyr::filter(!!rlang::sym("hpop") == TRUE, !is.na(!!rlang::sym("ind")),
-                  !!rlang::sym("ind") %in% remove_unused_wash_ind(.data[["ind"]], water_sanitation_ind))
+    dplyr::filter(.data[["hpop"]],
+                  !is.na(.data[["ind"]]),
+                  !((.data[["ind"]] %in% !!water_sanitation_ind) & !(.data[["ind"]] %in% unique(df_iso[[!!ind]]))))
 
   # summary sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")
 
-  wb <- write_hpop_summary_sheet(df = df_iso, wb = wb, sheet_name = summary_sheet,
-                             start_year = start_year, end_year = end_year, value =value,year = year,
-                             iso3 = iso3,iso = iso,ind = ind ,population = population,
-                             transform_value = transform_value, type_col = type_col,
-                             source_col = source_col, contribution = contribution,
-                             contribution_pct = contribution_pct,
-                             contribution_pct_pop_total = contribution_pct_pop_total,
-                             ind_df)
+  wb <- write_hpop_summary_sheet(df = df_iso,
+                                 wb = wb,
+                                 sheet_name = summary_sheet,
+                                 start_year = start_year,
+                                 end_year = end_year,
+                                 value = value,
+                                 year = year,
+                                 iso3 = iso3,
+                                 iso = iso,
+                                 ind = ind,
+                                 population = population,
+                                 transform_value = transform_value,
+                                 type_col = type_col,
+                                 source_col = source_col,
+                                 contribution = contribution,
+                                 contribution_pct = contribution_pct,
+                                 contribution_pct_total_pop = contribution_pct_total_pop,
+                                 ind_df = ind_df)
 
   # Time series
   timeseries_sheet <- glue::glue("{sheet_prefix}_Time Series")

@@ -229,14 +229,14 @@ write_bilion_contrib_ind_hpop_summary <- function(df,
                                           contribution_pct,
                                           population,
                                           contribution,
-                                          contribution_pct_pop_total,
+                                          contribution_pct_total_pop,
                                           ind_df,
                                           bounds
                                           ){
 
   hpop_contrib <- df %>%
     dplyr::filter(.data[[year]] == max(end_year)) %>%
-    dplyr::select(dplyr::all_of(c(ind , contribution_pct, population, contribution, contribution_pct_pop_total))) %>%
+    dplyr::select(dplyr::all_of(c(ind, contribution_pct, population, contribution, contribution_pct_total_pop))) %>%
     dplyr::mutate(dplyr::across(c(!!population, !! contribution), ~ ./1000))
 
   hpop_contrib <- ind_df[,"ind"] %>%

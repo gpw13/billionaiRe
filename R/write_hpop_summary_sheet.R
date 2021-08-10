@@ -22,37 +22,37 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name,iso,
                                  source_col = "source",
                                  contribution = "contribution",
                                  contribution_pct = paste0(contribution, "_percent"),
-                                 contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                 contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                  ind_df
                                  ){
 
   indicators <- ind_df %>%
-    dplyr::select("ind","sdg", "short_name")
+    dplyr::select("ind", "sdg", "short_name")
 
   boxes_bounds <- list(indicators = c(start_col = 1,
                                       end_col = 2,
                                       start_row = 9,
-                                      end_row = 9+2+nrow(indicators)),
+                                      end_row = 9 + 2 + nrow(indicators)),
                        latest = c(start_col = 3,
-                                  end_col = 2+5+(2*length(value)),
+                                  end_col = 2 + 5 + (2 * length(value)),
                                   start_row = 9,
-                                  end_row = 9+2+nrow(indicators)),
-                       baseline_proj = c(start_col = 2+5+(2*length(value))+2,
-                                         end_col = 2+5+(2*length(value))+1+(3*length(value))*2+5,
+                                  end_row = 9 + 2 + nrow(indicators)),
+                       baseline_proj = c(start_col = 2 + 5 + (2 * length(value)) + 2,
+                                         end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5,
                                          start_row = 9,
-                                         end_row = 9+2+nrow(indicators)),
-                       contribution = c(start_col = 2+5+(2*length(value))+1+(3*length(value))*2+5+2,
-                                        end_col = 2+5+(2*length(value))+1+(3*length(value))*2+5+1+(length(value)*3)+1,
+                                         end_row = 9 + 2 + nrow(indicators)),
+                       contribution = c(start_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2,
+                                        end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 1 + (length(value) * 3) + 1,
                                         start_row = 9,
-                                        end_row = 9+2+nrow(indicators)),
-                       billion_contribution = c(start_col = 2+5+(2*length(value))+1+(3*length(value))*2+5+2,
-                                                end_col = 2+5+(2*length(value))+1+(3*length(value))*2+5+2 + 3,
-                                                start_row = 9+2+nrow(indicators)+2,
-                                                end_row = 9+2+nrow(indicators)+1+6),
+                                        end_row = 9 + 2 + nrow(indicators)),
+                       billion_contribution = c(start_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2,
+                                                end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2 + 3,
+                                                start_row = 9 + 2 + nrow(indicators) + 2,
+                                                end_row = 9 + 2 + nrow(indicators) + 1 + 6),
                        notes = c(start_col = 1,
                                  end_col = 5,
-                                 start_row = 9+2+nrow(indicators)+2,
-                                 end_row = 9+2+nrow(indicators)+1+5)
+                                 start_row = 9 + 2 + nrow(indicators) + 2,
+                                 end_row = 9 +2 + nrow(indicators) + 1 + 5)
   )
 
 
@@ -106,7 +106,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name,iso,
                                       contribution_pct = contribution_pct,
                                       population = population,
                                       contribution = contribution,
-                                      contribution_pct_pop_total = contribution_pct_pop_total,
+                                      contribution_pct_total_pop = contribution_pct_total_pop,
                                       ind_df = ind_df,
                                       bounds = boxes_bounds$contribution)
 
@@ -158,8 +158,11 @@ write_sheet_header_hpop_summary <- function(wb, sheet_name, iso, start_col, star
 
   country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
   country_pop_end_year <- wppdistro::get_population(iso, year = max(end_year))
-  openxlsx::writeData(wb,sheet = sheet_name, x = country_name,
-                      startCol = start_col, startRow = start_row + 2)
+  openxlsx::writeData(wb,
+                      sheet = sheet_name,
+                      x = country_name,
+                      startCol = start_col,
+                      startRow = start_row + 2)
 
   openxlsx::writeData(wb, sheet = sheet_name,
                       x = c(glue::glue("Projected number of newly healthier lives by {max(end_year)}"),

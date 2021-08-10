@@ -5,8 +5,7 @@
 \title{Style data single data column according to its type}
 \usage{
 style_data_single(
-  data_type = c("numeric", "integer", "Date", "character", "character_centered",
-    "formula"),
+  data_type = c("numeric", "integer", "Date", "character", "character_centered"),
   wb,
   sheet_name,
   rows,

@@ -6,7 +6,7 @@
 #' @inheritParams export_all_countries_summaries_xls
 #' @inheritParams style_header_hpop_summary_sheet
 #'
-#' @return a [openxlsx::createWorkbook()] object
+#' @return A [openxlsx::createWorkbook()] object
 write_permanent_sheets <- function(billion, start_col, start_row){
   wb_file <- system.file("extdata",
                          "country_summary_template.xlsx",
@@ -14,14 +14,19 @@ write_permanent_sheets <- function(billion, start_col, start_row){
 
   wb <- openxlsx::loadWorkbook(wb_file)
 
-  openxlsx::writeData(wb, sheet = "Intro",
+  openxlsx::writeData(wb,
+                      sheet = "Intro",
                       x = glue::glue("Date Summary Generated: {lubridate::today()}"),
-                      startCol = start_col, startRow = start_row,
+                      startCol = start_col,
+                      startRow = start_row,
                       colNames = FALSE)
 
-  wb <- write_indicator_list_sheet(wb, sheet_name = "Indicator List",
+  wb <- write_indicator_list_sheet(wb,
+                                   sheet_name = "Indicator List",
                                    billion,
-                                   start_col = start_col, start_row = start_row + 1)
+                                   start_col = start_col,
+                                   start_row = start_row + 1)
+
   return(wb)
 
 }

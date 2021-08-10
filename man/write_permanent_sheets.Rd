@@ -14,7 +14,7 @@ write_permanent_sheets(billion, start_col, start_row)
 \item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 }
 \value{
-a \code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} object
+A \code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} object
 }
 \description{
 \code{write_permanent_sheets()} writes and styles the Intro and Indicator List sheets
