@@ -13,25 +13,31 @@ extrapolate_campaign_data <- function(pathogen,
                                       transform_value,
                                       source) {
   if (!is.null(pathogen_year)) {
-    dplyr::mutate(df,
-                  dplyr::across(!!transform_value,
-                                ~ dplyr::case_when(
-                                  .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ .x,
-                                  .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ .x[.data[[year]] == pathogen_year],
-                                  TRUE ~ .x
-                                )),
-                  "_billionaiRe_type_temp" := dplyr::case_when(
-                    .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ "reported",
-                    .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ "projected",
-                    TRUE ~ .data[["_billionaiRe_type_temp"]]
-                  ),
-                  "_billionaiRe_source_temp" := dplyr::case_when(
-                    .data[[ind]] %in% pathogen ~ !!source,
-                    TRUE ~ .data[["_billionaiRe_type_temp"]]
-                  )) %>%
+    dplyr::mutate(
+      df,
+      dplyr::across(
+        !!transform_value,
+        ~ dplyr::case_when(
+          .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ .x,
+          .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ .x[.data[[year]] == pathogen_year],
+          TRUE ~ .x
+        )
+      ),
+      "_billionaiRe_type_temp" := dplyr::case_when(
+        .data[[ind]] %in% pathogen & .data[[year]] <= pathogen_year ~ "reported",
+        .data[[ind]] %in% pathogen & .data[[year]] > pathogen_year ~ "projected",
+        TRUE ~ .data[["_billionaiRe_type_temp"]]
+      ),
+      "_billionaiRe_source_temp" := dplyr::case_when(
+        .data[[ind]] %in% pathogen ~ !!source,
+        TRUE ~ .data[["_billionaiRe_type_temp"]]
+      )
+    ) %>%
       dplyr::arrange(.data[[year]], .by_group = TRUE) %>%
-      dplyr::filter(dplyr::across(transform_value,
-                                  ~ dplyr::row_number() >= min(which(.x > 0), Inf))) # dropping rows before data exists
+      dplyr::filter(dplyr::across(
+        transform_value,
+        ~ dplyr::row_number() >= min(which(.x > 0), Inf)
+      )) # dropping rows before data exists
   } else {
     df
   }
@@ -47,19 +53,21 @@ extrapolate_campaign_vector <- function(x, n) {
   not_na <- which(!is.na(x))
   if (length(not_na) > 0) {
     x_sum <- zoo::rollapply(x,
-                            n,
-                            sum,
-                            na.rm = T,
-                            partial = TRUE,
-                            align = "right")
+      n,
+      sum,
+      na.rm = T,
+      partial = TRUE,
+      align = "right"
+    )
 
 
 
     flat_spot <- max(not_na)
 
     ifelse(1:length(x) <= flat_spot,
-           x_sum,
-           x_sum[flat_spot])
+      x_sum,
+      x_sum[flat_spot]
+    )
   } else {
     x
   }

@@ -7,21 +7,25 @@
 #' @inheritParams style_header_hpop_summary_sheet
 #'
 #' @return a [openxlsx::createWorkbook()] object
-write_permanent_sheets <- function(billion, start_col, start_row){
+write_permanent_sheets <- function(billion, start_col, start_row) {
   wb_file <- system.file("extdata",
-                         "country_summary_template.xlsx",
-                         package = "billionaiRe")
+    "country_summary_template.xlsx",
+    package = "billionaiRe"
+  )
 
   wb <- openxlsx::loadWorkbook(wb_file)
 
-  openxlsx::writeData(wb, sheet = "Intro",
-                      x = glue::glue("Date Summary Generated: {lubridate::today()}"),
-                      startCol = start_col, startRow = start_row,
-                      colNames = FALSE)
+  openxlsx::writeData(wb,
+    sheet = "Intro",
+    x = glue::glue("Date Summary Generated: {lubridate::today()}"),
+    startCol = start_col, startRow = start_row,
+    colNames = FALSE
+  )
 
-  wb <- write_indicator_list_sheet(wb, sheet_name = "Indicator List",
-                                   billion,
-                                   start_col = start_col, start_row = start_row + 1)
+  wb <- write_indicator_list_sheet(wb,
+    sheet_name = "Indicator List",
+    billion,
+    start_col = start_col, start_row = start_row + 1
+  )
   return(wb)
-
 }

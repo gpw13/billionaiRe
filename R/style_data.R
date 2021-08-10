@@ -9,7 +9,7 @@
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param df data frame to be tested
-get_data_type <- function(df){
+get_data_type <- function(df) {
   sapply(df, get_data_type_single)
 }
 
@@ -24,13 +24,12 @@ get_data_type <- function(df){
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param vec vector to be tested
-get_data_type_single <- function(vec){
-
-    if(sum(vec %in% c("imputed", "estimated", "projected", "reported", NA)) == length(vec)){
-      type <- "character_centered"
-    }else{
-      type <- class(vec)
-    }
+get_data_type_single <- function(vec) {
+  if (sum(vec %in% c("imputed", "estimated", "projected", "reported", NA)) == length(vec)) {
+    type <- "character_centered"
+  } else {
+    type <- class(vec)
+  }
   return(type)
 }
 
@@ -44,12 +43,11 @@ get_data_type_single <- function(vec){
 #' @inheritParams style_data_single
 #'
 style_data <- function(data_type, wb, sheet_name,
-                       rows, cols){
-
+                       rows, cols) {
   assert_same_length(data_type, cols)
 
-  for(i in seq_along(cols)){
-    wb <- style_data_single(data_type[i], wb, sheet_name,rows, cols[i])
+  for (i in seq_along(cols)) {
+    wb <- style_data_single(data_type[i], wb, sheet_name, rows, cols[i])
   }
 
   return(wb)
@@ -63,11 +61,10 @@ style_data <- function(data_type, wb, sheet_name,
 #' @inheritParams openxlsx::addStyle
 #' @param col Column to apply style to.
 style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered"), wb, sheet_name,
-                       rows, col){
-
+                              rows, col) {
   rlang::arg_match(data_type)
 
-  if(data_type == "numeric"){
+  if (data_type == "numeric") {
     openxlsx::addStyle(
       wb,
       sheet = sheet_name,
@@ -84,8 +81,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
       cols = col,
       gridExpand = TRUE
     )
-
-  }else if(data_type == "Date"){
+  } else if (data_type == "Date") {
     openxlsx::addStyle(
       wb,
       sheet = sheet_name,
@@ -102,8 +98,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
       cols = col,
       gridExpand = TRUE
     )
-
-  }else if(data_type == "integer"){
+  } else if (data_type == "integer") {
     openxlsx::addStyle(
       wb,
       sheet = sheet_name,
@@ -120,7 +115,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
       cols = col,
       gridExpand = TRUE
     )
-  }else if(data_type == "character"){
+  } else if (data_type == "character") {
     openxlsx::addStyle(
       wb,
       sheet = sheet_name,
@@ -137,7 +132,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
       cols = col,
       gridExpand = TRUE
     )
-  }else if(data_type == "character_centered"){
+  } else if (data_type == "character_centered") {
     openxlsx::addStyle(
       wb,
       sheet = sheet_name,
@@ -157,6 +152,4 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
   }
 
   return(wb)
-
 }
-

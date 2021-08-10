@@ -10,19 +10,22 @@ write_notes <- function(df,
                         notes_title = "Notes:",
                         wb,
                         sheet_name,
-                        bounds){
+                        bounds) {
+  openxlsx::writeData(wb,
+    sheet = sheet_name,
+    x = notes_title,
+    startCol = bounds["start_col"],
+    startRow = bounds["start_row"]
+  )
 
-  openxlsx::writeData(wb, sheet = sheet_name,
-                      x = notes_title,
-                      startCol = bounds['start_col'],
-                      startRow = bounds['start_row'])
 
-
-  openxlsx::writeData(wb, sheet = sheet_name,
-                      x = df,
-                      startCol = bounds['start_col'],
-                      startRow = bounds['start_row']+1,
-                      colNames = FALSE)
+  openxlsx::writeData(wb,
+    sheet = sheet_name,
+    x = df,
+    startCol = bounds["start_col"],
+    startRow = bounds["start_row"] + 1,
+    colNames = FALSE
+  )
 
   wb <- style_notes(wb, sheet_name, bounds)
 
@@ -34,24 +37,28 @@ write_notes <- function(df,
 #' @inherit style_hpop_indicators
 #' @inherit write_baseline_projection_hpop_summary
 
-style_notes <- function(wb, sheet_name, bounds){
-  for(i in (bounds['start_row']:bounds['end_row'])){
-    mergeCellForced(wb, sheet = sheet_name,
-                    cols = bounds['start_col']:bounds['end_col'],
-                    rows = i)
+style_notes <- function(wb, sheet_name, bounds) {
+  for (i in (bounds["start_row"]:bounds["end_row"])) {
+    mergeCellForced(wb,
+      sheet = sheet_name,
+      cols = bounds["start_col"]:bounds["end_col"],
+      rows = i
+    )
   }
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$bold_text_no_border,
-                     rows = bounds['start_row'],
-                     cols =bounds['start_col']:bounds['end_col'],
-                     gridExpand = TRUE)
+    sheet = sheet_name, style = excel_styles()$bold_text_no_border,
+    rows = bounds["start_row"],
+    cols = bounds["start_col"]:bounds["end_col"],
+    gridExpand = TRUE
+  )
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$normal_text_no_border,
-                     rows = (bounds['start_row']+1):bounds['end_row'],
-                     cols =bounds['start_col']:bounds['end_col'],
-                     gridExpand = TRUE)
+    sheet = sheet_name, style = excel_styles()$normal_text_no_border,
+    rows = (bounds["start_row"] + 1):bounds["end_row"],
+    cols = bounds["start_col"]:bounds["end_col"],
+    gridExpand = TRUE
+  )
 
 
   return(wb)

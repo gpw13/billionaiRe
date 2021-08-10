@@ -1,11 +1,11 @@
 #' Stores styles to be used in excel outputs
 #'
-#'@param font character name with the name of the font to use.
+#' @param font character name with the name of the font to use.
 #'
 
 excel_styles <- function(font = "Calibri") {
 
-  #TODO: This is mess... needs to organised/used in a better way.
+  # TODO: This is mess... needs to organised/used in a better way.
   ## Maybe pass more arguments to have less objects created, rather than storing
   ## styles independently.
 
@@ -389,7 +389,8 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE,
     border = "bottom",
     borderColour = "black",
-    borderStyle = "thin")
+    borderStyle = "thin"
+  )
 
   hpop_sec_data_header_border_right_align <- openxlsx::createStyle(
     fontName = font,
@@ -402,7 +403,8 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE,
     border = "bottom",
     borderColour = "black",
-    borderStyle = "thin")
+    borderStyle = "thin"
+  )
 
 
   hpop_sec_data_header_left_align <- openxlsx::createStyle(

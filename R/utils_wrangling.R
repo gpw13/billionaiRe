@@ -42,16 +42,15 @@ has_xmart_cols <- function(df) {
 #' @return a data frame
 #' @export
 add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
+  proj <- ifelse(projected == TRUE, "proj_data", "unproj_data")
 
-  proj = ifelse(projected == TRUE, "proj_data", "unproj_data")
-
-  exist_df = load_billion_data(billion, proj) %>%
+  exist_df <- load_billion_data(billion, proj) %>%
     dplyr::filter(.data[["ind"]] == ind_code) %>%
     dplyr::select(xmart_cols())
 
-  anti_df = dplyr::anti_join(exist_df, df, by = c("iso3", "ind", "year")) %>%
+  anti_df <- dplyr::anti_join(exist_df, df, by = c("iso3", "ind", "year")) %>%
     dplyr::mutate(
-      dplyr::across(c("value", "lower", "upper", "source", "type", "other_detail"), ~ NA)
+      dplyr::across(c("value", "lower", "upper", "source", "type", "other_detail"), ~NA)
     )
 
   if (nrow(anti_df) > 0) {
