@@ -10,7 +10,7 @@
 #'
 #' @param df data frame to be tested
 #' @return character vector with the data_type of data frame columns
-get_data_type <- function(df){
+get_data_type <- function(df) {
   purrr::map_chr(df, get_data_type_single)
 }
 
@@ -26,16 +26,14 @@ get_data_type <- function(df){
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param vec vector to be tested
-get_data_type_single <- function(vec){
-
-    if(sum(vec %in% c("imputed", "estimated", "projected", "reported", NA)) == length(vec)){
-      type <- "character_centered"
-    }else if(sum(grepl("^=", vec), is.na(vec)) == length(vec)){
-      type <- "formula"
-    }
-    else{
-      type <- class(vec)
-    }
+get_data_type_single <- function(vec) {
+  if (sum(vec %in% c("imputed", "estimated", "projected", "reported", NA)) == length(vec)) {
+    type <- "character_centered"
+  } else if (sum(grepl("^=", vec), is.na(vec)) == length(vec)) {
+    type <- "formula"
+  } else {
+    type <- class(vec)
+  }
   type[length(type)]
 }
 
@@ -50,12 +48,11 @@ get_data_type_single <- function(vec){
 #' @inheritParams style_data_single
 #'
 style_data <- function(data_type, wb, sheet_name,
-                       rows, cols){
-
+                       rows, cols) {
   assert_same_length(data_type, cols)
 
-  for(i in seq_along(cols)){
-    wb <- style_data_single(data_type[i], wb, sheet_name,rows, cols[i])
+  for (i in seq_along(cols)) {
+    wb <- style_data_single(data_type[i], wb, sheet_name, rows, cols[i])
   }
 
   return(wb)
@@ -72,8 +69,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
                               wb,
                               sheet_name,
                               rows,
-                              col){
-
+                              col) {
   data_type <- rlang::arg_match(data_type)
 
   if (data_type %in% c("numeric", "formula")) {
@@ -112,4 +108,3 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
 
   return(wb)
 }
-
