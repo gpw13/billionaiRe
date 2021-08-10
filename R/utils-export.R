@@ -17,8 +17,8 @@ vec2emptyDF <- function(vec){
 #'
 #' @param ind_list character vector with the indicators to be changed
 convert_wash_name<-function(ind_list) {
-  ind_list <- stringr::str_replace(ind_list, "^water.*", "water")
-  ind_list <- stringr::str_replace(ind_list, "^hpop_sanitation.*", "hpop_sanitation")
+  ind_list[c("water_urban", "water_rural")] <- ind_list["water"]
+  ind_list[c("hpop_sanitation_urban", "hpop_sanitation_rural")] <- ind_list[c("hpop_sanitation")]
   return(ind_list)
 }
 
