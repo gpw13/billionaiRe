@@ -19,7 +19,7 @@ calculate_hpop_billion <- function(df,
                                    transform_value = "transform_value",
                                    contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                    contribution_pct = paste0(contribution, "_percent"),
-                                   contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                    scenario = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind, year, transform_value)
@@ -40,7 +40,7 @@ calculate_hpop_billion <- function(df,
                                            transform_value = transform_value,
                                            contribution = contribution,
                                            contribution_pct = contribution_pct,
-                                           contribution_pct_pop_total = contribution_pct_pop_total,
+                                           contribution_pct_total_pop = contribution_pct_total_pop,
                                            scenario = scenario,
                                            ind_ids = ind_ids)
 

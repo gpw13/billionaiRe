@@ -13,19 +13,6 @@ vec2emptyDF <- function(vec){
   return(df)
 }
 
-#' Removes unused WASH indicator from indicator list
-#'
-#' `remove_unused_wash_ind` removes unused WASH indicators from indicator list to
-#' provide a clean list to be printed.
-#'
-#' @param ind_list character vector containing the list of indicator to be treated
-#' @param correct_wash character vector with the exact indicators to keep for WASH
-remove_unused_wash_ind <- function(ind_list, correct_wash){
-  wash_ind <- unique(stringr::str_extract(ind_list, paste0("^",correct_wash,"$", collapse = "|")))
-  wash_ind <- wash_ind[!is.na(wash_ind)]
-  c(ind_list[!stringr::str_detect(ind_list, "water|sanitation")], wash_ind)
-}
-
 #' Convert WASH names to remove the urban/rural element
 #'
 #' @param ind_list character vector with the indicators to be changed

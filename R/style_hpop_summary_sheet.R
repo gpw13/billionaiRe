@@ -282,33 +282,39 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds){
 #'
 style_header_hpop_summary_sheet <- function(wb, sheet_name, start_row, start_col){
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$title,
+                     sheet = sheet_name,
+                     style = excel_styles()$title,
                      rows = start_row,
                      cols = start_col
   )
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$sub_title,
-                     rows = start_row +2 ,
+                     sheet = sheet_name,
+                     style = excel_styles()$sub_title,
+                     rows = start_row + 2,
                      cols = start_col
   )
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$normal_text_10p,
-                     rows = c((start_row +3):(start_row+5)) ,
-                     cols = start_col, gridExpand = TRUE
+                     sheet = sheet_name,
+                     style = excel_styles()$normal_text_10p,
+                     rows = c((start_row +3):(start_row+5)),
+                     cols = start_col,
+                     gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$bold_hpop_blue_hR_2dp,
-                     rows = (start_row+3):(start_row+5),
+                     sheet = sheet_name,
+                     style = excel_styles()$bold_hpop_blue_hR_2dp,
+                     rows = (start_row + 3):(start_row + 5),
                      cols = (start_col + 4),
                      gridExpand = TRUE
                      )
 
   openxlsx::addStyle(wb,
-                     sheet = sheet_name, style = excel_styles()$bold_hpop_blue_hL_2dp,
-                     rows = (start_row+3):(start_row+5),
+                     sheet = sheet_name,
+                     style = excel_styles()$bold_hpop_blue_hL_2dp,
+                     rows = (start_row + 3):(start_row + 5),
                      cols = (start_col + 5),
                      gridExpand = TRUE
                      )
