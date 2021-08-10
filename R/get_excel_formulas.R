@@ -11,21 +11,21 @@
 #'
 #'  @return character vector with the formula for the indicator, column, row combination
 #'  specified. If indicator is not found, "" is returned.
-get_transform_formula_single <- function(ind, raw_col, raw_row){
-  #TODO: add HEP and HPOP indicators formula
+get_transform_formula_single <- function(ind, raw_col, raw_row) {
+  # TODO: add HEP and HPOP indicators formula
   raw_cell <- glue::glue("{openxlsx::int2col(raw_col)}{raw_row}")
 
-  if(ind == "bp"){
+  if (ind == "bp") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF((100-{raw_cell})<=50,0,((100-{raw_cell})-50)/(100-50)*100),""),2)')
-  }else if(ind == "fpg"){
+  } else if (ind == "fpg") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<=5.1,100,IF({raw_cell}>=7.1,100,(7.1-{raw_cell})/(7.1-5.1)*100)),""),2)')
-  }else if(ind == "uhc_tobacco"){
+  } else if (ind == "uhc_tobacco") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",100-{raw_cell},""),2)')
-  }else if(ind == "beds"){
+  } else if (ind == "beds") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<18,{raw_cell}/18*100,100),""),2)')
-  }else if(ind == "hwf"){
+  } else if (ind == "hwf") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<154.74,{raw_cell}/154.74*100,100),""),2)')
-  }else {
+  } else {
     formula <- ""
   }
   return(formula)
@@ -40,8 +40,8 @@ get_transform_formula_single <- function(ind, raw_col, raw_row){
 #' transformation are located. Must be the same length as `ind`
 #' @inherit get_transform_formula_single
 
-get_transform_formula <- function(ind, raw_col, raw_rows){
-  purrr::map2_chr(ind,raw_rows, ~get_transform_formula_single(.x, raw_col, .y)) %>%
+get_transform_formula <- function(ind, raw_col, raw_rows) {
+  purrr::map2_chr(ind, raw_rows, ~ get_transform_formula_single(.x, raw_col, .y)) %>%
     as_excel_formula()
 }
 
@@ -56,9 +56,8 @@ get_transform_formula <- function(ind, raw_col, raw_rows){
 #' @inherit openxlsx::writeFormula
 #' @seealso [openxlsx::writeFormula()]
 #'
-as_excel_formula <- function(col, array = FALSE){
+as_excel_formula <- function(col, array = FALSE) {
   class(col) <- c("character", ifelse(array, "array_formula", "formula"))
 
   return(col)
 }
-

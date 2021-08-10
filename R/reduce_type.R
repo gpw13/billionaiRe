@@ -12,7 +12,7 @@ reduce_type <- function(value, type) {
     ut <- unique(type[!is.na(type)])
     if (length(ut) == 1) {
       return(ut)
-    } else if ("projected" %in% ut){
+    } else if ("projected" %in% ut) {
       return("projected")
     } else if ("imputed" %in% ut) {
       return("imputed")

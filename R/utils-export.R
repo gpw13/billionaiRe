@@ -5,9 +5,9 @@
 #'
 #' @param vec character vector
 
-vec2emptyDF <- function(vec){
+vec2emptyDF <- function(vec) {
   stopifnot(is.character(vec))
-  df <-data.frame(matrix(ncol = length(vec), nrow = 0))
+  df <- data.frame(matrix(ncol = length(vec), nrow = 0))
   names(df) <- vec
 
   return(df)
@@ -16,7 +16,7 @@ vec2emptyDF <- function(vec){
 #' Convert WASH names to remove the urban/rural element
 #'
 #' @param ind_list character vector with the indicators to be changed
-convert_wash_name<-function(ind_list) {
+convert_wash_name <- function(ind_list) {
   ind_list[c("water_urban", "water_rural")] <- ind_list["water"]
   ind_list[c("hpop_sanitation_urban", "hpop_sanitation_rural")] <- ind_list[c("hpop_sanitation")]
   return(ind_list)
@@ -29,7 +29,7 @@ convert_wash_name<-function(ind_list) {
 #'
 #' @inheritParams openxlsx::mergeCells
 
-mergeCellForced <- function(wb, sheet, cols, rows){
+mergeCellForced <- function(wb, sheet, cols, rows) {
   openxlsx::removeCellMerge(wb, sheet, cols, rows)
   openxlsx::mergeCells(wb, sheet, cols, rows)
 }

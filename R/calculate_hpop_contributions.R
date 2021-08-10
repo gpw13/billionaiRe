@@ -40,7 +40,7 @@ calculate_hpop_contributions <- function(df,
   assert_years(start_year, end_year)
 
   # add columns if not already existing
-  df <- billionaiRe_add_columns(df, c(contribution, contribution_pct,contribution_pct_total_pop), NA_real_)
+  df <- billionaiRe_add_columns(df, c(contribution, contribution_pct, contribution_pct_total_pop), NA_real_)
 
   total_pop <- df %>%
     dplyr::ungroup() %>%
@@ -54,26 +54,26 @@ calculate_hpop_contributions <- function(df,
 
 
   for (i in seq(contribution)) {
-    df <- dplyr::mutate(df,
-                        !!rlang::sym(contribution_pct[i]) := ifelse(
-                          !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
-                          .data[[contribution_pct[i]]],
-                          (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year])
-                        ),
-                        !!rlang::sym(contribution[i]) := ifelse(
-                          !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
-                          .data[[contribution[i]]],
-                          .data[[population]] * .data[[contribution_pct[i]]] / 100
-                        ),
-                        !!rlang::sym(contribution_pct_total_pop[i]) := ifelse(
-                          !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
-                          .data[[contribution_pct_total_pop[i]]],
-                          .data[[contribution[i]]] /.data[["total_pop"]] * 100
-                        )
-                      )
+    df <- dplyr::mutate(
+      df,
+      !!rlang::sym(contribution_pct[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution_pct[i]]],
+        (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year])
+      ),
+      !!rlang::sym(contribution[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution[i]]],
+        .data[[population]] * .data[[contribution_pct[i]]] / 100
+      ),
+      !!rlang::sym(contribution_pct_total_pop[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution_pct_total_pop[i]]],
+        .data[[contribution[i]]] / .data[["total_pop"]] * 100
+      )
+    )
   }
 
   dplyr::ungroup(df)
   dplyr::select(df, -"total_pop")
 }
-

@@ -31,26 +31,31 @@ wrangle_gho_data <- function(df,
   # Ensure that the data frame only pertains to a single indicator
   assert_homogeneous_col(df, "IndicatorCode")
 
-  output = df %>%
-    dplyr::transmute("iso3" := .data[["SpatialDim"]],
-                     "year" := .data[["TimeDim"]],
-                     "ind" := ifelse(is.null(ind),
-                                     convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "analysis_code"),
-                                     ind),
-                     "value" := .data[["NumericValue"]],
-                     "lower" := .data[["Low"]],
-                     "upper" := .data[["High"]],
-                     "use_dash" := TRUE,
-                     "use_calc" := TRUE,
-                     "source" := ifelse(is.null(source),
-                                        .data[["DataSourceDim"]],
-                                        source),
-                     "type" := ifelse(is.null(type),
-                                      NA_character_,
-                                      type),
-                     "type_detail" := NA,
-                     "other_detail" := .data[["Comments"]],
-                     "upload_detail" := NA) %>%
+  output <- df %>%
+    dplyr::transmute(
+      "iso3" := .data[["SpatialDim"]],
+      "year" := .data[["TimeDim"]],
+      "ind" := ifelse(is.null(ind),
+        convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "analysis_code"),
+        ind
+      ),
+      "value" := .data[["NumericValue"]],
+      "lower" := .data[["Low"]],
+      "upper" := .data[["High"]],
+      "use_dash" := TRUE,
+      "use_calc" := TRUE,
+      "source" := ifelse(is.null(source),
+        .data[["DataSourceDim"]],
+        source
+      ),
+      "type" := ifelse(is.null(type),
+        NA_character_,
+        type
+      ),
+      "type_detail" := NA,
+      "other_detail" := .data[["Comments"]],
+      "upload_detail" := NA
+    ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 
@@ -183,13 +188,10 @@ wrangle_rural_urban_gho_data <- function(df,
       type_detail = NA,
       upload_detail = NA
     ) %>%
-
     # Remove unnecessary DataSourceDim column
     dplyr::select(-"DataSourceDim") %>%
-
     # Filter to keep only WHO members
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
-
     # Arrange in ascending order of iso3, year
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 
@@ -232,21 +234,24 @@ wrangle_unsd_data <- function(df,
   assert_string(type, 1)
 
   df %>%
-    dplyr::transmute("iso3" := whoville::codes_to_iso3(.data[["GeoAreaCode"]], type = "m49"),
-                     "year" := .data[["TimePeriod"]],
-                     "ind" := .data[["SeriesCode"]],
-                     "value" := .data[["Value"]],
-                     "lower" := .data[["LowerBound"]],
-                     "upper" := .data[["UpperBound"]],
-                     "source" := ifelse(is.null(source),
-                                        .data[["Source"]],
-                                        source),
-                     "type" := dplyr::case_when(
-                       !is.null(type) ~ type,
-                       .data[["Nature"]] %in% c("C", "CA") ~ "reported",
-                       .data[["Nature"]] %in% c("E", "M") ~"estimated"
-                     ),
-                     "other_detail" := .data[["FootNote"]]) %>%
+    dplyr::transmute(
+      "iso3" := whoville::codes_to_iso3(.data[["GeoAreaCode"]], type = "m49"),
+      "year" := .data[["TimePeriod"]],
+      "ind" := .data[["SeriesCode"]],
+      "value" := .data[["Value"]],
+      "lower" := .data[["LowerBound"]],
+      "upper" := .data[["UpperBound"]],
+      "source" := ifelse(is.null(source),
+        .data[["Source"]],
+        source
+      ),
+      "type" := dplyr::case_when(
+        !is.null(type) ~ type,
+        .data[["Nature"]] %in% c("C", "CA") ~ "reported",
+        .data[["Nature"]] %in% c("E", "M") ~ "estimated"
+      ),
+      "other_detail" := .data[["FootNote"]]
+    ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
 }

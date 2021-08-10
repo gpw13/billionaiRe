@@ -41,13 +41,15 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_5"),
         .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
-      ))
+      )
+    )
 
   # join up populations and replace missing values in column with generated populations
   df %>%
     dplyr::left_join(pop_df, by = c("iso3", "ind")) %>%
     dplyr::mutate(!!sym(population) := ifelse(is.na(.data[[population]]),
-                                              .data[["_temp_population"]],
-                                              .data[[population]])) %>%
+      .data[["_temp_population"]],
+      .data[[population]]
+    )) %>%
     dplyr::select(-"_temp_population")
 }

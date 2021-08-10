@@ -46,10 +46,12 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
   mart_table <- rlang::arg_match(mart_table)
-  mart_match <- c("full_data" = "FULL_BILLIONS",
-                  "raw_data" = "RAW_INDICATOR",
-                  "unproj_data" = "RAW_UNPROJ_DATA",
-                  "proj_data" = "RAW_PROJ_DATA")
+  mart_match <- c(
+    "full_data" = "FULL_BILLIONS",
+    "raw_data" = "RAW_INDICATOR",
+    "unproj_data" = "RAW_UNPROJ_DATA",
+    "proj_data" = "RAW_PROJ_DATA"
+  )
   mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
   format <- rlang::arg_match(format)
@@ -71,18 +73,21 @@ filter_billion_inds <- function(df, billion) {
   df
 }
 
-#'@noRd
+#' @noRd
 filter_billion_date <- function(df, date_filter) {
   if (!is.null(date_filter)) {
-    df <- dplyr::group_by(df,
-                          .data[["ind"]],
-                          .data[["iso3"]],
-                          .data[["year"]])
+    df <- dplyr::group_by(
+      df,
+      .data[["ind"]],
+      .data[["iso3"]],
+      .data[["year"]]
+    )
     if (date_filter != "latest") {
       date_filter <- lubridate::as_date(date_filter)
       if (date_filter < min(df[["upload_date"]])) {
         warning("`date_filter` is before the first upload date of the Billions data, returning an empty data frame.",
-                call. = FALSE)
+          call. = FALSE
+        )
       }
       df <- dplyr::filter(df, .data[["upload_date"]] <= !!date_filter)
     }
@@ -106,7 +111,8 @@ assert_date_filter <- function(fltr) {
     if (fltr != "latest") {
       if (!is.character(fltr) | length(fltr) > 1 | !stringr::str_detect(fltr, "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}")) {
         stop("`date_filter` needs to be either 'latest', NULL, or a single hyphen delimited ISO 8601 date string (e.g. '1988-06-21').",
-             call. = FALSE)
+          call. = FALSE
+        )
       }
     }
   }
@@ -115,22 +121,23 @@ assert_date_filter <- function(fltr) {
 #' @noRd
 load_billion_table <- function(tbl, format, ...) {
   xmart4::xmart4_table("GPW13", tbl,
-                       col_types = readr::cols(
-                         ISO3 = readr::col_character(),
-                         YEAR = readr::col_double(),
-                         IND = readr::col_character(),
-                         UPLOAD_DATE = readr::col_date(format = ""),
-                         VALUE = readr::col_double(),
-                         LOW = readr::col_double(),
-                         HIGH = readr::col_double(),
-                         USE_DASH = readr::col_logical(),
-                         USE_CALC = readr::col_logical(),
-                         SOURCE = readr::col_character(),
-                         TYPE = readr::col_character(),
-                         TYPE_DETAIL = readr::col_character(),
-                         OTHER_DETAIL = readr::col_character(),
-                         UPLOAD_DETAIL = readr::col_character()
-                       ),
-                       format = format,
-                       ...)
+    col_types = readr::cols(
+      ISO3 = readr::col_character(),
+      YEAR = readr::col_double(),
+      IND = readr::col_character(),
+      UPLOAD_DATE = readr::col_date(format = ""),
+      VALUE = readr::col_double(),
+      LOW = readr::col_double(),
+      HIGH = readr::col_double(),
+      USE_DASH = readr::col_logical(),
+      USE_CALC = readr::col_logical(),
+      SOURCE = readr::col_character(),
+      TYPE = readr::col_character(),
+      TYPE_DETAIL = readr::col_character(),
+      OTHER_DETAIL = readr::col_character(),
+      UPLOAD_DETAIL = readr::col_character()
+    ),
+    format = format,
+    ...
+  )
 }

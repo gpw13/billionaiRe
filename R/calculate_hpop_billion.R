@@ -30,30 +30,34 @@ calculate_hpop_billion <- function(df,
   assert_years(start_year, end_year)
 
   # calculate the contribution_pct (change) and contribution for component HPOP indicators
-  contr_df <- calculate_hpop_contributions(df = df,
-                                           year = year,
-                                           start_year = start_year,
-                                           end_year = end_year,
-                                           iso3 = iso3,
-                                           ind = ind,
-                                           population = population,
-                                           transform_value = transform_value,
-                                           contribution = contribution,
-                                           contribution_pct = contribution_pct,
-                                           contribution_pct_total_pop = contribution_pct_total_pop,
-                                           scenario = scenario,
-                                           ind_ids = ind_ids)
+  contr_df <- calculate_hpop_contributions(
+    df = df,
+    year = year,
+    start_year = start_year,
+    end_year = end_year,
+    iso3 = iso3,
+    ind = ind,
+    population = population,
+    transform_value = transform_value,
+    contribution = contribution,
+    contribution_pct = contribution_pct,
+    contribution_pct_total_pop = contribution_pct_total_pop,
+    scenario = scenario,
+    ind_ids = ind_ids
+  )
 
   # calculate the Billion based off the change
-  change_df <- calculate_hpop_billion_change(df = contr_df,
-                                             change = contribution_pct,
-                                             contribution = contribution,
-                                             ind = ind,
-                                             iso3 = iso3,
-                                             year = year,
-                                             end_year = end_year,
-                                             scenario = scenario,
-                                             ind_ids = ind_ids)
+  change_df <- calculate_hpop_billion_change(
+    df = contr_df,
+    change = contribution_pct,
+    contribution = contribution,
+    ind = ind,
+    iso3 = iso3,
+    year = year,
+    end_year = end_year,
+    scenario = scenario,
+    ind_ids = ind_ids
+  )
 
   # return Billions with the rest of the original data
   dplyr::bind_rows(contr_df, change_df) %>%
@@ -91,44 +95,55 @@ calculate_hpop_billion_change <- function(df,
   # only calculate Billion using relevant indicators and years and correct for child nutrition
 
   change_df <- df %>%
-    dplyr::filter(.data[[year]] %in% c(!!end_year),
-                  .data[[ind]] %in% !!ind_ids) %>%
+    dplyr::filter(
+      .data[[year]] %in% c(!!end_year),
+      .data[[ind]] %in% !!ind_ids
+    ) %>%
     dplyr::mutate(!!sym(ind) := ifelse(.data[[ind]] %in% ind_ids[c("wasting", "overweight")],
-                                       "child_nutrition",
-                                       .data[[ind]])) %>%
+      "child_nutrition",
+      .data[[ind]]
+    )) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind, year)))) %>%
-    dplyr::summarize(dplyr::across(dplyr::all_of(change),
-                                   ~ sum(.x, na.rm = TRUE)), # for child_nutrition
-                     .groups = "drop")
+    dplyr::summarize(dplyr::across(
+      dplyr::all_of(change),
+      ~ sum(.x, na.rm = TRUE)
+    ), # for child_nutrition
+    .groups = "drop"
+    )
 
   # add population groups
 
   change_df <- dplyr::left_join(change_df,
-                                generate_hpop_populations(pop_year),
-                                by = c(iso3 = "iso3", ind = "ind"))
+    generate_hpop_populations(pop_year),
+    by = c(iso3 = "iso3", ind = "ind")
+  )
 
   # calculate billions for each contribution column
 
   bill_df_list <- purrr::map2(change,
-                              contribution,
-                              calculate_hpop_billion_single,
-                              df = change_df,
-                              iso3 = iso3,
-                              ind = ind,
-                              year = year,
-                              pop_year = pop_year,
-                              scenario = scenario)
+    contribution,
+    calculate_hpop_billion_single,
+    df = change_df,
+    iso3 = iso3,
+    ind = ind,
+    year = year,
+    pop_year = pop_year,
+    scenario = scenario
+  )
 
   # join back together
   bill_df <- purrr::reduce(bill_df_list,
-                           dplyr::left_join,
-                           by = c(iso3, ind, year, scenario))
+    dplyr::left_join,
+    by = c(iso3, ind, year, scenario)
+  )
 
   # add population column (adding here instead of in calc_single() to not generate multiple columns)
-  bill_df <- dplyr::mutate(bill_df,
-                           !!sym(population) := wppdistro::get_population(
-                             .data[[iso3]],
-                             year = !!pop_year)
+  bill_df <- dplyr::mutate(
+    bill_df,
+    !!sym(population) := wppdistro::get_population(
+      .data[[iso3]],
+      year = !!pop_year
+    )
   )
 
   bill_df
@@ -150,38 +165,51 @@ calculate_hpop_billion_single <- function(change,
   # calculate Billion contributions
 
   contr_df <- df %>%
-    dplyr::mutate("_delta_temp" := .data[[change]] / 100,
-                  "_od_temp" := 1 - abs(.data[["_delta_temp"]]),
-                  "_pos_temp" := .data[["_delta_temp"]] > 0) %>%
+    dplyr::mutate(
+      "_delta_temp" := .data[[change]] / 100,
+      "_od_temp" := 1 - abs(.data[["_delta_temp"]]),
+      "_pos_temp" := .data[["_delta_temp"]] > 0
+    ) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario, "_pop_group_temp", "_pos_temp")))) %>%
     dplyr::summarize("_product_temp" := 1 - prod(.data[["_od_temp"]]),
-                     "_pop_group_population_temp" := unique(.data[["_pop_group_population_temp"]]),
-                     "_sumi_temp" := sum(.data[["_delta_temp"]]),
-                     .groups = "drop") %>%
+      "_pop_group_population_temp" := unique(.data[["_pop_group_population_temp"]]),
+      "_sumi_temp" := sum(.data[["_delta_temp"]]),
+      .groups = "drop"
+    ) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
     dplyr::summarize("hpop_healthier_plus" := sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * .data[["_pos_temp"]]),
-                     "hpop_healthier_minus" := -sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * !.data[["_pos_temp"]]),
-                     "hpop_healthier_plus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * .data[["_pos_temp"]]),
-                     "hpop_healthier_minus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * !.data[["_pos_temp"]]),
-                     .groups = "drop") %>%
-    dplyr::mutate("hpop_healthier" := .data[["hpop_healthier_plus"]] + .data[["hpop_healthier_minus"]],
-                  "hpop_healthier_dbl_cntd" := .data[["hpop_healthier_plus_dbl_cntd"]] + .data[["hpop_healthier_minus_dbl_cntd"]]) %>%
-    tidyr::pivot_longer(dplyr::all_of(c("hpop_healthier_plus",
-                                        "hpop_healthier_minus",
-                                        "hpop_healthier",
-                                        "hpop_healthier_plus_dbl_cntd",
-                                        "hpop_healthier_minus_dbl_cntd",
-                                        "hpop_healthier_dbl_cntd")),
-                        names_to = ind,
-                        values_to = contribution)
+      "hpop_healthier_minus" := -sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * !.data[["_pos_temp"]]),
+      "hpop_healthier_plus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * .data[["_pos_temp"]]),
+      "hpop_healthier_minus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * !.data[["_pos_temp"]]),
+      .groups = "drop"
+    ) %>%
+    dplyr::mutate(
+      "hpop_healthier" := .data[["hpop_healthier_plus"]] + .data[["hpop_healthier_minus"]],
+      "hpop_healthier_dbl_cntd" := .data[["hpop_healthier_plus_dbl_cntd"]] + .data[["hpop_healthier_minus_dbl_cntd"]]
+    ) %>%
+    tidyr::pivot_longer(dplyr::all_of(c(
+      "hpop_healthier_plus",
+      "hpop_healthier_minus",
+      "hpop_healthier",
+      "hpop_healthier_plus_dbl_cntd",
+      "hpop_healthier_minus_dbl_cntd",
+      "hpop_healthier_dbl_cntd"
+    )),
+    names_to = ind,
+    values_to = contribution
+    )
 
   # creating new columns called change with contributions, to present change / % contribution for Billion
-  contr_df[,change] <- contr_df[,contribution]
+  contr_df[, change] <- contr_df[, contribution]
 
   contr_df %>%
-    dplyr::mutate("_total_pop_temp" := wppdistro::get_population(iso3, pop_year),
-                  dplyr::across(dplyr::all_of(!!change),
-                                ~ 100 * .x / .data[["_total_pop_temp"]])) %>%
+    dplyr::mutate(
+      "_total_pop_temp" := wppdistro::get_population(iso3, pop_year),
+      dplyr::across(
+        dplyr::all_of(!!change),
+        ~ 100 * .x / .data[["_total_pop_temp"]]
+      )
+    ) %>%
     dplyr::select(-"_total_pop_temp")
 }
 
@@ -202,30 +230,33 @@ calculate_hpop_billion_single <- function(change,
 #'
 #' @export
 generate_hpop_populations <- function(pop_year) {
-  dplyr::tibble(iso3 = whoville::who_member_states(),
-                under_5_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "male"),
-                btwn_5_14_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "male"),
-                btwn_15_18_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
-                btwn_18_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
-                over_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "male"),
-                under_5_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "male"),
-                btwn_5_14_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "male"),
-                btwn_15_18_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
-                btwn_18_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
-                over_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "male"),
-                under_5_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "female"),
-                btwn_5_14_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "female"),
-                btwn_15_18_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
-                btwn_18_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
-                over_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "female"),
-                under_5_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "female"),
-                btwn_5_14_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "female"),
-                btwn_15_18_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
-                btwn_18_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
-                over_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "female")) %>%
+  dplyr::tibble(
+    iso3 = whoville::who_member_states(),
+    under_5_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "male"),
+    btwn_5_14_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "male"),
+    btwn_15_18_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
+    btwn_18_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "male") / 2,
+    over_19_urban_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "male"),
+    under_5_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "male"),
+    btwn_5_14_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "male"),
+    btwn_15_18_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
+    btwn_18_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "male") / 2,
+    over_19_rural_male = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "male"),
+    under_5_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "urban", sex = "female"),
+    btwn_5_14_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "urban", sex = "female"),
+    btwn_15_18_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
+    btwn_18_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "urban", sex = "female") / 2,
+    over_19_urban_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "urban", sex = "female"),
+    under_5_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "under_5", rural_urb = "rural", sex = "female"),
+    btwn_5_14_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "btwn_5_14", rural_urb = "rural", sex = "female"),
+    btwn_15_18_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
+    btwn_18_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "15_19", rural_urb = "rural", sex = "female") / 2,
+    over_19_rural_female = wppdistro::get_population(iso3, pop_year, age_range = "over_19", rural_urb = "rural", sex = "female")
+  ) %>%
     tidyr::pivot_longer(-c("iso3"),
-                        names_to = "_pop_group_temp",
-                        values_to = "_pop_group_population_temp") %>%
+      names_to = "_pop_group_temp",
+      values_to = "_pop_group_population_temp"
+    ) %>%
     dplyr::full_join(billionaiRe::pop_links, by = c("_pop_group_temp" = "pop_group"))
 }
 
@@ -244,5 +275,3 @@ calculate_hpop_change_vector <- function(transform_value,
     NA_real_
   }
 }
-
-
