@@ -41,7 +41,7 @@ calculate_hpop_billion <- function(df,
     transform_value = transform_value,
     contribution = contribution,
     contribution_pct = contribution_pct,
-    contribution_pct_pop_total = contribution_pct_pop_total,
+    contribution_pct_total_pop = contribution_pct_total_pop,
     scenario = scenario,
     ind_ids = ind_ids
   )

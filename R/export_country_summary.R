@@ -22,7 +22,7 @@ export_all_countries_summaries_xls <- function(df,
                                                population = "population",
                                                contribution = "contribution",
                                                contribution_pct = paste0(contribution, "_percent"),
-                                               contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                               contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                                ind_ids = billion_ind_codes("hpop"),
                                                start_year = 2018,
                                                end_year = 2019:2023,
@@ -54,7 +54,7 @@ export_all_countries_summaries_xls <- function(df,
       population = population,
       contribution = contribution,
       contribution_pct = contribution_pct,
-      contribution_pct_pop_total = contribution_pct_pop_total,
+      contribution_pct_total_pop = contribution_pct_total_pop,
       start_year = start_year,
       end_year = end_year,
       sheet_prefix = "HPOP",
@@ -296,8 +296,6 @@ export_hpop_country_summary_xls <- function(df,
     sheet = "HPOP_Chart", rows = 22, cols = (3:(2 + nrow(ind_df))),
     style = excel_styles()$vertical_txt
   )
-
-
   return(wb)
 }
 

@@ -9,7 +9,6 @@
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param df data frame to be tested
-
 #' @return character vector with the data_type of data frame columns
 get_data_type <- function(df) {
   purrr::map_chr(df, get_data_type_single)
@@ -66,7 +65,6 @@ style_data <- function(data_type, wb, sheet_name,
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
 #' @param col Column to apply style to.
-
 style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered", "formula"),
                               wb,
                               sheet_name,

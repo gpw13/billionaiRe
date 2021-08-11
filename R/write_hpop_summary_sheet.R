@@ -22,7 +22,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      source_col = "source",
                                      contribution = "contribution",
                                      contribution_pct = paste0(contribution, "_percent"),
-                                     contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+                                     contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                      ind_df) {
   indicators <- ind_df %>%
     dplyr::select("ind", "sdg", "short_name")
@@ -124,7 +124,7 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     contribution_pct = contribution_pct,
     population = population,
     contribution = contribution,
-    contribution_pct_pop_total = contribution_pct_pop_total,
+    contribution_pct_total_pop = contribution_pct_total_pop,
     ind_df = ind_df,
     bounds = boxes_bounds$contribution
   )
