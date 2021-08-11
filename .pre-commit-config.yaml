@@ -8,6 +8,8 @@ repos:
         args: [--style_pkg=styler, --style_fun=tidyverse_style]
     -   id: use-tidy-description
     -   id: deps-in-desc
+    -   id: parsable-R
+    -   id: no-browser-statement
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
