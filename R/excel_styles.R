@@ -40,6 +40,18 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  normal_data_wrapped_dec_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    numFmt = "0.0",
+    wrapText = TRUE,
+    hidden = TRUE
+  )
+
   normal_data_wrapped_dec_black_border <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -50,6 +62,18 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  normal_data_wrapped_dec_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0.0",
+    wrapText = TRUE,
+    hidden = TRUE
+  )
+
   normal_data_wrapped_bold_dec <- openxlsx::createStyle(
     fontName = font,
     textDecoration = "bold",
@@ -57,6 +81,18 @@ excel_styles <- function(font = "Calibri") {
     fgFill = "white",
     border = "bottom",
     borderColour = "grey",
+    numFmt = "0.0",
+    wrapText = TRUE
+  )
+
+  normal_text_bold <- openxlsx::createStyle(
+    fontName = font,
+    textDecoration = "bold",
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    borderStyle = "thin",
     numFmt = "0.0",
     wrapText = TRUE
   )
@@ -80,6 +116,18 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  normal_data_wrapped_int_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    numFmt = "0",
+    wrapText = TRUE,
+    hidden = TRUE
+  )
+
   normal_data_wrapped_bold_int_black_border <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -98,6 +146,30 @@ excel_styles <- function(font = "Calibri") {
     borderColour = "black",
     numFmt = "0",
     wrapText = TRUE
+  )
+
+  normal_data_wrapped_bold_int_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0",
+    wrapText = TRUE,
+    hidden = TRUE
+  )
+
+  normal_data_wrapped_int_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0",
+    wrapText = TRUE,
+    fontColour = "white",
+    hidden = TRUE
   )
 
   normal_data_wrapped_red <- openxlsx::createStyle(
@@ -120,6 +192,18 @@ excel_styles <- function(font = "Calibri") {
     fontColour = "red",
     numFmt = "0",
     wrapText = TRUE
+  )
+
+  normal_data_wrapped_red_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0",
+    wrapText = TRUE,
+    fontColour = "white",
+    hidden = TRUE
   )
 
   normal_data_wrapped_bold_int <- openxlsx::createStyle(
@@ -172,6 +256,30 @@ excel_styles <- function(font = "Calibri") {
     textDecoration = "bold"
   )
 
+  normal_data_int_faded_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0",
+    fontColour = "white",
+    hidden = TRUE
+  )
+
+  bold_data_dec_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "0.00",
+    textDecoration = "bold",
+    fontColour = "white",
+    hidden = TRUE
+  )
+
+
   normal_data_wrapped_date <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -182,6 +290,19 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  normal_data_wrapped_date_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    numFmt = "DATE",
+    wrapText = TRUE,
+    hidden = TRUE
+  )
+
+
   normal_data_wrapped_date_black_border <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -190,6 +311,18 @@ excel_styles <- function(font = "Calibri") {
     borderColour = "black",
     numFmt = "DATE",
     wrapText = TRUE
+  )
+
+  normal_data_wrapped_date_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "DATE",
+    wrapText = TRUE,
+    fontColour = "white",
+    hidden = TRUE
   )
 
   normal_data_wrapped_bold_date <- openxlsx::createStyle(
@@ -264,6 +397,21 @@ excel_styles <- function(font = "Calibri") {
     border = "bottom"
   )
 
+  normal_text_wrapped_vCentered_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    numFmt = "TEXT",
+    halign = "left",
+    valign = "center",
+    wrapText = TRUE,
+    borderStyle = "thin",
+    borderColour = "black",
+    border = "bottom",
+    fontColour = "white",
+    hidden = TRUE
+  )
+
   normal_text_wrapped_black_border <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -275,12 +423,41 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  normal_text_wrapped_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "TEXT",
+    halign = "left",
+    wrapText = TRUE,
+    fontColour = "white",
+    hidden = TRUE
+  )
+
   normal_text_10p <- openxlsx::createStyle(
     fontName = font,
     fontSize = 10,
     fgFill = "white",
     border = "bottom",
     borderColour = "grey",
+    numFmt = "TEXT",
+    halign = "left"
+  )
+
+  normal_text_10p_noBorder <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 10,
+    fgFill = "white",
+    numFmt = "TEXT",
+    halign = "left"
+  )
+
+  normal_text_8p_noBorder <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
     numFmt = "TEXT",
     halign = "left"
   )
@@ -294,6 +471,17 @@ excel_styles <- function(font = "Calibri") {
     borderColour = "grey",
     halign = "left"
   )
+  normal_text_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    halign = "left",
+    hidden = TRUE
+  )
+
   normal_text_faded <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -315,6 +503,17 @@ excel_styles <- function(font = "Calibri") {
     halign = "left"
   )
 
+  normal_text_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    halign = "left",
+    fontColour = "white",
+    hidden = TRUE
+  )
+
   normal_text_centered <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -325,6 +524,18 @@ excel_styles <- function(font = "Calibri") {
     halign = "center"
   )
 
+  normal_text_centered_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "white",
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "grey",
+    numFmt = "TEXT",
+    halign = "center",
+    hidden = TRUE
+  )
+
   normal_text_centered_black_border <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -333,6 +544,18 @@ excel_styles <- function(font = "Calibri") {
     borderColour = "black",
     numFmt = "TEXT",
     halign = "center"
+  )
+
+  normal_text_centered_black_border_hidden <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fgFill = "white",
+    border = "bottom",
+    borderColour = "black",
+    numFmt = "TEXT",
+    halign = "center",
+    fontColour = "white",
+    hidden = TRUE
   )
 
   white_bckgrd <- openxlsx::createStyle(
@@ -454,6 +677,102 @@ excel_styles <- function(font = "Calibri") {
     textDecoration = "bold",
   )
 
+  uhc_pillar_header_data <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light2_color,
+    halign = "center",
+    valign = "center",
+    numFmt = "0.00"
+  )
+
+  uhc_pillar_header_data_bold <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light2_color,
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    numFmt = "0.00"
+  )
+
+  uhc_pillar_header_data_centered <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light2_color,
+    halign = "center",
+    valign = "center",
+    numFmt = "0.00"
+  )
+
+  uhc_summary_text <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "left",
+    valign = "center",
+    numFmt = "TEXT"
+  )
+
+  uhc_summary_text_bold <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "left",
+    valign = "center",
+    textDecoration = "bold",
+    numFmt = "TEXT"
+  )
+
+  uhc_summary_data <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "center",
+    valign = "center",
+    numFmt = "0.00"
+  )
+
+  uhc_summary_data_bold <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    numFmt = "0.00"
+  )
+
+  uhc_summary_data_int <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "center",
+    valign = "center",
+    numFmt = "0"
+  )
+
+  uhc_summary_data_int_bold <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    numFmt = "0"
+  )
+
+
+
   hpop_main_data_header <- openxlsx::createStyle(
     fontName = font,
     fontSize = 10,
@@ -516,6 +835,21 @@ excel_styles <- function(font = "Calibri") {
     wrapText = TRUE
   )
 
+  uhc_sec_data_header_border_right_align <- openxlsx::createStyle(
+    fontName = font,
+    fontSize = 8,
+    fontColour = "black",
+    fgFill = uhc_light_color,
+    halign = "right",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE,
+    border = "bottom",
+    borderColour = "black",
+    borderStyle = "thin"
+  )
+
+
   uhc_pillar_average_data <- openxlsx::createStyle(
     fontName = font,
     fontSize = 8,
@@ -555,41 +889,70 @@ excel_styles <- function(font = "Calibri") {
     white_bckgrd = white_bckgrd,
     normal_data_dec = normal_data_dec,
     normal_data_wrapped_dec = normal_data_wrapped_dec,
+    normal_data_wrapped_dec_hidden = normal_data_wrapped_dec_hidden,
     normal_data_wrapped_dec_black_border = normal_data_wrapped_dec_black_border,
+    normal_data_wrapped_dec_black_border_hidden = normal_data_wrapped_dec_black_border_hidden,
     normal_data_wrapped_bold_dec = normal_data_wrapped_bold_dec,
     normal_data_int = normal_data_int,
     normal_data_wrapped_int = normal_data_wrapped_int,
+    normal_data_wrapped_int_hidden = normal_data_wrapped_int_hidden,
     normal_data_wrapped_bold_int_black_border = normal_data_wrapped_bold_int_black_border,
+    normal_data_wrapped_bold_int_black_border_hidden = normal_data_wrapped_bold_int_black_border_hidden,
     normal_data_wrapped_int_black_border = normal_data_wrapped_int_black_border,
+    normal_data_wrapped_int_black_border_hidden = normal_data_wrapped_int_black_border_hidden,
     normal_data_wrapped_bold_int = normal_data_wrapped_bold_int,
     normal_data_date = normal_data_date,
     normal_data_wrapped_date = normal_data_wrapped_date,
+    normal_data_wrapped_date_hidden = normal_data_wrapped_date_hidden,
     normal_data_wrapped_date_black_border = normal_data_wrapped_date_black_border,
+    normal_data_wrapped_date_black_border_hidden = normal_data_wrapped_date_black_border_hidden,
     normal_data_wrapped_bold_date = normal_data_wrapped_bold_date,
     vertical_txt = vertical_txt,
     normal_data_wrapped_faded_dec = normal_data_wrapped_faded_dec,
     normal_text = normal_text,
+    normal_text_hidden = normal_text_hidden,
     normal_text_black_border = normal_text_black_border,
+    normal_text_black_border_hidden = normal_text_black_border_hidden,
     normal_text_centered = normal_text_centered,
+    normal_text_centered_hidden = normal_text_centered_hidden,
     normal_text_centered_black_border = normal_text_centered_black_border,
+    normal_text_centered_black_border_hidden = normal_text_centered_black_border_hidden,
     bold_hpop_blue_hR_2dp = bold_hpop_blue_hR_2dp,
     bold_hpop_blue_hL_2dp = bold_hpop_blue_hL_2dp,
     normal_text_wrapped = normal_text_wrapped,
     normal_text_wrapped_black_border = normal_text_wrapped_black_border,
+    normal_text_wrapped_black_border_hidden = normal_text_wrapped_black_border_hidden,
     normal_text_10p = normal_text_10p,
+    normal_text_10p_noBorder = normal_text_10p_noBorder,
+    normal_text_8p_noBorder = normal_text_8p_noBorder,
     normal_data_wrapped_red = normal_data_wrapped_red,
     normal_data_wrapped_red_black_border = normal_data_wrapped_red_black_border,
+    normal_data_wrapped_red_black_border_hidden = normal_data_wrapped_red_black_border_hidden,
     normal_text_faded = normal_text_faded,
     normal_data_int_faded = normal_data_int_faded,
     normal_text_no_border = normal_text_no_border,
     bold_text_no_border = bold_text_no_border,
     normal_data_int_faded_black_border = normal_data_int_faded_black_border,
+    normal_data_int_faded_black_border_hidden = normal_data_int_faded_black_border_hidden,
     bold_data_dec_black_border = bold_data_dec_black_border,
+    bold_data_dec_black_border_hidden = bold_data_dec_black_border_hidden,
     bold_uhc_hR_2dp = bold_uhc_hR_2dp,
     bold_uhc_hL_2dp = bold_uhc_hL_2dp,
     uhc_pillar_header = uhc_pillar_header,
+    uhc_pillar_header_data_bold = uhc_pillar_header_data_bold,
+    uhc_pillar_header_data_centered = uhc_pillar_header_data_centered,
+    uhc_pillar_header_data = uhc_pillar_header_data,
+    uhc_summary_text = uhc_summary_text,
+    uhc_summary_text_bold = uhc_summary_text_bold,
+    uhc_summary_data = uhc_summary_data,
+    uhc_summary_data_bold = uhc_summary_data_bold,
+    uhc_summary_data_int = uhc_summary_data_int,
+    uhc_summary_data_int_bold = uhc_summary_data_int_bold,
     normal_text_wrapped_vCentered = normal_text_wrapped_vCentered,
-    normal_text_wrapped_vCentered_black_border = normal_text_wrapped_vCentered_black_border
+    normal_text_wrapped_vCentered_black_border = normal_text_wrapped_vCentered_black_border,
+    normal_text_wrapped_vCentered_black_border_hidden = normal_text_wrapped_vCentered_black_border_hidden,
+    uhc_sec_data_header_border_right_align = uhc_sec_data_header_border_right_align,
+    normal_text_bold = normal_text_bold
   )
 
   return(excel_styles)

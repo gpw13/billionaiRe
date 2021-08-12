@@ -47,14 +47,19 @@ get_data_type_single <- function(vec) {
 #' @inheritParams openxlsx::addStyle
 #' @inheritParams style_data_single
 #'
-style_data <- function(data_type, wb, sheet_name,
-                       rows, cols) {
+style_data <- function(data_type,
+                       wb,
+                       sheet_name,
+                       rows,
+                       cols,
+                       no_show = TRUE,
+                       no_show_row = 0) {
   assert_same_length(data_type, cols)
-
-  for (i in seq_along(cols)) {
-    wb <- style_data_single(data_type[i], wb, sheet_name, rows, cols[i])
-  }
-
+  # TODO: This needs rethinking because it makes the whole script very slow...
+  purrr::walk2(
+    data_type, cols,
+    ~ style_data_single(data_type = .x, wb, sheet_name, rows, col = .y, no_show = no_show, no_show_row = no_show_row)
+  )
   return(wb)
 }
 
@@ -69,26 +74,37 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
                               wb,
                               sheet_name,
                               rows,
-                              col) {
+                              col,
+                              no_show = TRUE,
+                              no_show_row) {
   data_type <- rlang::arg_match(data_type)
 
   if (data_type %in% c("numeric", "formula")) {
     row_style <- excel_styles()$normal_data_wrapped_dec
     final_row_style <- excel_styles()$normal_data_wrapped_dec_black_border
+    row_style_hiv <- excel_styles()$normal_data_wrapped_dec_hidden
+    final_row_style_hiv <- excel_styles()$normal_data_wrapped_dec_black_border_hidden
   } else if (data_type == "Date") {
     row_style <- excel_styles()$normal_data_wrapped_date
     final_row_style <- excel_styles()$normal_data_wrapped_date_black_border
+    row_style_hiv <- excel_styles()$normal_data_wrapped_date_hidden
+    final_row_style_hiv <- excel_styles()$normal_data_wrapped_date_black_border_hidden
   } else if (data_type == "integer") {
     row_style <- excel_styles()$normal_data_wrapped_int
     final_row_style <- excel_styles()$normal_data_wrapped_int_black_border
+    row_style_hiv <- excel_styles()$normal_data_wrapped_int_hidden
+    final_row_style_hiv <- excel_styles()$normal_data_wrapped_int_black_border_hidden
   } else if (data_type == "character") {
     row_style <- excel_styles()$normal_text
     final_row_style <- excel_styles()$normal_text_black_border
+    row_style_hiv <- excel_styles()$normal_text_hidden
+    final_row_style_hiv <- excel_styles()$normal_text_black_border_hidden
   } else if (data_type == "character_centered") {
     row_style <- excel_styles()$normal_text_centered
     final_row_style <- excel_styles()$normal_text_centered_black_border
+    row_style_hiv <- excel_styles()$normal_text_centered_hidden
+    final_row_style_hiv <- excel_styles()$normal_text_centered_black_border_hidden
   }
-
   openxlsx::addStyle(
     wb,
     sheet = sheet_name,
@@ -105,6 +121,26 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
     cols = col,
     gridExpand = TRUE
   )
-
+  if (no_show) {
+    if (no_show_row == length(rows)) {
+      openxlsx::addStyle(
+        wb,
+        sheet = sheet_name,
+        style = final_row_style_hiv,
+        rows = rows[no_show_row],
+        cols = col,
+        gridExpand = TRUE
+      )
+    } else {
+      openxlsx::addStyle(
+        wb,
+        sheet = sheet_name,
+        style = row_style_hiv,
+        rows = rows[no_show_row],
+        cols = col,
+        gridExpand = TRUE
+      )
+    }
+  }
   return(wb)
 }

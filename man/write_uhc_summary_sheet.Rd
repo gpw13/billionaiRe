@@ -19,7 +19,8 @@ write_uhc_summary_sheet(
   population = "population",
   type_col = "type",
   source_col = "source",
-  ind_df
+  ind_df,
+  ind_ids
 )
 }
 \arguments{

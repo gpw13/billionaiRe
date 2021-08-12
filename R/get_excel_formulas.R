@@ -19,7 +19,7 @@ get_transform_formula_single <- function(ind, raw_col, raw_row) {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF((100-{raw_cell})<=50,0,((100-{raw_cell})-50)/(100-50)*100),""),2)')
   } else if (ind == "fpg") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<=5.1,100,IF({raw_cell}>=7.1,100,(7.1-{raw_cell})/(7.1-5.1)*100)),""),2)')
-  } else if (ind == "uhc_tobacco") {
+  } else if (ind %in% c("uhc_tobacco", "fh")) {
     formula <- glue::glue('=round(IF({raw_cell}<>"",100-{raw_cell},""),2)')
   } else if (ind == "beds") {
     formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<18,{raw_cell}/18*100,100),""),2)')

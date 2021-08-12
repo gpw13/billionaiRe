@@ -10,7 +10,9 @@ style_data_single(
   wb,
   sheet_name,
   rows,
-  col
+  col,
+  no_show = TRUE,
+  no_show_row
 )
 }
 \arguments{

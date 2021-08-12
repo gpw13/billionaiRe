@@ -10,7 +10,8 @@ style_uhc_pillar(
   boxes_bounds,
   data_type,
   pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
-  show_hiv = FALSE
+  no_show = TRUE,
+  no_show_row = 2
 )
 }
 \arguments{
@@ -31,7 +32,9 @@ types. Passed to \code{style_data()}}
 \item service
 }}
 
-\item{show_hiv}{Boolean TRUE if HIV data should be displayed.}
+\item{no_show}{Boolean with TRUE if data in \code{no_show_row} should be displayed}
+
+\item{no_show_row}{integer identifying which row contains data no to show}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

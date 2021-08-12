@@ -8,7 +8,8 @@
 
 write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
                                        start_row, start_col, value,
-                                       ind_df, ind, year, type_col) {
+                                       ind_df, ind, year, type_col,
+                                       ind_ids) {
   ind_df_timeseries <- ind_df %>%
     dplyr::mutate(
       !!sym("ind") := dplyr::case_when(
@@ -29,16 +30,23 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
     startRow = 2
   )
 
-  # TODO: Simplify function to purrr-like walk rather than looping
+  no_show <- ifelse(sum(df[df[, "ind"] == ind_ids["art"], "use_dash"]) == 0, TRUE, FALSE)
 
-  no_show_ind <- unique(df[[ind]][df[, "use_dash"] == FALSE & df[, year]])
+  # TODO: Simplify function to purrr-like walk rather than looping
 
   time_series <- df %>%
     dplyr::ungroup() %>%
     dplyr::select(.data[[ind]], .data[[year]], .data[[type_col]], !!value) %>%
     dplyr::group_by(.data[[ind]], .data[[year]], .data[[type_col]]) %>%
     tidyr::pivot_longer(c(!!value), names_to = "value_mod", values_to = "value") %>%
-    dplyr::mutate(!!sym("value_mod") := factor(!!sym("value_mod"), levels = !!value)) %>%
+    dplyr::mutate(
+      !!sym("value") := dplyr::case_when(
+        .data[[ind]] == ind_ids["art"] & no_show ~ NA_real_,
+        .data[[ind]] == ind_ids["fh"] & .data[[type_col]] == "projected" ~ NA_real_,
+        TRUE ~ .data[["value"]]
+      ),
+      !!sym("value_mod") := factor(!!sym("value_mod"), levels = !!value)
+    ) %>%
     dplyr::arrange(.data[[year]]) %>%
     dplyr::group_by(!!sym("value_mod")) %>%
     dplyr::group_split()
@@ -83,8 +91,8 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
       startCol = start_col, startRow = start_row_new + 2,
       colNames = FALSE
     )
-    wb <- style_hpop_timeseries(
-      df = df, wb, sheet_name,
+    wb <- style_uhc_timeseries(
+      df = time_series[[i]], wb, sheet_name,
       start_row = start_row_new, start_col = start_col,
       ind, year, type_col, df_wide = time_series_wide, ind_df_timeseries
     )
@@ -109,12 +117,12 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
   openxlsx::writeData(wb,
     sheet = sheet_name,
     x = "* Values are in bold if reported; normal if estimated; and faded if imputed/projected",
-    startRow = start_row_final + 2,
+    startRow = start_row_final + 1,
     startCol = start_col
   )
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_data_int,
-    rows = start_row_final + 2,
+    sheet = sheet_name, style = excel_styles()$normal_text_8p_noBorder,
+    rows = start_row_final + 1,
     cols = start_col, gridExpand = TRUE
   )
   return(wb)

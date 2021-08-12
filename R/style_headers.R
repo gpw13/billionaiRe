@@ -45,7 +45,7 @@ style_hpop_headers <- function(wb, sheet_name, bounds) {
 #' @inherit write_latest_reported_hpop_summary
 #'
 
-style_hpop_headers <- function(wb, sheet_name, bounds) {
+style_uhc_headers <- function(wb, sheet_name, bounds) {
   mergeCellForced(wb,
     sheet = sheet_name,
     rows = bounds["start_row"],

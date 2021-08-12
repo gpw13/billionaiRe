@@ -31,17 +31,14 @@ export_all_countries_summaries_xls <- function(df,
 
   unique_iso3s <- unique(df[[iso3]])
 
-  wb <- write_permanent_sheets(billion, start_col = 2, start_row = 3)
-
   if (billion == "hpop") {
     sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")]
     for (i in seq_along(sheets_to_remove)) {
       openxlsx::removeWorksheet(wb, sheets_to_remove[i])
     }
 
-    purrr::map(unique_iso3s, ~ export_hpop_country_summary_xls(
+    purrr::map(unique_iso3s, ~ export_country_summary_xls(
       df = df,
-      wb = wb,
       iso = .x,
       iso3 = iso3,
       year = year,
@@ -57,9 +54,7 @@ export_all_countries_summaries_xls <- function(df,
       contribution_pct_total_pop = contribution_pct_total_pop,
       start_year = start_year,
       end_year = end_year,
-      sheet_prefix = "HPOP",
-      output_folder = output_folder,
-      ind_ids = billion_ind_codes("hpop")
+      output_folder = output_folder
     ))
   }
 }
@@ -94,7 +89,6 @@ export_country_summary_xls <- function(df,
                                        contribution = "contribution",
                                        contribution_pct = paste0(contribution, "_percent"),
                                        contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-                                       ind_ids = billion_ind_codes("hpop"),
                                        start_year = 2018,
                                        end_year = 2019:2023,
                                        output_folder = "outputs") {
@@ -106,10 +100,8 @@ export_country_summary_xls <- function(df,
   #   export_hep_country_summary_xls()
   # }
   if (billion == "hpop") {
-    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")]
-    for (i in seq_along(sheets_to_remove)) {
-      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
-    }
+    purrr::map(openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")], ~ openxlsx::removeWorksheet(wb, .x))
+
     export_hpop_country_summary_xls(
       df = df,
       wb = wb,
@@ -134,10 +126,7 @@ export_country_summary_xls <- function(df,
     )
   }
   if (billion == "uhc") {
-    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^HPOP|^HEP")]
-    for (i in seq_along(sheets_to_remove)) {
-      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
-    }
+    purrr::map(openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^HPOP|^HEP")], ~ openxlsx::removeWorksheet(wb, .x))
 
     export_uhc_country_summary_xls(df,
       wb,
@@ -232,7 +221,6 @@ export_hpop_country_summary_xls <- function(df,
   value, transform_value, and contribution must be of length 1 at the moment.
   If you need to run with mutliple values, please run function multiple times" = length(value) == 1)
 
-
   # Get country specific data frame
 
   df_iso <- df %>%
@@ -243,6 +231,8 @@ export_hpop_country_summary_xls <- function(df,
       .data[[year]]
     ) %>%
     dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
+
+  df_iso <- get_df_one_scenario(df_iso, scenario)
 
   water_sanitation_ind <- ind_ids[stringr::str_detect(names(ind_ids), "^water|^hpop_sanitation")]
 
@@ -343,6 +333,8 @@ export_uhc_country_summary_xls <- function(df,
     ) %>%
     dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
 
+  df_iso <- get_df_one_scenario(df_iso, scenario)
+
   ind_df <- billionaiRe::indicator_df %>%
     dplyr::filter(.data[["uhc"]])
 
@@ -364,8 +356,29 @@ export_uhc_country_summary_xls <- function(df,
     population = "population",
     type_col = "type",
     source_col = "source",
-    ind_df
+    ind_df,
+    ind_ids
   )
+
+  write_uhc_timeseries_sheet(
+    df = df_iso,
+    wb = wb,
+    sheet_name = glue::glue("{sheet_prefix}_Time Series"),
+    start_row = 4,
+    start_col = 2,
+    value,
+    ind_df,
+    ind,
+    year,
+    type_col,
+    ind_ids
+  )
+
+  openxlsx::addStyle(wb,
+    sheet = "UHC_Chart", rows = 22, cols = (3:(2 + nrow(ind_df))),
+    style = excel_styles()$vertical_txt
+  )
+
 
   return(wb)
 }

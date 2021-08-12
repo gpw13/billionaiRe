@@ -33,3 +33,26 @@ mergeCellForced <- function(wb, sheet, cols, rows) {
   openxlsx::removeCellMerge(wb, sheet, cols, rows)
   openxlsx::mergeCells(wb, sheet, cols, rows)
 }
+
+#'  Get data frame with just one scenario
+#'
+#'  Get just one scenario in the data frame. Is used to avoid issues with when
+#'  multiple scenarios are present in export functions, as scenarios are not implemented
+#'  at the moment.
+#'
+#'  @param df data.frame to be treated
+#'  @param scenario character string identifying the scenario column in `df`
+#'
+#'  @return A data frame with one scenario
+#'
+get_df_one_scenario <- function(df, scenario) {
+  scenario <- ifelse(is.null(scenario), "scenario", scenario)
+  if (length(df[["scenario"]]) > 1) {
+    warning(paste0(
+      "More than one scenario found in column ", names(df)[grep("scenario", names(df))],
+      "If 'default' is present, this scenario will used. Otherwise, the first scenario will be used."
+    ))
+    scenario_to_use <- ifelse("default" %in% unique(df[["scenario"]]), "default", unique(df[["scenario"]][1]))
+    df <- dplyr::filter(df, !!sym("scenario") == !!scenario_to_use)
+  }
+}

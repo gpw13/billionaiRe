@@ -169,7 +169,7 @@ write_baseline_projection_hpop_summary <- function(df,
 
   baseline_proj <- ind_df[, "ind"] %>%
     dplyr::left_join(baseline_proj, by = c("ind" = ind)) %>%
-    dplyr::select(.data[[iso3]], -.data[["ind"]])
+    dplyr::select(-.data[[iso3]], -.data[["ind"]])
 
   openxlsx::writeData(
     wb,
@@ -317,7 +317,7 @@ write_billion_contribution_hpop_summary <- function(df,
       stringr::str_detect(.data[[ind]], "^hpop_healthier$")
     ) %>%
     dplyr::select(!!ind, !!contribution_pct) %>%
-    dplyr::rename(!!sym(contribution) := .data[[contribution_pc]])
+    dplyr::rename(!!sym(contribution) := .data[[contribution_pct]])
 
   hpop_billion_contribution <- dplyr::bind_rows(hpop_billion_contribution, hpop_billion_contribution_pct) %>%
     dplyr::select(-!!ind)

@@ -18,7 +18,7 @@ style_header_uhc_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_text_10p,
+    sheet = sheet_name, style = excel_styles()$normal_text_10p_noBorder,
     rows = c((boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5)),
     cols = boxes_bounds$sheet_header["start_col"], gridExpand = TRUE
   )
@@ -61,7 +61,7 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
     cols = (boxes_bounds$latest_reported_data["start_col"]):(boxes_bounds$latest_reported_data["end_col"])
   )
 
-  wb <- style_hpop_headers(wb, sheet_name, bounds = boxes_bounds$latest_reported_data)
+  wb <- style_uhc_headers(wb, sheet_name, bounds = boxes_bounds$latest_reported_data)
 
   mergeCellForced(wb,
     sheet = sheet_name,
@@ -164,13 +164,15 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
 #' * infectious
 #' * NCD
 #' * service
-#' @param show_hiv Boolean TRUE if HIV data should be displayed.
+#' @param no_show Boolean with TRUE if data in `no_show_row` should be displayed
+#' @param no_show_row integer identifying which row contains data no to show
 #' @inherit style_header_hpop_summary_sheet
 #' @inherit write_sheet_header_hpop_summary
 
 style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
                              pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
-                             show_hiv = FALSE) {
+                             no_show = TRUE,
+                             no_show_row = 2) {
   pillar <- rlang::arg_match(pillar)
 
   openxlsx::addStyle(wb, sheet_name,
@@ -196,14 +198,16 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
 
   wb <- style_data(
     data_type = data_type$latest_reported, wb, sheet_name,
-    rows = (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"] - 1),
-    cols = boxes_bounds[["latest_reported_data"]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"]
+    rows = data_rows,
+    cols = boxes_bounds[["latest_reported_data"]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"],
+    no_show = no_show, no_show_row = no_show_row
   )
 
   wb <- style_data(
     data_type = data_type$baseline_projection, wb, sheet_name,
-    rows = (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"] - 1),
-    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
+    rows = data_rows,
+    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"],
+    no_show = no_show, no_show_row = no_show_row
   )
 
   openxlsx::addStyle(wb, sheet_name,
@@ -225,6 +229,128 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
     gridExpand = TRUE
   )
 
+  return(wb)
+}
 
+style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
+                                       pillar = "fin_hardship",
+                                       no_show = TRUE,
+                                       no_show_cols,
+                                       no_show_rows) {
+  pillar <- rlang::arg_match(pillar)
+
+  openxlsx::addStyle(wb, sheet_name,
+    style = excel_styles()$uhc_pillar_header,
+    rows = boxes_bounds[[pillar]]["start_row"],
+    cols = boxes_bounds[[pillar]]["start_col"]:boxes_bounds[[pillar]]["end_col"],
+    gridExpand = TRUE
+  )
+  openxlsx::addStyle(wb, sheet_name,
+    style = excel_styles()$uhc_pillar_header_data_bold,
+    rows = boxes_bounds[[pillar]]["start_row"],
+    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"],
+    gridExpand = TRUE
+  )
+  data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"])
+
+  openxlsx::addStyle(wb, sheet_name,
+    style = excel_styles()$normal_text_wrapped_vCentered,
+    rows = data_rows,
+    cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
+    gridExpand = TRUE
+  )
+  openxlsx::addStyle(wb, sheet_name,
+    style = excel_styles()$normal_text_wrapped_vCentered_black_border,
+    rows = data_rows[length(data_rows)],
+    cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
+    gridExpand = TRUE
+  )
+
+  style_data(
+    data_type = data_type$latest_reported, wb, sheet_name,
+    rows = data_rows,
+    cols = boxes_bounds[["latest_reported_data"]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"]
+  )
+
+  style_data(
+    data_type = data_type$baseline_projection, wb, sheet_name,
+    rows = data_rows,
+    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
+  )
+
+  if (no_show) {
+    openxlsx::addStyle(wb,
+      sheet_name,
+      style = excel_styles()$normal_text_hidden,
+      rows = no_show_rows,
+      cols = no_show_cols,
+      gridExpand = TRUE
+    )
+  }
+
+  return(wb)
+}
+
+style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_text_bold,
+    rows = c(
+      boxes_bounds[["summary"]]["start_row"],
+      boxes_bounds[["summary"]]["end_row"] - 1,
+      boxes_bounds[["summary"]]["end_row"]
+    ),
+    cols = boxes_bounds[["summary"]]["start_col"] + 1,
+    gridExpand = TRUE
+  )
+
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_text,
+    rows = c(
+      boxes_bounds[["summary"]]["start_row"] + 1,
+      boxes_bounds[["summary"]]["start_row"] + 2
+    ),
+    cols = boxes_bounds[["summary"]]["start_col"] + 1,
+    gridExpand = TRUE
+  )
+
+  col_trans_start_year <- boxes_bounds[["baseline_projection_data"]]["start_col"] + 3
+  col_trans_end_year <- boxes_bounds[["baseline_projection_data"]]["start_col"] + 4
+
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_data_bold,
+    rows = c(
+      boxes_bounds[["summary"]]["start_row"],
+      boxes_bounds[["summary"]]["end_row"]
+    ),
+    cols = col_trans_start_year:col_trans_end_year,
+    gridExpand = TRUE
+  )
+
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_data,
+    rows = c(boxes_bounds[["summary"]]["start_row"] + 1),
+    cols = col_trans_start_year:col_trans_end_year,
+    gridExpand = TRUE
+  )
+
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_data_int_bold,
+    rows = c(boxes_bounds[["summary"]]["start_row"] + 3),
+    cols = col_trans_start_year:col_trans_end_year,
+    gridExpand = TRUE
+  )
+
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles()$uhc_summary_data_int,
+    rows = c(boxes_bounds[["summary"]]["start_row"] + 2),
+    cols = col_trans_start_year:col_trans_end_year,
+    gridExpand = TRUE
+  )
   return(wb)
 }

@@ -4,7 +4,15 @@
 \alias{style_data}
 \title{Style data according to its type}
 \usage{
-style_data(data_type, wb, sheet_name, rows, cols)
+style_data(
+  data_type,
+  wb,
+  sheet_name,
+  rows,
+  cols,
+  no_show = TRUE,
+  no_show_row = 0
+)
 }
 \arguments{
 \item{data_type}{character vector of class(es) of the data to be styled.
