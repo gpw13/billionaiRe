@@ -12,6 +12,34 @@ xmart_cols <- function() {
   )
 }
 
+#' Get the col_types for xMart columns
+#'
+#' A helper function for specifying the column types when reading/writing Triple
+#' Billions csv files.
+#'
+#' @return a list with column specifications
+#' @export
+#'
+#' @examples
+#' `read_csv("hpop_sanitation.csv", col_types = xmart_col_types)`
+xmart_col_types = function() {
+  list(
+    iso3 = col_character(),
+    year = col_integer(),
+    ind = col_character(),
+    value = col_double(),
+    lower = col_double(),
+    upper = col_double(),
+    use_dash = col_logical(),
+    use_calc = col_logical(),
+    source = col_character(),
+    type = col_character(),
+    type_detail = col_character(),
+    other_detail = col_character(),
+    upload_detail = col_character()
+  )
+}
+
 #' Check data frame for xMart4 columns
 #'
 #' Tests to see if the given data frame has all the columns required by the Triple Billions
