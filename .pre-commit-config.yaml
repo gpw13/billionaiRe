@@ -11,6 +11,7 @@ repos:
     -   id: parsable-R
     -   id: no-browser-statement
     -   id: readme-rmd-rendered
+    -   id:  roxygenize
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
