@@ -19,24 +19,21 @@ xmart_cols <- function() {
 #'
 #' @return a list with column specifications
 #' @export
-#'
-#' @examples
-#' `read_csv("hpop_sanitation.csv", col_types = xmart_col_types)`
 xmart_col_types = function() {
   list(
-    iso3 = col_character(),
-    year = col_integer(),
-    ind = col_character(),
-    value = col_double(),
-    lower = col_double(),
-    upper = col_double(),
-    use_dash = col_logical(),
-    use_calc = col_logical(),
-    source = col_character(),
-    type = col_character(),
-    type_detail = col_character(),
-    other_detail = col_character(),
-    upload_detail = col_character()
+    iso3 = readr::col_character(),
+    year = readr::col_integer(),
+    ind = readr::col_character(),
+    value = readr::col_double(),
+    lower = readr::col_double(),
+    upper = readr::col_double(),
+    use_dash = readr::col_logical(),
+    use_calc = readr::col_logical(),
+    source = readr::col_character(),
+    type = readr::col_character(),
+    type_detail = readr::col_character(),
+    other_detail = readr::col_character(),
+    upload_detail = readr::col_character()
   )
 }
 

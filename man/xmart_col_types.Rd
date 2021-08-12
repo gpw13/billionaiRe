@@ -13,6 +13,3 @@ a list with column specifications
 A helper function for specifying the column types when reading/writing Triple
 Billions csv files.
 }
-\examples{
-`read_csv("hpop_sanitation.csv", col_types = xmart_col_types)`
-}
