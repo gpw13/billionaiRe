@@ -66,6 +66,18 @@ wrangle_gho_data <- function(df,
 
 #' Wrangle GHO data with TOTL/RUR/URB dimensions
 #'
+#' #'`wrangle_gho_rural_urban_data()` exapnds the functionality of
+#' [billionaiRe::wrangle_gho_data()] by also handling indicators which have
+#' TOTL/RUR/URB values in the `Dim1` column of the GHO data response, by first pivoting
+#' the data frame and then selecting only the total, rural, and urban values for a given
+#' (iso3, year) combination (in that order of preference).
+#'
+#' It also automatically filters 'mixed' time series — i.e., instances where the time series
+#' for a given country contains a combination of TOTL, RUR, and URB values by
+#' keeping the time series associated only with the most commonly occuring of these
+#' options. For example, a time series with URB data from 2000 to 2015 and TOTL data
+#' from 2016 to 2020 will be cutoff at 2015, so that only the URB data is kept.
+#'
 #' @param df A data frame in GHO format, returned from [ghost::gho_data()].
 #' @param source Character string of source to be provided to the data frame.
 #' If `NULL`, the source column is generated from the GHO's `DataSourceDim` column.
@@ -90,7 +102,7 @@ wrangle_gho_data <- function(df,
 #' of redundant logic. This means that, eventually, users may do
 #' `gho_data(.) %>% unspool_gho_dim(.) %>% wrangle_gho_data(.)`
 #' @export
-wrangle_rural_urban_gho_data <- function(df,
+wrangle_gho_rural_urban_data <- function(df,
                                          source = NULL,
                                          type = NULL,
                                          ind = NULL,
@@ -118,6 +130,24 @@ wrangle_rural_urban_gho_data <- function(df,
   # Used for the transmute later
   make_conds <- function(prefixes, suffixes) {
     purrr::map2(prefixes, suffixes, make_expr)
+  }
+
+  # Used to find the mode ind for a data frame, returns an error in case of a tie
+  # Used to detect 'mixed' time series with total/rural/urban data combined,
+  # then used to filter the time series to keep only the most frequent option
+  ind_mode = function(df) {
+    counts = table(df[["ind"]])
+    max_count = max(counts)
+    modes = names(counts)[counts == max_count]
+    if (length(modes) == 1) {
+      return(modes)
+    } else {
+      stop(
+        sprintf("The time series for %s has no clear mode. Please check it manually", unique(df[["iso3"]])),
+        call. = FALSE
+      )
+      return(NA_character_)
+    }
   }
 
   output <- df %>%
@@ -184,8 +214,20 @@ wrangle_rural_urban_gho_data <- function(df,
       upload_detail = NA
     ) %>%
 
-    # Remove unnecessary DataSourceDim column
-    dplyr::select(-"DataSourceDim") %>%
+    ## Filter out 'mixed' time series
+    # Group time series by iso3
+    dplyr::group_by(.data[["iso3"]]) %>%
+
+    # Find the most commonly occurring indicator code
+    dplyr::mutate("ind_mode" = ind_mode(dplyr::cur_data())) %>%
+    dplyr::ungroup() %>%
+
+    # Keep only the rows corresponding to the most frequent option for "mixed"
+    # time series
+    dplyr::filter(.data[["ind"]] == .data[["ind_mode"]]) %>%
+
+    # Remove unnecessary columns
+    dplyr::select(xmart_cols()) %>%
 
     # Filter to keep only WHO members
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
