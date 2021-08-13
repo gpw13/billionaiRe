@@ -283,7 +283,6 @@ export_hpop_country_summary_xls <- function(df,
     sheet = "HPOP_Chart", rows = 22, cols = (3:(2 + nrow(ind_df))),
     style = excel_styles()$vertical_txt
   )
-
   return(wb)
 }
 

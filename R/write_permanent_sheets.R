@@ -29,6 +29,5 @@ write_permanent_sheets <- function(billion, start_col, start_row) {
     start_col = start_col,
     start_row = start_row + 1
   )
-
   return(wb)
 }
