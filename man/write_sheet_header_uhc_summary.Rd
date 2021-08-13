@@ -14,7 +14,7 @@ write_sheet_header_uhc_summary(
 )
 }
 \arguments{
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -26,9 +26,6 @@ write_sheet_header_uhc_summary(
 
 \item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
 }
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
-}
 \description{
-\code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.
+Write and style UHC summary sheet header
 }

@@ -20,7 +20,7 @@ style_uhc_timeseries(
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

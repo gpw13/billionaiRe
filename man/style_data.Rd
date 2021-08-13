@@ -19,13 +19,17 @@ style_data(
 Can be one of "numeric", "integer", "Date", "character", "character_centered",
 or "formula".}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
 \item{rows}{Rows to apply style to.}
 
 \item{cols}{columns to apply style to.}
+
+\item{no_show}{Boolean with TRUE if data in \code{no_show_row} should be displayed}
+
+\item{no_show_row}{integer identifying which row contains data no to show}
 }
 \description{
 Style data according to its type

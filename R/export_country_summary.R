@@ -4,6 +4,7 @@
 #' billions or for a specific billion.
 #'
 #' @inheritParams export_country_summary_xls
+#' @inheritParams transform_hpop_data
 #'
 #' @return `openxslx` Workbook object. Output file is in `output_folder`.
 #'
@@ -32,11 +33,6 @@ export_all_countries_summaries_xls <- function(df,
   unique_iso3s <- unique(df[[iso3]])
 
   if (billion == "hpop") {
-    sheets_to_remove <- openxlsx::sheets(wb)[stringr::str_detect(openxlsx::sheets(wb), "^UHC|^HEP")]
-    for (i in seq_along(sheets_to_remove)) {
-      openxlsx::removeWorksheet(wb, sheets_to_remove[i])
-    }
-
     purrr::map(unique_iso3s, ~ export_country_summary_xls(
       df = df,
       iso = .x,
@@ -185,6 +181,7 @@ export_hep_country_summary_xls <- function(df,
 #' `export_hpop_country_summary_xls` Export a country-specific for HPOP billion.
 #' @inheritParams export_country_summary_xls
 #' @inheritParams write_baseline_projection_hpop_summary
+#' @inheritParams transform_hpop_data
 #' @param sheet_prefix Character prefix to add in front of export sheets
 #'
 export_hpop_country_summary_xls <- function(df,
@@ -294,6 +291,7 @@ export_hpop_country_summary_xls <- function(df,
 #' `export_uhc_country_summary_xls` Export a country-specific for UHC billion.
 #'
 #' @inherit export_hpop_country_summary_xls return details params
+#' @inheritParams transform_hpop_data
 export_uhc_country_summary_xls <- function(df,
                                            wb,
                                            iso,

@@ -38,6 +38,8 @@ get_ind_order <- function(ind) {
 #' or reported data. Used in write functions.
 #'
 #' @inherit export_hpop_country_summary_xls
+#' @inheritParams write_uhc_timeseries_sheet
+#' @inheritParams write_hpop_summary_sheet
 get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df) {
   df <- df %>%
     dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
@@ -62,7 +64,8 @@ get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transfo
 #' or reported data. Used in write functions.
 #'
 #' @inherit export_hpop_country_summary_xls
-
+#' @inheritParams transform_hpop_data
+#' @inheritParams write_hpop_summary_sheet
 get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, transform_value, start_year, end_year, source_col, ind_df) {
   df <- df %>%
     dplyr::filter(.data[[year]] %in% c(!!start_year, max(!!end_year))) %>%

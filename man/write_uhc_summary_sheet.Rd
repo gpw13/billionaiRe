@@ -27,6 +27,10 @@ write_uhc_summary_sheet(
 \item{df}{Data frame in long format filtered for a specific country, where 1 row corresponds
 to a specific year, and indicator.}
 
+\item{wb}{a \code{openxlsx} workbook to be edited.}
+
+\item{sheet_name}{character name of the sheet to update}
+
 \item{iso}{ISO3 code of country to summarize.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
@@ -51,6 +55,11 @@ used to calculate contributions.}
 \item{source_col}{Column name of column to store source information.}
 
 \item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

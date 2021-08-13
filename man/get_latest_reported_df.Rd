@@ -34,6 +34,8 @@ country, year, and indicator.}
 used to calculate contributions.}
 
 \item{source_col}{Column name of column to store source information.}
+
+\item{ind_df}{data frame containing information on indicators}
 }
 \description{
 \code{get_latest_reported()} gets the latest reported data available for estimated

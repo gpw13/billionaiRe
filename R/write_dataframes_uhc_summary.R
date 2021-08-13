@@ -4,6 +4,8 @@
 #'
 #' @inherit write_latest_reported_hpop_summary
 #' @inherit write_sheet_header_hpop_summary
+#' @inheritParams  calculate_hpop_contributions
+
 
 write_data_headers_uhc_summary <- function(wb, sheet_name, value, boxes_bounds, start_year, end_year) {
   openxlsx::writeData(wb,
@@ -86,8 +88,11 @@ write_data_headers_uhc_summary <- function(wb, sheet_name, value, boxes_bounds, 
 #' Used in `write_uhc_summary_sheet()`.
 #'
 #' @inherit write_latest_reported_hpop_summary
-#' @inherit write_sheet_header_hpop_summary
-#' @inherit style_uhc_pillar
+#' @inheritParams  write_sheet_header_hpop_summary
+#' @inheritParams  style_uhc_pillar
+#' @inheritParams  calculate_hpop_contributions
+#' @inheritParams  transform_hpop_data
+
 
 write_data_boxes_uhc_summary <- function(df,
                                          pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
@@ -235,9 +240,9 @@ write_data_boxes_uhc_summary <- function(df,
 #' @inherit write_latest_reported_hpop_summary
 #' @inherit write_sheet_header_hpop_summary
 #' @inherit style_uhc_pillar
+#' @inheritParams  calculate_hpop_contributions
 write_asc_uhc_data_summary <- function(df,
                                        pillar,
-                                       data_boxes_pillars = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
                                        wb,
                                        sheet_name,
                                        value,

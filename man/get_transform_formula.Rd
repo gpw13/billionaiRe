@@ -15,6 +15,10 @@ is located.}
 \item{raw_rows}{integer vector identifying rows indices where raw values for
 transformation are located. Must be the same length as \code{ind}}
 }
+\value{
+character vector with the formula for the indicator, column, row combination
+specified. If indicator is not found, "" is returned.
+}
 \description{
 \code{get_transform_formula()} gets the right transformation Excel formula for the
 specified indicator. Used in \code{write_tranform_formula}.

@@ -29,7 +29,7 @@ write_hpop_summary_sheet(
 \item{df}{Data frame in long format filtered for a specific country, where 1 row corresponds
 to a specific year, and indicator.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

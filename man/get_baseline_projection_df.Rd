@@ -40,6 +40,8 @@ used to calculate contributions.}
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
 \item{source_col}{Column name of column to store source information.}
+
+\item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 }
 \description{
 \code{get_latest_reported()} gets the latest reported data available for estimated

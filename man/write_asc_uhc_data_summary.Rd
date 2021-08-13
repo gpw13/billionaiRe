@@ -7,7 +7,6 @@
 write_asc_uhc_data_summary(
   df,
   pillar,
-  data_boxes_pillars = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
   wb,
   sheet_name,
   value,
@@ -36,7 +35,7 @@ to a specific year, and indicator.}
 \item service
 }}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -46,6 +45,8 @@ to a specific year, and indicator.}
 used to calculate contributions.}
 
 \item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
@@ -60,6 +61,11 @@ used to calculate contributions.}
 \item{source_col}{Column name of column to store source information.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

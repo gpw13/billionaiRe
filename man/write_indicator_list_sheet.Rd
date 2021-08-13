@@ -7,7 +7,7 @@
 write_indicator_list_sheet(wb, sheet_name, billion, start_row, start_col)
 }
 \arguments{
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

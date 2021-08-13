@@ -6,7 +6,7 @@
 #' @inheritParams export_all_countries_summaries_xls
 #' @inheritParams style_header_hpop_summary_sheet
 #'
-#' @return A [openxlsx::createWorkbook()] object
+#' @return A `openxlsx` workbook object
 write_permanent_sheets <- function(billion, start_col, start_row) {
   wb_file <- system.file("extdata",
     "country_summary_template.xlsx",

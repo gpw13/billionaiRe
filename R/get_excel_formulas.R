@@ -9,8 +9,8 @@
 #' @param raw_row integer identifying the row where the raw value (pre-transformation)
 #'  is located.
 #'
-#'  @return character vector with the formula for the indicator, column, row combination
-#'  specified. If indicator is not found, "" is returned.
+#' @return character vector with the formula for the indicator, column, row combination
+#' specified. If indicator is not found, "" is returned.
 get_transform_formula_single <- function(ind, raw_col, raw_row) {
   # TODO: add HEP and HPOP indicators formula
   raw_cell <- glue::glue("{openxlsx::int2col(raw_col)}{raw_row}")
@@ -31,20 +31,6 @@ get_transform_formula_single <- function(ind, raw_col, raw_row) {
   return(formula)
 }
 
-#' Get the transformation formula for a specified indicator
-#'
-#' `get_transform_formula()` gets the right transformation Excel formula for the
-#' specified indicator. Used in `write_tranform_formula`.
-#'
-#' @param raw_rows integer vector identifying rows indices where raw values for
-#' transformation are located. Must be the same length as `ind`
-#' @inherit get_transform_formula_single
-
-get_transform_formula <- function(ind, raw_col, raw_rows) {
-  purrr::map2_chr(ind, raw_rows, ~ get_transform_formula_single(.x, raw_col, .y)) %>%
-    as_excel_formula()
-}
-
 #' Coerce coerce column to Excel Formula
 #'
 #' `as_excel_formula_column` coerce a specified column into an Excel formula to be
@@ -53,11 +39,21 @@ get_transform_formula <- function(ind, raw_col, raw_rows) {
 #' as normal text by Excel.
 #'
 #' @param col integer or character vector identifying the column to be coerced
-#' @inherit openxlsx::writeFormula
-#' @seealso [openxlsx::writeFormula()]
-#'
+#' @inheritParams openxlsx::writeFormula
 as_excel_formula <- function(col, array = FALSE) {
   class(col) <- c("character", ifelse(array, "array_formula", "formula"))
 
   return(col)
+}
+
+#' Get the transformation formula for a specified indicator
+#'
+#' `get_transform_formula()` gets the right transformation Excel formula for the
+#' specified indicator. Used in `write_tranform_formula`.
+#'
+#' @param raw_rows integer vector identifying rows indices where raw values for
+#' transformation are located. Must be the same length as `ind`
+#' @inherit get_transform_formula_single
+get_transform_formula <- function(ind, raw_col, raw_rows) {
+  as_excel_formula(purrr::map2_chr(ind, raw_rows, ~ get_transform_formula_single(.x, raw_col, .y)))
 }

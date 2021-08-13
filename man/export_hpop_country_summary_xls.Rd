@@ -31,7 +31,7 @@ export_hpop_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
@@ -72,6 +72,11 @@ as \code{transform_value}.}
 \item{sheet_prefix}{Character prefix to add in front of export sheets}
 
 \item{output_folder}{Folder path to where the Excel files should be written}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.

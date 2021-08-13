@@ -4,11 +4,11 @@
 #'  summary sheet. Used within `export_uhc_country_summary_xls()`
 #'
 #' @inherit export_country_summary_xls
-#' @inheritParams write_uhc_summary_sheet
+#' @inheritParams write_baseline_projection_hpop_summary
 #' @param df Data frame in long format filtered for a specific country, where 1 row corresponds
 #'    to a specific year, and indicator.
 #' @param ind_df data frame containing the indicators in the correct order and format to be used.
-#'
+#' @inheritParams  calculate_hpop_contributions
 write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
                                     start_year = 2018,
                                     end_year = 2019:2023,
@@ -122,7 +122,6 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
   write_asc_uhc_data_summary(
     df = df,
     pillar = "fin_hardship",
-    data_boxes_pillars = pillars,
     wb = wb,
     sheet_name = sheet_name,
     value = value,
@@ -157,12 +156,12 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
         "3 Data are imputed using linear interpolation between 2020 and 2025 projected values extracted from WHO Global Report on Trends in Tobacco Use 2000-2025.",
         "4 ITN use only applies to malaria endemic countries in sub-Saharan Africa for which data on ITN use are available.",
         "5 The Average Service Coverage value presented here is slightly different to the SDG 3.8.1 value due to the use of nested arithmetic means and small adjustments to the TB treatment, tobacco control, and Health workforce indicators. Please see the Methods Report for more information.",
-        "** Projections have been produced jointly with the World Bank based on survey based estimates available to both organizations by July 2019. Modelling relies on the International Monetary Fund World Economic Outlook projections for GDP per capita (2019 released until 2024); the WHO Global expenditure data on household out-of-pocket expenditures (2018 update) and the IMF or the World Bank data on household final private consumption (2019 released). These projections are preliminary, they will be used in the dashboard to compute the UHC billion but won’t be shown. They will be updated to take into account more recent survey-based estimates that will go through country consultation in early 2021 but might not yet capture the impact of COVID-19."
+        "\\** Projections have been produced jointly with the World Bank based on survey based estimates available to both organizations by July 2019. Modelling relies on the International Monetary Fund World Economic Outlook projections for GDP per capita (2019 released until 2024); the WHO Global expenditure data on household out-of-pocket expenditures (2018 update) and the IMF or the World Bank data on household final private consumption (2019 released). These projections are preliminary, they will be used in the dashboard to compute the UHC billion but won't be shown. They will be updated to take into account more recent survey-based estimates that will go through country consultation in early 2021 but might not yet capture the impact of COVID-19."
       ),
     methode_transformation =
       c(
         "The prevalence of raised blood pressure is converted into prevalence of non-raised blood pressure and is rescaled using a minimum value of 50% (i.e. rescaled value = (X - 50) / (100 - 50) * 100).",
-        "Mean fasting plasma glucose, which is a continuous measure (units of mmol/L), is converted to a scale of 0 to 100 using the minimum theoretical biological risk (5.1 mmol/L) and observed maximum across countries (7.1 mmol/L) (i.e. ° rescaled value  =  (7.1  -  original value)  / (7.1 - 5.1) * 100).",
+        "Mean fasting plasma glucose, which is a continuous measure (units of mmol/L), is converted to a scale of 0 to 100 using the minimum theoretical biological risk (5.1 mmol/L) and observed maximum across countries (7.1 mmol/L) (i.e. rescaled value  =  (7.1  -  original value)  / (7.1 - 5.1) * 100).",
         "The prevalence of tobacco use is converted into prevalence of tobacco non-use.",
         "Hospital bed density is capped at a maximum threshold, and values above this threshold are held constant at 100. The treshold is based on minimum values observed across Organisation for Economic Co-operation and Development countries (i.e. rescaled hospital beds per 10,000 = minimum (100, original value / 18 * 100)).",
         "Health worker density is the sum of doctors and nurses/midwives densities, is capped at a maximum threshold and values above this threshold are held constant at 100. The treshold is based on the 95th percentile across all national densities from 2000 to 2017 (i.e. rescaled health worker density per 10,000 = minimum (100, original value / 154.7 * 100)).",
@@ -173,7 +172,7 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
   )
 
   notes_bounds <- boxes_bounds[["notes"]]
-  notes_bounds[["end_row"]] <- boxes_bounds[["notes"]]["start_row"] + length(notes$notes) + 1
+  notes_bounds[["end_row"]] <- boxes_bounds[["notes"]]["start_row"] + length(end_notes$notes) + 1
 
   write_notes(end_notes$notes, "Notes:", wb, sheet_name, bounds = notes_bounds)
 
@@ -189,7 +188,8 @@ write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
 #' Write and style UHC summary sheet header
 #'
 #' @inherit write_sheet_header_hpop_summary
-
+#' @inheritParams transform_hpop_data
+#' @inheritParams export_country_summary_xls
 write_sheet_header_uhc_summary <- function(wb, sheet_name, iso, end_year, value, boxes_bounds) {
   openxlsx::writeData(wb,
     sheet = sheet_name,

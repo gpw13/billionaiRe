@@ -168,8 +168,9 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
 
 #' Write and style HPOP summary sheet header
 #' @inherit write_baseline_projection_hpop_summary
-#' @inherit export_hpop_country_summary_xls
-#' @inherit style_header_hpop_summary_sheet
+#' @inheritParams transform_hpop_data
+#' @inheritParams style_header_hpop_summary_sheet
+#' @inheritParams export_country_summary_xls
 #' @param boxes_bounds named list of bounds for data frame boxes to be written in sheet.
 
 write_sheet_header_hpop_summary <- function(wb, sheet_name, iso, start_col, start_row, end_year, value, boxes_bounds) {

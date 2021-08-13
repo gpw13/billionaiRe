@@ -9,7 +9,7 @@ write_indicators_hpop_summary(ind_df, wb, sheet_name, bounds)
 \arguments{
 \item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

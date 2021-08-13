@@ -6,14 +6,16 @@
 \usage{
 get_df_one_scenario(df, scenario)
 }
+\arguments{
+\item{df}{data.frame to be treated}
+
+\item{scenario}{character string identifying the scenario column in \code{df}}
+}
+\value{
+A data frame with one scenario
+}
 \description{
 Get just one scenario in the data frame. Is used to avoid issues with when
 multiple scenarios are present in export functions, as scenarios are not implemented
 at the moment.
-}
-\details{
-@param df data.frame to be treated
-@param scenario character string identifying the scenario column in \code{df}
-
-@return A data frame with one scenario
 }

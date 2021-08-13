@@ -46,7 +46,7 @@ get_data_type_single <- function(vec) {
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
 #' @inheritParams style_data_single
-#'
+#' @inheritParams style_uhc_pillar
 style_data <- function(data_type,
                        wb,
                        sheet_name,
@@ -69,6 +69,7 @@ style_data <- function(data_type,
 #' Can be one of "numeric", "integer", "Date", "character", or "character_centered"
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
+#' @inheritParams style_uhc_pillar
 #' @param col Column to apply style to.
 style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered", "formula"),
                               wb,

@@ -21,7 +21,7 @@ write_uhc_timeseries_sheet(
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -38,6 +38,11 @@ write_uhc_timeseries_sheet(
 \item{year}{Column name of column with years.}
 
 \item{type_col}{Column name of column to store type.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.

@@ -13,10 +13,11 @@ get_transform_formula_single(ind, raw_col, raw_row)
 is located.}
 
 \item{raw_row}{integer identifying the row where the raw value (pre-transformation)
-is located.
-
-@return character vector with the formula for the indicator, column, row combination
-specified. If indicator is not found, "" is returned.}
+is located.}
+}
+\value{
+character vector with the formula for the indicator, column, row combination
+specified. If indicator is not found, "" is returned.
 }
 \description{
 \code{get_transform_formula_single()} gets the right transformation Excel formula
