@@ -65,14 +65,14 @@ style_indicator_list_sheet <- function(df,
                                        end_col) {
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$title,
+    style = excel_styles(style_category = "title"),
     cols = 2,
     rows = 2
   )
 
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = openxlsx::createStyle(
+    style = excel_styles(
       fontName = "Calibri",
       fontColour = "white",
       fontSize = 10,
@@ -103,7 +103,10 @@ style_indicator_list_sheet <- function(df,
     sheet = sheet_name,
     cols = start_col:(start_col + 30),
     rows = (start_row + nrow(df) + 1):(start_row + nrow(df) + 100),
-    style = excel_styles()$white_bckgrd,
+    style = excel_styles(
+      fgFill = "white",
+      borderColour = "white"
+    ),
     gridExpand = T
   )
 

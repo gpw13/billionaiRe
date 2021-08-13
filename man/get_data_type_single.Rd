@@ -16,7 +16,7 @@ Gets the type of data for styling purposes. Can be either:
 \item integer
 \item Date
 \item character
-\item character_centered
+\item chr_type
 \item formula
 Used to pass appropriate parameters to \code{style_data()}
 }

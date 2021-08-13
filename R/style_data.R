@@ -5,7 +5,7 @@
 #' * integer
 #' * Date
 #' * character
-#' * character_centered
+#' * chr_type
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param df data frame to be tested
@@ -21,14 +21,14 @@ get_data_type <- function(df) {
 #' * integer
 #' * Date
 #' * character
-#' * character_centered
+#' * chr_type
 #' * formula
 #' Used to pass appropriate parameters to `style_data()`
 #'
 #' @param vec vector to be tested
 get_data_type_single <- function(vec) {
   if (sum(vec %in% c("imputed", "estimated", "projected", "reported", NA)) == length(vec)) {
-    type <- "character_centered"
+    type <- "chr_type"
   } else if (sum(grepl("^=", vec), is.na(vec)) == length(vec)) {
     type <- "formula"
   } else {
@@ -41,7 +41,7 @@ get_data_type_single <- function(vec) {
 #' Style data according to its type
 #'
 #' @param  data_type character vector of class(es) of the data to be styled.
-#' Can be one of "numeric", "integer", "Date", "character", "character_centered",
+#' Can be one of "numeric", "integer", "Date", "character", "chr_type",
 #' or "formula".
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
@@ -56,8 +56,10 @@ style_data <- function(data_type,
                        no_show_row = 0) {
   assert_same_length(data_type, cols)
   # TODO: This needs rethinking because it makes the whole script very slow...
+  unique_data_types <- unique(data_type)
+  unique_col_types <- purrr::map(unique_data_types, ~ grep(.x, data_type))
   purrr::walk2(
-    data_type, cols,
+    unique_data_types, unique_col_types,
     ~ style_data_single(data_type = .x, wb, sheet_name, rows, col = .y, no_show = no_show, no_show_row = no_show_row)
   )
   return(wb)
@@ -66,12 +68,12 @@ style_data <- function(data_type,
 #' Style data single data column according to its type
 #'
 #' @param data_type character vector of class(es) of the data to be styled.
-#' Can be one of "numeric", "integer", "Date", "character", or "character_centered"
+#' Can be one of "numeric", "integer", "Date", "character", or "chr_type"
 #' @inheritParams write_baseline_projection_hpop_summary
 #' @inheritParams openxlsx::addStyle
 #' @inheritParams style_uhc_pillar
 #' @param col Column to apply style to.
-style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "character_centered", "formula"),
+style_data_single <- function(data_type = c("numeric", "integer", "Date", "character", "chr_type", "formula"),
                               wb,
                               sheet_name,
                               rows,
@@ -100,7 +102,7 @@ style_data_single <- function(data_type = c("numeric", "integer", "Date", "chara
     final_row_style <- excel_styles()$normal_text_black_border
     row_style_hiv <- excel_styles()$normal_text_hidden
     final_row_style_hiv <- excel_styles()$normal_text_black_border_hidden
-  } else if (data_type == "character_centered") {
+  } else if (data_type == "chr_type") {
     row_style <- excel_styles()$normal_text_centered
     final_row_style <- excel_styles()$normal_text_centered_black_border
     row_style_hiv <- excel_styles()$normal_text_centered_hidden

@@ -2,13 +2,41 @@
 % Please edit documentation in R/excel_styles.R
 \name{excel_styles}
 \alias{excel_styles}
-\title{Stores styles to be used in excel outputs}
+\title{Create basic Excel Styles and provides a way to modify them}
 \usage{
-excel_styles(font = "Calibri")
+excel_styles(
+  billion = NULL,
+  style_category = NULL,
+  type_data = NULL,
+  fontName = "Calibri",
+  ...
+)
 }
 \arguments{
-\item{font}{character name with the name of the font to use.}
+\item{billion}{Billion to be used for billion styling when relevant: either
+"hep", "hpop", "uhc", or NULL when no billion to be applied.}
+
+\item{style_category}{category of style to be used. Can be either:
+\itemize{
+\item "title"
+\item "subtitle"
+\item "datatable_header": for column headers of data tables
+\item "sub_datatable_header": for sub-headers of data tables
+\item "data" : for standard data points
+\item "normal_text"
+\item NULL when no category applies
+}}
+
+\item{type_data}{type of data. Can be either "date", "numeric", or "integer".}
+
+\item{fontName}{character name with the name of the font to use.}
+
+\item{...}{additional parameters to be passed to \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}}}
 }
 \description{
-Stores styles to be used in excel outputs
+\code{excel_styles} creates a series of styles used across the package and provides
+a way to modify them to increase the performance of the styling functions.
+}
+\seealso{
+\code{\link[openxlsx]{createStyle}}
 }

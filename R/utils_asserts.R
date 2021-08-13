@@ -253,3 +253,38 @@ assert_list <- function(df) {
     )
   }
 }
+
+#' Assert that `params` are valid formal argument to [openxlsx::createStyle()]
+#'
+#' @param ... character vector of parameters to [openxlsx::createStyle()]
+assert_style_param <- function(...) {
+  params <- c(...)
+  createStylesParams <- names(formals(openxlsx::createStyle))
+  bad_params <- params[!names(params) %in% createStylesParams]
+
+  if (length(bad_params) > 0) {
+    stop(sprintf(
+      "Params(s) %s are not valid formal argument to openxlsx::createStyle",
+      paste(bad_params, collapse = ", ")
+    ),
+    call. = FALSE
+    )
+  }
+}
+
+#'  Assert that x is in list or is NULL
+#'
+#'  @param x value to be checked
+#'  @param list list of values to be checked against
+assert_in_list_or_null <- function(x, list) {
+  if (!is.null(x)) {
+    if (!x %in% list) {
+      stop(sprintf(
+        "%s must be present in %s or NULL",
+        x, paste(list, collapse = ", ")
+      ),
+      call. = FALSE
+      )
+    }
+  }
+}
