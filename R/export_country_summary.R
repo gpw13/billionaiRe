@@ -159,7 +159,7 @@ export_country_summary_xls <- function(df,
   }
 
   openxlsx::saveWorkbook(wb,
-    glue::glue("{output_folder}/GPW13_{toupper(billion)}_billion_{iso}_CountrySummary_{lubridate::today())}.xlsx"),
+    glue::glue("{output_folder}/GPW13_{toupper(billion)}_billion_{iso}_CountrySummary_{lubridate::today()}.xlsx"),
     overwrite = TRUE
   )
 }
