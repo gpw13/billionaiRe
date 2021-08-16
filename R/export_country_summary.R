@@ -32,27 +32,26 @@ export_all_countries_summaries_xls <- function(df,
 
   unique_iso3s <- unique(df[[iso3]])
 
-  if (billion == "hpop") {
-    purrr::map(unique_iso3s, ~ export_country_summary_xls(
-      df = df,
-      iso = .x,
-      iso3 = iso3,
-      year = year,
-      ind = ind,
-      value = value,
-      transform_value = transform_value,
-      scenario = scenario,
-      type_col = type_col,
-      source_col = source_col,
-      population = population,
-      contribution = contribution,
-      contribution_pct = contribution_pct,
-      contribution_pct_total_pop = contribution_pct_total_pop,
-      start_year = start_year,
-      end_year = end_year,
-      output_folder = output_folder
-    ))
-  }
+  purrr::map(unique_iso3s, ~ export_country_summary_xls(
+    df = df,
+    iso = .x,
+    billion = billion,
+    iso3 = iso3,
+    year = year,
+    ind = ind,
+    value = value,
+    transform_value = transform_value,
+    scenario = scenario,
+    type_col = type_col,
+    source_col = source_col,
+    population = population,
+    contribution = contribution,
+    contribution_pct = contribution_pct,
+    contribution_pct_total_pop = contribution_pct_total_pop,
+    start_year = start_year,
+    end_year = end_year,
+    output_folder = output_folder
+  ))
 }
 
 #' Export country summary to Excel
