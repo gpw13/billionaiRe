@@ -6,7 +6,11 @@
 \usage{
 assert_in_list_or_null(x, list)
 }
+\arguments{
+\item{x}{value to be checked}
+
+\item{list}{list of values to be checked against}
+}
 \description{
-@param x value to be checked
-@param list list of values to be checked against
+Assert that x is in list or is NULL
 }

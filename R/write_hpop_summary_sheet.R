@@ -27,42 +27,43 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
   indicators <- ind_df %>%
     dplyr::select("ind", "sdg", "short_name")
 
+  # TODO: make dynamic if value or scenario >1
   boxes_bounds <- list(
     indicators = c(
       start_col = 1,
       end_col = 2,
       start_row = 9,
-      end_row = 9 + 2 + nrow(indicators)
+      end_row = 28
     ),
     latest = c(
       start_col = 3,
-      end_col = 2 + 5 + (2 * length(value)),
+      end_col = 9,
       start_row = 9,
-      end_row = 9 + 2 + nrow(indicators)
+      end_row = 28
     ),
     baseline_proj = c(
-      start_col = 2 + 5 + (2 * length(value)) + 2,
-      end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5,
+      start_col = 11,
+      end_col = 21,
       start_row = 9,
-      end_row = 9 + 2 + nrow(indicators)
+      end_row = 28
     ),
     contribution = c(
-      start_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2,
-      end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 1 + (length(value) * 3) + 1,
+      start_col = 23,
+      end_col = 26,
       start_row = 9,
-      end_row = 9 + 2 + nrow(indicators)
+      end_row = 28
     ),
     billion_contribution = c(
-      start_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2,
-      end_col = 2 + 5 + (2 * length(value)) + 1 + (3 * length(value)) * 2 + 5 + 2 + 3,
-      start_row = 9 + 2 + nrow(indicators) + 2,
-      end_row = 9 + 2 + nrow(indicators) + 1 + 6
+      start_col = 23,
+      end_col = 26,
+      start_row = 30,
+      end_row = 35
     ),
     notes = c(
       start_col = 1,
       end_col = 5,
-      start_row = 9 + 2 + nrow(indicators) + 2,
-      end_row = 9 + 2 + nrow(indicators) + 1 + 5
+      start_row = 30,
+      end_row = 34
     )
   )
 
@@ -202,8 +203,8 @@ write_sheet_header_hpop_summary <- function(wb, sheet_name, iso, start_col, star
   openxlsx::writeFormula(wb,
     sheet = sheet_name,
     x = c(
-      glue::glue("={openxlsx::int2col(boxes_bounds$contribution['start_col']+2)}{boxes_bounds$billion_contribution['end_row']-1}/1000"),
-      glue::glue("={openxlsx::int2col(boxes_bounds$contribution['start_col']+2)}{boxes_bounds$billion_contribution['end_row']}"),
+      glue::glue("={openxlsx::int2col(boxes_bounds$contribution['end_col'])}{boxes_bounds$billion_contribution['end_row']-1}/1000"),
+      glue::glue("={openxlsx::int2col(boxes_bounds$contribution['end_col'])}{boxes_bounds$billion_contribution['end_row']}"),
       glue::glue("={country_pop_end_year}/1000000")
     ),
     startRow = start_row + 3,

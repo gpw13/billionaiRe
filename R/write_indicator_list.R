@@ -78,7 +78,8 @@ style_indicator_list_sheet <- function(df,
       fontSize = 10,
       border = c("top", "bottom"),
       borderStyle = "thin",
-      fgFill = "grey"
+      fgFill = "#A6A6A6",
+      textDecoration = "bold"
     ),
     rows = start_row,
     cols = c(start_col:(end_col))
@@ -137,7 +138,6 @@ add_style_wrapper_billion <- function(wb,
       fontName = "Calibri",
       fontSize = 8,
       halign = "left",
-      wrapText = TRUE,
       numFmt = "TXT",
       fgFill = fgFill,
       border = "bottom",

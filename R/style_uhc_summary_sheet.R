@@ -6,32 +6,49 @@
 #'
 style_header_uhc_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$title,
+    sheet = sheet_name, style = excel_styles(style_category = "title"),
     rows = boxes_bounds$sheet_header["start_row"],
     cols = boxes_bounds$sheet_header["start_col"]
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$sub_title,
+    sheet = sheet_name, style = excel_styles(style_category = "subtitle"),
     rows = boxes_bounds$sheet_header["start_row"] + 2,
     cols = boxes_bounds$sheet_header["start_col"]
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_text_10p_noBorder,
+    sheet = sheet_name, style = excel_styles(
+      style_category = "normal_text",
+      fontSize = 10
+    ),
     rows = c((boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5)),
     cols = boxes_bounds$sheet_header["start_col"], gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$bold_uhc_hR_2dp,
+    sheet = sheet_name, style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      fontSize = 10,
+      textDecoration = "bold",
+      numFmt = "0.00",
+      halign = "right"
+    ),
     rows = (boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5),
     cols = (boxes_bounds$sheet_header["start_col"] + 4),
     gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$bold_uhc_hL_2dp,
+    sheet = sheet_name, style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      fontSize = 10,
+      textDecoration = "bold",
+      numFmt = "0.00",
+      halign = "left"
+    ),
     rows = (boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5),
     cols = (boxes_bounds$sheet_header["start_col"] + 5),
     gridExpand = TRUE
@@ -48,19 +65,26 @@ style_header_uhc_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
 #' @inherit style_header_hpop_summary_sheet
 #' @inheritParams write_sheet_header_hpop_summary
 style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
+
+  # Tracer area / tracer indicator headers
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$uhc_main_data_header_left_align,
+    sheet = sheet_name, style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "main",
+      style_category = "datatable_header",
+      halign = "left"
+    ),
     rows = boxes_bounds$data_header["start_row"] + 2,
     cols = boxes_bounds$data_header["start_col"]:(boxes_bounds$data_header["start_col"] + 1),
     gridExpand = TRUE
   )
-
+  # Merging latest reported
   mergeCellForced(wb,
     sheet = sheet_name,
     rows = boxes_bounds$latest_reported_data["start_row"],
     cols = (boxes_bounds$latest_reported_data["start_col"]):(boxes_bounds$latest_reported_data["end_col"])
   )
-
+  # Syling Latest reported data headers
   wb <- style_uhc_headers(wb, sheet_name, bounds = boxes_bounds$latest_reported_data)
 
   mergeCellForced(wb,
@@ -69,24 +93,60 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
     rows = boxes_bounds$baseline_projection_data["start_row"]
   )
 
+  # Styling main baseline/projection header
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$uhc_main_data_header,
+    sheet = sheet_name, style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "main",
+      style_category = "datatable_header",
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
     rows = boxes_bounds$baseline_projection_data["start_row"],
     gridExpand = TRUE
   )
 
+  # Styling baseline/projection sub-header
+  # Back ground color
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header_border_left_align,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1):((boxes_bounds$baseline_projection_data["start_row"] + 2)),
+    gridExpand = TRUE
+  )
+  # Raw values
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "left",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["start_col"] + 1),
     rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
     gridExpand = TRUE
   )
 
+  # Transformed values
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header_border_left_align,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "left",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"] + 3):(boxes_bounds$baseline_projection_data["start_col"] + 4),
     rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
     gridExpand = TRUE
@@ -98,38 +158,67 @@ style_data_headers_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
     rows = (boxes_bounds$baseline_projection_data["start_col"] + 1):(boxes_bounds$baseline_projection_data["start_col"] + 2)
   )
 
+  # Types
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header_border_left_align,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "left",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"] + 8):(boxes_bounds$baseline_projection_data["start_col"] + 9),
     rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
     gridExpand = TRUE
   )
-
+  # Sources
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header_border_left_align,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "left",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"] + 11):(boxes_bounds$baseline_projection_data["end_col"]),
     rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
     gridExpand = TRUE
   )
 
+  # years row
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
     rows = (boxes_bounds$data_header["end_row"]),
     gridExpand = TRUE
   )
-
+  # Direction of change
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center"
+    ),
     cols = (boxes_bounds$baseline_projection_data["start_col"] + 6),
     rows = (boxes_bounds$baseline_projection_data["start_col"] + 1):(boxes_bounds$baseline_projection_data["start_col"] + 2),
     gridExpand = TRUE
   )
 
+  # Width columns
   openxlsx::setColWidths(wb,
     sheet = sheet_name,
     cols = c(boxes_bounds$data_header["start_col"]:(boxes_bounds$data_header["start_col"] + 1)),
@@ -175,27 +264,70 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
                              no_show_row = 2) {
   pillar <- rlang::arg_match(pillar)
 
+  # Style box header
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_header,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light2",
+      fontSize = 10,
+      fontColour = "black",
+      halign = "left",
+      valign = "center",
+      textDecoration = "bold",
+    ),
     rows = boxes_bounds[[pillar]]["start_row"],
-    cols = boxes_bounds[[pillar]]["start_col"]:boxes_bounds[[pillar]]["end_col"],
+    cols = boxes_bounds[[pillar]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"],
     gridExpand = TRUE
   )
 
+  openxlsx::addStyle(wb, sheet_name,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light2",
+      fontSize = 10,
+      fontColour = "black",
+      halign = "left",
+      valign = "center",
+      textDecoration = "bold",
+    ),
+    rows = boxes_bounds[[pillar]]["start_row"],
+    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"],
+    gridExpand = TRUE
+  )
+
+
+  normal_text_vCentered <- excel_styles(
+    style_category = "normal_text",
+    border = "bottom",
+    borderColour = "grey",
+    valign = "center"
+  )
+
+  # Style boxes indicators
   data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"] - 1)
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$normal_text_wrapped_vCentered,
+    style = excel_styles(
+      style_category = "normal_text",
+      border = "bottom",
+      borderColour = "grey",
+      valign = "center",
+      wrapText = TRUE
+    ),
     rows = data_rows,
     cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
     gridExpand = TRUE
   )
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$normal_text_wrapped_vCentered_black_border,
+    style = modifyStyle(
+      style = normal_text_vCentered,
+      borderColour = "black"
+    ),
     rows = data_rows[length(data_rows)],
     cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
     gridExpand = TRUE
   )
 
+  # Styling data rows
   wb <- style_data(
     data_type = data_type$latest_reported, wb, sheet_name,
     rows = data_rows,
@@ -210,24 +342,48 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
     no_show = no_show, no_show_row = no_show_row
   )
 
-  openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_average_data,
-    rows = boxes_bounds[[pillar]]["end_row"],
-    cols = boxes_bounds[[pillar]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"]
+  uhc_pillar_average_text <- excel_styles(
+    style_category = "data",
+    type_data = "numeric",
+    fgFill = "#D9D9D9",
+    halign = "right",
+    valign = "center",
+    textDecoration = c("bold", "italic"),
+    numFmt = "TEXT"
   )
-
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_average_data,
-    rows = boxes_bounds[[pillar]]["end_row"],
-    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
-  )
-
-  openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_average_text,
+    style = modifyStyle(uhc_pillar_average_text,
+      halign = "right",
+      valign = "center",
+      textDecoration = c("bold", "italic"),
+      numFmt = "TEXT"
+    ),
     rows = boxes_bounds[[pillar]]["end_row"],
     cols = boxes_bounds[[pillar]]["start_col"] + 1,
     gridExpand = TRUE
   )
+
+  uhc_pillar_average_data <- excel_styles(
+    style_category = "data",
+    type_data = "numeric",
+    fgFill = "#D9D9D9",
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold"
+  )
+  # Styling averages rows
+  openxlsx::addStyle(wb, sheet_name,
+    style = uhc_pillar_average_data,
+    rows = boxes_bounds[[pillar]]["end_row"],
+    cols = boxes_bounds[["latest_reported_data"]]["start_col"]:boxes_bounds[["latest_reported_data"]]["end_col"]
+  )
+
+  openxlsx::addStyle(wb, sheet_name,
+    style = uhc_pillar_average_data,
+    rows = boxes_bounds[[pillar]]["end_row"],
+    cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
+  )
+
 
   return(wb)
 }
@@ -240,27 +396,52 @@ style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
   pillar <- rlang::arg_match(pillar)
 
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_header,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light2",
+      fontSize = 10,
+      fontColour = "black",
+      halign = "left",
+      valign = "center",
+      textDecoration = "bold",
+    ),
     rows = boxes_bounds[[pillar]]["start_row"],
     cols = boxes_bounds[[pillar]]["start_col"]:boxes_bounds[[pillar]]["end_col"],
     gridExpand = TRUE
   )
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$uhc_pillar_header_data_bold,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light2",
+      fontSize = 8,
+      fontColour = "black",
+      halign = "center",
+      valign = "center",
+      textDecoration = "bold",
+      numFmt = "0.00"
+    ),
     rows = boxes_bounds[[pillar]]["start_row"],
     cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"],
     gridExpand = TRUE
   )
   data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"])
 
+  normal_text_vCentered <- excel_styles(
+    style_category = "normal_text",
+    border = "bottom",
+    borderColour = "grey",
+    valign = "center",
+    wrapText = TRUE
+  )
+
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$normal_text_wrapped_vCentered,
+    style = normal_text_vCentered,
     rows = data_rows,
     cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
     gridExpand = TRUE
   )
   openxlsx::addStyle(wb, sheet_name,
-    style = excel_styles()$normal_text_wrapped_vCentered_black_border,
+    style = modifyStyle(normal_text_vCentered, borderColour = "black"),
     rows = data_rows[length(data_rows)],
     cols = boxes_bounds[[pillar]]["start_col"]:(boxes_bounds[[pillar]]["start_col"] + 1),
     gridExpand = TRUE
@@ -281,7 +462,7 @@ style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
   if (no_show) {
     openxlsx::addStyle(wb,
       sheet_name,
-      style = excel_styles()$normal_text_hidden,
+      style = excel_styles(style_category = "normal_text", hide = TRUE),
       rows = no_show_rows,
       cols = no_show_cols,
       gridExpand = TRUE
@@ -294,7 +475,12 @@ style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
 style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_summary_text_bold,
+    style = excel_styles(
+      billion = "uhc", billion_fgFill = "light",
+      textDecoration = "bold",
+      numFmt = "TEXT",
+      fontSize = 8
+    ),
     rows = c(
       boxes_bounds[["summary"]]["start_row"],
       boxes_bounds[["summary"]]["end_row"] - 1,
@@ -306,7 +492,11 @@ style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
 
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_summary_text,
+    style = excel_styles(
+      billion = "uhc", billion_fgFill = "light",
+      numFmt = "TEXT",
+      fontSize = 8
+    ),
     rows = c(
       boxes_bounds[["summary"]]["start_row"] + 1,
       boxes_bounds[["summary"]]["start_row"] + 2
@@ -320,7 +510,11 @@ style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
 
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_summary_data_bold,
+    style = excel_styles(
+      type_data = "numeric",
+      billion = "uhc", billion_fgFill = "light",
+      fontSize = 8
+    ),
     rows = c(
       boxes_bounds[["summary"]]["start_row"],
       boxes_bounds[["summary"]]["end_row"]
@@ -331,24 +525,29 @@ style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
 
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_summary_data,
-    rows = c(boxes_bounds[["summary"]]["start_row"] + 1),
+    style = excel_styles(
+      type_data = "numeric",
+      billion = "uhc", billion_fgFill = "light",
+      textDecoration = "bold",
+      fontSize = 8
+    ),
+    rows = c(
+      boxes_bounds[["summary"]]["start_row"],
+      boxes_bounds[["summary"]]["end_row"]
+    ),
     cols = col_trans_start_year:col_trans_end_year,
     gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_summary_data_int_bold,
-    rows = c(boxes_bounds[["summary"]]["start_row"] + 3),
-    cols = col_trans_start_year:col_trans_end_year,
-    gridExpand = TRUE
-  )
-
-  openxlsx::addStyle(wb,
-    sheet = sheet_name,
-    style = excel_styles()$uhc_summary_data_int,
-    rows = c(boxes_bounds[["summary"]]["start_row"] + 2),
+    style = excel_styles(
+      type_data = "integer",
+      billion = "uhc", billion_fgFill = "light",
+      textDecoration = "bold",
+      fontSize = 8
+    ),
+    rows = c(boxes_bounds[["summary"]]["end_row"] - 1),
     cols = col_trans_start_year:col_trans_end_year,
     gridExpand = TRUE
   )

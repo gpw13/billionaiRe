@@ -67,8 +67,8 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
       startCol = start_col, startRow = start_row_new + 2,
       colNames = FALSE
     )
-    wb <- style_hpop_timeseries(
-      df = df, wb, sheet_name,
+    wb <- style_timeseries(
+      df = time_series[[i]], wb, billion = "hpop", sheet_name,
       start_row = start_row_new, start_col = start_col,
       ind, year, type_col, df_wide = time_series_wide, ind_df
     )
@@ -97,7 +97,7 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
     startCol = start_col
   )
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_data_int,
+    sheet = sheet_name, style = excel_styles(style_category = "normal_text"),
     rows = start_row_final + 2,
     cols = start_col, gridExpand = TRUE
   )

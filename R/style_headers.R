@@ -15,7 +15,11 @@ style_hpop_headers <- function(wb, sheet_name, bounds) {
   openxlsx::addStyle(
     wb,
     sheet = sheet_name,
-    style = excel_styles()$hpop_main_data_header,
+    style = excel_styles(
+      style_category = "datatable_header",
+      billion = "hpop",
+      billion_fgFill = "main"
+    ),
     rows = bounds["start_row"],
     cols = bounds["start_col"]:bounds["end_col"],
     gridExpand = TRUE
@@ -29,8 +33,12 @@ style_hpop_headers <- function(wb, sheet_name, bounds) {
   openxlsx::addStyle(
     wb,
     sheet = sheet_name,
-    style = excel_styles()$hpop_sec_data_header,
-    rows =  (bounds["start_row"] + 1):(bounds["start_row"] + 2),
+    style = excel_styles(
+      style_category = "sub_datatable_header",
+      billion = "hpop",
+      billion_fgFill = "light"
+    ),
+    rows = (bounds["start_row"] + 1):(bounds["start_row"] + 2),
     cols = bounds["start_col"]:(bounds["end_col"]),
     gridExpand = TRUE
   )
@@ -55,7 +63,11 @@ style_uhc_headers <- function(wb, sheet_name, bounds) {
   openxlsx::addStyle(
     wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_main_data_header,
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "main",
+      style_category = "datatable_header"
+    ),
     rows = bounds["start_row"],
     cols = bounds["start_col"]:bounds["end_col"],
     gridExpand = TRUE
@@ -69,8 +81,12 @@ style_uhc_headers <- function(wb, sheet_name, bounds) {
   openxlsx::addStyle(
     wb,
     sheet = sheet_name,
-    style = excel_styles()$uhc_sec_data_header,
-    rows =  (bounds["start_row"] + 1):(bounds["start_row"] + 2),
+    style = excel_styles(
+      billion = "uhc",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header"
+    ),
+    rows = (bounds["start_row"] + 1):(bounds["start_row"] + 2),
     cols = bounds["start_col"]:(bounds["end_col"]),
     gridExpand = TRUE
   )

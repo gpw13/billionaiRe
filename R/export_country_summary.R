@@ -133,8 +133,8 @@ export_country_summary_xls <- function(df,
       value = value,
       transform_value = transform_value,
       scenario = scenario,
-      type_col = type,
-      source_col = source,
+      type_col = type_col,
+      source_col = source_col,
       population = population,
       contribution = contribution,
       start_year = start_year,
@@ -159,7 +159,7 @@ export_country_summary_xls <- function(df,
   }
 
   openxlsx::saveWorkbook(wb,
-    glue::glue("{output_folder}/GPW13_{billion}_billion_{iso}_CountrySummary_{lubridate::month(lubridate::today(), TRUE)}{lubridate::year(lubridate::today())}.xlsx"),
+    glue::glue("{output_folder}/GPW13_{toupper(billion)}_billion_{iso}_CountrySummary_{lubridate::today())}.xlsx"),
     overwrite = TRUE
   )
 }
@@ -281,7 +281,14 @@ export_hpop_country_summary_xls <- function(df,
   # Flip titles graph
   openxlsx::addStyle(wb,
     sheet = "HPOP_Chart", rows = 22, cols = (3:(2 + nrow(ind_df))),
-    style = excel_styles()$vertical_txt
+    style = excel_styles(
+      textRotation = 90,
+      fontSize = 8,
+      fgFill = "white",
+      wrapText = TRUE,
+      halign = "center",
+      valign = "center"
+    )
   )
   return(wb)
 }
@@ -338,7 +345,7 @@ export_uhc_country_summary_xls <- function(df,
   # data sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")
 
-  wb <- write_uhc_summary_sheet(
+  write_uhc_summary_sheet(
     df = df_iso,
     wb = wb,
     sheet_name = summary_sheet,
@@ -373,7 +380,14 @@ export_uhc_country_summary_xls <- function(df,
 
   openxlsx::addStyle(wb,
     sheet = "UHC_Chart", rows = 22, cols = (3:(2 + nrow(ind_df))),
-    style = excel_styles()$vertical_txt
+    style = excel_styles(
+      textRotation = 90,
+      fontSize = 8,
+      fgFill = "white",
+      wrapText = TRUE,
+      halign = "center",
+      valign = "center"
+    )
   )
 
 

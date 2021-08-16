@@ -91,8 +91,8 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
       startCol = start_col, startRow = start_row_new + 2,
       colNames = FALSE
     )
-    wb <- style_uhc_timeseries(
-      df = time_series[[i]], wb, sheet_name,
+    wb <- style_timeseries(
+      df = time_series[[i]], wb, billion = "uhc", sheet_name,
       start_row = start_row_new, start_col = start_col,
       ind, year, type_col, df_wide = time_series_wide, ind_df_timeseries
     )
@@ -121,7 +121,7 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
     startCol = start_col
   )
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_text_8p_noBorder,
+    sheet = sheet_name, style = excel_styles(style_category = "normal_text"),
     rows = start_row_final + 1,
     cols = start_col, gridExpand = TRUE
   )

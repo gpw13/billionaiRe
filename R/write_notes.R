@@ -47,19 +47,21 @@ style_notes <- function(wb, sheet_name, bounds) {
   }
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$bold_text_no_border,
+    sheet = sheet_name, style = excel_styles(
+      style_category = "normal_text",
+      textDecoration = "bold"
+    ),
     rows = bounds["start_row"],
     cols = bounds["start_col"]:bounds["end_col"],
     gridExpand = TRUE
   )
 
   openxlsx::addStyle(wb,
-    sheet = sheet_name, style = excel_styles()$normal_text_no_border,
+    sheet = sheet_name, style = excel_styles(style_category = "normal_text"),
     rows = (bounds["start_row"] + 1):bounds["end_row"],
     cols = bounds["start_col"]:bounds["end_col"],
     gridExpand = TRUE
   )
-
 
   return(wb)
 }

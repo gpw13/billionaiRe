@@ -9,6 +9,8 @@ excel_styles(
   style_category = NULL,
   type_data = NULL,
   fontName = "Calibri",
+  billion_fgFill = NULL,
+  hide = FALSE,
   ...
 )
 }
@@ -31,7 +33,13 @@ excel_styles(
 
 \item{fontName}{character name with the name of the font to use.}
 
-\item{...}{additional parameters to be passed to \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}}}
+\item{billion_fgFill}{character with the type of billion color to be used. Passed
+to \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}} fgFill parameter.}
+
+\item{hide}{bolean. Set fontColor to white and hidden to TRUE in \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}}}
+
+\item{...}{additional parameters to be passed to \code{\link[openxlsx:createStyle]{openxlsx::createStyle()}}.
+Overrides any of the parameter passed by previous parameters.}
 }
 \description{
 \code{excel_styles} creates a series of styles used across the package and provides

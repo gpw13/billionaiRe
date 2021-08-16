@@ -258,7 +258,7 @@ assert_list <- function(df) {
 #'
 #' @param ... character vector of parameters to [openxlsx::createStyle()]
 assert_style_param <- function(...) {
-  params <- c(...)
+  params <- list(...)
   createStylesParams <- names(formals(openxlsx::createStyle))
   bad_params <- params[!names(params) %in% createStylesParams]
 
@@ -272,10 +272,10 @@ assert_style_param <- function(...) {
   }
 }
 
-#'  Assert that x is in list or is NULL
+#' Assert that x is in list or is NULL
 #'
-#'  @param x value to be checked
-#'  @param list list of values to be checked against
+#' @param x value to be checked
+#' @param list list of values to be checked against
 assert_in_list_or_null <- function(x, list) {
   if (!is.null(x)) {
     if (!x %in% list) {
