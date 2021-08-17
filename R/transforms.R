@@ -100,7 +100,7 @@ untransform_hwf <- function(x) {
 #'
 #' @inheritParams reverse_ind
 transform_glucose <- function(x) {
-  x <- scales::rescale(x, from = c(7.4, 5.1), to = c(0,100))
+  x <- scales::rescale(x, from = c(7.4, 5.1), to = c(0, 100))
   trim_transforms(x)
 }
 
@@ -110,7 +110,7 @@ transform_glucose <- function(x) {
 #'
 #' @inheritParams reverse_ind
 untransform_glucose <- function(x) {
-  x <- scales::rescale(x, to = c(7.4, 5.1), from = c(0,100))
+  x <- scales::rescale(x, to = c(7.4, 5.1), from = c(0, 100))
   x
 }
 

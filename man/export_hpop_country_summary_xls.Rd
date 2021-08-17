@@ -19,7 +19,7 @@ export_hpop_country_summary_xls(
   population = "population",
   contribution = "contribution",
   contribution_pct = paste0(contribution, "_percent"),
-  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+  contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   start_year = 2018,
   end_year = 2019:2023,
   sheet_prefix = "HPOP",
@@ -31,7 +31,7 @@ export_hpop_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
@@ -61,7 +61,7 @@ values. Must be the same length as \code{transform_value}.}
 \item{contribution_pct}{Column name of column(s) to store contribution (percent)
 values. Must be the same length as \code{transform_value}.}
 
-\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
 (percent of total population of the country) values. Must be the same length
 as \code{transform_value}.}
 

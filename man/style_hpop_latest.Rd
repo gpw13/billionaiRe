@@ -7,7 +7,7 @@
 style_hpop_latest(wb, sheet_name, bounds, data_type)
 }
 \arguments{
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -23,7 +23,7 @@ Must have the following named elements:
 }}
 
 \item{data_type}{character vector of class(es) of the data to be styled.
-Can be one of "numeric", "integer", "Date", "character" or "character_centered"}
+Can be one of "numeric", "integer", "Date", "character", or "chr_type"}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

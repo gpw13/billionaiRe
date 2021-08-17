@@ -9,6 +9,9 @@ get_data_type(df)
 \arguments{
 \item{df}{data frame to be tested}
 }
+\value{
+character vector with the data_type of data frame columns
+}
 \description{
 Gets the type of data for styling purposes. Can be either:
 \itemize{
@@ -16,7 +19,7 @@ Gets the type of data for styling purposes. Can be either:
 \item integer
 \item Date
 \item character
-\item character_centered
+\item chr_type
 Used to pass appropriate parameters to \code{style_data()}
 }
 }

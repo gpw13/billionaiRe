@@ -8,3 +8,4 @@ outputs/
 ~$*.xls*
 inst/extdata/archive
 vignettes/.build.timestamp
+*.Rprofvis

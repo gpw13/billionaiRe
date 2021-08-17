@@ -6,9 +6,12 @@ assert_columns <- function(df, ...) {
   columns <- c(...)
   bad_cols <- columns[!(columns %in% names(df))]
   if (length(bad_cols) > 0) {
-    stop(sprintf("Column(s) %s are not in the data frame",
-                 paste(bad_cols, collapse = ", ")),
-         call. = FALSE)
+    stop(sprintf(
+      "Column(s) %s are not in the data frame",
+      paste(bad_cols, collapse = ", ")
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -19,7 +22,7 @@ assert_columns <- function(df, ...) {
 #'
 #' @param x argument to check
 assert_arg_exists <- function(x) {
-  if ( is.na(x) | is.null(x) ) {
+  if (is.na(x) | is.null(x)) {
     stop(
       sprintf("The %s argument is required and cannot be NA or NULL", deparse(substitute(x))),
       call. = FALSE
@@ -35,17 +38,23 @@ assert_strings <- function(...) {
   args <- list(...)
   classes <- sapply(args, class)
   if (!all(classes == "character")) {
-    stop(sprintf("%s must be a character vector of length one, not %s",
-                 paste(arg_names[!classes == "character"], collapse = ", "),
-                 paste(classes[!classes == "character"], collapse = ", ")),
-         call. = FALSE)
+    stop(sprintf(
+      "%s must be a character vector of length one, not %s",
+      paste(arg_names[!classes == "character"], collapse = ", "),
+      paste(classes[!classes == "character"], collapse = ", ")
+    ),
+    call. = FALSE
+    )
   }
   lens <- sapply(args, length)
   if (!all(lens == 1)) {
-    stop(sprintf("%s must be of length one, not length %s",
-                 paste(arg_names[lens != 1], collapse = ", "),
-                 paste(lens[lens != 1], collapse = ", ")),
-         call. = FALSE)
+    stop(sprintf(
+      "%s must be of length one, not length %s",
+      paste(arg_names[lens != 1], collapse = ", "),
+      paste(lens[lens != 1], collapse = ", ")
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -56,11 +65,14 @@ assert_strings <- function(...) {
 assert_numeric <- function(df, ...) {
   args <- c(...)
   nums <- sapply(args, function(x) is.numeric(df[[x]]))
-  if(!all(nums)) {
-    stop(sprintf("%s must be numeric not %s",
-                 paste(args[!nums], collapse = ", "),
-                 paste(sapply(args[!nums], function(x) class(df[[x]])), collapse = ", ")),
-         call. = FALSE)
+  if (!all(nums)) {
+    stop(sprintf(
+      "%s must be numeric not %s",
+      paste(args[!nums], collapse = ", "),
+      paste(sapply(args[!nums], function(x) class(df[[x]])), collapse = ", ")
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -72,12 +84,15 @@ assert_string <- function(x, n) {
   if (!is.null(x)) {
     lx <- length(x)
     if (!((is.character(x) & (lx == n)))) {
-      stop(sprintf("`%s` must be a character vector of length %d, not %s of length %d.",
-                   deparse(substitute(x)),
-                   n,
-                   class(x),
-                   lx),
-           call. = FALSE)
+      stop(sprintf(
+        "`%s` must be a character vector of length %d, not %s of length %d.",
+        deparse(substitute(x)),
+        n,
+        class(x),
+        lx
+      ),
+      call. = FALSE
+      )
     }
   }
 }
@@ -87,9 +102,12 @@ assert_string <- function(x, n) {
 #' @param df Supposed data frame
 assert_df <- function(df) {
   if (!is.data.frame(df)) {
-    stop(sprintf("`df` must be a data frame, not a %s.",
-                 class(df)[1]),
-         call. = FALSE)
+    stop(sprintf(
+      "`df` must be a data frame, not a %s.",
+      class(df)[1]
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -101,9 +119,12 @@ assert_ind_ids <- function(ind_ids, billion) {
   ind_check <- billion_ind_codes(billion)
   ind_check_nms <- all(ind_check %in% names(ind_ids))
   if (!ind_check_nms) {
-    stop(sprintf("`ind_ids` must be a named vector with all `billion_ind_codes('%s')` present as names.",
-                 billion),
-         call. = FALSE)
+    stop(sprintf(
+      "`ind_ids` must be a named vector with all `billion_ind_codes('%s')` present as names.",
+      billion
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -112,8 +133,7 @@ assert_ind_ids <- function(ind_ids, billion) {
 #'
 #' @param df input data frame
 #' @param col_name string specifying the column to check
-assert_homogeneous_col<- function(df, col_name) {
-
+assert_homogeneous_col <- function(df, col_name) {
   if (length(unique(df[[col_name]])) > 1) {
     stop(
       sprintf("This function should have only one unique value in the %s column.", col_name),
@@ -140,7 +160,8 @@ assert_unique_rows <- function(df,
   dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(ind, iso3, year, scenario))))
   if (nrow(ind_df) != nrow(dist_df)) {
     stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
@@ -153,9 +174,12 @@ assert_same_length <- function(...) {
   lns <- sapply(args, length)
 
   if (lns[1] != lns[2]) {
-    stop(sprintf("%s must have the same length.",
-                 paste(arg_names, collapse = " and ")),
-         call. = FALSE)
+    stop(sprintf(
+      "%s must have the same length.",
+      paste(arg_names, collapse = " and ")
+    ),
+    call. = FALSE
+    )
   }
 }
 
@@ -166,7 +190,8 @@ assert_same_length <- function(...) {
 assert_years <- function(start_year, end_year) {
   if (!all(start_year < end_year)) {
     stop("`end_year` must always be after `start_year`.",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
@@ -177,18 +202,23 @@ assert_years <- function(start_year, end_year) {
 #' @param col_name string specifying the name of column
 #' @param how string specifying whether to check for any/all missing values
 warning_col_missing_values <- function(df, col_name, how) {
-
   if (how == "any") {
     if (any(is.na(df[[col_name]]))) {
-      warning(sprintf("Some of the rows are missing a %s value.",
-                      col_name),
-              call. = FALSE)
+      warning(sprintf(
+        "Some of the rows are missing a %s value.",
+        col_name
+      ),
+      call. = FALSE
+      )
     }
   } else {
     if (all(is.na(df[[col_name]]))) {
-      warning(sprintf("All of the rows are missing a %s value.",
-                      col_name),
-              call. = FALSE)
+      warning(sprintf(
+        "All of the rows are missing a %s value.",
+        col_name
+      ),
+      call. = FALSE
+      )
     }
   }
 }
@@ -204,8 +234,8 @@ assert_who_iso <- function(iso) {
   if (!whoville::is_who_member(iso)) {
     stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
                  All valid codes are available through `whoville::who_member_states()`."),
-         call. = FALSE)
-
+      call. = FALSE
+    )
   }
 }
 
@@ -215,8 +245,46 @@ assert_who_iso <- function(iso) {
 #' @param df Supposed list
 assert_list <- function(df) {
   if (!is.list(df)) {
-    stop(sprintf("`df` must be a list, not a %s.",
-                 class(df)[1]),
-         call. = FALSE)
+    stop(sprintf(
+      "`df` must be a list, not a %s.",
+      class(df)[1]
+    ),
+    call. = FALSE
+    )
+  }
+}
+
+#' Assert that `params` are valid formal argument to [openxlsx::createStyle()]
+#'
+#' @param ... character vector of parameters to [openxlsx::createStyle()]
+assert_style_param <- function(...) {
+  params <- list(...)
+  createStylesParams <- names(formals(openxlsx::createStyle))
+  bad_params <- params[!names(params) %in% createStylesParams]
+
+  if (length(bad_params) > 0) {
+    stop(sprintf(
+      "Params(s) %s are not valid formal argument to openxlsx::createStyle",
+      paste(bad_params, collapse = ", ")
+    ),
+    call. = FALSE
+    )
+  }
+}
+
+#' Assert that x is in list or is NULL
+#'
+#' @param x value to be checked
+#' @param list list of values to be checked against
+assert_in_list_or_null <- function(x, list) {
+  if (!is.null(x)) {
+    if (!x %in% list) {
+      stop(sprintf(
+        "%s must be present in %s or NULL",
+        x, paste(list, collapse = ", ")
+      ),
+      call. = FALSE
+      )
+    }
   }
 }

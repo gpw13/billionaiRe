@@ -1,55 +1,57 @@
-Package: billionaiRe
 Type: Package
+Package: billionaiRe
 Title: Calculate the WHO Triple Billions
 Version: 0.4.3
-Authors@R: c(person(given = "Seth", 
-                    family = "Caldwell", 
-                    email = "caldwellst@gmail.com", 
-                    role = c("aut", "cre")),
-             person(given = "Alice", 
-                    family = "Robson", 
-                    email = "robsona@who.int", 
-                    role = c("aut")),
-             person(given = "Nelly", 
-                    family = "Biondi", 
-                    email = "biondin@who.int", 
-                    role = c("aut")))
-Description: Apply methods to calculate Universal Health
-    Coverage, Healthier Populations, and Health Emergencies Protection Billions.
-URL: https://www.who.int/data/triple-billion-dashboard, 
-     https://www.who.int/publications/m/item/thirteenth-general-programme-of-work-(gpw13)-methods-for-impact-measurement, 
-     https://github.com/gpw13/billionaiRe
+Authors@R: 
+    c(person(given = "Seth",
+             family = "Caldwell",
+             role = c("aut", "cre"),
+             email = "caldwellst@gmail.com"),
+      person(given = "Alice",
+             family = "Robson",
+             role = "aut",
+             email = "robsona@who.int"),
+      person(given = "Nelly",
+             family = "Biondi",
+             role = "aut",
+             email = "biondin@who.int"))
+Description: Apply methods to calculate Universal Health Coverage,
+    Healthier Populations, and Health Emergencies Protection Billions.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
-Roxygen: list(markdown = TRUE)
-Imports: 
-    dplyr,
-    tidyselect,
-    tidyr,
-    rlang,
-    readr,
-    stringr,
-    memoise,
-    scales,
-    magrittr,
-    whoville,
-    lubridate,
-    purrr,
-    zoo,
-    glue,
-    tibble,
-    openxlsx
-Remotes: 
-    gpw13/wppdistro,
-    gpw13/whoville,
-    gpw13/xmart4
+URL: https://www.who.int/data/triple-billion-dashboard,
+    https://www.who.int/publications/m/item/thirteenth-general-programme-of-work-(gpw13)-methods-for-impact-measurement,
+    https://github.com/gpw13/billionaiRe
 Depends: 
     R (>= 2.10)
+Imports: 
+    dplyr,
+    glue,
+    lubridate,
+    magrittr,
+    memoise,
+    openxlsx,
+    purrr,
+    readr,
+    rlang,
+    scales,
+    stringr,
+    tibble,
+    tidyr,
+    tidyselect,
+    whoville,
+    zoo
 Suggests: 
     knitr,
-    wppdistro (>= 0.1.0),
     rmarkdown,
+    wppdistro (>= 0.1.0),
     xmart4 (>= 0.2.2)
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
+Remotes: 
+    gpw13/whoville,
+    gpw13/wppdistro,
+    gpw13/xmart4
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

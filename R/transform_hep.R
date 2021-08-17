@@ -46,23 +46,27 @@ transform_hep_data <- function(df,
 
   new_df <- df %>%
     dplyr::filter(dplyr::if_any(value, ~ !is.na(.x))) %>%
-    transform_prev_cmpgn_data(iso3,
-                              year,
-                              ind,
-                              scenario,
-                              value,
-                              transform_value,
-                              type_col,
-                              source_col,
-                              source,
-                              ind_ids,
-                              extrapolate_to) %>%
-    transform_prev_routine_data(iso3,
-                                year,
-                                ind,
-                                value,
-                                transform_value,
-                                ind_ids)
+    transform_prev_cmpgn_data(
+      iso3,
+      year,
+      ind,
+      scenario,
+      value,
+      transform_value,
+      type_col,
+      source_col,
+      source,
+      ind_ids,
+      extrapolate_to
+    ) %>%
+    transform_prev_routine_data(
+      iso3,
+      year,
+      ind,
+      value,
+      transform_value,
+      ind_ids
+    )
 
   # get transform values for HEP indicators not transformed above
   for (i in 1:length(transform_value)) {
@@ -102,7 +106,8 @@ transform_prev_routine_data <- function(df,
   inf_df <- df %>%
     dplyr::filter(.data[[ind]] %in% !!inf_ind) %>%
     dplyr::select(dplyr::all_of(c(!!iso3, !!year, !!value))) %>%
-    dplyr::distinct() %>% # in case multiple surviving inf scenario data
+    dplyr::distinct() %>%
+    # in case multiple surviving inf scenario data
     dplyr::rename_with(~ inf_val_names[which(!!value == .x)], .cols = !!value)
 
   # join to main data frame
@@ -122,10 +127,13 @@ transform_prev_routine_data <- function(df,
 
   # add transform value for routine indicators
   for (i in 1:length(value)) {
-    final_df <- dplyr::mutate(final_df,
-                              !!sym(transform_value[i]) := ifelse(.data[[ind]] %in% c(routine_inds, routine_match),
-                                                                  .data[[value[i]]],
-                                                                  .data[[transform_value[i]]]))
+    final_df <- dplyr::mutate(
+      final_df,
+      !!sym(transform_value[i]) := ifelse(.data[[ind]] %in% c(routine_inds, routine_match),
+        .data[[value[i]]],
+        .data[[transform_value[i]]]
+      )
+    )
   }
 
   final_df
@@ -160,18 +168,20 @@ transform_prev_cmpgn_data <- function(df,
                                       source,
                                       ind_ids,
                                       extrapolate_to) {
-  ind_check <- c("meningitis_campaign_denom",
-                 "meningitis_campaign_num",
-                 "cholera_campaign_num",
-                 "cholera_campaign_denom",
-                 "yellow_fever_campaign_num",
-                 "yellow_fever_campaign_denom",
-                 "ebola_campaign_num",
-                 "ebola_campaign_denom",
-                 "covid_campaign_num",
-                 "covid_campaign_denom",
-                 "measles_campaign_num",
-                 "measles_campaign_denom")
+  ind_check <- c(
+    "meningitis_campaign_denom",
+    "meningitis_campaign_num",
+    "cholera_campaign_num",
+    "cholera_campaign_denom",
+    "yellow_fever_campaign_num",
+    "yellow_fever_campaign_denom",
+    "ebola_campaign_num",
+    "ebola_campaign_denom",
+    "covid_campaign_num",
+    "covid_campaign_denom",
+    "measles_campaign_num",
+    "measles_campaign_denom"
+  )
 
   # split data frames to edit cmpgn_df and later join back up to old_df
   cmpgn_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids[ind_check])
@@ -184,20 +194,25 @@ transform_prev_cmpgn_data <- function(df,
   # expand data frame with or without scenarios
 
   if (!is.null(scenario)) {
-    exp_df <- tidyr::expand_grid(!!sym(iso3) := unique(cmpgn_df[[iso3]]),
-                                 !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
-                                 !!sym(ind) := unique(cmpgn_df[[ind]]),
-                                 !!sym(scenario) := unique(cmpgn_df[[scenario]]))
+    exp_df <- tidyr::expand_grid(
+      !!sym(iso3) := unique(cmpgn_df[[iso3]]),
+      !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
+      !!sym(ind) := unique(cmpgn_df[[ind]]),
+      !!sym(scenario) := unique(cmpgn_df[[scenario]])
+    )
   } else {
-    exp_df <- tidyr::expand_grid(!!sym(iso3) := unique(cmpgn_df[[iso3]]),
-                                 !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
-                                 !!sym(ind) := unique(cmpgn_df[[ind]]))
+    exp_df <- tidyr::expand_grid(
+      !!sym(iso3) := unique(cmpgn_df[[iso3]]),
+      !!sym(year) := min(cmpgn_df[[year]]):extrapolate_to,
+      !!sym(ind) := unique(cmpgn_df[[ind]])
+    )
   }
 
   # expand data frame to prepare for rolling sums
   new_df <- cmpgn_df %>%
     dplyr::right_join(exp_df,
-                      by = c(iso3, year, ind, scenario)) %>%
+      by = c(iso3, year, ind, scenario)
+    ) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(!!iso3, !!ind, !!scenario)))) %>%
     dplyr::filter(dplyr::if_any(!!value, ~ any(!is.na(.x)))) %>%
     dplyr::arrange(.data[[year]], .by_group = TRUE)
@@ -208,23 +223,28 @@ transform_prev_cmpgn_data <- function(df,
     new_df <- dplyr::mutate(new_df, !!sym(transform_value[i]) := dplyr::case_when(
       .data[[ind]] %in% ind_ids[c("cholera_campaign_num", "cholera_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], 3),
       .data[[ind]] %in% ind_ids[c("meningitis_campaign_num", "meningitis_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], 10),
-      .data[[ind]] %in% ind_ids[c("yellow_fever_campaign_num", "yellow_fever_campaign_denom",
-                                  "ebola_campaign_num", "ebola_campaign_denom",
-                                  "covid_campaign_num", "covid_campaign_denom",
-                                  "measles_campaign_num", "measles_campaign_denom")] ~ extrapolate_campaign_vector(.data[[value[i]]], length(.data[[value[i]]]))
+      .data[[ind]] %in% ind_ids[c(
+        "yellow_fever_campaign_num", "yellow_fever_campaign_denom",
+        "ebola_campaign_num", "ebola_campaign_denom",
+        "covid_campaign_num", "covid_campaign_denom",
+        "measles_campaign_num", "measles_campaign_denom"
+      )] ~ extrapolate_campaign_vector(.data[[value[i]]], length(.data[[value[i]]]))
     ))
   }
 
   # Extrapolate out type and source for each pathogen
   new_df %>%
     dplyr::filter(dplyr::row_number() >= min(which(!is.na(.data[[type_col]])), Inf)) %>%
-    dplyr::mutate(!!sym(type_col) := dplyr::case_when(
-                    !is.na(.data[[type_col]]) ~ .data[[type_col]],
-                    dplyr::row_number() <= max(which(!is.na(.data[[value[i]]])), -Inf) ~ "reported",
-                    TRUE ~ "projected"
-                  ),
-                  !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
-                                              unique(.data[[source_col]][!is.na(.data[[source_col]])]),
-                                              !!source)) %>%
+    dplyr::mutate(
+      !!sym(type_col) := dplyr::case_when(
+        !is.na(.data[[type_col]]) ~ .data[[type_col]],
+        dplyr::row_number() <= max(which(!is.na(.data[[value[i]]])), -Inf) ~ "reported",
+        TRUE ~ "projected"
+      ),
+      !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
+        unique(.data[[source_col]][!is.na(.data[[source_col]])]),
+        !!source
+      )
+    ) %>%
     dplyr::bind_rows(old_df, .)
 }

@@ -17,59 +17,69 @@ write_hpop_inter <- function(wb,
                              start_col,
                              start_row,
                              transform_value,
-                             summary_bounds){
+                             summary_bounds) {
+  l_trans_values <- length(transform_value)
 
-    l_trans_values <- length(transform_value)
+  start_trans <- l_trans_values * 2 + 1
 
-    start_trans <- l_trans_values*2+1
+  # Write indicators
+  openxlsx::writeData(wb, sheet_name,
+    startCol = start_col, startRow = start_row + 1,
+    x = data.frame(ind_df[, "short_name"]), colNames = FALSE
+  )
+  row_range <- (summary_bounds$baseline_proj["start_row"] + 3):summary_bounds$baseline_proj["end_row"]
 
-    # Write indicators
-    openxlsx::writeData(wb, sheet_name, startCol = start_col, startRow = start_row+1,
-                        x = data.frame(ind_df[,"short_name"]), colNames = FALSE)
-    row_range <- (summary_bounds$baseline_proj['start_row']+3):summary_bounds$baseline_proj['end_row']
+  # start_year formulae
+  ## start_year header
+  openxlsx::writeData(wb, sheet_name,
+    startCol = start_col + 2,
+    startRow = start_row,
+    x = start_year
+  )
 
-    # start_year formulae
-    ## start_year header
-    openxlsx::writeData(wb, sheet_name, startCol = start_col + 2,
-                        startRow = start_row,
-                        x = start_year)
+  letter_position_start <- openxlsx::int2col(summary_bounds$baseline_proj["start_col"] + start_trans)
+  openxlsx::writeFormula(wb, sheet_name,
+    x = glue::glue('=IF({data_sheet_name}!{letter_position_start}{row_range}<>"",{data_sheet_name}!{letter_position_start}{row_range},#N/A)'),
+    startCol = start_col + 2, startRow = start_row + 1
+  )
 
-    letter_position_start <- openxlsx::int2col(summary_bounds$baseline_proj['start_col']+start_trans)
-    openxlsx::writeFormula(wb, sheet_name,
-                           x = glue::glue('=IF({data_sheet_name}!{letter_position_start}{row_range}<>"",{data_sheet_name}!{letter_position_start}{row_range},#N/A)'),
-                           startCol = start_col+2, startRow = start_row +1)
+  # end_year formulae
+  ## end_year header
+  openxlsx::writeData(wb, sheet_name,
+    startCol = start_col + 3,
+    startRow = start_row,
+    x = max(end_year)
+  )
 
-    # end_year formulae
-    ## end_year header
-    openxlsx::writeData(wb, sheet_name, startCol = start_col + 3,
-                        startRow = start_row,
-                        x = max(end_year))
+  letter_position_end <- openxlsx::int2col(summary_bounds$baseline_proj["start_col"] + start_trans + 1)
+  openxlsx::writeFormula(wb, sheet_name,
+    x = glue::glue('=IF({data_sheet_name}!{letter_position_end}{row_range}<>"",{data_sheet_name}!{letter_position_end}{row_range},#N/A)'),
+    startCol = start_col + 3, startRow = start_row + 1
+  )
 
-    letter_position_end <- openxlsx::int2col(summary_bounds$baseline_proj['start_col']+start_trans+1)
-    openxlsx::writeFormula(wb, sheet_name,
-                           x = glue::glue('=IF({data_sheet_name}!{letter_position_end}{row_range}<>"",{data_sheet_name}!{letter_position_end}{row_range},#N/A)'),
-                           startCol = start_col + 3, startRow = start_row +1)
+  # latest available
+  position_start_latest_available <- summary_bounds$latest["start_col"] + l_trans_values
+  letter_position_latest <- openxlsx::int2col(position_start_latest_available)
 
-    # latest available
-    position_start_latest_available <- summary_bounds$latest["start_col"]+l_trans_values
-    letter_position_latest <- openxlsx::int2col(position_start_latest_available)
+  openxlsx::writeFormula(wb, sheet_name,
+    x = glue::glue('=IF({data_sheet_name}!{letter_position_latest}{row_range}<>"",{data_sheet_name}!{letter_position_latest}{row_range},#N/A)'),
+    startCol = start_col + 8, startRow = start_row + 1
+  )
 
-    openxlsx::writeFormula(wb, sheet_name,
-                           x = glue::glue('=IF({data_sheet_name}!{letter_position_latest}{row_range}<>"",{data_sheet_name}!{letter_position_latest}{row_range},#N/A)'),
-                           startCol = start_col + 8, startRow = start_row +1)
+  # latest year
+  position_start_latest_year <- position_start_latest_available + l_trans_values
+  letter_position_latest_year <- openxlsx::int2col(position_start_latest_year)
 
-    #latest year
-    position_start_latest_year <- position_start_latest_available + l_trans_values
-    letter_position_latest_year <- openxlsx::int2col(position_start_latest_year)
+  openxlsx::writeFormula(wb, sheet_name,
+    x = glue::glue('=IF({data_sheet_name}!{letter_position_latest_year}{row_range}<>"",{data_sheet_name}!{letter_position_latest_year}{row_range},#N/A)'),
+    startCol = start_col + 9, startRow = start_row + 1
+  )
 
-    openxlsx::writeFormula(wb, sheet_name,
-                           x = glue::glue('=IF({data_sheet_name}!{letter_position_latest_year}{row_range}<>"",{data_sheet_name}!{letter_position_latest_year}{row_range},#N/A)'),
-                           startCol = start_col + 9, startRow = start_row +1)
+  # Clear content below last row
+  openxlsx::deleteData(wb, sheet_name,
+    cols = start_col:10,
+    rows = (start_row + nrow(ind_df) + 1), gridExpand = TRUE
+  )
 
-    # Clear content below last row
-    openxlsx::deleteData(wb, sheet_name,
-                        cols = start_col:10,
-                        rows = (start_row + nrow(ind_df)+1), gridExpand = TRUE)
-
-    return(wb)
+  return(wb)
 }

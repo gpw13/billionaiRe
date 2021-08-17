@@ -2,12 +2,12 @@
 % Please edit documentation in R/style_headers.R
 \name{style_hpop_headers}
 \alias{style_hpop_headers}
-\title{Style table headers}
+\title{Style table headers for HPOP}
 \usage{
 style_hpop_headers(wb, sheet_name, bounds)
 }
 \arguments{
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

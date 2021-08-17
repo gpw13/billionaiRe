@@ -21,7 +21,7 @@ write_hpop_summary_sheet(
   source_col = "source",
   contribution = "contribution",
   contribution_pct = paste0(contribution, "_percent"),
-  contribution_pct_pop_total = paste0(contribution, "_percent_pop_total"),
+  contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   ind_df
 )
 }
@@ -29,7 +29,7 @@ write_hpop_summary_sheet(
 \item{df}{Data frame in long format filtered for a specific country, where 1 row corresponds
 to a specific year, and indicator.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -62,7 +62,7 @@ values. Must be the same length as \code{transform_value}.}
 \item{contribution_pct}{Column name of column(s) to store contribution (percent)
 values. Must be the same length as \code{transform_value}.}
 
-\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
 (percent of total population of the country) values. Must be the same length
 as \code{transform_value}.}
 

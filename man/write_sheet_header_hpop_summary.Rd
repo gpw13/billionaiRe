@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_hpop_summary_sheet.R
 \name{write_sheet_header_hpop_summary}
 \alias{write_sheet_header_hpop_summary}
-\title{Write and style sheet header}
+\title{Write and style HPOP summary sheet header}
 \usage{
 write_sheet_header_hpop_summary(
   wb,
@@ -16,7 +16,7 @@ write_sheet_header_hpop_summary(
 )
 }
 \arguments{
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -32,9 +32,6 @@ write_sheet_header_hpop_summary(
 
 \item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
 }
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
-}
 \description{
-\code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.
+Write and style HPOP summary sheet header
 }

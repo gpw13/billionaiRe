@@ -11,7 +11,7 @@ write_notes(df, notes_title = "Notes:", wb, sheet_name, bounds)
 
 \item{notes_title}{character string with the title (first line) of the notes.}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 

@@ -4,19 +4,32 @@
 \alias{style_data}
 \title{Style data according to its type}
 \usage{
-style_data(data_type, wb, sheet_name, rows, cols)
+style_data(
+  data_type,
+  wb,
+  sheet_name,
+  rows,
+  cols,
+  no_show = TRUE,
+  no_show_row = 0
+)
 }
 \arguments{
 \item{data_type}{character vector of class(es) of the data to be styled.
-Can be one of "numeric", "integer", "Date", "character", or "character_centered"}
+Can be one of "numeric", "integer", "Date", "character", "chr_type",
+or "formula".}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
 \item{rows}{Rows to apply style to.}
 
 \item{cols}{columns to apply style to.}
+
+\item{no_show}{Boolean with TRUE if data in \code{no_show_row} should be displayed}
+
+\item{no_show_row}{integer identifying which row contains data no to show}
 }
 \description{
 Style data according to its type

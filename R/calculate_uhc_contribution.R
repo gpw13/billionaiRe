@@ -44,7 +44,8 @@ calculate_uhc_contribution <- function(df,
           !(.data[[ind]] %in% ind_ids) ~ .data[[contribution[i]]],
           !(.data[[year]] %in% end_year) ~ .data[[contribution[i]]],
           TRUE ~ .data[["_population_temp"]] * .data[[contribution_pct[i]]] / 100
-        ))
+        )
+      )
   }
 
   dplyr::select(df, -"_population_temp") %>%

@@ -15,7 +15,7 @@ write_bilion_contrib_ind_hpop_summary(
   contribution_pct,
   population,
   contribution,
-  contribution_pct_pop_total,
+  contribution_pct_total_pop,
   ind_df,
   bounds
 )
@@ -23,7 +23,7 @@ write_bilion_contrib_ind_hpop_summary(
 \arguments{
 \item{df}{data frame to be written}
 
-\item{wb}{\code{\link[openxlsx:createWorkbook]{openxlsx::createWorkbook()}} workbook to be edited.}
+\item{wb}{a \code{openxlsx} workbook to be edited.}
 
 \item{sheet_name}{character name of the sheet to update}
 
@@ -43,7 +43,7 @@ values. Must be the same length as \code{transform_value}.}
 \item{contribution}{Column name of column(s) to store contribution (population)
 values. Must be the same length as \code{transform_value}.}
 
-\item{contribution_pct_pop_total}{Column name of column(s) to store contribution
+\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
 (percent of total population of the country) values. Must be the same length
 as \code{transform_value}.}
 
