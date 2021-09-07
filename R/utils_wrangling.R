@@ -112,7 +112,7 @@ save_wrangled_output <- function(df, path) {
     output_df <- df %>%
       dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
-      dplyr::arrange(.data[["iso3"]], .data[["year"]]) %>%
+      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]]) %>%
       readr::write_csv(path, na = "")
 
     message("Output saved to disk.")
