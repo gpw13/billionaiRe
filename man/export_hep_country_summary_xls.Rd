@@ -6,9 +6,25 @@
 \usage{
 export_hep_country_summary_xls(
   df,
+  wb,
   iso,
+  iso3 = "iso3",
+  year = "year",
+  ind = "ind",
+  value = "value",
+  transform_value = "transform_value",
+  scenario = NULL,
+  type_col = "type",
+  source_col = "source",
+  population = "population",
+  contribution = "contribution",
+  contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   start_year = 2018,
-  end_year = 2019:2023
+  end_year = 2019:2023,
+  sheet_prefix = "HEP",
+  output_folder = "outputs",
+  ind_ids = billion_ind_codes("hep")
 )
 }
 \arguments{
@@ -17,9 +33,41 @@ country, year, and indicator.}
 
 \item{iso}{ISO3 code of country to summarize.}
 
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with years.}
+
+\item{ind}{Column name of column with indicator names.}
+
+\item{value}{Column name of column with indicator values.}
+
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{source_col}{Column name of column to store source information.}
+
+\item{population}{Column name of column with population figures.}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
+
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+
+\item{output_folder}{Folder path to where the Excel files should be written}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

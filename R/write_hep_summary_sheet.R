@@ -82,7 +82,6 @@ write_hep_summary_sheet <- function(df, wb, sheet_name, iso,
   wb <- write_sheet_header_hep_summary(wb, sheet_name, iso, end_year, value, boxes_bounds)
 
   wb <- write_data_headers_hep_summary(wb, sheet_name, value, boxes_bounds, start_year, end_year)
-
 }
 
 #' Write and style HEP summary sheet header
@@ -92,37 +91,37 @@ write_hep_summary_sheet <- function(df, wb, sheet_name, iso,
 #' @inheritParams export_country_summary_xls
 write_sheet_header_hep_summary <- function(wb, sheet_name, iso, end_year, value, boxes_bounds) {
   openxlsx::writeData(wb,
-                      sheet = sheet_name,
-                      x = glue::glue("Country contribution to GPW13 Health Emergency Protection billion"),
-                      startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"], colNames = FALSE
+    sheet = sheet_name,
+    x = glue::glue("Country contribution to GPW13 Health Emergency Protection billion"),
+    startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"], colNames = FALSE
   )
 
   country_name <- whoville::iso3_to_names(iso, org = "who", type = "short", language = "en")
   country_pop_end_year <- wppdistro::get_population(iso, year = max(end_year))
   openxlsx::writeData(wb,
-                      sheet = sheet_name, x = country_name,
-                      startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"] + 2
+    sheet = sheet_name, x = country_name,
+    startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"] + 2
   )
 
   openxlsx::writeData(wb,
-                      sheet = sheet_name,
-                      x = c(
-                        glue::glue("Projected number of persons newly protected from health emergencies by {max(end_year)}"),
-                        glue::glue("% of country population projected to be newly protected from health emergencies by {max(end_year)}"),
-                        glue::glue("{country_name} population in {max(end_year)} (Source: World Population Prospects)")
-                      ),
-                      startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"] + 3
+    sheet = sheet_name,
+    x = c(
+      glue::glue("Projected number of persons newly protected from health emergencies by {max(end_year)}"),
+      glue::glue("% of country population projected to be newly protected from health emergencies by {max(end_year)}"),
+      glue::glue("{country_name} population in {max(end_year)} (Source: World Population Prospects)")
+    ),
+    startCol = boxes_bounds$sheet_header["start_col"], startRow = boxes_bounds$sheet_header["start_row"] + 3
   )
 
   openxlsx::writeFormula(wb,
-                         sheet = sheet_name,
-                         x = c(
-                           as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+12)}{boxes_bounds$summary['end_row']-1}/1000")),
-                           as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+12)}{boxes_bounds$summary['end_row']}*100")),
-                           as_excel_formula(glue::glue("={country_pop_end_year}/1000000"))
-                         ),
-                         startRow = boxes_bounds$sheet_header["start_row"] + 3,
-                         startCol = boxes_bounds$sheet_header["start_col"] + 6
+    sheet = sheet_name,
+    x = c(
+      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+6)}{boxes_bounds$summary['end_row']-1}/1000")),
+      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+6)}{boxes_bounds$summary['end_row']}*100")),
+      as_excel_formula(glue::glue("={country_pop_end_year}/1000000"))
+    ),
+    startRow = boxes_bounds$sheet_header["start_row"] + 3,
+    startCol = boxes_bounds$sheet_header["start_col"] + 6
   )
 
   wb <- style_header_hep_summary_sheet(wb, sheet_name, boxes_bounds = boxes_bounds)
