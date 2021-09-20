@@ -261,8 +261,8 @@ export_hep_country_summary_xls <- function(df,
     iso3 = iso3,
     ind = ind,
     population = population,
-    type_col = type,
-    source_col = source,
+    type_col = type_col,
+    source_col = source_col,
     ind_df,
     ind_ids)
 }
@@ -449,8 +449,8 @@ export_uhc_country_summary_xls <- function(df,
     iso3 = iso3,
     ind = ind,
     population = population,
-    type_col = type,
-    source_col = source,
+    type_col = type_col,
+    source_col = source_col,
     ind_df,
     ind_ids
   )
