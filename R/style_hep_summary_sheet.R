@@ -36,7 +36,7 @@ style_header_hep_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
                        halign = "right"
                      ),
                      rows = (boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5),
-                     cols = (boxes_bounds$sheet_header["start_col"] + 4),
+                     cols = (boxes_bounds$sheet_header["start_col"] + 6),
                      gridExpand = TRUE
   )
 
@@ -50,7 +50,7 @@ style_header_hep_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
                        halign = "left"
                      ),
                      rows = (boxes_bounds$sheet_header["start_row"] + 3):(boxes_bounds$sheet_header["start_row"] + 5),
-                     cols = (boxes_bounds$sheet_header["start_col"] + 5),
+                     cols = (boxes_bounds$sheet_header["start_col"] + 7),
                      gridExpand = TRUE
   )
 
