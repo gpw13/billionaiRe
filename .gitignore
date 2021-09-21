@@ -9,3 +9,5 @@ outputs/
 inst/extdata/archive
 vignettes/.build.timestamp
 *.Rprofvis
+hep_data.RDS
+.RDataTmp

@@ -55,6 +55,7 @@ calculate_hpop_billion <- function(df,
     iso3 = iso3,
     year = year,
     end_year = end_year,
+    pop_year = pop_year,
     scenario = scenario,
     ind_ids = ind_ids
   )

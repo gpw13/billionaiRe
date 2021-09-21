@@ -31,6 +31,8 @@ export_hep_country_summary_xls(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
+\item{wb}{a \code{openxlsx} workbook to be edited.}
+
 \item{iso}{ISO3 code of country to summarize.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
@@ -67,10 +69,14 @@ as \code{transform_value}.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
 
+\item{sheet_prefix}{Character prefix to add in front of export sheets}
+
 \item{output_folder}{Folder path to where the Excel files should be written}
-}
-\value{
-\code{openxslx} Workbook object. Output file is in \code{output_folder}.
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \description{
 \code{export_hep_country_summary_xls} Export a country-specific for HEP billion.

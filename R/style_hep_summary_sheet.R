@@ -58,3 +58,178 @@ style_header_hep_summary_sheet <- function(wb, sheet_name, boxes_bounds) {
 
   return(wb)
 }
+
+#' Style HEP summary worksheet data headers
+#'
+#' `style_data_headers_hep_summary()` styles headers of the data part of the HEP
+#' summary worksheet: indicators, latest reported, and baseline/projection headers
+#'
+#' @inherit style_header_hpop_summary_sheet
+#' @inheritParams write_sheet_header_hpop_summary
+style_data_headers_hep_summary <- function(wb, sheet_name, boxes_bounds) {
+
+  # Tracer area / tracer indicator headers
+  indic_bounds <- c(
+    start_col = as.integer(boxes_bounds$data_header["start_col"]),
+    end_col = as.integer(boxes_bounds$data_header["start_col"] + 1),
+    start_row = as.integer(boxes_bounds$data_header["start_row"]),
+    end_row = as.integer(boxes_bounds$data_header["end_row"])
+  )
+  wb <- style_hep_headers(wb, sheet_name, bounds = indic_bounds)
+
+  # Syling Latest reported data headers
+  wb <- style_hep_headers(wb, sheet_name, bounds = boxes_bounds$latest_reported_data)
+
+  # Styling main baseline/projection header
+  openxlsx::addStyle(wb,
+    sheet = sheet_name, style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "main",
+      style_category = "datatable_header",
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = boxes_bounds$baseline_projection_data["start_row"],
+    gridExpand = TRUE
+  )
+
+  # Styling baseline/projection sub-header
+  # Back ground color
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1):((boxes_bounds$baseline_projection_data["start_row"] + 2)),
+    gridExpand = TRUE
+  )
+  # Raw values
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["start_col"] + 1),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
+    gridExpand = TRUE
+  )
+
+  mergeCellForced(wb,
+    sheet = sheet_name,
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["start_col"] + 1),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1)
+  )
+
+  # levels values
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 3):(boxes_bounds$baseline_projection_data["start_col"] + 4),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
+    gridExpand = TRUE
+  )
+
+  mergeCellForced(wb,
+    sheet = sheet_name,
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 3):(boxes_bounds$baseline_projection_data["start_col"] + 4),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1)
+  )
+
+
+  # Types
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 6):(boxes_bounds$baseline_projection_data["start_col"] + 7),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
+    gridExpand = TRUE
+  )
+  mergeCellForced(wb,
+    sheet = sheet_name,
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 6):(boxes_bounds$baseline_projection_data["start_col"] + 7),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1)
+  )
+
+  # Sources
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center",
+      border = "bottom",
+      borderColour = "black",
+      borderStyle = "thin"
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 9):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1),
+    gridExpand = TRUE
+  )
+
+  mergeCellForced(wb,
+    sheet = sheet_name,
+    cols = (boxes_bounds$baseline_projection_data["start_col"] + 9):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = (boxes_bounds$baseline_projection_data["start_row"] + 1)
+  )
+
+
+  # years row
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles(
+      billion = "hep",
+      billion_fgFill = "light",
+      style_category = "sub_datatable_header",
+      halign = "center"
+    ),
+    cols = (boxes_bounds$baseline_projection_data["start_col"]):(boxes_bounds$baseline_projection_data["end_col"]),
+    rows = (boxes_bounds$data_header["end_row"]),
+    gridExpand = TRUE
+  )
+
+  # Width columns
+  openxlsx::setColWidths(wb,
+    sheet = sheet_name,
+    cols = c(boxes_bounds$data_header["start_col"]:(boxes_bounds$data_header["start_col"] + 1)),
+    widths = c(13.82, 27.64)
+  )
+  openxlsx::setColWidths(wb,
+    sheet = sheet_name,
+    cols = c(boxes_bounds$latest_reported_data["start_col"]:(boxes_bounds$latest_reported_data["end_col"])),
+    widths = c(7.18, 7.18, 7.18, 7.18, 26)
+  )
+
+  openxlsx::setColWidths(wb,
+    sheet = sheet_name,
+    cols = c(boxes_bounds$baseline_projection_data["start_col"]:(boxes_bounds$baseline_projection_data["end_col"])),
+    widths = c(7, 7, 0.5, 7, 7, 0.5, 7.22, 7.22, 0.5, 26, 26)
+  )
+
+
+  return(wb)
+}

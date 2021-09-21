@@ -190,7 +190,8 @@ export_country_summary_xls <- function(df,
 #'
 #' `export_hep_country_summary_xls` Export a country-specific for HEP billion.
 #'
-#' @inherit export_country_summary_xls return details params
+#' @inherit export_hpop_country_summary_xls return details params
+#' @inheritParams transform_hpop_data
 export_hep_country_summary_xls <- function(df,
                                            wb,
                                            iso,
@@ -211,7 +212,6 @@ export_hep_country_summary_xls <- function(df,
                                            sheet_prefix = "HEP",
                                            output_folder = "outputs",
                                            ind_ids = billion_ind_codes("hep")) {
-
   assert_columns(df, year, iso3, ind, value, transform_value, contribution, population, contribution_pct, contribution_pct_total_pop, scenario, type_col, source_col)
   assert_years(start_year, end_year)
   assert_who_iso(iso)
@@ -264,7 +264,8 @@ export_hep_country_summary_xls <- function(df,
     type_col = type_col,
     source_col = source_col,
     ind_df,
-    ind_ids)
+    ind_ids
+  )
 }
 
 #' Export country summary to Excel for HPOP billion
