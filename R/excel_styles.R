@@ -100,15 +100,27 @@ excel_styles <- function(billion = NULL,
   }
   if (!is.null(style_category)) {
     if (style_category == "sub_datatable_header") {
-      style <- modifyStyle(
-        style,
-        fontSize = 8,
-        fontColour = "black",
-        halign = "center",
-        valign = "center",
-        textDecoration = "bold",
-        wrapText = TRUE
-      )
+      if (billion == "hep") {
+        style <- modifyStyle(
+          style,
+          fontSize = 8,
+          fontColour = "white",
+          halign = "center",
+          valign = "center",
+          textDecoration = "bold",
+          wrapText = TRUE
+        )
+      } else {
+        style <- modifyStyle(
+          style,
+          fontSize = 8,
+          fontColour = "black",
+          halign = "center",
+          valign = "center",
+          textDecoration = "bold",
+          wrapText = TRUE
+        )
+      }
     }
     if (style_category == "data") {
       style <- modifyStyle(

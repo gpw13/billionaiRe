@@ -25,6 +25,25 @@
 #' }
 "indicator_df"
 
+#' Dataset of indicators order and meta-information
+#'
+#' A dataset containing dashboard and analysis indicator codes and their uses
+#' within the GPW13 Billions. It is joinded to `indicator_df`.
+#'
+#' @format A data frame with `r nrow(indicator_order)` rows and `r ncol(indicator_order)` variables:
+#' \describe{
+#'   \item{sdg}{Indicator code from SDG and attributed if not in SDG}
+#'   \item{short_name}{Short name of the indicator}
+#'   \item{unit_raw}{Unit of raw values for indicator}
+#'   \item{unit_transformed}{Unit of raw values for indicator}
+#'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
+#'   \item{transformed_name}{Name of indicator after transformation}
+#'   \item{ind}{Code of the indicator in billionaiRe}
+#'   \item{order}{Order of the indicators}
+#'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
+#' }
+"indicator_order"
+
 #' HPOP Billion population links
 #'
 #' A dataset linking each HPOP Billion indicator to relevant population groups
@@ -116,3 +135,17 @@
 #'   \item{share_perc}{Share, as percent of total projected population in 2023.}
 #' }
 "country_shares"
+
+#' Country affected by pathogens data
+#'
+#' List of countries and by which pathogens they are affected. Used HEP Billion
+#' outputs to fade out pathongens not applicable to country.
+#'
+#' @format A data frame with `r nrow(affected_pathogens)` rows and `r ncol(affected_pathogens)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{yellow_fever}{TRUE if country is affected by yellow fever.}
+#'   \item{cholera}{TRUE if country is affected by cholera.}
+#'   \item{meningitis}{TRUE if country is affected by meningitis.}
+#' }
+"affected_pathogens"

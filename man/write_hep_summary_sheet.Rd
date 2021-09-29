@@ -10,7 +10,7 @@ write_hep_summary_sheet(
   sheet_name,
   iso,
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   value = "value",
   transform_value = "transform_value",
   year = "year",
@@ -35,7 +35,7 @@ to a specific year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value}{Column name of column with indicator values.}
 

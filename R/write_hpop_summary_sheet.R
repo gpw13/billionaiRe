@@ -11,7 +11,7 @@
 #'
 write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      start_year = 2018,
-                                     end_year = 2019:2023,
+                                     end_year = 2019:2025,
                                      value = "value",
                                      year = "year",
                                      iso3 = "iso3",
@@ -27,47 +27,56 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
   indicators <- ind_df %>%
     dplyr::select("ind", "sdg", "short_name")
 
+  start_row_data <- 9
+  end_row_data <- start_row_data + nrow(ind_df) + 2
+
   # TODO: make dynamic if value or scenario >1
   boxes_bounds <- list(
     indicators = c(
       start_col = 1,
       end_col = 2,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     latest = c(
       start_col = 3,
       end_col = 9,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     baseline_proj = c(
       start_col = 11,
       end_col = 21,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     contribution = c(
       start_col = 23,
       end_col = 26,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     billion_contribution = c(
       start_col = 23,
       end_col = 26,
-      start_row = 30,
-      end_row = 35
+      start_row = end_row_data + 2,
+      end_row = end_row_data + 7
     ),
     notes = c(
       start_col = 1,
       end_col = 5,
-      start_row = 30,
-      end_row = 34
+      start_row = end_row_data + 2,
+      end_row = end_row_data + 7
     )
   )
 
+  # Clean slate
 
+  wb <- write_empty_white_data(
+    wb = wb,
+    sheet_name = sheet_name,
+    bounds = boxes_bounds
+  )
   ## Write header
   wb <- write_sheet_header_hpop_summary(wb,
     sheet_name = sheet_name,

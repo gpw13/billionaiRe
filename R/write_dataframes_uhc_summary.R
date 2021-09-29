@@ -119,8 +119,13 @@ write_data_boxes_uhc_summary <- function(df,
     dplyr::filter(.data[[ind]] %in% unique(ind_df_pillar[["ind"]]))
 
   pillar_latest_reported <- df_pillar %>%
-    get_latest_reported_df(iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df_pillar) %>%
-    dplyr::mutate(empty = "", .after = glue::glue("{value}"))
+    get_latest_reported_df(
+      iso3 = iso3, ind = ind, type_col = type_col,
+      year = year, value,
+      transform_value = transform_value,
+      level = NULL, source_col = source_col,
+      ind_df = ind_df_pillar
+    )
 
   pillar_data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"] - 1)
 
@@ -130,6 +135,9 @@ write_data_boxes_uhc_summary <- function(df,
   pillar_baseline_projection <- df_pillar %>%
     get_baseline_projection_df(iso3, ind, type_col, year, value, transform_value, start_year, end_year, source_col, ind_df_pillar) %>%
     dplyr::mutate(dplyr::across(c(.data[[glue::glue("{transform_value}_{start_year}")]], .data[[glue::glue("{transform_value}_{max(end_year)}")]]), ~NA)) %>%
+    dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
+    dplyr::mutate(empty2 = NA, .after = glue::glue("{transform_value}_{max(end_year)}")) %>%
+    dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}")) %>%
     dplyr::mutate(empty21 = NA, .after = "empty2") %>%
     dplyr::mutate(dir_change = as_excel_formula(glue::glue('=IF(OR(ISBLANK({col_raw_end_year}{pillar_data_rows}),ISBLANK({col_raw_start_year}{pillar_data_rows})),"",{col_raw_end_year}{pillar_data_rows}-{col_raw_start_year}{pillar_data_rows})')), .after = "empty2")
 
@@ -175,7 +183,9 @@ write_data_boxes_uhc_summary <- function(df,
     )
   } else if (pillar %in% c("ncd", "service_cap_access")) {
     pillar_latest_reported <- pillar_latest_reported %>%
-      dplyr::mutate(!!sym("empty") := as_excel_formula(get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows))) %>%
+      dplyr::mutate(
+        !!sym(glue::glue("{transform_value}")) := as_excel_formula(get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows))
+      ) %>%
       dplyr::select(-.data[[ind]])
 
     pillar_baseline_projection <- pillar_baseline_projection %>%
@@ -234,7 +244,7 @@ write_data_boxes_uhc_summary <- function(df,
 
 #' Write and style ASC box in UHC summary data
 #'
-#' `write_data_boxes_uhc_summary` writes and styles the ASC box in UHC summary worksheet.
+#' `write_asc_uhc_data_summary` writes and styles the ASC box in UHC summary worksheet.
 #' Used in `write_uhc_summary_sheet()`.
 #'
 #' @inherit write_latest_reported_hpop_summary
@@ -288,16 +298,25 @@ write_asc_uhc_data_summary <- function(df,
     startCol = col_trans_end_year,
     startRow = boxes_bounds[[pillar]]["start_row"]
   )
+  pillar_data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"])
+
 
   pillar_latest_reported <- df_pillar %>%
-    get_latest_reported_df(iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df_pillar) %>%
-    dplyr::mutate(empty = "", .after = glue::glue("{value}")) %>%
+    get_latest_reported_df(
+      iso3 = iso3, ind = ind, type_col = type_col,
+      year = year, value,
+      transform_value = transform_value,
+      level = NULL, source_col = source_col,
+      ind_df = ind_df_pillar
+    ) %>%
+    dplyr::mutate(
+      !!sym(glue::glue("{transform_value}")) := get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows),
+    ) %>%
     dplyr::select(-.data[[ind]])
 
   col_raw_end_year <- openxlsx::int2col(boxes_bounds$baseline_projection_data["start_col"] + 1)
   col_raw_start_year <- openxlsx::int2col(boxes_bounds$baseline_projection_data["start_col"])
 
-  pillar_data_rows <- (boxes_bounds[[pillar]]["start_row"] + 1):(boxes_bounds[[pillar]]["end_row"])
 
   pillar_baseline_projection <- df_pillar %>%
     get_baseline_projection_df(iso3, ind, type_col, year, value, transform_value, start_year, end_year, source_col, ind_df_pillar) %>%
@@ -305,6 +324,9 @@ write_asc_uhc_data_summary <- function(df,
       !!sym(glue::glue("{transform_value}_{start_year}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"], pillar_data_rows),
       !!sym(glue::glue("{transform_value}_{max(end_year)}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"] + 1, pillar_data_rows)
     ) %>%
+    dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
+    dplyr::mutate(empty2 = NA, .after = glue::glue("{transform_value}_{max(end_year)}")) %>%
+    dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}")) %>%
     dplyr::mutate(empty21 = NA, .after = "empty2") %>%
     dplyr::mutate(dir_change = as_excel_formula(glue::glue('=IF(OR(ISBLANK({col_trans_end_year}{pillar_data_rows}),ISBLANK({col_trans_start_year}{pillar_data_rows})),"",{col_trans_end_year}{pillar_data_rows}-{col_trans_start_year}{pillar_data_rows})')), .after = "empty2") %>%
     dplyr::select(-.data[[iso3]], -.data[[ind]])
@@ -350,6 +372,18 @@ write_asc_uhc_data_summary <- function(df,
   return(wb)
 }
 
+
+
+#' Write and style summary box in UHC summary sheet
+#'
+#' `write_summary_box_uhc_summary` writes and styles the summary box in UHC
+#' summary worksheet. Used in `write_uhc_summary_sheet()`.
+#'
+#' @inherit write_latest_reported_hpop_summary
+#' @inherit write_sheet_header_hpop_summary
+#' @inherit style_uhc_pillar
+#' @inheritParams  calculate_hpop_contributions
+#'
 write_summary_box_uhc_summary <- function(wb,
                                           sheet_name,
                                           iso,

@@ -5,6 +5,8 @@
 \title{Style HEP summary worksheet data headers}
 \usage{
 style_data_headers_hep_summary(wb, sheet_name, boxes_bounds)
+
+style_data_headers_hep_summary(wb, sheet_name, boxes_bounds)
 }
 \arguments{
 \item{wb}{a \code{openxlsx} workbook to be edited.}
@@ -17,6 +19,9 @@ style_data_headers_hep_summary(wb, sheet_name, boxes_bounds)
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
+\code{style_data_headers_hep_summary()} styles headers of the data part of the HEP
+summary worksheet: indicators, latest reported, and baseline/projection headers
+
 \code{style_data_headers_hep_summary()} styles headers of the data part of the HEP
 summary worksheet: indicators, latest reported, and baseline/projection headers
 }

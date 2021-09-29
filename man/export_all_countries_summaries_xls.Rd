@@ -21,7 +21,7 @@ export_all_countries_summaries_xls(
   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   ind_ids = billion_ind_codes("hpop"),
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   output_folder = "outputs"
 )
 }
@@ -68,7 +68,7 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{output_folder}{Folder path to where the Excel files should be written}
 }

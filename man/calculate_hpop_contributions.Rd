@@ -8,7 +8,7 @@ calculate_hpop_contributions(
   df,
   year = "year",
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   iso3 = "iso3",
   ind = "ind",
   population = "population",
@@ -29,7 +29,7 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
 

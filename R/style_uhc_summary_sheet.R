@@ -384,9 +384,22 @@ style_uhc_pillar <- function(wb, sheet_name, boxes_bounds, data_type,
     cols = boxes_bounds[["baseline_projection_data"]]["start_col"]:boxes_bounds[["baseline_projection_data"]]["end_col"]
   )
 
-
   return(wb)
 }
+
+#' Style ASC Pillars summary sheet
+#'
+#' `style_asc_uhc_data_summary()` styles the UHC ASC box/section of the UHC
+#' summary sheet. Used within `write_asc_uhc_data_summary()`.
+#'
+#' @param data_type named list with latest_reported and baseline_projection data
+#' types. Passed to `style_data()`
+#' @param pillar character Pillar identifying the pillar to style.
+#' @param no_show Boolean with TRUE if data in `no_show_row` should be displayed
+#' @param no_show_cols Boolean with TRUE if data in `no_show_row` should be displayed
+#' @param no_show_rows integer identifying which row contains data no to show
+#' @inherit style_header_hpop_summary_sheet
+#' @inherit write_sheet_header_hpop_summary
 
 style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
                                        pillar = "fin_hardship",
@@ -472,6 +485,14 @@ style_asc_uhc_data_summary <- function(wb, sheet_name, boxes_bounds, data_type,
   return(wb)
 }
 
+
+#' Style UHC Summary box in summary sheet
+#'
+#' `style_summary_box_uhc_summary()` styles the HEP summary box/section of the
+#' UHC summary sheet. Used within `write_summary_box_uhc_summary()`.
+#'
+#' @inherit style_header_hpop_summary_sheet
+#' @inherit write_sheet_header_hpop_summary
 style_summary_box_uhc_summary <- function(wb, sheet_name, boxes_bounds) {
   openxlsx::addStyle(wb,
     sheet = sheet_name,

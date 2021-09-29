@@ -5,6 +5,8 @@
 \title{Style HEP summary worksheet header}
 \usage{
 style_header_hep_summary_sheet(wb, sheet_name, boxes_bounds)
+
+style_header_hep_summary_sheet(wb, sheet_name, boxes_bounds)
 }
 \arguments{
 \item{wb}{a \code{openxlsx} workbook to be edited.}
@@ -17,6 +19,9 @@ style_header_hep_summary_sheet(wb, sheet_name, boxes_bounds)
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
+\code{style_header_hep_summary_sheet} styles the title and sub-title of the summary
+worksheet header.
+
 \code{style_header_hep_summary_sheet} styles the title and sub-title of the summary
 worksheet header.
 }

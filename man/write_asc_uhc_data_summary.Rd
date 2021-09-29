@@ -48,7 +48,7 @@ used to calculate contributions.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{ind}{Column name of column with indicator names.}
 
@@ -71,6 +71,6 @@ be supplied as a named vector where the names correspond to the output of
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.
 }
 \description{
-\code{write_data_boxes_uhc_summary} writes and styles the ASC box in UHC summary worksheet.
+\code{write_asc_uhc_data_summary} writes and styles the ASC box in UHC summary worksheet.
 Used in \code{write_uhc_summary_sheet()}.
 }

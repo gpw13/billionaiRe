@@ -20,7 +20,7 @@ export_uhc_country_summary_xls(
   population = "population",
   contribution = "contribution",
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   sheet_prefix = "UHC",
   output_folder = "outputs",
   ind_ids = billion_ind_codes("uhc")
@@ -59,7 +59,7 @@ values. Must be the same length as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{sheet_prefix}{Character prefix to add in front of export sheets}
 

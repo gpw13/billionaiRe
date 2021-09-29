@@ -54,4 +54,55 @@ get_df_one_scenario <- function(df, scenario) {
     scenario_to_use <- ifelse("default" %in% unique(df[["scenario"]]), "default", unique(df[["scenario"]][1]))
     df <- dplyr::filter(df, !!sym("scenario") == !!scenario_to_use)
   }
+  return(df)
+}
+
+#' Write empty and white data on the maximum extend of bounds
+#'
+#' `write_empty_white_data` writes a matrix of the size of the maximum values
+#' found in `bounds` (plus 4 column/rows as a margin)
+#'
+#' @inheritParams write_baseline_projection_hpop_summary
+#' @param bounds a named list with the extent of the data to be written over.
+#' Must contain the following named parameters:
+#' * start_row
+#' * end_row
+#' * start_col
+#' * end_col
+#'
+#' @return `openxslx` Workbook object
+
+write_empty_white_data <- function(wb, sheet_name, bounds) {
+  bounds_extent <- dplyr::bind_rows(bounds) %>%
+    dplyr::summarise(
+      dplyr::across(dplyr::starts_with("start"), min),
+      dplyr::across(dplyr::starts_with("end"), max)
+    )
+
+  empty_matrix <- matrix(
+    nrow = length(bounds_extent$start_row:bounds_extent$end_row) + 4,
+    ncol = length(bounds_extent$start_col:bounds_extent$end_col) + 4
+  )
+
+  openxlsx::writeData(
+    wb,
+    sheet = sheet_name,
+    x = empty_matrix,
+    colNames = FALSE,
+    startCol = bounds_extent$start_col,
+    startRow = bounds_extent$start_row
+  )
+
+  openxlsx::addStyle(
+    wb = wb,
+    sheet = sheet_name,
+    style = openxlsx::createStyle(
+      fgFill = "white",
+      borderColour = "white"
+    ),
+    rows = bounds_extent$start_row:(bounds_extent$end_row + 4),
+    cols = bounds_extent$start_col:(bounds_extent$end_col + 4),
+    gridExpand = TRUE
+  )
+  return(wb)
 }

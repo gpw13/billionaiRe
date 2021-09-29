@@ -132,7 +132,7 @@ write_latest_reported_hpop_summary <- function(df,
 #' @param wb a `openxlsx` workbook to be edited.
 #' @param sheet_name character name of the sheet to update
 #' @param start_year Base year for contribution calculation, defaults to 2018.
-#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2023.
+#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2025.
 #' @inheritParams export_hpop_country_summary_xls
 #' @inheritParams write_latest_reported_hpop_summary
 #'
@@ -326,7 +326,7 @@ write_billion_contribution_hpop_summary <- function(df,
     wb,
     sheet = sheet_name,
     x = vec2emptyDF(c("Contribution to Billion", "", "Corrected for Double Counting")),
-    startCol = bounds["start_col"], startRow = bounds["start_row"], colNames = FALSE
+    startCol = bounds["start_col"], startRow = bounds["start_row"], colNames = TRUE
   )
 
   openxlsx::writeData(

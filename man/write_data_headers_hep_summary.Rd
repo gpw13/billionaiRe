@@ -24,7 +24,7 @@ write_data_headers_hep_summary(
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

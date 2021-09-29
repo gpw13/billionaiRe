@@ -7,7 +7,7 @@
 #' already exists, only missing values will be replaced by the function.
 #'
 #' @inherit transform_hpop_data return details params
-#' @param pop_year Year used to pull in HPOP populations, defaults to 2023.
+#' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
 #' @param population Column name of column to create with population figures.
 #'
 #' @export
@@ -15,7 +15,7 @@ add_hpop_populations <- function(df,
                                  iso3 = "iso3",
                                  ind = "ind",
                                  population = "population",
-                                 pop_year = 2023,
+                                 pop_year = 2025,
                                  ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind)
   assert_string(population, 1)

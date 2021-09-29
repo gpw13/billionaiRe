@@ -20,7 +20,7 @@ write_sheet_header_uhc_summary(
 
 \item{iso}{ISO3 code of country to summarize.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value}{Column name of column with indicator values.}
 

@@ -14,7 +14,8 @@ write_hpop_timeseries_sheet(
   ind_df,
   ind,
   year,
-  type_col
+  type_col,
+  end_year
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ write_hpop_timeseries_sheet(
 \item{year}{Column name of column with years.}
 
 \item{type_col}{Column name of column to store type.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 }
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.

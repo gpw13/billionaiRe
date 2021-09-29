@@ -16,15 +16,15 @@ get_transform_formula_single <- function(ind, raw_col, raw_row) {
   raw_cell <- glue::glue("{openxlsx::int2col(raw_col)}{raw_row}")
 
   if (ind == "bp") {
-    formula <- glue::glue('=round(IF({raw_cell}<>"",IF((100-{raw_cell})<=50,0,((100-{raw_cell})-50)/(100-50)*100),""),2)')
+    formula <- glue::glue('=IF({raw_cell}<>"",IF((100-{raw_cell})<=50,0,round(((100-{raw_cell})-50)/(100-50)*100,2)),"")')
   } else if (ind == "fpg") {
-    formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<=5.1,100,IF({raw_cell}>=7.1,100,(7.1-{raw_cell})/(7.1-5.1)*100)),""),2)')
+    formula <- glue::glue('=IF({raw_cell}<>"",IF({raw_cell}<=5.1,100,IF({raw_cell}>=7.1,100,round((7.1-{raw_cell})/(7.1-5.1)*100,2))),"")')
   } else if (ind %in% c("uhc_tobacco", "fh")) {
-    formula <- glue::glue('=round(IF({raw_cell}<>"",100-{raw_cell},""),2)')
+    formula <- glue::glue('=IF({raw_cell}<>"",round(100-{raw_cell},2),"")')
   } else if (ind == "beds") {
-    formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<18,{raw_cell}/18*100,100),""),2)')
+    formula <- glue::glue('=IF({raw_cell}<>"",IF({raw_cell}<18,round({raw_cell}/18*100,2),100),"")')
   } else if (ind == "hwf") {
-    formula <- glue::glue('=round(IF({raw_cell}<>"",IF({raw_cell}<154.74,{raw_cell}/154.74*100,100),""),2)')
+    formula <- glue::glue('=IF({raw_cell}<>"",IF({raw_cell}<154.74,round({raw_cell}/154.74*100,2),100),"")')
   } else {
     formula <- ""
   }

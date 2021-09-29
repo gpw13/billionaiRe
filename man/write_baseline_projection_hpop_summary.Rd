@@ -34,7 +34,7 @@ write_baseline_projection_hpop_summary(
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{ind}{Column name of column with indicator names.}
 

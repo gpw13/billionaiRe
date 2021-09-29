@@ -96,7 +96,6 @@ style_hpop_baseline_projection <- function(wb, sheet_name, bounds, data_type) {
     halign = "left"
   )
 
-
   mergeCellForced(wb,
     sheet = sheet_name,
     rows = bounds["start_row"],
@@ -120,6 +119,12 @@ style_hpop_baseline_projection <- function(wb, sheet_name, bounds, data_type) {
   )
 
   # TODO: adapt to take more than one value (at the moment if length(value) >1, cells merging and styling won't work)
+  openxlsx::addStyle(wb,
+    sheet = sheet_name,
+    style = excel_styles("hpop", "sub_datatable_header", billion_fgFill = "light"),
+    rows = bounds["start_row"] + 1,
+    cols = (bounds["start_col"]:(bounds["end_col"]))
+  )
   mergeCellForced(wb,
     sheet = sheet_name,
     rows = bounds["start_row"] + 1,
@@ -186,7 +191,7 @@ style_hpop_baseline_projection <- function(wb, sheet_name, bounds, data_type) {
 
   openxlsx::setColWidths(wb,
     sheet = sheet_name,
-    widths = c(6.09, 6.09, 0.5, 6.09, 6.09, 0.5, 8.64, 8.64, 0.5, 17.91, 17.91),
+    widths = c(7, 7, 0.5, 7, 7, 0.5, 8.64, 8.64, 0.5, 17.91, 17.91),
     cols = c(bounds["start_col"]:bounds["end_col"])
   )
 
@@ -210,7 +215,7 @@ style_billion_contrib_ind_hpop <- function(wb, sheet_name, bounds, data_type) {
   # TODO: To be adapted to take multiple values in `value`
   openxlsx::setColWidths(wb,
     sheet = sheet_name,
-    widths = c(12.55, 12.55, 12.55, 12.55),
+    widths = c(14, 14, 14, 14),
     cols = c(bounds["start_col"]:bounds["end_col"])
   )
 
@@ -351,7 +356,7 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds) {
       borderColour = "black"
     ),
     rows = (bounds["end_row"] - 1),
-    cols = bounds["start_col"],
+    cols = bounds["start_col"]:(bounds["start_col"] + 1),
     gridExpand = TRUE
   )
 
@@ -378,7 +383,7 @@ style_hpop_billion_contribution <- function(wb, sheet_name, bounds) {
       borderColour = "black"
     ),
     rows = (bounds["end_row"]),
-    cols = (bounds["start_col"]),
+    cols = bounds["start_col"]:(bounds["start_col"] + 1),
     gridExpand = TRUE
   )
 

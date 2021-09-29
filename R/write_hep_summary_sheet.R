@@ -11,7 +11,7 @@
 #' @inheritParams  calculate_hpop_contributions
 write_hep_summary_sheet <- function(df, wb, sheet_name, iso,
                                     start_year = 2018,
-                                    end_year = 2019:2023,
+                                    end_year = 2019:2025,
                                     value = "value",
                                     transform_value = "transform_value",
                                     year = "year",
@@ -59,7 +59,7 @@ write_hep_summary_sheet <- function(df, wb, sheet_name, iso,
       start_row = 27,
       end_row = 38
     ),
-    dnr = c(
+    detect_respond = c(
       start_col = 1,
       end_col = 19,
       start_row = 39,
@@ -82,6 +82,55 @@ write_hep_summary_sheet <- function(df, wb, sheet_name, iso,
   wb <- write_sheet_header_hep_summary(wb, sheet_name, iso, end_year, value, boxes_bounds)
 
   wb <- write_data_headers_hep_summary(wb, sheet_name, value, boxes_bounds, start_year, end_year)
+
+  pillars <- c("prepare", "prevent", "detect_respond")
+
+  purrr::walk(
+    pillars,
+    ~ write_data_boxes_hep_summary(
+      df = df,
+      pillar = .x,
+      wb = wb,
+      sheet_name = sheet_name,
+      value = value,
+      transform_value = transform_value,
+      boxes_bounds = boxes_bounds,
+      start_year = start_year,
+      end_year = end_year,
+      ind = ind,
+      ind_df = ind_df,
+      year = year,
+      type_col = type_col,
+      source_col = source_col,
+      iso3 = iso3,
+      ind_ids = ind_ids
+    )
+  )
+
+  write_summary_box_hep_summary(
+    wb,
+    sheet_name,
+    iso,
+    start_year,
+    end_year,
+    boxes_bounds
+  )
+
+  end_notes <- list(
+    notes =
+      c(
+        "* Yellow fever, Meningitis, and Cholera vaccinations apply only to certain countries. When the vaccination is not relevant, the data is faded.",
+        "For more information, please refer to the GPW13 dashboard, section 'Reference', which includes the Impact Measurement Framework, the Methods Report, the Metadata and the Summary of Methods:",
+        "https://portal.who.int/triplebillions/PowerBIDashboards/UniversalHealthCoverage"
+      )
+  )
+
+  notes_bounds <- boxes_bounds[["notes"]]
+  notes_bounds[["end_row"]] <- boxes_bounds[["notes"]]["start_row"] + length(end_notes$notes) + 1
+
+  write_notes(end_notes$notes, "Notes:", wb, sheet_name, bounds = notes_bounds)
+
+  return(wb)
 }
 
 #' Write and style HEP summary sheet header
@@ -117,7 +166,7 @@ write_sheet_header_hep_summary <- function(wb, sheet_name, iso, end_year, value,
     sheet = sheet_name,
     x = c(
       as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+6)}{boxes_bounds$summary['end_row']-1}/1000")),
-      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+6)}{boxes_bounds$summary['end_row']}*100")),
+      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+6)}{boxes_bounds$summary['end_row']}")),
       as_excel_formula(glue::glue("={country_pop_end_year}/1000000"))
     ),
     startRow = boxes_bounds$sheet_header["start_row"] + 3,
