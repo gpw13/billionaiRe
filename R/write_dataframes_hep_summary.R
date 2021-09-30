@@ -120,33 +120,59 @@ write_data_boxes_hep_summary <- function(df,
   df_pillar <- df %>%
     dplyr::filter(.data[[ind]] %in% unique(ind_df_pillar[["ind"]]))
 
-  pillar_latest_reported <- df_pillar %>%
-    get_latest_reported_df(iso3,
-      ind,
-      type_col,
-      year,
-      value,
-      transform_value = NULL,
-      source_col,
-      level = "level",
-      ind_df_pillar
+  if (nrow(df_pillar) == 0) {
+    pillar_latest_reported <- tibble::tibble(
+      !!sym(ind) := ind_df_pillar[["ind"]],
+      !!sym(value) := NA,
+      !!sym("level") := NA,
+      !!sym(year) := NA,
+      !!sym(type_col) := NA,
+      !!sym(source_col) := NA
+    )
+    pillar_baseline_projection <- tibble::tibble(
+      !!sym(ind) := ind_df_pillar[["ind"]],
+      !!sym(iso3) := NA,
+      !!sym(glue::glue("{value}_{start_year}")) := NA,
+      !!sym(glue::glue("{value}_{max(end_year)}")) := NA,
+      empty1 = NA,
+      !!sym(glue::glue("level_{start_year}")) := NA,
+      !!sym(glue::glue("level_{max(end_year)}")) := NA,
+      empty2 = NA,
+      !!sym(glue::glue("{type_col}_{start_year}")) := NA,
+      !!sym(glue::glue("{type_col}_{max(end_year)}")) := NA,
+      empty3 = NA,
+      !!sym(glue::glue("{source_col}_{start_year}")) := NA,
+      !!sym(glue::glue("{source_col}_{max(end_year)}")) := NA
+    )
+  } else {
+    pillar_latest_reported <- df_pillar %>%
+      get_latest_reported_df(iso3,
+        ind,
+        type_col,
+        year,
+        value,
+        transform_value = NULL,
+        source_col,
+        level = "level",
+        ind_df_pillar
+      )
+
+    full_df_pillar <- tidyr::expand_grid(
+      !!sym(iso3) := unique(df_pillar[[iso3]]),
+      !!sym(ind) := unique(df_pillar[[ind]]),
+      !!sym(year) := start_year:max(end_year)
     )
 
-  full_df_pillar <- tidyr::expand_grid(
-    !!sym(iso3) := unique(df_pillar[[iso3]]),
-    !!sym(ind) := unique(df_pillar[[ind]]),
-    !!sym(year) := start_year:max(end_year)
-  )
-
-  pillar_baseline_projection <- df_pillar %>%
-    dplyr::full_join(full_df_pillar, by = c(iso3, ind, year)) %>%
-    get_baseline_projection_df(iso3, ind, type_col, year, value,
-      transform_value = "level", start_year, end_year,
-      source_col, ind_df_pillar
-    ) %>%
-    dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
-    dplyr::mutate(empty2 = NA, .after = glue::glue("level_{max(end_year)}")) %>%
-    dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}"))
+    pillar_baseline_projection <- df_pillar %>%
+      dplyr::full_join(full_df_pillar, by = c(iso3, ind, year)) %>%
+      get_baseline_projection_df(iso3, ind, type_col, year, value,
+        transform_value = "level", start_year, end_year,
+        source_col, ind_df_pillar
+      ) %>%
+      dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
+      dplyr::mutate(empty2 = NA, .after = glue::glue("level_{max(end_year)}")) %>%
+      dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}"))
+  }
 
   if (pillar == "prevent") {
     affected_pathos_iso3 <- billionaiRe::affected_pathogens %>%
