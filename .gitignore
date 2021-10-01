@@ -10,5 +10,4 @@ inst/extdata/archive
 vignettes/.build.timestamp
 *.Rprofvis
 hep_data.RDS
-.RDataTmp
-.RDataTmp1
+.RDataTmp*
