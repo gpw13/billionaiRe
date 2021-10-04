@@ -51,5 +51,6 @@ calculate_contribution_sums = function(df,
                           "estimated" %in% .data[["type"]] ~ "estimated",
                           TRUE ~ NA_character_)
     ) %>%
+    dplyr::ungroup() %>%
     dplyr::mutate("who_region" := NULL)
 }
