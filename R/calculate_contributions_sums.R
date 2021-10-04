@@ -51,5 +51,5 @@ calculate_contribution_sums = function(df,
                           "estimated" %in% .data[["type"]] ~ "estimated",
                           TRUE ~ NA_character_)
     ) %>%
-    dplyr::select(!.data[["who_region"]])
+    dplyr::mutate("who_region" := NULL)
 }
