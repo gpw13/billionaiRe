@@ -1,3 +1,7 @@
+# billionaire 0.4.4
+* Added `calculate_contribution_sums` with the ability to calculate regional or
+global sums for HEP, HPOP, or UHC billions for a given year.
+
 # billionaiRe 0.4.3
 * Added `wrangled_rural_urban_gho_data()` with functionality to supplant `wrangle_gho_data()`
 for indicators where the data has an additional RESIDENCEAREATYPE dimension with possible values
