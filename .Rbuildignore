@@ -5,3 +5,4 @@
 ^LICENSE\.md$
 ^data-raw$
 ^\.github$
+^\.pre-commit-config\.yaml$

@@ -2,6 +2,11 @@
 #'
 #' Calculates global or regional sums for billions contributions for the UHC, HPOP, and HEP billions.
 #'
+#' full_data is expected to have the values of the billions calculations per
+#' country already computed.
+#' In this example, we're calculating the global contributions for the HPOP
+#' billion for 2025.
+#'
 #' @param df A data frame
 #' @param billion One of uhc, hpop, and hep. The billion for which we want to find
 #'   global sums.
@@ -14,11 +19,6 @@
 #'   include rows from the original data frame.
 #' @export
 #'
-#' @examples
-#' # full_data is expected to have the values of the billions calculations per
-#' # country already computed.
-#' # In this example, we're calculating the global contributions for the HPOP billion for 2025.
-#' # calculate_contribution_sums(full_data, "hpop", 2025, "global")
 calculate_contribution_sums = function(df,
                                        billion = c("uhc", "hpop", "hep"),
                                        sum_year,
@@ -28,13 +28,17 @@ calculate_contribution_sums = function(df,
   billion <- rlang::arg_match(billion)
   sum_type <- rlang::arg_match(sum_type)
 
-  ind_code = switch(billion,
+  ind_code <- switch(billion,
                     uhc = "uhc_sm",
                     hpop = "hpop_healthier",
                     hep = "hep_idx")
 
   # Add WHO region to the grouping columns for regional sums
-  group_cols = if (sum_type == "global") c("scenario") else c("scenario", "who_region")
+  if(sum_type == "global"){
+    group_cols <- c("scenario")
+  }else{
+    group_cols <- c("scenario", "who_region")
+  }
 
   df %>%
     dplyr::filter(.data[["ind"]] == ind_code, .data[["year"]] == sum_year) %>%
@@ -49,8 +53,8 @@ calculate_contribution_sums = function(df,
       "type" := dplyr::case_when("projected" %in% .data[["type"]] ~ "projected",
                           "reported" %in% .data[["type"]] ~ "reported",
                           "estimated" %in% .data[["type"]] ~ "estimated",
-                          TRUE ~ NA_character_)
+                          TRUE ~ NA_character_),
+      .groups = "drop"
     ) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate("who_region" := NULL)
 }

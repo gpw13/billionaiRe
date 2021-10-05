@@ -32,9 +32,9 @@ include rows from the original data frame.
 \description{
 Calculates global or regional sums for billions contributions for the UHC, HPOP, and HEP billions.
 }
-\examples{
-# full_data is expected to have the values of the billions calculations per
-# country already computed.
-# In this example, we're calculating the global contributions for the HPOP billion for 2025.
-# calculate_contribution_sums(full_data, "hpop", 2025, "global")
+\details{
+full_data is expected to have the values of the billions calculations per
+country already computed.
+In this example, we're calculating the global contributions for the HPOP
+billion for 2025.
 }
