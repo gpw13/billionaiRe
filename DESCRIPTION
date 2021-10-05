@@ -36,7 +36,9 @@ Imports:
     tidyselect,
     usethis,
     whoville,
-    zoo
+    zoo,
+    testit
+    arrow
 Suggests: 
     knitr,
     rmarkdown,
