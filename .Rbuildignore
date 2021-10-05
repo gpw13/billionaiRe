@@ -12,5 +12,4 @@
 ^outputs$
 ^.*\.Rprofvis
 ^\.pre-commit-config\.yaml$
-^.RDataTmp$
-^hep_data.RDS$
+^.RDataTmp*$

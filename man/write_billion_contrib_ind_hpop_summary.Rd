@@ -50,6 +50,8 @@ as \code{transform_value}.}
 
 \item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
 
+\item{boxes_bounds}{named list of bounds for data frame boxes to be written in sheet.}
+
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of

@@ -68,6 +68,11 @@ values. Must be the same length as \code{transform_value}.}
 as \code{transform_value}.}
 
 \item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

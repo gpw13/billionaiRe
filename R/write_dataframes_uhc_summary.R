@@ -274,6 +274,8 @@ write_asc_uhc_data_summary <- function(df,
   df_pillar <- df %>%
     dplyr::filter(.data[[ind]] %in% unique(ind_df_pillar[["ind"]]))
 
+  this_iso3 <- unique(df[[iso3]])
+
   col_trans_start_year <- openxlsx::int2col(boxes_bounds[["baseline_projection_data"]]["start_col"] + 3)
   col_trans_end_year <- openxlsx::int2col(boxes_bounds[["baseline_projection_data"]]["start_col"] + 4)
 

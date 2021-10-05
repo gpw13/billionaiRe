@@ -47,6 +47,7 @@ write_indicators_hpop_summary <- function(ind_df,
 #' * `end_col`: end column
 #' * `start_row`: start row
 #' * `end_row`: end row
+#' @inheritParams transform_hpop_data
 
 write_latest_reported_hpop_summary <- function(df,
                                                wb,
@@ -159,6 +160,7 @@ write_latest_reported_hpop_summary <- function(df,
 #' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2025.
 #' @inheritParams export_hpop_country_summary_xls
 #' @inheritParams write_latest_reported_hpop_summary
+#' @inheritParams transform_hpop_data
 #'
 
 write_baseline_projection_hpop_summary <- function(df,
@@ -271,6 +273,7 @@ write_baseline_projection_hpop_summary <- function(df,
 #' @inheritParams export_hpop_country_summary_xls
 #' @inheritParams write_latest_reported_hpop_summary
 #' @inheritParams write_baseline_projection_hpop_summary
+#' @inheritParams write_sheet_header_hpop_summary
 #'
 
 write_billion_contrib_ind_hpop_summary <- function(df,
@@ -296,7 +299,7 @@ write_billion_contrib_ind_hpop_summary <- function(df,
       .data[[year]] == max(end_year),
       .data[[ind]] %in% ind_ids
     ) %>%
-    dplyr::select(all_of(population)) %>%
+    dplyr::select(dplyr::all_of(population)) %>%
     tidyr::replace_na(list(population = '""')) %>%
     unlist()
 

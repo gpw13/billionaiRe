@@ -8,6 +8,7 @@
 #' @param df Data frame in long format filtered for a specific country, where 1 row corresponds
 #'    to a specific year, and indicator.
 #' @param ind_df data frame containing the indicators in the correct order and format to be used.
+#' @inheritParams transform_hpop_data
 #'
 write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      start_year = 2018,
