@@ -12,6 +12,7 @@ get_latest_reported_df(
   year,
   value,
   transform_value = NULL,
+  level = NULL,
   source_col,
   ind_df
 )
@@ -32,6 +33,8 @@ country, year, and indicator.}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
+
+\item{level}{integer indicating the level column. Specific to HEP.}
 
 \item{source_col}{Column name of column to store source information.}
 

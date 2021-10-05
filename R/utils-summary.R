@@ -36,18 +36,18 @@ get_ind_order <- function(ind) {
 #'
 #' `get_latest_reported()` gets the latest reported data available for estimated
 #' or reported data. Used in write functions.
-#'
+#' @param level integer indicating the level column. Specific to HEP.
 #' @inherit export_hpop_country_summary_xls
 #' @inheritParams write_uhc_timeseries_sheet
 #' @inheritParams write_hpop_summary_sheet
-get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transform_value = NULL, source_col, ind_df) {
+get_latest_reported_df <- function(df, iso3, ind, type_col, year, value, transform_value = NULL, level = NULL, source_col, ind_df) {
   df <- df %>%
     dplyr::filter(.data[[type_col]] %in% c("estimated", "reported")) %>%
     dplyr::group_by(.data[[iso3]], .data[[ind]]) %>%
     dplyr::filter(.data[[year]] == max(.data[[year]])) %>%
     dplyr::ungroup() %>%
     dplyr::select(dplyr::all_of(c(
-      ind, value, transform_value, year,
+      ind, value, transform_value, level, year,
       type_col, source_col
     ))) %>%
     dplyr::mutate(!!sym(year) := as.integer(.data[[year]]))
@@ -74,13 +74,11 @@ get_baseline_projection_df <- function(df, iso3, ind, type_col, year, value, tra
       source_col, iso3
     ))) %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
+    dplyr::arrange(.data[[year]]) %>%
     tidyr::pivot_wider(
       names_from = .data[[year]],
       values_from = c(dplyr::all_of(c(value, transform_value)), .data[[type_col]], .data[[source_col]])
     ) %>%
-    dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
-    dplyr::mutate(empty2 = NA, .after = glue::glue("{transform_value}_{max(end_year)}")) %>%
-    dplyr::mutate(empty3 = NA, .after = glue::glue("{type_col}_{max(end_year)}")) %>%
     dplyr::ungroup()
 
   df <- ind_df[, "ind"] %>%

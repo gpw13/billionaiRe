@@ -4,16 +4,23 @@
 \alias{get_transform_formula}
 \title{Get the transformation formula for a specified indicator}
 \usage{
-get_transform_formula(ind, raw_col, raw_rows)
+get_transform_formula(ind, raw_col, raw_rows, ind_ids, iso3)
 }
 \arguments{
-\item{ind}{character with the indicator code (\code{ind} in \code{billionaiRe::indicator_df()})}
+\item{ind}{Column name of column with indicator names.}
 
 \item{raw_col}{integer identifying the column where the raw value (pre-transformation)
 is located.}
 
 \item{raw_rows}{integer vector identifying rows indices where raw values for
 transformation are located. Must be the same length as \code{ind}}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
+
+\item{iso3}{Country ISO3 code.}
 }
 \value{
 character vector with the formula for the indicator, column, row combination

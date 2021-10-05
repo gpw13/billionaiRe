@@ -10,8 +10,8 @@ calculate_uhc_contribution(
   iso3 = "iso3",
   ind = "ind",
   start_year = 2018,
-  end_year = 2019:2023,
-  pop_year = 2023,
+  end_year = 2019:2025,
+  pop_year = 2025,
   transform_value = "transform_value",
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
@@ -32,9 +32,9 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}

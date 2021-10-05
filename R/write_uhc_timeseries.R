@@ -9,7 +9,7 @@
 write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
                                        start_row, start_col, value,
                                        ind_df, ind, year, type_col,
-                                       ind_ids) {
+                                       ind_ids, end_year) {
   ind_df_timeseries <- ind_df %>%
     dplyr::mutate(
       !!sym("ind") := dplyr::case_when(
@@ -37,6 +37,7 @@ write_uhc_timeseries_sheet <- function(df, wb, sheet_name,
   time_series <- df %>%
     dplyr::ungroup() %>%
     dplyr::select(.data[[ind]], .data[[year]], .data[[type_col]], !!value) %>%
+    dplyr::filter(.data[[year]] <= max(end_year)) %>%
     dplyr::group_by(.data[[ind]], .data[[year]], .data[[type_col]]) %>%
     tidyr::pivot_longer(c(!!value), names_to = "value_mod", values_to = "value") %>%
     dplyr::mutate(

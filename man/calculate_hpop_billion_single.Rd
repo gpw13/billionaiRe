@@ -30,7 +30,7 @@ country, year, and indicator.}
 
 \item{year}{Column name of column with years.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

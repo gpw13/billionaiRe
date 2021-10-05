@@ -16,7 +16,7 @@ transform_hep_data(
   source_col = "source",
   source = "WUENIC/IVB/WHO Technical Programme",
   ind_ids = billion_ind_codes("hep"),
-  extrapolate_to = 2023
+  extrapolate_to = 2025
 )
 }
 \arguments{
@@ -50,7 +50,7 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023}
+\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
 }
 \value{
 Data frame in long format.

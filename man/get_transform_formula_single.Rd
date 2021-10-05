@@ -4,7 +4,7 @@
 \alias{get_transform_formula_single}
 \title{Get the transformation formula for a specified indicator and cell reference}
 \usage{
-get_transform_formula_single(ind, raw_col, raw_row)
+get_transform_formula_single(ind, raw_col, raw_row, ind_ids, iso3)
 }
 \arguments{
 \item{ind}{character with the indicator code (\code{ind} in \code{billionaiRe::indicator_df()})}
@@ -14,6 +14,13 @@ is located.}
 
 \item{raw_row}{integer identifying the row where the raw value (pre-transformation)
 is located.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
+
+\item{iso3}{Country ISO3 code.}
 }
 \value{
 character vector with the formula for the indicator, column, row combination

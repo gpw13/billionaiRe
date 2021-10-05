@@ -21,7 +21,7 @@ export_country_summary_xls(
   contribution_pct = paste0(contribution, "_percent"),
   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   output_folder = "outputs"
 )
 }
@@ -65,7 +65,7 @@ as \code{transform_value}.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{output_folder}{Folder path to where the Excel files should be written}
 }

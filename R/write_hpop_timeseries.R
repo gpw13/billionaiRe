@@ -8,11 +8,22 @@
 
 write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
                                         start_row, start_col, value,
-                                        ind_df, ind, year, type_col) {
+                                        ind_df, ind, year, type_col, end_year) {
   openxlsx::writeData(wb, sheet_name,
     x = "Time Series",
     startCol = start_col,
     startRow = 2
+  )
+
+  wb <- write_empty_white_data(
+    wb,
+    sheet_name,
+    bounds = c(
+      start_row = start_row,
+      start_col = start_col,
+      end_row = 1000,
+      end_col = 100
+    )
   )
 
   # TODO: Simplify function to purrr-like walk rather than looping
@@ -23,6 +34,7 @@ write_hpop_timeseries_sheet <- function(df, wb, sheet_name,
     dplyr::select(.data[[ind]], .data[[year]], .data[[type_col]], !!value) %>%
     dplyr::group_by(.data[[ind]], .data[[year]], .data[[type_col]]) %>%
     tidyr::pivot_longer(c(!!value), names_to = "value_mod", values_to = "value") %>%
+    dplyr::filter(.data[[year]] <= max(end_year)) %>%
     dplyr::mutate(!!sym("value_mod") := factor(!!sym("value_mod"), levels = !!value)) %>%
     dplyr::group_by(!!sym("value_mod")) %>%
     dplyr::group_split()

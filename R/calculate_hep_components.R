@@ -62,7 +62,7 @@ calculate_hep_components <- function(df,
   for (i in 1:length(level)) {
     new_df <- new_df %>%
       dplyr::mutate(!!sym(level[i]) := dplyr::case_when(
-        !(.data[[ind]] %in% ind_ids[c(
+        !(stringr::str_detect(.data[[ind]], paste0(ind_ids[c(
           "detect_respond",
           "detect",
           "notify",
@@ -70,7 +70,7 @@ calculate_hep_components <- function(df,
           "prevent",
           "espar",
           "hep_idx"
-        )]) ~ NA_real_,
+        )], collapse = "|"))) ~ NA_real_,
         .data[[transform_value[i]]] < 30 ~ 1,
         .data[[transform_value[i]]] < 50 ~ 2,
         .data[[transform_value[i]]] < 70 ~ 3,

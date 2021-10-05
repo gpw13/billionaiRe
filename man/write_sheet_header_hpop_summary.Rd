@@ -26,7 +26,7 @@ write_sheet_header_hpop_summary(
 
 \item{start_row}{integer start row of styling. Passed to \code{\link[openxlsx:addStyle]{openxlsx::addStyle()}}}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value}{Column name of column with indicator values.}
 

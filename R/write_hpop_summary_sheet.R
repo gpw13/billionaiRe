@@ -8,10 +8,11 @@
 #' @param df Data frame in long format filtered for a specific country, where 1 row corresponds
 #'    to a specific year, and indicator.
 #' @param ind_df data frame containing the indicators in the correct order and format to be used.
+#' @inheritParams transform_hpop_data
 #'
 write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      start_year = 2018,
-                                     end_year = 2019:2023,
+                                     end_year = 2019:2025,
                                      value = "value",
                                      year = "year",
                                      iso3 = "iso3",
@@ -23,51 +24,61 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      contribution = "contribution",
                                      contribution_pct = paste0(contribution, "_percent"),
                                      contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-                                     ind_df) {
+                                     ind_df,
+                                     ind_ids) {
   indicators <- ind_df %>%
     dplyr::select("ind", "sdg", "short_name")
+
+  start_row_data <- 9
+  end_row_data <- start_row_data + sum(unique(df[[ind]]) %in% ind_ids) + 2
 
   # TODO: make dynamic if value or scenario >1
   boxes_bounds <- list(
     indicators = c(
       start_col = 1,
       end_col = 2,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     latest = c(
       start_col = 3,
       end_col = 9,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     baseline_proj = c(
       start_col = 11,
       end_col = 21,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     contribution = c(
       start_col = 23,
       end_col = 26,
-      start_row = 9,
-      end_row = 28
+      start_row = start_row_data,
+      end_row = end_row_data
     ),
     billion_contribution = c(
       start_col = 23,
       end_col = 26,
-      start_row = 30,
-      end_row = 35
+      start_row = end_row_data + 2,
+      end_row = end_row_data + 7
     ),
     notes = c(
       start_col = 1,
       end_col = 5,
-      start_row = 30,
-      end_row = 34
+      start_row = end_row_data + 2,
+      end_row = end_row_data + 7
     )
   )
 
+  # Clean slate
 
+  wb <- write_empty_white_data(
+    wb = wb,
+    sheet_name = sheet_name,
+    bounds = boxes_bounds
+  )
   ## Write header
   wb <- write_sheet_header_hpop_summary(wb,
     sheet_name = sheet_name,
@@ -94,7 +105,8 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     transform_value = transform_value,
     source_col = source_col,
     year_counts = c(2000, 2015),
-    bounds = boxes_bounds$latest
+    bounds = boxes_bounds$latest,
+    ind_ids = ind_ids
   )
 
   wb <- write_baseline_projection_hpop_summary(
@@ -111,10 +123,11 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     type_col = type_col,
     source_col = source_col,
     iso3 = iso3,
-    bounds = boxes_bounds$baseline_proj
+    bounds = boxes_bounds$baseline_proj,
+    ind_ids = ind_ids
   )
 
-  wb <- write_bilion_contrib_ind_hpop_summary(
+  wb <- write_billion_contrib_ind_hpop_summary(
     df = df,
     wb = wb,
     sheet_name = sheet_name,
@@ -127,7 +140,8 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     contribution = contribution,
     contribution_pct_total_pop = contribution_pct_total_pop,
     ind_df = ind_df,
-    bounds = boxes_bounds$contribution
+    boxes_bounds = boxes_bounds,
+    ind_ids = ind_ids
   )
 
 

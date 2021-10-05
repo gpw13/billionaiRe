@@ -12,8 +12,8 @@ calculate_hpop_billion_change(
   iso3 = "iso3",
   year = "year",
   population = "population",
-  end_year = 2019:2023,
-  pop_year = 2023,
+  end_year = 2019:2025,
+  pop_year = 2025,
   scenario = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
@@ -35,9 +35,9 @@ values. Must be the same length as \code{transform_value}.}
 
 \item{population}{Column name of column with population figures.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

@@ -19,7 +19,8 @@ write_latest_reported_hpop_summary(
   transform_value,
   source_col,
   year_counts = c(2000, 2015),
-  bounds
+  bounds,
+  ind_ids
 )
 }
 \arguments{
@@ -64,6 +65,11 @@ Must have the following named elements:
 \item \code{start_row}: start row
 \item \code{end_row}: end row
 }}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

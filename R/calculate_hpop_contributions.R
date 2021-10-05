@@ -5,7 +5,7 @@
 #'
 #' @param year Column name of column with years.
 #' @param start_year Base year for contribution calculation, defaults to 2018.
-#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2023.
+#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2025.
 #' @param population Column name of column with population figures.
 #' @param transform_value Column name of column(s) with transformed indicator values,
 #'     used to calculate contributions.
@@ -23,7 +23,7 @@
 calculate_hpop_contributions <- function(df,
                                          year = "year",
                                          start_year = 2018,
-                                         end_year = 2019:2023,
+                                         end_year = 2019:2025,
                                          iso3 = "iso3",
                                          ind = "ind",
                                          population = "population",

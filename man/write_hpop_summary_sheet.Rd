@@ -10,7 +10,7 @@ write_hpop_summary_sheet(
   sheet_name,
   iso,
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   value = "value",
   year = "year",
   iso3 = "iso3",
@@ -22,7 +22,8 @@ write_hpop_summary_sheet(
   contribution = "contribution",
   contribution_pct = paste0(contribution, "_percent"),
   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-  ind_df
+  ind_df,
+  ind_ids
 )
 }
 \arguments{
@@ -37,7 +38,7 @@ to a specific year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value}{Column name of column with indicator values.}
 
@@ -67,6 +68,11 @@ values. Must be the same length as \code{transform_value}.}
 as \code{transform_value}.}
 
 \item{ind_df}{data frame containing the indicators in the correct order and format to be used.}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 \code{openxslx} Workbook object. Output file is in \code{output_folder}.

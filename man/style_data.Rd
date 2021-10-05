@@ -10,8 +10,10 @@ style_data(
   sheet_name,
   rows,
   cols,
-  no_show = TRUE,
-  no_show_row = 0
+  no_show = FALSE,
+  no_show_row = 0,
+  fade = FALSE,
+  fade_row = 0
 )
 }
 \arguments{
@@ -30,6 +32,10 @@ or "formula".}
 \item{no_show}{Boolean with TRUE if data in \code{no_show_row} should be displayed}
 
 \item{no_show_row}{integer identifying which row contains data no to show}
+
+\item{fade}{Boolean with TRUE if rows in \code{fade_row} should be faded}
+
+\item{fade_row}{integer identifying which row contains data no to show}
 }
 \description{
 Style data according to its type

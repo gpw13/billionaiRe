@@ -1,20 +1,12 @@
 Type: Package
 Package: billionaiRe
 Title: Calculate the WHO Triple Billions
-Version: 0.4.3
-Authors@R: 
-    c(person(given = "Seth",
-             family = "Caldwell",
-             role = c("aut", "cre"),
-             email = "caldwellst@gmail.com"),
-      person(given = "Alice",
-             family = "Robson",
-             role = "aut",
-             email = "robsona@who.int"),
-      person(given = "Nelly",
-             family = "Biondi",
-             role = "aut",
-             email = "biondin@who.int"))
+Version: 0.4.4
+Authors@R: c(
+    person("Seth", "Caldwell", , "caldwellst@gmail.com", role = c("aut", "cre")),
+    person("Alice", "Robson", , "robsona@who.int", role = "aut"),
+    person("Nelly", "Biondi", , "biondin@who.int", role = "aut")
+  )
 Description: Apply methods to calculate Universal Health Coverage,
     Healthier Populations, and Health Emergencies Protection Billions.
 License: GPL-3
@@ -38,6 +30,7 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
+    usethis,
     whoville,
     zoo
 Suggests: 

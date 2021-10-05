@@ -11,7 +11,7 @@ indicator_df <- read_excel("data-raw/indicator_df.xlsx") %>%
     c(uhc, hpop, hep, covariate, calculated),
     ~ ifelse(is.na(.x), F, T)
   )) %>%
-  left_join(indicator_order, by = c("analysis_code" = "ind"), keep = TRUE) %>%
+  left_join(read_excel("data-raw/indicator_order.xlsx"), by = c("analysis_code" = "ind"), keep = TRUE) %>%
   arrange(order)
 
 usethis::use_data(indicator_df, overwrite = TRUE, internal = FALSE)

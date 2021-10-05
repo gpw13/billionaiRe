@@ -10,8 +10,10 @@ style_data_single(
   sheet_name,
   rows,
   col,
-  no_show = TRUE,
-  no_show_row
+  no_show = FALSE,
+  no_show_row = 0,
+  fade = TRUE,
+  fade_row = 0
 )
 }
 \arguments{
@@ -29,6 +31,10 @@ Can be one of "numeric", "integer", "Date", "character", or "chr_type"}
 \item{no_show}{Boolean with TRUE if data in \code{no_show_row} should be displayed}
 
 \item{no_show_row}{integer identifying which row contains data no to show}
+
+\item{fade}{Boolean with TRUE if rows in \code{fade_row} should be faded}
+
+\item{fade_row}{integer identifying which row contains data no to show}
 }
 \description{
 Style data single data column according to its type

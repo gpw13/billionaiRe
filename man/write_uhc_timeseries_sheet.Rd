@@ -15,7 +15,8 @@ write_uhc_timeseries_sheet(
   ind,
   year,
   type_col,
-  ind_ids
+  ind_ids,
+  end_year
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ write_uhc_timeseries_sheet(
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 }
 \description{
 \code{export_hpop_country_summary_xls} Export a country-specific for HPOP billion.

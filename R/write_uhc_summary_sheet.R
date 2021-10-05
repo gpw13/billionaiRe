@@ -11,7 +11,7 @@
 #' @inheritParams  calculate_hpop_contributions
 write_uhc_summary_sheet <- function(df, wb, sheet_name, iso,
                                     start_year = 2018,
-                                    end_year = 2019:2023,
+                                    end_year = 2019:2025,
                                     value = "value",
                                     transform_value = "transform_value",
                                     year = "year",
@@ -218,7 +218,7 @@ write_sheet_header_uhc_summary <- function(wb, sheet_name, iso, end_year, value,
     sheet = sheet_name,
     x = c(
       as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+12)}{boxes_bounds$summary['end_row']-1}/1000")),
-      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+12)}{boxes_bounds$summary['end_row']}*100")),
+      as_excel_formula(glue::glue("={openxlsx::int2col(boxes_bounds$summary['start_col']+12)}{boxes_bounds$summary['end_row']}")),
       as_excel_formula(glue::glue("={country_pop_end_year}/1000000"))
     ),
     startRow = boxes_bounds$sheet_header["start_row"] + 3,

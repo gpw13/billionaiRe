@@ -29,8 +29,8 @@ calculate_hep_billion <- function(df,
                                   contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                   contribution_pct = paste0(contribution, "_percent"),
                                   start_year = 2018,
-                                  end_year = 2019:2023,
-                                  pop_year = 2023,
+                                  end_year = 2019:2025,
+                                  pop_year = 2025,
                                   ind_ids = billion_ind_codes("hep")) {
   assert_columns(df, iso3, ind, year, transform_value, level)
   assert_ind_ids(ind_ids, "hep")

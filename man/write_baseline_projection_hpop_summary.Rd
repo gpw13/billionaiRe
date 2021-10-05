@@ -18,7 +18,8 @@ write_baseline_projection_hpop_summary(
   type_col,
   source_col,
   iso3,
-  bounds
+  bounds,
+  ind_ids
 )
 }
 \arguments{
@@ -34,7 +35,7 @@ write_baseline_projection_hpop_summary(
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{ind}{Column name of column with indicator names.}
 
@@ -59,6 +60,11 @@ Must have the following named elements:
 \item \code{start_row}: start row
 \item \code{end_row}: end row
 }}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \description{
 Write the baseline/projection data frame to the data sheet

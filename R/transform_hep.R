@@ -18,7 +18,7 @@
 #' @param source Source to use for prevent data that is flat extrapolated
 #'     that has more than one unique value.
 #' @param year Column name of column with year data.
-#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2023
+#' @param extrapolate_to Year to extrapolate Prevent data to, defaults to 2025
 #'
 #' @return Data frame in long format.
 #'
@@ -34,7 +34,7 @@ transform_hep_data <- function(df,
                                source_col = "source",
                                source = "WUENIC/IVB/WHO Technical Programme",
                                ind_ids = billion_ind_codes("hep"),
-                               extrapolate_to = 2023) {
+                               extrapolate_to = 2025) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
