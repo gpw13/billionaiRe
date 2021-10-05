@@ -45,7 +45,8 @@ Suggests:
     testthat (>= 3.0.0),
     whdh,
     wppdistro (>= 0.1.0),
-    xmart4 (>= 0.2.2)
+    xmart4 (>= 0.2.2),
+    whdh
 VignetteBuilder: 
     knitr
 Remotes: 
