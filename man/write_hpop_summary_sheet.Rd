@@ -22,7 +22,8 @@ write_hpop_summary_sheet(
   contribution = "contribution",
   contribution_pct = paste0(contribution, "_percent"),
   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-  ind_df
+  ind_df,
+  ind_ids
 )
 }
 \arguments{

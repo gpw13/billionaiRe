@@ -93,7 +93,6 @@ write_data_headers_uhc_summary <- function(wb, sheet_name, value, boxes_bounds, 
 #' @inheritParams  calculate_hpop_contributions
 #' @inheritParams  transform_hpop_data
 
-
 write_data_boxes_uhc_summary <- function(df,
                                          pillar = c("RMNCH", "infec_diseases", "ncd", "service_cap_access"),
                                          wb,
@@ -111,6 +110,8 @@ write_data_boxes_uhc_summary <- function(df,
                                          iso3,
                                          ind_ids) {
   pillar <- rlang::arg_match(pillar)
+
+  this_iso3 <- unique(df[[iso3]])
 
   ind_df_pillar <- ind_df %>%
     dplyr::filter(.data[["pillar"]] %in% !!pillar)
@@ -184,14 +185,14 @@ write_data_boxes_uhc_summary <- function(df,
   } else if (pillar %in% c("ncd", "service_cap_access")) {
     pillar_latest_reported <- pillar_latest_reported %>%
       dplyr::mutate(
-        !!sym(glue::glue("{transform_value}")) := as_excel_formula(get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows))
+        !!sym(glue::glue("{transform_value}")) := as_excel_formula(get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3))
       ) %>%
       dplyr::select(-.data[[ind]])
 
     pillar_baseline_projection <- pillar_baseline_projection %>%
       dplyr::mutate(
-        !!sym(glue::glue("{transform_value}_{start_year}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"], pillar_data_rows),
-        !!sym(glue::glue("{transform_value}_{max(end_year)}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"] + 1, pillar_data_rows)
+        !!sym(glue::glue("{transform_value}_{start_year}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"], pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3),
+        !!sym(glue::glue("{transform_value}_{max(end_year)}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"] + 1, pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3)
       ) %>%
       dplyr::select(-.data[[ind]], -.data[[iso3]])
 
@@ -310,7 +311,7 @@ write_asc_uhc_data_summary <- function(df,
       ind_df = ind_df_pillar
     ) %>%
     dplyr::mutate(
-      !!sym(glue::glue("{transform_value}")) := get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows),
+      !!sym(glue::glue("{transform_value}")) := get_transform_formula(.data[[ind]], boxes_bounds$latest_reported_data["start_col"], pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3),
     ) %>%
     dplyr::select(-.data[[ind]])
 
@@ -321,8 +322,8 @@ write_asc_uhc_data_summary <- function(df,
   pillar_baseline_projection <- df_pillar %>%
     get_baseline_projection_df(iso3, ind, type_col, year, value, transform_value, start_year, end_year, source_col, ind_df_pillar) %>%
     dplyr::mutate(
-      !!sym(glue::glue("{transform_value}_{start_year}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"], pillar_data_rows),
-      !!sym(glue::glue("{transform_value}_{max(end_year)}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"] + 1, pillar_data_rows)
+      !!sym(glue::glue("{transform_value}_{start_year}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"], pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3),
+      !!sym(glue::glue("{transform_value}_{max(end_year)}")) := get_transform_formula(.data[[ind]], boxes_bounds$baseline_projection_data["start_col"] + 1, pillar_data_rows, ind_ids = ind_ids, iso3 = this_iso3)
     ) %>%
     dplyr::mutate(empty1 = NA, .after = glue::glue("{value}_{max(end_year)}")) %>%
     dplyr::mutate(empty2 = NA, .after = glue::glue("{transform_value}_{max(end_year)}")) %>%

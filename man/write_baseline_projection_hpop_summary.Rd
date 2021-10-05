@@ -18,7 +18,8 @@ write_baseline_projection_hpop_summary(
   type_col,
   source_col,
   iso3,
-  bounds
+  bounds,
+  ind_ids
 )
 }
 \arguments{

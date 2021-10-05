@@ -404,12 +404,18 @@ export_hpop_country_summary_xls <- function(df,
 
   df_iso <- df %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data[[iso3]] == !!iso) %>%
+    dplyr::filter(
+      .data[[iso3]] == !!iso,
+      stringr::str_detect(.data[[ind]], paste0(c(ind_ids, "^hpop_healthier"), collapse = "|"))
+    ) %>%
     dplyr::arrange(
       get_ind_order(.data[[ind]]),
       .data[[year]]
     ) %>%
-    dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2)))
+    dplyr::mutate(dplyr::across(c(!!value, !!transform_value), ~ round(.x, digits = 2))) %>%
+    dplyr::group_by(.data[[ind]]) %>%
+    dplyr::filter(sum(is.na(.data[[value]])) != dplyr::n() | !is.na(.data[[contribution]])) %>%
+    dplyr::ungroup()
 
   df_iso <- get_df_one_scenario(df_iso, scenario)
 
@@ -423,6 +429,21 @@ export_hpop_country_summary_xls <- function(df,
       !is.na(.data[["ind"]]),
       !((.data[["ind"]] %in% !!water_sanitation_ind) & !(.data[["ind"]] %in% unique(df_iso[[!!ind]])))
     )
+
+  df_iso <- df_iso %>%
+    dplyr::full_join(
+      tidyr::expand_grid(
+        ind = unique(ind_df[["ind"]]),
+        year = start_year:max(end_year),
+        iso3 = iso
+      ),
+      by = c(ind, year, iso3)
+    ) %>%
+    dplyr::arrange(
+      get_ind_order(.data[[ind]]),
+      .data[[year]]
+    )
+
 
   # summary sheet
   summary_sheet <- glue::glue("{sheet_prefix}_summary")
@@ -445,7 +466,8 @@ export_hpop_country_summary_xls <- function(df,
     contribution = contribution,
     contribution_pct = contribution_pct,
     contribution_pct_total_pop = contribution_pct_total_pop,
-    ind_df = ind_df
+    ind_df = ind_df,
+    ind_ids = ind_ids
   )
 
   # Time series

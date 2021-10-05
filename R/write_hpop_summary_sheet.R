@@ -23,12 +23,13 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
                                      contribution = "contribution",
                                      contribution_pct = paste0(contribution, "_percent"),
                                      contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-                                     ind_df) {
+                                     ind_df,
+                                     ind_ids) {
   indicators <- ind_df %>%
     dplyr::select("ind", "sdg", "short_name")
 
   start_row_data <- 9
-  end_row_data <- start_row_data + nrow(ind_df) + 2
+  end_row_data <- start_row_data + sum(unique(df[[ind]]) %in% ind_ids) + 2
 
   # TODO: make dynamic if value or scenario >1
   boxes_bounds <- list(
@@ -103,7 +104,8 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     transform_value = transform_value,
     source_col = source_col,
     year_counts = c(2000, 2015),
-    bounds = boxes_bounds$latest
+    bounds = boxes_bounds$latest,
+    ind_ids = ind_ids
   )
 
   wb <- write_baseline_projection_hpop_summary(
@@ -120,10 +122,11 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     type_col = type_col,
     source_col = source_col,
     iso3 = iso3,
-    bounds = boxes_bounds$baseline_proj
+    bounds = boxes_bounds$baseline_proj,
+    ind_ids = ind_ids
   )
 
-  wb <- write_bilion_contrib_ind_hpop_summary(
+  wb <- write_billion_contrib_ind_hpop_summary(
     df = df,
     wb = wb,
     sheet_name = sheet_name,
@@ -136,7 +139,8 @@ write_hpop_summary_sheet <- function(df, wb, sheet_name, iso,
     contribution = contribution,
     contribution_pct_total_pop = contribution_pct_total_pop,
     ind_df = ind_df,
-    bounds = boxes_bounds$contribution
+    boxes_bounds = boxes_bounds,
+    ind_ids = ind_ids
   )
 
 

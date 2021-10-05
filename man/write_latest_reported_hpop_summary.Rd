@@ -19,7 +19,8 @@ write_latest_reported_hpop_summary(
   transform_value,
   source_col,
   year_counts = c(2000, 2015),
-  bounds
+  bounds,
+  ind_ids
 )
 }
 \arguments{
