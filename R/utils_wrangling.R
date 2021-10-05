@@ -97,27 +97,41 @@ add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
 #'
 #' @param df data frame the output
 #' @param path the path where the output should be saved
+#' @param compression Compression algorithm to use for parquet format. "snappy" by
+#'   default
 #'
 #' @return a data frame. This is the modified dataframe that's saved to disk if
 #' the data frame has all the columns expected by xMart. Otherwise, it simply return
 #' the input data frame.
 #'
 #' @export
-save_wrangled_output <- function(df, path) {
+save_wrangled_output <- function(df, path, compression = "snappy") {
   assert_df(df)
   assert_string(path, 1)
 
+  ext <- stringr::str_split(path, "\\.")[[1]][[2]]
+
   if (has_xmart_cols(df)) {
     output_df <- df %>%
+      dplyr::ungroup() %>%
       dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
-      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]]) %>%
-      readr::write_csv(path, na = "")
+      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]])
 
-    message("Output saved to disk.")
-    return(output_df)
+    if (ext == "csv") {
+      readr::write_csv(output_df, path, na = "")
+      message("Output saved to disk.")
+    } else if (ext == "parquet") {
+      arrow::write_parquet(output_df, path, compression = compression)
+      message("Output saved to disk.")
+    } else {
+      warning("Unknown extension. The output was not saved to disk.")
+      output_df <- df
+    }
   } else {
     warning("The output data frame did not have the correct columns. The output was not saved to disk.")
-    return(df)
+    output_df <- df
   }
+
+  output_df
 }
