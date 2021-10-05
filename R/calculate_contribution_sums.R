@@ -14,6 +14,7 @@
 #' @param sum_type Allows you to select between global and regional sums.
 #' @param source The source for the calculated billions. `WHO DDI calculations`,
 #'   with `month, year` timestamp by default.
+#' @inheritParams calculate_hpop_contributions
 #'
 #' @return A data frame with the global sums for the relevant billion. Does not
 #'   include rows from the original data frame.
@@ -23,7 +24,13 @@ calculate_contribution_sums = function(df,
                                        billion = c("uhc", "hpop", "hep"),
                                        sum_year,
                                        sum_type = c("global", "regional"),
-                                       source = sprintf("WHO DDI calculation, %s", format(Sys.Date(), '%B %Y'))) {
+                                       source = sprintf("WHO DDI calculation, %s", format(Sys.Date(), '%B %Y')),
+                                       scenario = NULL,
+                                       year = "year",
+                                       iso3 = "iso3",
+                                       ind = "ind",
+                                       transform_value = "transform_value",
+                                       contribution = stringr::str_replace(transform_value, "transform_value", "contribution")) {
   # Checks and assertions
   billion <- rlang::arg_match(billion)
   sum_type <- rlang::arg_match(sum_type)
@@ -35,20 +42,20 @@ calculate_contribution_sums = function(df,
 
   # Add WHO region to the grouping columns for regional sums
   if(sum_type == "global"){
-    group_cols <- c("scenario")
+    group_cols <- c(scenario)
   }else{
-    group_cols <- c("scenario", "who_region")
+    group_cols <- c(scenario, "who_region")
   }
 
   df %>%
-    dplyr::filter(.data[["ind"]] == ind_code, .data[["year"]] == sum_year) %>%
-    dplyr::mutate(who_region = whoville::iso3_to_regions(.data[["iso3"]], "who_region")) %>%
+    dplyr::filter(.data[[ind]] == ind_code, .data[[year]] == sum_year) %>%
+    dplyr::mutate(who_region = whoville::iso3_to_regions(.data[[iso3]], "who_region")) %>%
     dplyr::group_by(dplyr::across(tidyselect::all_of(group_cols))) %>%
     dplyr::summarise(
-      "iso3" := ifelse(sum_type == "global", "GLOBAL", .data[["who_region"]]),
-      "year" := sum_year,
-      "ind" := ind_code,
-      "contribution" := sum(.data[["contribution"]], na.rm = TRUE),
+      !!sym(iso3) := ifelse(sum_type == "global", "GLOBAL", .data[["who_region"]]),
+      !!sym(year) := sum_year,
+      !!sym(ind) := ind_code,
+      !!sym(contribution) := sum(.data[["contribution"]], na.rm = TRUE),
       "source" := !!source,
       "type" := dplyr::case_when("projected" %in% .data[["type"]] ~ "projected",
                           "reported" %in% .data[["type"]] ~ "reported",

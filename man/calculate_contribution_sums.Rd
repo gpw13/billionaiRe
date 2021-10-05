@@ -9,7 +9,14 @@ calculate_contribution_sums(
   billion = c("uhc", "hpop", "hep"),
   sum_year,
   sum_type = c("global", "regional"),
-  source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y"))
+  source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
+  scenario = NULL,
+  year = "year",
+  iso3 = "iso3",
+  ind = "ind",
+  transform_value = "transform_value",
+  contribution = stringr::str_replace(transform_value, "transform_value",
+    "contribution")
 )
 }
 \arguments{
@@ -24,6 +31,21 @@ global sums.}
 
 \item{source}{The source for the calculated billions. \verb{WHO DDI calculations},
 with \verb{month, year} timestamp by default.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
+\item{year}{Column name of column with years.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{ind}{Column name of column with indicator names.}
+
+\item{transform_value}{Column name of column(s) with transformed indicator values,
+used to calculate contributions.}
+
+\item{contribution}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value}.}
 }
 \value{
 A data frame with the global sums for the relevant billion. Does not
