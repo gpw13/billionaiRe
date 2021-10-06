@@ -218,7 +218,7 @@ pathogen_calc <- function(df,
 
   df %>%
     dplyr::summarize(
-      !!sym(type_col) := reduce_type(.data[[transform_value[1]]], .data[[type_col]]),
+      !!sym(type_col) := reduce_type(.data[[transform_value[1]]], .data[[type_col]], .data[[ind]]),
       dplyr::across(
         !!transform_value,
         ~ dplyr::case_when(
