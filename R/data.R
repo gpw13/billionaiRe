@@ -13,6 +13,15 @@
 #'   \item{hep}{Logical, is a HEP Billions indicator}
 #'   \item{covariate}{Logical, is the indicator just a covariate for the Billions}
 #'   \item{calculated}{Logical, is the indicator calculated within the package and thus not an input}
+#'   \item{sdg}{Indicator code from SDG and attributed if not in SDG}
+#'   \item{short_name}{Short name of the indicator}
+#'   \item{unit_raw}{Unit of raw values for indicator}
+#'   \item{unit_transformed}{Unit of raw values for indicator}
+#'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
+#'   \item{transformed_name}{Name of indicator after transformation}
+#'   \item{ind}{Code of the indicator in billionaiRe}
+#'   \item{order}{Order of the indicators}
+#'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
 #' }
 "indicator_df"
 
@@ -107,3 +116,17 @@
 #'   \item{share_perc}{Share, as percent of total projected population in 2023.}
 #' }
 "country_shares"
+
+#' Country affected by pathogens data
+#'
+#' List of countries and by which pathogens they are affected. Used HEP Billion
+#' outputs to fade out pathongens not applicable to country.
+#'
+#' @format A data frame with `r nrow(affected_pathogens)` rows and `r ncol(affected_pathogens)` variables:
+#' \describe{
+#'   \item{iso3}{Country ISO3 codes.}
+#'   \item{yellow_fever}{TRUE if country is affected by yellow fever.}
+#'   \item{cholera}{TRUE if country is affected by cholera.}
+#'   \item{meningitis}{TRUE if country is affected by meningitis.}
+#' }
+"affected_pathogens"

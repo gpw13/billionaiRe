@@ -15,8 +15,8 @@ calculate_uhc_contribution <- function(df,
                                        iso3 = "iso3",
                                        ind = "ind",
                                        start_year = 2018,
-                                       end_year = 2019:2023,
-                                       pop_year = 2023,
+                                       end_year = 2019:2025,
+                                       pop_year = 2025,
                                        transform_value = "transform_value",
                                        contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                        contribution_pct = paste0(contribution, "_percent"),
@@ -44,7 +44,8 @@ calculate_uhc_contribution <- function(df,
           !(.data[[ind]] %in% ind_ids) ~ .data[[contribution[i]]],
           !(.data[[year]] %in% end_year) ~ .data[[contribution[i]]],
           TRUE ~ .data[["_population_temp"]] * .data[[contribution_pct[i]]] / 100
-        ))
+        )
+      )
   }
 
   dplyr::select(df, -"_population_temp") %>%

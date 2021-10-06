@@ -45,8 +45,8 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
 #'
 #' @export
 convert_ind_codes <- function(ind_codes,
-                             from = c("dashboard_id", "analysis_code", "gho_code"),
-                             to = c("dashboard_id", "analysis_code", "gho_code")) {
+                              from = c("dashboard_id", "analysis_code", "gho_code"),
+                              to = c("dashboard_id", "analysis_code", "gho_code")) {
   from <- rlang::arg_match(from)
   to <- rlang::arg_match(to)
   df <- billionaiRe::indicator_df
@@ -61,7 +61,7 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @return Numeric vector of SDI ratios.
 get_sdi_ratio <- function(iso3) {
-  billionaiRe::sdi_ratio[['sdiratio']][match(iso3, billionaiRe::sdi_ratio[['iso3']])]
+  billionaiRe::sdi_ratio[["sdiratio"]][match(iso3, billionaiRe::sdi_ratio[["iso3"]])]
 }
 
 #' Get country shares data
@@ -80,7 +80,9 @@ get_country_shares <- function(iso3,
   bill <- rlang::arg_match(billion)
   share_type <- rlang::arg_match(share_type)
 
-  df <- dplyr::filter(billionaiRe::country_shares,
-                      .data[["billion"]] == bill)
+  df <- dplyr::filter(
+    billionaiRe::country_shares,
+    .data[["billion"]] == bill
+  )
   df[[paste0("share_", share_type)]][match(iso3, df[["iso3"]])]
 }

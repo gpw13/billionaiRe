@@ -7,7 +7,7 @@
 #' already exists, only missing values will be replaced by the function.
 #'
 #' @inherit transform_hpop_data return details params
-#' @param pop_year Year used to pull in HPOP populations, defaults to 2023.
+#' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
 #' @param population Column name of column to create with population figures.
 #'
 #' @export
@@ -15,11 +15,12 @@ add_hpop_populations <- function(df,
                                  iso3 = "iso3",
                                  ind = "ind",
                                  population = "population",
-                                 pop_year = 2023,
+                                 pop_year = 2025,
                                  ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind)
   assert_string(population, 1)
   assert_ind_ids(ind_ids, "hpop")
+  assert_numeric(pop_year)
 
   # add population column if it doesn't already exist
   df <- billionaiRe_add_columns(df, population, NA_real_)
@@ -40,13 +41,15 @@ add_hpop_populations <- function(df,
         .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_5"),
         .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
         .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
-      ))
+      )
+    )
 
   # join up populations and replace missing values in column with generated populations
   df %>%
     dplyr::left_join(pop_df, by = c("iso3", "ind")) %>%
     dplyr::mutate(!!sym(population) := ifelse(is.na(.data[[population]]),
-                                              .data[["_temp_population"]],
-                                              .data[[population]])) %>%
+      .data[["_temp_population"]],
+      .data[[population]]
+    )) %>%
     dplyr::select(-"_temp_population")
 }

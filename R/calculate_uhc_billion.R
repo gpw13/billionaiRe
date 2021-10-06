@@ -41,25 +41,28 @@ calculate_uhc_billion <- function(df,
       .data[[ind]] %in% ind_ids[c("tb", "art", "itn", "uhc_sanitation")] ~ "_cd_temp",
       .data[[ind]] %in% ind_ids[c("uhc_tobacco", "bp", "fpg")] ~ "_ncd_temp",
       .data[[ind]] %in% ind_ids[c("beds", "hwf", "espar")] ~ "_sca_temp",
-      .data[[ind]] == ind_ids["fh"] ~ "_fh_temp"))
+      .data[[ind]] == ind_ids["fh"] ~ "_fh_temp"
+    ))
 
   # calculate billion for each set of transform_value / value and join to original df
   for (i in 1:length(value)) {
-    bill_df <- calculate_uhc_billion_single(bill_df,
-                                            year,
-                                            iso3,
-                                            ind,
-                                            transform_value[i],
-                                            value[i],
-                                            scenario,
-                                            source_col,
-                                            source,
-                                            type_col,
-                                            projected_year,
-                                            ind_ids)
+    bill_df <- calculate_uhc_billion_single(
+      bill_df,
+      year,
+      iso3,
+      ind,
+      transform_value[i],
+      value[i],
+      scenario,
+      source_col,
+      source,
+      type_col,
+      projected_year,
+      ind_ids
+    )
   }
 
-    dplyr::bind_rows(df, bill_df)
+  dplyr::bind_rows(df, bill_df)
 }
 
 #' Calculate UHC Billion for one set of columns
@@ -78,25 +81,33 @@ calculate_uhc_billion_single <- function(df,
                                          projected_year,
                                          ind_ids) {
   df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>% # nurses doctors already aggregated to hwf
+    dplyr::filter(.data[[ind]] %in% ind_ids[!(ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"]))]) %>%
+    # nurses doctors already aggregated to hwf
     dplyr::group_by(dplyr::across(dplyr::any_of(c(!!year, !!iso3, !!scenario, "_billion_group_temp")))) %>%
     dplyr::summarize(!!sym(transform_value) := billion_group_mean(.data[[ind]], .data[[transform_value]], !!ind_ids),
-                     .groups = "drop") %>%
-    tidyr::pivot_wider(names_from = "_billion_group_temp",
-                       values_from = transform_value) %>%
+      .groups = "drop"
+    ) %>%
+    tidyr::pivot_wider(
+      names_from = "_billion_group_temp",
+      values_from = transform_value
+    ) %>%
     dplyr::rowwise() %>%
     dplyr::mutate("asc" := mean(dplyr::c_across(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp")))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate("uhc_sm" := .data[["asc"]] * (100 - .data[["_fh_temp"]]) / 100) %>%
     dplyr::select(-dplyr::any_of(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp", "_fh_temp"))) %>%
     tidyr::pivot_longer(c("asc", "uhc_sm"),
-                        names_to = "ind",
-                        values_to = transform_value) %>%
-    dplyr::mutate(!!sym(type_col) := ifelse(.data[[year]] >= !!projected_year,
-                                            "projected",
-                                            "estimated"),
-                  !!sym(source_col) := !!source,
-                  !!sym(value) := .data[[transform_value]])
+      names_to = "ind",
+      values_to = transform_value
+    ) %>%
+    dplyr::mutate(
+      !!sym(type_col) := ifelse(.data[[year]] >= !!projected_year,
+        "projected",
+        "estimated"
+      ),
+      !!sym(source_col) := !!source,
+      !!sym(value) := .data[[transform_value]]
+    )
 }
 
 #' Calculate average per Billion group
@@ -118,8 +129,10 @@ billion_group_mean <- function(ind,
   sca <- ind_ids[c("beds", "hwf", "espar")]
   fh <- ind_ids["fh"]
 
-  chk <- sapply(list(rmnch, cd, ncd, sca, fh),
-                function(x) all(x %in% ind))
+  chk <- sapply(
+    list(rmnch, cd, ncd, sca, fh),
+    function(x) all(x %in% ind)
+  )
 
   if (any(chk)) {
     mean(transform_value, na.rm = T)

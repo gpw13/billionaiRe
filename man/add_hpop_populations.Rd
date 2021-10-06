@@ -9,7 +9,7 @@ add_hpop_populations(
   iso3 = "iso3",
   ind = "ind",
   population = "population",
-  pop_year = 2023,
+  pop_year = 2025,
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -23,7 +23,7 @@ country, year, and indicator.}
 
 \item{population}{Column name of column to create with population figures.}
 
-\item{pop_year}{Year used to pull in HPOP populations, defaults to 2023.}
+\item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

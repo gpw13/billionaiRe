@@ -3,4 +3,11 @@
 .RData
 .Ruserdata
 inst/doc
-
+test/
+outputs/
+~$*.xls*
+inst/extdata/archive
+vignettes/.build.timestamp
+*.Rprofvis
+hep_data.RDS
+.RDataTmp*

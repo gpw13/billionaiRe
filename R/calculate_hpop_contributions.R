@@ -5,7 +5,7 @@
 #'
 #' @param year Column name of column with years.
 #' @param start_year Base year for contribution calculation, defaults to 2018.
-#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2023.
+#' @param end_year End year(s) for contribution calculation, defaults to 2019 to 2025.
 #' @param population Column name of column with population figures.
 #' @param transform_value Column name of column(s) with transformed indicator values,
 #'     used to calculate contributions.
@@ -13,6 +13,9 @@
 #'     values. Must be the same length as `transform_value`.
 #' @param contribution_pct Column name of column(s) to store contribution (percent)
 #'     values. Must be the same length as `transform_value`.
+#' @param contribution_pct_total_pop Column name of column(s) to store contribution
+#' (percent of total population of the country) values. Must be the same length
+#' as `transform_value`.
 #' @param scenario Column name of column with scenario identifiers. Useful for
 #'     calculating contributions on data in long format rather than wide format.
 #'
@@ -20,13 +23,14 @@
 calculate_hpop_contributions <- function(df,
                                          year = "year",
                                          start_year = 2018,
-                                         end_year = 2019:2023,
+                                         end_year = 2019:2025,
                                          iso3 = "iso3",
                                          ind = "ind",
                                          population = "population",
                                          transform_value = "transform_value",
                                          contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                          contribution_pct = paste0(contribution, "_percent"),
+                                         contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                          scenario = NULL,
                                          ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, year, iso3, ind, population, transform_value, scenario)
@@ -36,26 +40,40 @@ calculate_hpop_contributions <- function(df,
   assert_years(start_year, end_year)
 
   # add columns if not already existing
-  df <- billionaiRe_add_columns(df, c(contribution, contribution_pct), NA_real_)
+  df <- billionaiRe_add_columns(df, c(contribution, contribution_pct, contribution_pct_total_pop), NA_real_)
+
+  total_pop <- df %>%
+    dplyr::ungroup() %>%
+    dplyr::select(.data[[iso3]]) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate("total_pop" := wppdistro::get_population(.data[[iso3]], year = max(end_year)))
 
   # calculate relevant contributions for each contribution column
-  df <- dplyr::group_by(df, dplyr::across(dplyr::any_of(c(iso3, ind, scenario))))
+  df <- dplyr::group_by(df, dplyr::across(dplyr::any_of(c(iso3, ind, scenario)))) %>%
+    dplyr::left_join(total_pop, by = iso3)
 
-  for (i in length(contribution)) {
-    df <- dplyr::mutate(df,
-                        !!sym(contribution_pct[i]) := ifelse(
-                          !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
-                          .data[[contribution_pct[i]]],
-                          (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year])
-                        ),
-                        !!sym(contribution[i]) := ifelse(
-                          !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
-                          .data[[contribution[i]]],
-                          .data[[population]] * .data[[contribution_pct[i]]] / 100
-                        )
+
+  for (i in seq(contribution)) {
+    df <- dplyr::mutate(
+      df,
+      !!sym(contribution_pct[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution_pct[i]]],
+        (.data[[transform_value[i]]] - .data[[transform_value[i]]][.data[[year]] == !!start_year])
+      ),
+      !!sym(contribution[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution[i]]],
+        .data[[population]] * .data[[contribution_pct[i]]] / 100
+      ),
+      !!sym(contribution_pct_total_pop[i]) := ifelse(
+        !(.data[[ind]] %in% ind_ids) | !(.data[[year]] %in% end_year),
+        .data[[contribution_pct_total_pop[i]]],
+        .data[[contribution[i]]] / .data[["total_pop"]] * 100
+      )
     )
   }
 
   dplyr::ungroup(df)
+  dplyr::select(df, -"total_pop")
 }
-

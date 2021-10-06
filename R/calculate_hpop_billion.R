@@ -11,14 +11,15 @@
 calculate_hpop_billion <- function(df,
                                    year = "year",
                                    start_year = 2018,
-                                   end_year = 2019:2023,
+                                   end_year = 2019:2025,
                                    iso3 = "iso3",
                                    ind = "ind",
                                    population = "population",
-                                   pop_year = 2023,
+                                   pop_year = 2025,
                                    transform_value = "transform_value",
                                    contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                    contribution_pct = paste0(contribution, "_percent"),
+                                   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
                                    scenario = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, iso3, ind, year, transform_value)
@@ -40,6 +41,7 @@ calculate_hpop_billion <- function(df,
     transform_value = transform_value,
     contribution = contribution,
     contribution_pct = contribution_pct,
+    contribution_pct_total_pop = contribution_pct_total_pop,
     scenario = scenario,
     ind_ids = ind_ids
   )
@@ -59,7 +61,8 @@ calculate_hpop_billion <- function(df,
   )
 
   # return Billions with the rest of the original data
-  dplyr::bind_rows(contr_df, change_df)
+  dplyr::bind_rows(contr_df, change_df) %>%
+    dplyr::ungroup()
 }
 
 #' Calculate the HPOP Billion using columns of change
@@ -81,8 +84,8 @@ calculate_hpop_billion_change <- function(df,
                                           iso3 = "iso3",
                                           year = "year",
                                           population = "population",
-                                          end_year = 2019:2023,
-                                          pop_year = 2023,
+                                          end_year = 2019:2025,
+                                          pop_year = 2025,
                                           scenario = NULL,
                                           ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, change, ind, iso3, year, scenario)

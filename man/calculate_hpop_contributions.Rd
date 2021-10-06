@@ -8,7 +8,7 @@ calculate_hpop_contributions(
   df,
   year = "year",
   start_year = 2018,
-  end_year = 2019:2023,
+  end_year = 2019:2025,
   iso3 = "iso3",
   ind = "ind",
   population = "population",
@@ -16,6 +16,7 @@ calculate_hpop_contributions(
   contribution = stringr::str_replace(transform_value, "transform_value",
     "contribution"),
   contribution_pct = paste0(contribution, "_percent"),
+  contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
   scenario = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
@@ -28,7 +29,7 @@ country, year, and indicator.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2023.}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{iso3}{Column name of column with country ISO3 codes.}
 
@@ -44,6 +45,10 @@ values. Must be the same length as \code{transform_value}.}
 
 \item{contribution_pct}{Column name of column(s) to store contribution (percent)
 values. Must be the same length as \code{transform_value}.}
+
+\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
+(percent of total population of the country) values. Must be the same length
+as \code{transform_value}.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

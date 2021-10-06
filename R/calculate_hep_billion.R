@@ -29,8 +29,8 @@ calculate_hep_billion <- function(df,
                                   contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
                                   contribution_pct = paste0(contribution, "_percent"),
                                   start_year = 2018,
-                                  end_year = 2019:2023,
-                                  pop_year = 2023,
+                                  end_year = 2019:2025,
+                                  pop_year = 2025,
                                   ind_ids = billion_ind_codes("hep")) {
   assert_columns(df, iso3, ind, year, transform_value, level)
   assert_ind_ids(ind_ids, "hep")
@@ -40,11 +40,15 @@ calculate_hep_billion <- function(df,
   assert_same_length(transform_value, contribution)
 
   bill_df <- df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids[c("prevent",
-                                              "detect_respond",
-                                              "espar",
-                                              "hep_idx")],
-                  .data[[year]] %in% c(!!start_year, !!end_year)) %>%
+    dplyr::filter(
+      .data[[ind]] %in% ind_ids[c(
+        "prevent",
+        "detect_respond",
+        "espar",
+        "hep_idx"
+      )],
+      .data[[year]] %in% c(!!start_year, !!end_year)
+    ) %>%
     dplyr::mutate("_pop_temp" := wppdistro::get_population(.data[[iso3]], pop_year))
 
   bill_df <- billionaiRe_add_columns(bill_df, c(contribution, contribution_pct), NA_real_)
@@ -52,24 +56,32 @@ calculate_hep_billion <- function(df,
   for (i in 1:length(contribution)) {
     bill_df <- bill_df %>%
       dplyr::group_by(dplyr::across(c(iso3, ind, scenario))) %>%
-      dplyr::mutate(!!sym(contribution_pct[i]) := calculate_hep_contribution_pct(.data[[ind]],
-                                                                                 .data[[year]],
-                                                                                 !!start_year,
-                                                                                 .data[[transform_value[i]]],
-                                                                                 .data[[level[i]]],
-                                                                                 !!ind_ids),
-                    !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
-                                                     NA_real_,
-                                                     .data[[contribution_pct[i]]] * .data[["_pop_temp"]] / 100)) %>%
+      dplyr::mutate(
+        !!sym(contribution_pct[i]) := calculate_hep_contribution_pct(
+          .data[[ind]],
+          .data[[year]],
+          !!start_year,
+          .data[[transform_value[i]]],
+          .data[[level[i]]],
+          !!ind_ids
+        ),
+        !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
+          NA_real_,
+          .data[[contribution_pct[i]]] * .data[["_pop_temp"]] / 100
+        )
+      ) %>%
       dplyr::ungroup() %>%
       dplyr::group_by(dplyr::across(c(iso3, year, scenario))) %>%
       dplyr::mutate(
         !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
-                                         sum(.data[[contribution[i]]], na.rm = T),
-                                         .data[[contribution[i]]]),
+          sum(.data[[contribution[i]]], na.rm = T),
+          .data[[contribution[i]]]
+        ),
         !!sym(contribution_pct[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
-                                             100 * .data[[contribution[i]]] / .data[["_pop_temp"]],
-                                             .data[[contribution_pct[i]]])) %>%
+          100 * .data[[contribution[i]]] / .data[["_pop_temp"]],
+          .data[[contribution_pct[i]]]
+        )
+      ) %>%
       dplyr::ungroup()
   }
 
@@ -90,8 +102,9 @@ calculate_hep_billion <- function(df,
 calculate_hep_contribution_pct <- function(ind, year, start_year, value, level, ind_ids) {
   if (all(ind %in% ind_ids["detect_respond"])) {
     ifelse(level == 1,
-           0,
-           level)
+      0,
+      level
+    )
   } else if (all(ind %in% ind_ids[c("espar", "prevent")])) {
     (value - value[year == start_year])
   } else {

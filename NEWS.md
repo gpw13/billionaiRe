@@ -1,4 +1,22 @@
-# billionaire 0.4.4
+# billionaiRe 0.5.0
+* Added `export_all_countries_summaries_xls` to export all country summary Excel
+files for all billions or a specific billion.
+* Added `export_country_summary_xls` to export one country summary Excel file for
+all billions or a specific billion.
+* Added support functions for the two preceding functions.
+* Modified `indicator_df`, `indicator_df.xlsx`, and `indicator_df.rda` to include
+additional information about indicators definition, names, etc.
+* Added `indicator_order.xlsx` to be joined with `indicator_df`.
+* Added `affected_pathogens`, `affected_pathogens.xlsx`, and `affected_pathogens.rda`
+to indicate by which pathogens countries are affected.
+* Added `inst/extdata/country_summary_template.xlsx` to store the Excel template
+for country profiles.
+* Modified all default values to 2025 instead of 2023.
+* Added `pre-commit` hooks to style and ensure consistency in code on commit. See
+[pre-commit repository](https://github.com/lorenzwalthert/precommit) for more
+information.
+
+# billionaiRe 0.4.4
 * Added `calculate_contribution_sums` with the ability to calculate regional or
 global sums for HEP, HPOP, or UHC billions for a given year.
 
@@ -58,4 +76,3 @@ and `year`.
 
 * Initial release of package. UHC and HPOP Billions available for calculation through the
 billionaiRe API.
-

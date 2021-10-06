@@ -49,7 +49,7 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2023}
+\item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
 }
 \description{
 Prevent campaign data uses aggregates across years that a vaccine provides
