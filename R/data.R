@@ -25,25 +25,6 @@
 #' }
 "indicator_df"
 
-#' Dataset of indicators order and meta-information
-#'
-#' A dataset containing dashboard and analysis indicator codes and their uses
-#' within the GPW13 Billions. It is joinded to `indicator_df`.
-#'
-#' @format A data frame with `r nrow(indicator_order)` rows and `r ncol(indicator_order)` variables:
-#' \describe{
-#'   \item{sdg}{Indicator code from SDG and attributed if not in SDG}
-#'   \item{short_name}{Short name of the indicator}
-#'   \item{unit_raw}{Unit of raw values for indicator}
-#'   \item{unit_transformed}{Unit of raw values for indicator}
-#'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
-#'   \item{transformed_name}{Name of indicator after transformation}
-#'   \item{ind}{Code of the indicator in billionaiRe}
-#'   \item{order}{Order of the indicators}
-#'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
-#' }
-"indicator_order"
-
 #' HPOP Billion population links
 #'
 #' A dataset linking each HPOP Billion indicator to relevant population groups
