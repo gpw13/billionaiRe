@@ -12,6 +12,31 @@ xmart_cols <- function() {
   )
 }
 
+#' Get the col_types for xMart columns
+#'
+#' A helper function for specifying the column types when reading/writing Triple
+#' Billions csv files.
+#'
+#' @return a list with column specifications
+#' @export
+xmart_col_types <- function() {
+  list(
+    iso3 = readr::col_character(),
+    year = readr::col_integer(),
+    ind = readr::col_character(),
+    value = readr::col_double(),
+    lower = readr::col_double(),
+    upper = readr::col_double(),
+    use_dash = readr::col_logical(),
+    use_calc = readr::col_logical(),
+    source = readr::col_character(),
+    type = readr::col_character(),
+    type_detail = readr::col_character(),
+    other_detail = readr::col_character(),
+    upload_detail = readr::col_character()
+  )
+}
+
 #' Check data frame for xMart4 columns
 #'
 #' Tests to see if the given data frame has all the columns required by the Triple Billions
@@ -35,7 +60,7 @@ has_xmart_cols <- function(df) {
 #'
 #' @param df data frame
 #' @param billion the Billion that the indicator belongs to
-#' @param ind_code the GPW13 code for the indicator
+#' @param ind_code the GPW13 code for the indicator(s)
 #' @param projected boolean value indicating where the indicator has already been
 #' projected by the technical programme
 #'
@@ -45,7 +70,7 @@ add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
   proj <- ifelse(projected == TRUE, "proj_data", "unproj_data")
 
   exist_df <- load_billion_data(billion, proj) %>%
-    dplyr::filter(.data[["ind"]] == ind_code) %>%
+    dplyr::filter(.data[["ind"]] %in% ind_code) %>%
     dplyr::select(xmart_cols())
 
   anti_df <- dplyr::anti_join(exist_df, df, by = c("iso3", "ind", "year")) %>%
