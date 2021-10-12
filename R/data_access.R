@@ -60,8 +60,6 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @param ind_codes A character vector with indicator (analysis) codes
 #' @param metadata_col The name of the indicator_df column with the desired metadata.
-#' Must be One of "dashboard_id", "ind", "gho_code", "ind_type", "uhc",
-#' "hpop", "hep","covariate", and "calculated"
 #'
 #' @return A character vector with the metadata. The positions correspond to the
 #' order of the ind_codes input.
@@ -79,9 +77,10 @@ get_ind_metadata <- function(ind_codes,
   metadata_col <- rlang::arg_match(metadata_col)
   assert_type(ind_codes, "character")
   testit::assert("The indicator codes are valid", {
-    valid_inds <- purrr::map(c("hep", "hpop", "uhc"), ~ {
-      billion_ind_codes(.x)
-    }) %>%
+    valid_inds = purrr::map(c("hep", "hpop", "uhc"),
+                            billion_ind_codes,
+                            include_covariates = TRUE,
+                            include_calculated = TRUE) %>%
       unlist()
     all(ind_codes %in% valid_inds)
   })

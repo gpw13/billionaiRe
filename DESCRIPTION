@@ -37,7 +37,6 @@ Imports:
     usethis,
     whoville,
     zoo,
-    testit
     arrow
 Suggests: 
     knitr,
@@ -45,8 +44,7 @@ Suggests:
     testthat (>= 3.0.0),
     whdh,
     wppdistro (>= 0.1.0),
-    xmart4 (>= 0.2.2),
-    whdh
+    xmart4 (>= 0.2.2)
 VignetteBuilder: 
     knitr
 Remotes: 
