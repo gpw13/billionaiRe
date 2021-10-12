@@ -1,3 +1,13 @@
+# billionaiRe 0.6.0
+Various updates to facilitate migration of the Triple Billion data pipeline into the WHDH
+* Updated `save_wrangled_output` to work with parquet format.
+* Added `save_gho_backup_to_whdh`, making it easier to backup snapshots of GHO data
+to the WHDH data lake.
+* Added `get_whdh_path` for easy generation of download/upload paths for the WHDH data lake
+* Added `assert_type`
+* Added `assert_fileext`
+* Updated `assert_arg_exists` to have custom error messages
+
 # billionaiRe 0.5.3
 * Export functions introduced in version 0.5.0 were moved the code to
 a new package: [rapporteur](https://github.com/gpw13/rapporteur). This reduces

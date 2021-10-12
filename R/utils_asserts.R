@@ -21,12 +21,31 @@ assert_columns <- function(df, ...) {
 #' where an argument is required for the rest of the code to work.
 #'
 #' @param x argument to check
-assert_arg_exists <- function(x) {
-  if (is.na(x) | is.null(x)) {
+#' @param error_template A template for generating the error message. Used as the
+#'   input to an `sprintf()` call. Must include %s, which corresponds to the input x.
+assert_arg_exists <- function(x, error_template = "The %s argument is required and cannot be NA or NULL") {
+  if ( is.null(x) || is.na(x) ) {
     stop(
-      sprintf("The %s argument is required and cannot be NA or NULL", deparse(substitute(x))),
+      sprintf(error_template, deparse(substitute(x))),
       call. = FALSE
     )
+  }
+}
+
+#' Assert that `x` is a character vector of length n
+#'
+#' @param x Supposed string to test
+#' @param n Length to test
+assert_string <- function(x, n) {
+  if (!is.null(x)) {
+    lx <- length(x)
+    if (!((is.character(x) & (lx == n)))) {
+      stop(sprintf("`%s` must be a character vector of length %d, not %s of length %d.",
+                   deparse(substitute(x)),
+                   n,
+                   class(x),
+                   lx))
+    }
   }
 }
 
@@ -73,27 +92,6 @@ assert_numeric <- function(df, ...) {
     ),
     call. = FALSE
     )
-  }
-}
-
-#' Assert that `x` is a character vector of length n
-#'
-#' @param x Supposed string to test
-#' @param n Length to test
-assert_string <- function(x, n) {
-  if (!is.null(x)) {
-    lx <- length(x)
-    if (!((is.character(x) & (lx == n)))) {
-      stop(sprintf(
-        "`%s` must be a character vector of length %d, not %s of length %d.",
-        deparse(substitute(x)),
-        n,
-        class(x),
-        lx
-      ),
-      call. = FALSE
-      )
-    }
   }
 }
 
@@ -195,7 +193,6 @@ assert_years <- function(start_year, end_year) {
   }
 }
 
-
 #' Warn user when any/all of the row are missing values for the the specified column
 #'
 #' @param df Input data frame
@@ -234,69 +231,26 @@ assert_type = function(x, expected_type) {
   }
 }
 
-
-#' Asserts that provided ISO is valid
+#' Assert that a file's extension is one of a few options
 #'
-#' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
-#' using [whoville::is_who_member()].
-#'
-#' @param iso Single ISO3 code
-assert_who_iso <- function(iso) {
-  assert_string(iso, 1)
-  if (!whoville::is_who_member(iso)) {
-    stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
-                 All valid codes are available through `whoville::who_member_states()`."),
-      call. = FALSE
-    )
-  }
-}
+#' @param file_name A string. The name of the file
+#' @param valid_exts A character vector. The list of valid extensions.
+assert_fileext = function(file_name, valid_exts) {
+  if (!is.null(file_name)) {
+    # Check that valid_exts is a character vector
+    assert_type(valid_exts, "character")
+    # Extract the file extension
+    ext = stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
 
-
-#' Assert that `df` is a list
-#'
-#' @param df Supposed list
-assert_list <- function(df) {
-  if (!is.list(df)) {
-    stop(sprintf(
-      "`df` must be a list, not a %s.",
-      class(df)[1]
-    ),
-    call. = FALSE
-    )
-  }
-}
-
-#' Assert that `params` are valid formal argument to [openxlsx::createStyle()]
-#'
-#' @param ... character vector of parameters to [openxlsx::createStyle()]
-assert_style_param <- function(...) {
-  params <- list(...)
-  createStylesParams <- names(formals(openxlsx::createStyle))
-  bad_params <- params[!names(params) %in% createStylesParams]
-
-  if (length(bad_params) > 0) {
-    stop(sprintf(
-      "Params(s) %s are not valid formal argument to openxlsx::createStyle",
-      paste(bad_params, collapse = ", ")
-    ),
-    call. = FALSE
-    )
-  }
-}
-
-#' Assert that x is in list or is NULL
-#'
-#' @param x value to be checked
-#' @param list list of values to be checked against
-assert_in_list_or_null <- function(x, list) {
-  if (!is.null(x)) {
-    if (!x %in% list) {
-      stop(sprintf(
-        "%s must be present in %s or NULL",
-        x, paste(list, collapse = ", ")
-      ),
-      call. = FALSE
+    if (!(ext %in% valid_exts)) {
+      stop(
+        sprintf("The file extension is %s but needs to be one of: %s",
+                ext,
+                paste(valid_exts, collapse = ", ")),
+        call. = FALSE
       )
     }
   }
 }
+
+
