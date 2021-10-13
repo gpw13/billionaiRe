@@ -8,7 +8,7 @@ get_whdh_path(
   operation = c("download", "upload"),
   billion = c("hep", "hpop", "uhc"),
   ind_code,
-  file_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
+  data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
   file_name = NULL
 )
 }
@@ -19,7 +19,7 @@ get_whdh_path(
 
 \item{ind_code}{The GPW13 code for the indicator.}
 
-\item{file_type}{The type of file/data asset. Cane be one of "ingestion_data",
+\item{data_type}{The type of file/data asset. Cane be one of "ingestion_data",
 "gho_backup", "unproj_data", "proj_data", "calc_data" and "full_data"}
 
 \item{file_name}{The name of the file to download. NULL by default}

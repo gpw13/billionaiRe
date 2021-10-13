@@ -4,7 +4,7 @@
 \alias{save_gho_backup_to_whdh}
 \title{Backup GHO data to the WHDH Data Lake}
 \usage{
-save_gho_backup_to_whdh(df, billion, ind_code)
+save_gho_backup_to_whdh(df, billion, ind_code, silent = FALSE)
 }
 \arguments{
 \item{df}{The response from the GHO API, typically the result of calling

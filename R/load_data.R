@@ -66,6 +66,89 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   df
 }
 
+#' Load Billions indicator data
+#'
+#' @param billion String. Billions data to load, one of "hep" (default), "hpop",
+#'   "uhc", or "all". If `all`, downloads data for all indicators for each of the
+#'   three billions.
+#' @param ind_codes Character vector. The name of the indicator to load data for.
+#'   If `all`, downloads data for all indicators for a given billion. This argument
+#'   is ignored if `billion = "all"`.
+#' @param data_type The type of data to load.
+#' * `wrangled_data` (default): raw data that has been wrangled into a suitable
+#'   form for analysis.
+#' * `projected_data`:  data that has been fully projected to the target but has
+#'   not yet been transformed or calculated upon.
+#' * `final_data`: the complete set of billions data with transformed values, contributions,
+#' and all calculations available.
+#' @param na_rm Logical. Specifies whether to filter the data to only rows
+#'     where `value` is not missing. Defaults to `TRUE`.
+#' @param silent Logical. Specifies whether to show authentication messages and
+#'     a download progress bar. Defaults to `TRUE`.
+#'
+#' @return A data frame.
+#' @export
+load_whdh_billion_data = function(billion = c("hep", "hpop", "uhc", "all"),
+                                  ind_code,
+                                  data_type = c("wrangled_data", "projected_data", "final_data"),
+                                  na_rm = TRUE,
+                                  silent = TRUE) {
+
+  # Assertions and checks
+  billion = rlang::arg_match(billion)
+  data_type = rlang::arg_match(data_type)
+
+  # If billion == all, ignore ind_code and get all data for all billions
+  # If billion != all, ensure ind_code is provided
+  if (billion != "all") {
+    assert_arg_exists(ind_code, "The %s argument is required when billion != all and cannot be NA or NULL")
+  }  else {
+    billion = c("hep", "hpop", "uhc")
+    ind_code = "all"
+  }
+
+  data_lake = get_data_lake_name()
+
+  # If ind_code == all, find all the data asset folders for that billion + data_type
+  if (ind_code == "all") {
+
+    data_layer = get_data_layer(data_type)
+    paths = purrr::map(billion, ~ {
+      whdh::list_blobs_in_directory(
+        data_lake_name = data_lake,
+        directory = sprintf("3B/%s/%s/%s/", data_layer, data_type, .x),
+        silent = silent
+      ) %>%
+        dplyr::filter(.data[["isdir"]]) %>%
+        dplyr::pull(.data[["name"]])
+    }) %>%
+      unlist()
+
+    # Otherwise just get the file path for the single ind_code
+  } else {
+
+    paths = get_whdh_path("download", billion, ind_code, data_type)
+
+  }
+
+  df = purrr::map_dfr(paths, ~ {
+
+    temp_file = tempfile()
+    whdh::download_from_data_lake(
+      data_lake_name = data_lake,
+      source_path = .x,
+      destination_path = temp_file,
+      latest_version_only = TRUE,
+      silent = silent
+    )
+
+    arrow::read_parquet(temp_file)
+  })
+
+  df %>%
+    filter_billion_na(na_rm)
+}
+
 #' @noRd
 filter_billion_inds <- function(df, billion) {
   if (billion != "all") {

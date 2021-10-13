@@ -22,14 +22,15 @@ get_data_lake_name = function() {
 #' @export
 save_gho_backup_to_whdh = function(df,
                                    billion,
-                                   ind_code) {
+                                   ind_code,
+                                   silent = FALSE) {
   # Generate the upload path for the data lake
   tstamp = whdh::get_formatted_timestamp()
   file_name = sprintf("%s_%s_gho_%s.parquet", billion, ind_code, tstamp)
   gho_backup_path <-  get_whdh_path(operation = "upload",
                                     billion = billion,
                                     ind_code = ind_code,
-                                    file_type = "ingestion_data",
+                                    data_type = "ingestion_data",
                                     file_name = file_name)
 
   # Save the data frame to a temporary parquet file
@@ -41,7 +42,8 @@ save_gho_backup_to_whdh = function(df,
                             container = "dropzone",
                             source_path = temp_file,
                             destination_path = gho_backup_path,
-                            validate_user_input = FALSE)
+                            validate_user_input = FALSE,
+                            silent = silent)
 
   # Return the input data frame
   df
@@ -59,7 +61,7 @@ save_gho_backup_to_whdh = function(df,
 #' @param operation Either "download" or "upload".
 #' @param billion The billion to which the indicator belongs.
 #' @param ind_code The GPW13 code for the indicator.
-#' @param file_type The type of file/data asset. Cane be one of "ingestion_data",
+#' @param data_type The type of file/data asset. Cane be one of "ingestion_data",
 #'   "gho_backup", "unproj_data", "proj_data", "calc_data" and "full_data"
 #' @param file_name The name of the file to download. NULL by default
 #'
@@ -69,20 +71,20 @@ save_gho_backup_to_whdh = function(df,
 get_whdh_path = function(operation = c("download", "upload"),
                          billion = c("hep", "hpop", "uhc"),
                          ind_code,
-                         file_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
+                         data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
                          file_name = NULL) {
 
   # Argument checks and assertions
   operation = rlang::arg_match(operation)
   billion = rlang::arg_match(billion)
-  file_type = rlang::arg_match(file_type)
+  data_type = rlang::arg_match(data_type)
   assert_string(ind_code, 1)
   assert_string(file_name, 1)
 
   if (operation == "download") {
-    get_whdh_download_path(billion, ind_code, file_type, file_name)
+    get_whdh_download_path(billion, ind_code, data_type, file_name)
   } else {
-    get_whdh_upload_path(billion, ind_code, file_type, file_name)
+    get_whdh_upload_path(billion, ind_code, data_type, file_name)
   }
 }
 
@@ -91,27 +93,23 @@ get_whdh_path = function(operation = c("download", "upload"),
 #' @noRd
 get_whdh_download_path = function(billion = c("hep", "hpop", "uhc"),
                                   ind_code,
-                                  file_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
+                                  data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
                                   file_name = NULL) {
 
   data_asset = sprintf("%s_%s", billion, ind_code)
-  data_layer = switch(file_type,
-    ingestion_data = "Bronze",
-    wrangled_data = "Silver",
-    final_data = "Gold"
-  )
+  data_layer = data_layer = get_data_layer(data_type)
 
-  if (file_type == "ingestion_data") {
+  if (data_type == "ingestion_data") {
 
     # Ensure the file_name argument exists
-    assert_arg_exists(file_name, "The %s argument is required when file_type = 'ingestion_data' and cannot be NA or NULL")
+    assert_arg_exists(file_name, "The %s argument is required when data_type = 'ingestion_data' and cannot be NA or NULL")
 
     # Ensure that the file has the right extension
     assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
 
-    path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, file_type, billion, data_asset, file_name)
+    path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, data_type, billion, data_asset, file_name)
 
-  } else if (file_type == "final_data") {
+  } else if (data_type == "final_data") {
 
     # TODO: Decide on file structure for gold layer/final_data
     return(NULL)
@@ -121,14 +119,14 @@ get_whdh_download_path = function(billion = c("hep", "hpop", "uhc"),
     # If a file_name is not provided, then return the data asset folder
     if (is.null(file_name)) {
 
-      path = sprintf("3B/%s/%s/%s/%s/", data_layer, file_type, billion, data_asset)
+      path = sprintf("3B/%s/%s/%s/%s/", data_layer, data_type, billion, data_asset)
 
     } else {
 
       # Ensure that the file has the right extension
       assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
 
-      path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, file_type, billion, data_asset, file_name)
+      path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, data_type, billion, data_asset, file_name)
     }
   }
 
@@ -140,7 +138,7 @@ get_whdh_download_path = function(billion = c("hep", "hpop", "uhc"),
 #' @noRd
 get_whdh_upload_path = function(billion = c("hep", "hpop", "uhc"),
                                 ind_code,
-                                file_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
+                                data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
                                 file_name = NULL) {
 
   # All upload paths must have a file_name
@@ -150,13 +148,18 @@ get_whdh_upload_path = function(billion = c("hep", "hpop", "uhc"),
   assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
 
   data_asset = sprintf("%s_%s", billion, ind_code)
-  data_layer = switch(file_type,
-    ingestion_data = "Bronze",
-    wrangled_data = "Silver",
-    final_data = "Gold"
-  )
+  data_layer = get_data_layer(data_type)
 
-  path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, file_type, billion, data_asset, file_name)
+  path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, data_type, billion, data_asset, file_name)
   return(path)
 }
 
+#' @noRd
+get_data_layer = function(data_type) {
+  switch(data_type,
+         ingestion_data = "Bronze",
+         wrangled_data = "Silver",
+         projected_data = "Silver",
+         final_data = "Gold"
+  )
+}
