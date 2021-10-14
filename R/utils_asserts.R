@@ -223,6 +223,18 @@ warning_col_missing_values <- function(df, col_name, how) {
   }
 }
 
+#' Assert that an object is of a given type
+#'
+#' @param x The input object
+#' @param expected_type The expected type of x
+assert_type = function(x, expected_type) {
+  assert_string(expected_type, 1)
+  if (typeof(x) != expected_type) {
+    stop(sprintf("%s must be of type %s",  deparse(substitute(x)), expected_type), call. = FALSE)
+  }
+}
+
+
 #' Asserts that provided ISO is valid
 #'
 #' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
