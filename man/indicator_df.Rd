@@ -5,11 +5,13 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 101 rows and 17 variables:
+A data frame with 119 rows and 18 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
 \item{gho_code}{GHO storage code for indicator}
+\item{ind_type}{"proj_data" if the indicator is projected by a technical programme,
+and "unproj_data" if projected by DDI}
 \item{uhc}{Logical, is a UHC Billions indicator}
 \item{hpop}{Logical, is an HPOP Billions indicator}
 \item{hep}{Logical, is a HEP Billions indicator}
