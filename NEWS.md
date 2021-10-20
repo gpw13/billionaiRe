@@ -1,3 +1,9 @@
+# billionaiRe 0.5.1
+* Combined `indicator_df.xlsx` and `indicator_order.xlsx` into one file.
+* Updated dashboard_id to better align with current dashboard backend.
+* Changes to DESCRIPTION reflecting `wppdistro` transfer to WorldHealthOrganization
+GitHub org.
+
 # billionaiRe 0.5.0
 * Added `export_all_countries_summaries_xls` to export all country summary Excel
 files for all billions or a specific billion.
