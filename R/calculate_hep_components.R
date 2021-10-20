@@ -26,7 +26,7 @@ calculate_hep_components <- function(df,
                                      source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
                                      level = stringr::str_replace(transform_value, "transform_value", "level"),
                                      hepi_start_year = 2018,
-                                     ind_ids = billion_ind_codes("hep")) {
+                                     ind_ids = billion_ind_codes("hep", include_calculated = TRUE)) {
   assert_columns(df, iso3, ind, year, transform_value, scenario)
   assert_same_length(transform_value, level)
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)

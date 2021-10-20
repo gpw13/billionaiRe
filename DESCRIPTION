@@ -43,7 +43,7 @@ VignetteBuilder:
     knitr
 Remotes: 
     gpw13/whoville,
-    gpw13/wppdistro,
+    WorldHealthOrganization/wppdistro,
     gpw13/xmart4
 Encoding: UTF-8
 LazyData: true
