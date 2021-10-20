@@ -3,6 +3,6 @@ library(readxl)
 library(tidyverse)
 
 indicator_df <- read_excel("data-raw/indicator_df.xlsx") %>%
-  arrange(order)
+  arrange(hep, uhc, hpop, analysis_code)
 
 usethis::use_data(indicator_df, overwrite = TRUE, internal = FALSE)
