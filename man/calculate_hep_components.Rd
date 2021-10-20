@@ -16,7 +16,7 @@ calculate_hep_components(
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
   level = stringr::str_replace(transform_value, "transform_value", "level"),
   hepi_start_year = 2018,
-  ind_ids = billion_ind_codes("hep")
+  ind_ids = billion_ind_codes("hep", include_calculated = TRUE)
 )
 }
 \arguments{

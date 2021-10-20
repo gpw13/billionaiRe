@@ -18,7 +18,7 @@ calculate_hep_billion(
   start_year = 2018,
   end_year = 2019:2025,
   pop_year = 2025,
-  ind_ids = billion_ind_codes("hep")
+  ind_ids = billion_ind_codes("hep", include_calculated = TRUE)
 )
 }
 \arguments{
