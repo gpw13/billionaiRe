@@ -4,14 +4,12 @@
 \alias{reduce_type}
 \title{Helper to reduce type to unique value}
 \usage{
-reduce_type(value, type, ind)
+reduce_type(value, type)
 }
 \arguments{
 \item{value}{Vector of values}
 
 \item{type}{Vector of types}
-
-\item{ind}{Vector of indicators names}
 }
 \description{
 Used with \code{pathogen_calc()}
