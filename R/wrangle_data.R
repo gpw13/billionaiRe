@@ -36,7 +36,7 @@ wrangle_gho_data <- function(df,
       "iso3" := .data[["SpatialDim"]],
       "year" := .data[["TimeDim"]],
       "ind" := ifelse(is.null(ind),
-        convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "analysis_code"),
+        convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "ind"),
         ind
       ),
       "value" := .data[["NumericValue"]],
