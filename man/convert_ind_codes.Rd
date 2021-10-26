@@ -6,8 +6,8 @@
 \usage{
 convert_ind_codes(
   ind_codes,
-  from = c("dashboard_id", "analysis_code", "gho_code"),
-  to = c("dashboard_id", "analysis_code", "gho_code")
+  from = c("dashboard_id", "ind", "gho_code"),
+  to = c("dashboard_id", "ind", "gho_code")
 )
 }
 \arguments{

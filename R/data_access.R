@@ -27,9 +27,9 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
     df <- dplyr::filter(df, !.data[["calculated"]])
   }
 
-  codes <- df[["analysis_code"]][df[[billion]]]
+  codes <- df[["ind"]][df[[billion]]]
   names(codes) <- codes
-  codes
+  return(codes)
 }
 
 #' Convert indicator codes between types
@@ -45,8 +45,8 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
 #'
 #' @export
 convert_ind_codes <- function(ind_codes,
-                              from = c("dashboard_id", "analysis_code", "gho_code"),
-                              to = c("dashboard_id", "analysis_code", "gho_code")) {
+                              from = c("dashboard_id", "ind", "gho_code"),
+                              to = c("dashboard_id", "ind", "gho_code")) {
   from <- rlang::arg_match(from)
   to <- rlang::arg_match(to)
   df <- billionaiRe::indicator_df
@@ -60,7 +60,7 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @param ind_codes A character vector with indicator (analysis) codes
 #' @param metadata_col The name of the indicator_df column with the desired metadata.
-#' Must be One of "dashboard_id", "analysis_code", "gho_code", "ind_type", "uhc",
+#' Must be One of "dashboard_id", "ind", "gho_code", "ind_type", "uhc",
 #' "hpop", "hep","covariate", and "calculated"
 #'
 #' @return A character vector with the metadata. The positions correspond to the
@@ -73,13 +73,13 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' # Find the indicator type for multiple indicators
 #' get_ind_metadata(c("alcohol", "hwf"), "ind_type")
-get_ind_metadata = function(ind_codes,
-                            metadata_col = names(billionaiRe::indicator_df)) {
+get_ind_metadata <- function(ind_codes,
+                             metadata_col = names(billionaiRe::indicator_df)) {
   # Assertions and checks
-  metadata_col = rlang::arg_match(metadata_col)
+  metadata_col <- rlang::arg_match(metadata_col)
   assert_type(ind_codes, "character")
   testit::assert("The indicator codes are valid", {
-    valid_inds = purrr::map(c("hep", "hpop", "uhc"), ~ {
+    valid_inds <- purrr::map(c("hep", "hpop", "uhc"), ~ {
       billion_ind_codes(.x)
     }) %>%
       unlist()
@@ -87,12 +87,12 @@ get_ind_metadata = function(ind_codes,
   })
 
   # Get the indicator metadata
-  output = billionaiRe::indicator_df[[metadata_col]][match(ind_codes, billionaiRe::indicator_df[["analysis_code"]])]
+  output <- billionaiRe::indicator_df[[metadata_col]][match(ind_codes, billionaiRe::indicator_df[["ind"]])]
 
   # Ensure the function returns a non-null object
   testit::assert("The output is not NULL", !is.null(output))
 
-  output
+  return(output)
 }
 
 #' Get SDI ratio data
@@ -103,7 +103,7 @@ get_ind_metadata = function(ind_codes,
 #'
 #' @return Numeric vector of SDI ratios.
 get_sdi_ratio <- function(iso3) {
-  billionaiRe::sdi_ratio[['sdiratio']][match(iso3, billionaiRe::sdi_ratio[['iso3']])]
+  billionaiRe::sdi_ratio[["sdiratio"]][match(iso3, billionaiRe::sdi_ratio[["iso3"]])]
 }
 
 #' Get country shares data
@@ -122,9 +122,9 @@ get_country_shares <- function(iso3,
   bill <- rlang::arg_match(billion)
   share_type <- rlang::arg_match(share_type)
 
-  df <- dplyr::filter(billionaiRe::country_shares,
-                      .data[["billion"]] == bill)
+  df <- dplyr::filter(
+    billionaiRe::country_shares,
+    .data[["billion"]] == bill
+  )
   df[[paste0("share_", share_type)]][match(iso3, df[["iso3"]])]
 }
-
-
