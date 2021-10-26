@@ -6,7 +6,7 @@
 #' @format A data frame with `r nrow(indicator_df)` rows and `r ncol(indicator_df)` variables:
 #' \describe{
 #'   \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
-#'   \item{analysis_code}{Code used in the analysis scripts within the billionaiRe package}
+#'   \item{ind}{Code used in the analysis scripts within the billionaiRe package}
 #'   \item{gho_code}{GHO storage code for indicator}
 #'   \item{ind_type}{"proj_data" if the indicator is projected by a technical programme,
 #'       and "unproj_data" if projected by DDI}
@@ -21,7 +21,6 @@
 #'   \item{unit_transformed}{Unit of raw values for indicator}
 #'   \item{medium_name}{Medium length name of indicator (typically used for tables)}
 #'   \item{transformed_name}{Name of indicator after transformation}
-#'   \item{ind}{Code of the indicator in billionaiRe}
 #'   \item{order}{Order of the indicators}
 #'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
 #' }

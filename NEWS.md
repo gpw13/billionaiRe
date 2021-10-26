@@ -1,3 +1,9 @@
+# billionaiRe 0.5.2
+* Added further definitions to `indicator_df.xlsx`
+* Renamed column `analysis_code` by `ind` of `indicator_df.xlsx`. 
+* Removed column `ind` of `indicator_df.xlsx`.
+* Modified code to use `ind` instead of `analysis_code`.
+
 # billionaiRe 0.5.1
 * Combined `indicator_df.xlsx` and `indicator_order.xlsx` into one file.
 * Updated dashboard_id to better align with current dashboard backend.
