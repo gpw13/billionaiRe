@@ -7,16 +7,14 @@
 calculate_contribution_sums(
   df,
   billion = c("uhc", "hpop", "hep"),
-  sum_year,
+  sum_years,
   sum_type = c("global", "regional"),
   source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
-  scenario = NULL,
+  scenario = "scenario",
   year = "year",
   iso3 = "iso3",
   ind = "ind",
-  transform_value = "transform_value",
-  contribution = stringr::str_replace(transform_value, "transform_value",
-    "contribution")
+  contribution = "contribution"
 )
 }
 \arguments{
@@ -25,7 +23,7 @@ calculate_contribution_sums(
 \item{billion}{One of uhc, hpop, and hep. The billion for which we want to find
 global sums.}
 
-\item{sum_year}{The year for which we want to sum the billions contributions.}
+\item{sum_years}{The year(s) for which we want to sum the billions contributions.}
 
 \item{sum_type}{Allows you to select between global and regional sums.}
 
@@ -41,11 +39,7 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
-used to calculate contributions.}
-
-\item{contribution}{Column name of column(s) to store contribution (population)
-values. Must be the same length as \code{transform_value}.}
+\item{contribution}{Column name of column(s) to store contribution (population) values.}
 }
 \value{
 A data frame with the global sums for the relevant billion. Does not

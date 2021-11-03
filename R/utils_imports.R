@@ -1,3 +1,3 @@
 #' @noRd
-#' @importFrom rlang := !! sym .data
+#' @importFrom rlang := !! sym .data .env
 NULL
