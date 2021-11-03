@@ -15,7 +15,8 @@
 #' * `full_data`: Full Billions data with transformed values, contributions,
 #' and all calculations available. (default)
 #' * `raw_data`: Raw input Billions data, that has yet to be transformed or
-#' calculated upon, but has been fully projected.
+#' calculated upon, but has been fully projected. Includes full history.
+#' * `projected_data`: A copy of `raw_data` with only the latest data.
 #' * `proj_data`: Raw input Billions data that has been projected by the
 #' technical programme(s).
 #' * `unproj_data`: Raw input Billions that has has not been projected by the
@@ -38,7 +39,7 @@
 #'
 #' @export
 load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              mart_table = c("full_data", "raw_data", "unproj_data", "proj_data"),
+                              mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
                               date_filter = "latest",
                               na_rm = TRUE,
                               format = c("none", "csv", "streaming"),
@@ -49,6 +50,7 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   mart_match <- c(
     "full_data" = "FULL_BILLIONS",
     "raw_data" = "RAW_INDICATOR",
+    "projected_data" = "PROJECTED_DATA",
     "unproj_data" = "RAW_UNPROJ_DATA",
     "proj_data" = "RAW_PROJ_DATA"
   )

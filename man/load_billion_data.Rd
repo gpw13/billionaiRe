@@ -6,7 +6,7 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
-  mart_table = c("full_data", "raw_data", "unproj_data", "proj_data"),
+  mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
   date_filter = "latest",
   na_rm = TRUE,
   format = c("none", "csv", "streaming"),
@@ -21,7 +21,8 @@ load_billion_data(
 \item \code{full_data}: Full Billions data with transformed values, contributions,
 and all calculations available. (default)
 \item \code{raw_data}: Raw input Billions data, that has yet to be transformed or
-calculated upon, but has been fully projected.
+calculated upon, but has been fully projected. Includes full history.
+\item \code{projected_data}: A copy of \code{raw_data} with only the latest data.
 \item \code{proj_data}: Raw input Billions data that has been projected by the
 technical programme(s).
 \item \code{unproj_data}: Raw input Billions that has has not been projected by the
