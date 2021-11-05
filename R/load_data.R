@@ -28,10 +28,10 @@
 #' @param na_rm Logical value, specifying whether to filter the data to only rows
 #'     where `value` is not missing. Defaults to `TRUE`.
 #' @param format Specification of the output format to be returned by the xMart API.
-#'     Defaults to `"none"`, but consider switching to `"csv"` if you are
-#'     loading an extremely large table. Passed to [xmart4::xmart4_table()]. See the
+#'     Defaults to `"csv"` for faster download and processing times.
+#'     Passed to [xmart4::xmart4_table()]. See the
 #'     [xMart4 API documentation](https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html)
-#'     for details on the three options.
+#'     for details on all three options ("csv", "streaming", and "none").
 #' @param ... Additional arguments passed to `xmart4::xmart4_table()`. Use if
 #'     you need to provide additional token specifications for Azure authentication.
 #'
@@ -42,7 +42,7 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
                               mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
                               date_filter = "latest",
                               na_rm = TRUE,
-                              format = c("none", "csv", "streaming"),
+                              format = c("csv", "streaming", "none"),
                               ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
