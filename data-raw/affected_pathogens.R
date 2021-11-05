@@ -1,8 +1,7 @@
 library(tidyverse)
-library(readxl)
 library(usethis)
 
-affected_pathogens <- read_xlsx("data-raw/Prevent_CO_ReferenceTable.xlsx", sheet = "Sheet1") %>%
+affected_pathogens <- readr::read_csv("data-raw/Prevent_CO_ReferenceTable.csv") %>%
   dplyr::transmute(
     iso3 = iso3,
     yellow_fever = dplyr::case_when(atrisk_yf == 1 ~ TRUE, TRUE ~ FALSE),
@@ -10,4 +9,4 @@ affected_pathogens <- read_xlsx("data-raw/Prevent_CO_ReferenceTable.xlsx", sheet
     meningitis = dplyr::case_when(atrisk_cholera == 1 ~ TRUE, TRUE ~ FALSE)
   )
 
-use_data(affected_pathogens, overwrite = TRUE, internal = FALSE)
+usethis::use_data(affected_pathogens, overwrite = TRUE, internal = FALSE)
