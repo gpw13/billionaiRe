@@ -1,19 +1,7 @@
 ## code to prepare `country_shares` goes here
 library(tidyverse)
 
-uhc_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
-  sheet = "UHC"
-)
-hpop_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
-  sheet = "HPOP"
-)
-
-hep_shares <- readxl::read_excel("data-raw/country_shares.xlsx",
-  sheet = "HEP"
-)
-
-country_shares <- bind_rows(uhc_shares, hpop_shares) %>%
-  bind_rows(hep_shares) %>%
+country_shares <- read_csv("data-raw/country_shares.csv") %>%
   transmute(
     billion = tolower(Billion),
     iso3,
