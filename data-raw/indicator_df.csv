@@ -97,17 +97,17 @@ NA,measles_campaign,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Measles - Campai
 NA,measles_campaign_denom,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Campaign target population (denominator),Measles Campaign Denominator,NA,NA
 NA,measles_campaign_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Campaign reached population (numerator),Measles Campaign Numerator,NA,NA
 HE_measles_Routine,measles_routine,WHS8_110,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV2,MCV1 - Routine,%,%,Measles (MCV1) - Routine,MCV1 - Routine,53,prevent
-NA,measles_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Measles - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA
+NA,measles_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA
 NA,meningitis,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Meningitis - Campaigns and Routine combined,Meningitis,NA,NA
 NA,meningitis_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV6,Meningitis - Campaign,%,%,Meningitis - Campaign,Meningitis - Campaign,57,prevent
 HE_meningitis_CampignSize,meningitis_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Campaign target population (denominator),Meningitis Campaign Denominator,NA,NA
 HE_meningitis_Campign,meningitis_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Campaign reached population (numerator),Meningitis Campaign Numerator,NA,NA
 HE_meningitis_Routine,meningitis_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV5,Meningitis - Routine,%,%,Meningitis - Routine,Meningitis - Routine,56,prevent
-NA,meningitis_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Meningitis - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA
+NA,meningitis_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA
 HE_notify,notify,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP2,Time to notify,days,%,Time to notify,Time to notify,61,detect_respond
 NA,polio,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Polio - Campaigns and routine combined,Polio,NA,NA
 HE_polio_Routine,polio_routine,WHS4_544,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV1,Polio 3 - Routine,%,%,Polio 3 - Routine,Polio 3 - Routine,52,prevent
-NA,polio_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Polio - Routine reached population (numerator),Polio - Routine (numerator),NA,NA
+NA,polio_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Polio - Routine reached population (numerator),Polio - Routine (numerator),NA,NA
 HE_vaccinecov,prevent,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,59,prevent
 HE_respond,respond,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP3,Time to respond,days,%,Time to respond,Time to respond,62,detect_respond
 HE_surviving_infants,surviving_infants,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Surviving infants,Surviving infants,NA,NA
@@ -116,5 +116,5 @@ NA,yellow_fever_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV4,Yellow 
 HE_yellowfever_CampignSize,yellow_fever_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow Fever - Campaign target population (denominator),Yellow fever Campaign Denominator,NA,NA
 HE_yellowfever_Campign,yellow_fever_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Campaign reached population (numerator),Yellow fever Campaign Numerator,NA,NA
 HE_yellowfever_Routine,yellow_fever_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV3,Yellow Fever - Routine,%,%,Yellow Fever - Routine,Yellow fever - Routine,54,prevent
-NA,yellow_fever_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Yellow fever - Routine reached population (numerator),Yellow fever - Routine (numerator),NA,NA
+NA,yellow_fever_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Routine reached population (numerator),Yellow fever - Routine (numerator),NA,NA
 HE_ihr,espar,SDGIHR2018,unproj_data,TRUE,FALSE,TRUE,FALSE,FALSE,SDG 3.8.1.16,Health security,%,%,IHR core capacity index*,IHR core capacity index,37,service_cap_access
