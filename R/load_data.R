@@ -69,11 +69,9 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
 #' Load Billions indicator data
 #'
 #' @param billion String. Billions data to load, one of "hep" (default), "hpop",
-#'   "uhc", or "all". If `all`, downloads data for all indicators for each of the
-#'   three billions.
-#' @param ind_codes Character vector. The name of the indicator to load data for.
-#'   If `all`, downloads data for all indicators for a given billion. This argument
-#'   is ignored if `billion = "all"`.
+#'   or "uhc".
+#' @param ind_codes Character vector. The name of the indicator (or indicators) to load data for.
+#'   If `all`, downloads data for all indicators for a given billion.
 #' @param data_type The type of data to load.
 #' * `wrangled_data` (default): raw data that has been wrangled into a suitable
 #'   form for analysis.
@@ -88,29 +86,50 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
 #'
 #' @return A data frame.
 #' @export
-load_whdh_billion_data = function(billion = c("hep", "hpop", "uhc", "all"),
-                                  ind_code,
-                                  data_type = c("wrangled_data", "projected_data", "final_data"),
+load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data", "final_data"),
+                                  billion = c("hep", "hpop", "uhc"),
+                                  ind_codes,
                                   na_rm = TRUE,
                                   silent = TRUE) {
 
   # Assertions and checks
   billion = rlang::arg_match(billion)
   data_type = rlang::arg_match(data_type)
+  assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
+  assert_x_in_y(
+    ind_codes,
+    billion_ind_codes(billion) %>%
+      unname() %>%
+      purrr::keep(~ !str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+"))
+  )
 
-  # If billion == all, ignore ind_code and get all data for all billions
-  # If billion != all, ensure ind_code is provided
-  if (billion != "all") {
-    assert_arg_exists(ind_code, "The %s argument is required when billion != all and cannot be NA or NULL")
-  }  else {
-    billion = c("hep", "hpop", "uhc")
-    ind_code = "all"
+  if (ind_codes == "all") {
+    ind_codes = billion_ind_codes(billion) %>%
+      purrr::keep(~ !str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+"))
   }
+
+
+  map(c("hpop", "hep", "uhc"), billion_ind_codes) %>%
+    unlist() %>%
+    unname() %>%
+    sort() %>%
+    keep(~ !str_detect(.x, )) %>%
+    walk(print)
+
+
+  # # If billion == all, ignore ind_codes and get all data for all billions
+  # # If billion != all, ensure ind_codes is provided
+  # if (billion != "all") {
+  #   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
+  # }  else {
+  #   billion = c("hep", "hpop", "uhc")
+  #   ind_codes = "all"
+  # }
 
   data_lake = get_data_lake_name()
 
-  # If ind_code == all, find all the data asset folders for that billion + data_type
-  if (ind_code == "all") {
+  # If ind_codes == all, find all the data asset folders for that billion + data_type
+  if (ind_codes == "all") {
 
     data_layer = get_data_layer(data_type)
     paths = purrr::map(billion, ~ {
@@ -124,10 +143,10 @@ load_whdh_billion_data = function(billion = c("hep", "hpop", "uhc", "all"),
     }) %>%
       unlist()
 
-    # Otherwise just get the file path for the single ind_code
+    # Otherwise just get the file path for the single ind_codes
   } else {
 
-    paths = get_whdh_path("download", billion, ind_code, data_type)
+    paths = get_whdh_path("download", billion, ind_codes, data_type)
 
   }
 
