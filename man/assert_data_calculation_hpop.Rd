@@ -12,7 +12,7 @@ assert_data_calculation_hpop(
   value = "value",
   scenario = NULL,
   start_year = 2018,
-  end_year = 2018,
+  end_year = 2025,
   ind_ids = billion_ind_codes("hpop")
 )
 }

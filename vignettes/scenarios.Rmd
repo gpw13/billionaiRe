@@ -41,9 +41,9 @@ billionaiRe `transform_` and `calculate_` functions (as well as rapporteur expor
 
 For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios.
 
-Data recycling infers the existence of a reference scenario (called `default` scenario, but that should be modifiable in a parameter of recycling functions), which is be the main scenario displayed on the dashboard. The `default` scenario provides values when they are absent from scenarios. The `default` scenario is combined with `none` to have a full time series by default.
+Data recycling infers the existence of a reference scenario (called `default` scenario, but that is modifiable in a parameter of recycling functions), which is be the main scenario displayed on the dashboard. The `default` scenario provides values when they are absent from scenarios. The `default` scenario is combined with `none` to have a full time series by default.
 
-As for projections, the track change offered by git will act as a history of what is contained in the default scenario. It could be interesting to have a log of what is meant by `default` at any given time.
+As for projections, the track change offered by git will act as a history of what is contained in the default scenario at any given time. It could be interesting to have a log of what is meant by `default` at any given time in the future to make the retrival of the history easier.
 
 By default, projected and imputed values will be recycled from `default`. Similarly, `reported` vaccination campaigns are by default recycled from as far back as necessary. As those are parameters to the recycling function, it can be turned off if not relevant for some scenarios.
 

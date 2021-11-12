@@ -158,7 +158,7 @@ assert_data_calculation_hpop <- function(df,
                                          value = "value",
                                          scenario = NULL,
                                          start_year = 2018,
-                                         end_year = 2018,
+                                         end_year = 2025,
                                          ind_ids = billion_ind_codes("hpop")) {
   assert_iso3_not_empty(df, iso3, scenario, value)
 
@@ -195,7 +195,7 @@ assert_data_calculation_uhc <- function(df,
                                         ind_ids = billion_ind_codes("uhc")) {
   assert_iso3_not_empty(df, iso3, scenario, value)
 
-  necessary_ind <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"])]
+  necessary_ind <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
 
   only_full <- df %>%
     dplyr::filter(.data[[ind]] %in% necessary_ind) %>%
