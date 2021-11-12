@@ -11,3 +11,5 @@ vignettes/.build.timestamp
 *.Rprofvis
 hep_data.RDS
 .RDataTmp*
+vignettes/scenarios.docx
+data-raw/test_data.parquet

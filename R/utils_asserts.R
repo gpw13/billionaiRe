@@ -227,10 +227,10 @@ warning_col_missing_values <- function(df, col_name, how) {
 #'
 #' @param x The input object
 #' @param expected_type The expected type of x
-assert_type = function(x, expected_type) {
+assert_type <- function(x, expected_type) {
   assert_string(expected_type, 1)
   if (typeof(x) != expected_type) {
-    stop(sprintf("%s must be of type %s",  deparse(substitute(x)), expected_type), call. = FALSE)
+    stop(sprintf("%s must be of type %s", deparse(substitute(x)), expected_type), call. = FALSE)
   }
 }
 
@@ -298,5 +298,130 @@ assert_in_list_or_null <- function(x, list) {
       call. = FALSE
       )
     }
+  }
+}
+
+#' Asserts that iso3 (and scenario if provided) is not only NAs
+#'
+#' @inheritParams transform_hpop_data
+#' @inheritParams transform_hep_data
+assert_iso3_not_empty <- function(df, iso3 = "iso3", scenario = NULL, value = "value") {
+  empty_iso3 <- df %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario)))) %>%
+    dplyr::summarise(all_NA = dplyr::case_when(
+      sum(is.na(.data[[value]])) / dplyr::n() == 1 ~ TRUE,
+      TRUE ~ FALSE
+    ), .groups = "drop") %>%
+    dplyr::filter(.data[["all_NA"]])
+
+  if (nrow(empty_iso3) > 0) {
+    warning(sprintf(
+      "%s have only missing values (in at least one scenario, if provided). \nMissing values in:\n",
+      paste(unique(empty_iso3[[iso3]]), collapse = ", ")
+    ),
+    paste(utils::capture.output(print(empty_iso3)), collapse = "\n"),
+    call. = FALSE
+    )
+  }
+}
+
+#' Asserts start and end year are present
+#'
+#' Asserts that there are values at the start and end year by iso3 (and
+#' scenarios if provided).
+#'
+#' @inheritParams transform_hpop_data
+#' @inheritParams transform_hep_data
+#' @inheritParams calculate_hpop_contributions
+
+assert_start_end_year <- function(df,
+                                  iso3 = "iso3",
+                                  year = "year",
+                                  value = "value",
+                                  start_year = 2018,
+                                  end_year = 2025,
+                                  scenario = "scenario") {
+  missing_years <- df %>%
+    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario)))) %>%
+    dplyr::select(dplyr::any_of(c(iso3, year, scenario))) %>%
+    dplyr::distinct() %>%
+    dplyr::filter(dplyr::n() < length(c(start_year, end_year))) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(!!sym(year) := dplyr::case_when(
+      .data[[year]] == start_year ~ end_year,
+      .data[[year]] == end_year ~ start_year,
+      TRUE ~ .data[[year]]
+    ))
+
+  if (nrow(missing_years) > 0) {
+    warning(sprintf(
+      "%s have missing start_year or end_year (in at least one scenario, if provided).
+  Each iso3 and year (and scenario if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
+  Missing values in:\n",
+      paste(unique(missing_years[[iso3]]), collapse = ", ")
+    ),
+    paste(utils::capture.output(print(missing_years)), collapse = "\n"),
+    call. = FALSE
+    )
+  }
+
+  return(df)
+}
+
+#' Asserts indicators have values at start and end year
+#'
+#' Asserts that there are values at the start and end year for all indicators
+#' provided in ind_ids, by iso3 (and scenarios if provided).
+#'
+#' @param ind_ids named list of indicators to be checked for values. Follows
+#' similar structure as `billion_ind_codes` indicator lists.
+#' @inheritParams transform_hpop_data
+#' @inheritParams transform_hep_data
+#' @inheritParams calculate_hpop_contributions
+assert_ind_start_end_year <- function(df,
+                                      iso3 = "iso3",
+                                      year = "year",
+                                      value = "value",
+                                      start_year = 2018,
+                                      end_year = 2020,
+                                      ind = "ind",
+                                      ind_ids,
+                                      scenario = "scenario") {
+  if (!is.null(scenario)) {
+    full_df <- tidyr::expand_grid(
+      !!sym(iso3) := unique(df[[iso3]]),
+      !!sym(ind) := ind_ids,
+      !!sym(year) := c(start_year, end_year),
+      !!sym(scenario) := unique(df[[scenario]])
+    )
+  } else {
+    full_df <- tidyr::expand_grid(
+      !!sym(iso3) := unique(df[[iso3]]),
+      !!sym(ind) := ind_ids,
+      !!sym(year) := c(start_year, end_year)
+    )
+  }
+
+  missing_values <- df %>%
+    dplyr::full_join(full_df, by = c(iso3, ind, year, scenario)) %>%
+    dplyr::filter(
+      .data[[year]] %in% c(start_year, end_year),
+      .data[[ind]] %in% ind_ids
+    ) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+    dplyr::filter(is.na(.data[[value]])) %>%
+    dplyr::select(-.data[[value]])
+
+  if (nrow(missing_values) > 0) {
+    stop(sprintf(
+      "%s have missing values in start_year or end_year (in at least one scenario, if provided).
+Each iso3 and year (and scenario if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
+Missing values in:\n",
+      paste(unique(missing_values[[iso3]]), collapse = ", ")
+    ),
+    paste(utils::capture.output(print(missing_values)), collapse = "\n"),
+    call. = FALSE
+    )
   }
 }

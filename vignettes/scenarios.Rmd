@@ -1,0 +1,126 @@
+---
+title: "scenarios"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{scenarios}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Definition
+
+In the Triple Billions and the billionaiRe package context, `scenarios` are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.
+
+Two sets of scenarios can be identified:
+
+-   Event-based scenarios: an event has a presumed but yet unknown impact on the Billions and so it cannot be (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series. 
+-   Trajectory-based scenarios: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets, acceleration scenarios from technical programs).Those scenarios should start from 2019 as 2018 is the GPW13 baseline year.
+-   Internal use scenarios: scenarios provide the ability to deal with alternative time series of any kind, which could be include alternative projection methods, update to data sources, etc. While those scenarios might not be displayed for public use, they illustrate the versatility seeking in scenarios.
+
+Scenarios must:
+
+1.  Be [tidy](https://r4ds.had.co.nz/tidy-data.html): each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).
+2.  Contain **all** and **only** the data that is strictly needed for calculations with billionaiRe 2.1 If billionaiRe required data is missing in the scenario, they will be recycled from other scenarios (see [Data recycling]).
+
+There are three special case scenario:
+
+-   `none`: stores the `reported` and `estimated` data
+-   `tp`: stores WHO technical programs projected data (either `projected` or `imputed`).
+-   `default`: stores the main scenario presented on the dashboard. It can include projections and imputations. It is also the scenario to be used for data recycling (see [Data recycling])
+
+## Data recycling
+
+billionaiRe `transform_` and `calculate_` functions (as well as rapporteur export functions) use the provided scenario column as a group in [dplyr::group_by](https://dplyr.tidyverse.org/reference/group_by.html). Scenarios should then contain all the required data needed for billionaiRe calculations. If a scenario does not contain the required data, the functions will fail.
+
+For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios.
+
+Data recycling infers the existence of a reference scenario (called `default` scenario, but that should be modifiable in a parameter of recycling functions), which is be the main scenario displayed on the dashboard. The `default` scenario provides values when they are absent from scenarios. The `default` scenario is combined with `none` to have a full time series by default.
+
+As for projections, the track change offered by git will act as a history of what is contained in the default scenario. It could be interesting to have a log of what is meant by `default` at any given time.
+
+By default, projected and imputed values will be recycled from `default`. Similarly, `reported` vaccination campaigns are by default recycled from as far back as necessary. As those are parameters to the recycling function, it can be turned off if not relevant for some scenarios.
+
+### Example implementation of data recycling
+
+```{r recycling-example, include = TRUE, eval = FALSE}
+
+test_data <- billionaiRe::load_billion_data("all", "test_data")
+
+
+
+```
+
+## Scenarios integration into data pipeline
+
+The current GPW13 data pipeline is composed of four main steps:
+
+1.  Ingestion
+2.  Projecting
+3.  Calculating
+4.  Exporting
+
+The integration of the scenario happens at stage 3 (Calculating), as does the rest of the billionaiRe calculations.
+
+Within the billionaiRe calculations pipeline, adding the scenarios values should be the first steps. Data recycling can happen in the `add_scenario` and `prepare_data_` functions.
+
+In the `add_scenario` function, a `default_scenario` argument is provided to give a specific scenario what the default values should be. In this case, essential values not present in the data frame passed to the function will be recycled first from the `default_scenario`, then from `none` and `tp` scenarios.
+
+The `prepare_data_` functions recycle values where necessary to have the minimum required data to run billion's calculations. They also wrap the `transform_` functions to avoid to multiply unnecessary function calls.
+
+```{r scenario-example-simple, include = TRUE, eval = FALSE}
+library(billionaiRe)
+
+# TODO: update with real scenario function when available
+hep_df %>%
+  add_scenario("covid_never_return", # picks from a pre-determined list of scenarios
+               scenario = "scenario",
+               recycle = TRUE,
+               default_scenario = "pre_covid_bau") %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
+  add_scenario("aroc_fix_percent", # picks from a pre-determined list of scenarios
+               scenario = "scenario",
+               recycle = TRUE,
+               default_scenario = "covid_never_return") %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
+  prepare_data_hep(scenario = "scenario",
+                   recycle = TRUE,
+                   default_scenario = "pre_covid_bau",
+                   transform = FALSE) %>% # transform value is a parameter.
+  transform_hep_data(scenario = "scenario", # this call to transform_hep_data could have been redundant if `transform` was TRUE in `prepare_hep_data`
+                     recycle_minimum = TRUE) %>% # adds a parameter to `transform_` functions to recycle minimum data required for calculations
+  calculate_hep_components( scenario = "scenario") %>%
+  calculate_hep_billion(scenario = "scenario", end_year = 2025) %>%
+  dplyr::filter(ind %in% c("prevent",
+                           "espar",
+                           "detect_respond",
+                           "hep_idx"),
+                year == 2025)
+```
+
+The `add_scenario` functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called : 
+
+1.    **base scenario functions**: they are the building blocs of the wrapper functions. For instance, `scenario_fixed_target` sets the values on a linear trajectory towards a target by a certain year, `scenario_percent_baseline` sets a progression from the baseline with a fix percentage increase.
+2.    **wrappers function** combine base scenario functions to generate more complex scenarios like `covid_never_return` or `acceleration`.
+
+## Scenarios naming convention
+
+-   [Lower Snake case](https://en.wikipedia.org/wiki/Snake_case) is used
+
+-   Short and very descriptive names: use verbs as much as possible
+
+-   Use only commonly understood acronyms and abbreviations
+
+-   `event` scenarios start with them. E.g. covid, pre_covid_bau
+
+    -   Sub-event scenarios should have a descriptive word rather than numbering or other undefined markers. **DO**: covid_never_return. **DON'T**: COVID_1
+
+-   `none` is reserved for reported/estimated data
+
+-   `default` is reserved for the main data present on the dashboard
+
+-   `acceleration` is reserved for acceleration scenarios / trajectories

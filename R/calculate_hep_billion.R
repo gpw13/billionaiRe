@@ -106,7 +106,11 @@ calculate_hep_contribution_pct <- function(ind, year, start_year, value, level, 
       level
     )
   } else if (all(ind %in% ind_ids[c("espar", "prevent")])) {
-    (value - value[year == start_year])
+    if (length(value[year == start_year]) == 0) {
+      NA_real_
+    } else {
+      value - value[year == start_year]
+    }
   } else {
     NA_real_
   }

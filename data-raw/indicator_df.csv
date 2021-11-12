@@ -45,7 +45,7 @@ UHC_tbtreatment,tb,TB_1,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.5,TB tr
 UHC_basicsanitation,uhc_sanitation,WSH_SANITATION_BASIC,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.8,Water and sanitation,%,%,Use of basic sanitation,At least basic sanitation,29,infec_diseases
 UHC,uhc_sm,NA,NA,TRUE,FALSE,FALSE,FALSE,TRUE,NA,NA,%,%,UHC Single Measure,UHC Single Measure,66,UHC
 uhc_tobacco,uhc_tobacco,SDGTOBACCO,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.11,Tobacco control,%,%,Tobacco use prevalence* 3,Tobacco non-use,32,ncd
-HE_cholera,cholera,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
+HE_cholera,cholera,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,cholera_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV7,Cholera - Campaign,%,%,Cholera - Campaign,Cholera - Campaign,58,prevent
 HE_cholera_CampignSize,cholera_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
 HE_cholera_Campign,cholera_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
