@@ -5,12 +5,13 @@
 \alias{hpop_df}
 \title{HPOP generated example data}
 \format{
-A data frame with 34 rows and 4 variables:
+A data frame with 34 rows and 5 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{year}{Year.}
 \item{ind}{HPOP indicator code.}
 \item{value}{Raw indicator value.}
+\item{type}{Data type.}
 }
 }
 \usage{

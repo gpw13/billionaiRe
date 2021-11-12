@@ -64,6 +64,7 @@
 #'   \item{year}{Year.}
 #'   \item{ind}{HPOP indicator code.}
 #'   \item{value}{Raw indicator value.}
+#'   \item{type}{Data type.}
 #' }
 "hpop_df"
 
@@ -82,6 +83,7 @@
 #'   \item{year}{Year.}
 #'   \item{ind}{UHC indicator code.}
 #'   \item{value}{Raw indicator value.}
+#'   \item{type}{Data type.}
 #' }
 "uhc_df"
 
@@ -109,7 +111,7 @@
 #' Country shares data for UHC and HPOP Billions for all 194 WHO member
 #' states.
 #'
-#' @format A data frame with `r nrow(uhc_df)` rows and `r ncol(uhc_df)` variables:
+#' @format A data frame with `r nrow(country_shares)` rows and `r ncol(country_shares)` variables:
 #' \describe{
 #'   \item{iso3}{Country ISO3 codes.}
 #'   \item{billion}{Relevant billion}
