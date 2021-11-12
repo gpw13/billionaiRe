@@ -2,7 +2,12 @@
 library(tidyverse)
 library(billionaiRe)
 
-uhc_df <- read_csv("data-raw/uhc.csv")
+uhc_df <- read_csv("data-raw/uhc.csv") %>%
+  dplyr::mutate(type = case_when(
+    year == 2018 ~ "Reported",
+    year == 2023 ~ "Projected",
+    TRUE ~ NA_character_
+  ))
 
 usethis::use_data(uhc_df, overwrite = TRUE, internal = FALSE)
 
