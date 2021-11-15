@@ -180,7 +180,8 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 #' @param expected_type The expected type of x
 assert_type = function(x, expected_type) {
   assert_string(expected_type, 1)
-  if (typeof(x) != expected_type) {
+
+  if (!is.null(x) & typeof(x) != expected_type) {
     stop(sprintf("%s must be of type %s",  deparse(substitute(x)), expected_type), call. = FALSE)
   }
 }
@@ -274,7 +275,8 @@ assert_min_length = function(x, n) {
 
 #' Assert that all elements in x are members of y
 #'
-#' Useful for ensuring that an argument is one of a given set of options.
+#' In other words, assert that x is a subset of y. Useful for ensuring that an
+#' argument is one of a given set of options.
 #'
 #' @param x vector
 #' @param y vector
@@ -292,10 +294,34 @@ assert_x_in_y = function(x, y) {
 #' Assert that two or more vectors are the same length
 #'
 #' @param ... Two or more vectors that should be the same length.
-assert_same_length <- function(...) {
+#' @param recycle Whether vectors of length one can be recycled to match the length
+#'   of the other vectors.
+assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   arg_names <- sys.call()[-1]
   args <- list(...)
+
+  # Ensure that the input has at least two vectors for comparison
   assert_min_length(args, 2)
+
+  if (remove_null) {
+    args = args[!sapply(args, is.null)]
+  }
+
+  # If recycle = TRUE
+  if (recycle) {
+    length_one_vecs = args[sapply(args, length) == 1]
+
+    # If all the vectors are of length 1, then return immediately
+    if (length(length_one_vecs) == length(args)) {
+      return(invisible())
+    }
+    # Otherwise, remove the length one vectors from the list of vector to check
+    # because they can always be replicated
+    else {
+      args = args[sapply(args, length) != 1]
+    }
+  }
+
   cond = purrr::map(args, length) %>%
     purrr::reduce(`==`)
 
