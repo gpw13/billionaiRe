@@ -66,7 +66,7 @@ save_gho_backup_to_whdh = function(df,
 #' @param ind_code The GPW13 code for the indicator.
 #' @param data_type The type of file/data asset. Cane be one of "ingestion_data",
 #'   "gho_backup", "unproj_data", "proj_data", "calc_data" and "full_data"
-#' @param file_name The name of the file to download. NULL by default
+#' @param file_name The name of the file to download. NULL by default.
 #'
 #' @return A string with the properly formatted file path, abiding by the standardised
 #'   directory structure and naming conventions for the 3B WHDH data lake.
@@ -80,7 +80,8 @@ get_whdh_path = function(operation = c("download", "upload"),
   # Argument checks and assertions
   operation = rlang::arg_match(operation)
   data_type = rlang::arg_match(data_type)
-  assert_string(file_name, 1)
+  assert_type(ind_code, "character")
+  assert_type(file_name, "character")
 
   data_layer = data_layer = get_data_layer(data_type)
 
@@ -113,6 +114,11 @@ get_whdh_path = function(operation = c("download", "upload"),
 
   # If a file name is provided, append it to the data_asset
   if (!is.null(file_name) && !is.na(file_name)) {
+
+    # Ensure that ind_code and file_name have a 1-to-1 mapping or that one of them
+    # is of length 1 and can be recycled to match the length of the other
+    assert_same_length(ind_code, file_name, recycle = TRUE, remove_null = FALSE)
+
     # Ensure that the file has the right extension
     assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
     data_asset = paste0(data_asset, file_name)
