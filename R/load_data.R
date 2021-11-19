@@ -88,7 +88,8 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
 #' @export
 load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                   billion = c("hep", "hpop", "uhc"),
-                                  ind_codes,
+                                  ind_codes = "all",
+                                  date_filter = "latest",
                                   na_rm = TRUE,
                                   silent = TRUE) {
 
@@ -96,62 +97,50 @@ load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data
   billion = rlang::arg_match(billion)
   data_type = rlang::arg_match(data_type)
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
-  assert_x_in_y(
-    ind_codes,
-    billion_ind_codes(billion) %>%
-      unname() %>%
-      purrr::keep(~ !str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+"))
-  )
 
-  if (ind_codes == "all") {
-    ind_codes = billion_ind_codes(billion) %>%
-      purrr::keep(~ !str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+"))
+  if (ind_codes == "all" & data_type != "final_data") {
+
+    # include_covariates = TRUE to include pneumo_mort for wrangled_data but not for projected_data
+    incl_covars = if (data_type == "wrangled_data") TRUE else FALSE
+
+    ind_codes = billion_ind_codes(billion, include_covariates = incl_covars) %>%
+      purrr::keep(
+        ~ !stringr::str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+") & !is.na(get_ind_metadata(.x, "ind_type"))
+      )
   }
 
+  if (data_type != "final_data") {
 
-  map(c("hpop", "hep", "uhc"), billion_ind_codes) %>%
-    unlist() %>%
-    unname() %>%
-    sort() %>%
-    keep(~ !str_detect(.x, )) %>%
-    walk(print)
+    # Check if the input ind_codes are valid
+    valid_inds = billion_ind_codes(billion, include_covariates = TRUE) %>%
+      purrr::keep(~ !stringr::str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+") & !is.na(get_ind_metadata(.x, "ind_type")))
+    assert_x_in_y(ind_codes, valid_inds)
 
+  }
 
-  # # If billion == all, ignore ind_codes and get all data for all billions
-  # # If billion != all, ensure ind_codes is provided
-  # if (billion != "all") {
-  #   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
-  # }  else {
-  #   billion = c("hep", "hpop", "uhc")
-  #   ind_codes = "all"
-  # }
+  # Paths of items to download
+  paths = get_whdh_path("download", data_type, billion, ind_codes) %>%
+    stringr::str_replace("uhc_espar", "hep_espar")
 
+  # Ensure that each path has a corresponding data asset in the data lake
   data_lake = get_data_lake_name()
+  data_layer = get_data_layer(data_type)
 
-  # If ind_codes == all, find all the data asset folders for that billion + data_type
-  if (ind_codes == "all") {
-
-    data_layer = get_data_layer(data_type)
-    paths = purrr::map(billion, ~ {
-      whdh::list_blobs_in_directory(
-        data_lake_name = data_lake,
-        directory = sprintf("3B/%s/%s/%s/", data_layer, data_type, .x),
-        silent = silent
-      ) %>%
-        dplyr::filter(.data[["isdir"]]) %>%
-        dplyr::pull(.data[["name"]])
-    }) %>%
-      unlist()
-
-    # Otherwise just get the file path for the single ind_codes
+  # For final_data, the data_layer is the directory because there are in indicator folders
+  if (data_type != "final_data") {
+    dir_path = sprintf("3B/%s/%s/", data_layer, data_type)
   } else {
-
-    paths = get_whdh_path("download", billion, ind_codes, data_type)
-
+    dir_path = sprintf("3B/%s/", data_layer)
   }
+  valid_data_assets = whdh::list_blobs_in_directory(data_lake,
+                                dir_path,
+                                silent = TRUE) %>%
+    dplyr::filter(.data[["isdir"]]) %>%
+    dplyr::pull("name") %>%
+    paste(., "/", sep = "")
+  assert_x_in_y(paths, valid_data_assets)
 
   df = purrr::map_dfr(paths, ~ {
-
     temp_file = tempfile()
     whdh::download_from_data_lake(
       data_lake_name = data_lake,

@@ -281,8 +281,8 @@ assert_min_length = function(x, n) {
 #' @param x vector
 #' @param y vector
 assert_x_in_y = function(x, y) {
-  cond = all(x %in% y)
-  if (!cond) {
+  cond = x %in% y
+  if (!all(cond)) {
     stop(sprintf("`%s` must be one of `%s`.",
                  paste0(x[!cond], collapse = ", `"),
                  deparse(substitute(y))),
