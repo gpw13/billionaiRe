@@ -5,7 +5,7 @@
 \alias{hep_df}
 \title{HEP generated example data}
 \format{
-A data frame with 23 rows and 5 variables:
+A data frame with 21 rows and 5 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{year}{Year.}

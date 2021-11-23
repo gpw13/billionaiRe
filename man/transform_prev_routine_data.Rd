@@ -11,6 +11,7 @@ transform_prev_routine_data(
   ind,
   value,
   transform_value,
+  type_col,
   ind_ids
 )
 }
@@ -28,6 +29,8 @@ country, year, and indicator.}
 
 \item{transform_value}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
+
+\item{type_col}{Column name of column with type data.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

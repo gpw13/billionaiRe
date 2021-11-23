@@ -34,34 +34,13 @@ assert_data_calculation_hep <- function(df,
 
   pathogens <- c("meningitis", "yellow_fever", "cholera", "polio", "measles", "covid", "ebola")
 
-  patho_ind <- ind_ids[stringr::str_detect(ind_ids, paste0(pathogens, "_routine", collapse = "|"))]
+  patho_ind <- ind_ids[stringr::str_detect(ind_ids, paste0(pathogens, collapse = "|"))]
 
-  surviving_infants <- ind_ids[stringr::str_detect(ind_ids, "surviving_infants$")]
+  patho_df <- df %>%
+    dplyr::filter(.data[[ind]] %in% patho_ind)
 
-  prevent_ind <- c(patho_ind, surviving_infants)
-
-  surviving_infants_df <- df %>%
-    dplyr::filter(.data[[ind]] %in% prevent_ind) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
-    tidyr::pivot_wider(names_from = !!ind, values_from = !!value) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year)))) %>%
-    dplyr::summarise(dplyr::across(dplyr::any_of(prevent_ind), ~ sum(is.na(.x))),
-      .groups = "keep"
-    ) %>%
-    tidyr::pivot_longer(-c(.data[[iso3]], .data[[year]]),
-      names_to = ind, values_to = "missing_values"
-    ) %>%
-    dplyr::filter(.data[["missing_values"]] > 0, .data[[ind]] %in% ind_ids["surviving_infants"]) %>%
-    dplyr::select(-.data[["missing_values"]])
-
-  if (nrow(surviving_infants_df) > 0) {
-    stop(sprintf(
-      "%s must be present in %s for every year and country (and scenario when provided) where other prevent indicators are present.
-      Missing values in:\n",
-      ind_ids["surviving_infants"], paste("df", collapse = ", ")
-    ), paste(utils::capture.output(print(surviving_infants_df)), collapse = "\n"),
-    call. = FALSE
-    )
+  if (nrow(patho_df) == 0) {
+    warning("No pathogens indicator was provided. Prevent indicator will not be calculated.")
   }
 
   # eSPAR
