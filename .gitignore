@@ -11,5 +11,3 @@ vignettes/.build.timestamp
 *.Rprofvis
 hep_data.RDS
 .RDataTmp*
-
-data-raw/test_data.parquet

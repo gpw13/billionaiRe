@@ -8,12 +8,14 @@ AFG,2018,espar12,10,Actual
 AFG,2018,espar07,30,Actual
 AFG,2018,espar08,90,Actual
 AFG,2023,detect_respond,91,Projection
+AFG,2023,surviving_infants,1234134,Projection
+AFG,2018,surviving_infants,1232329,Actual
 AFG,2018,espar06,40,Actual
 AFG,2018,espar01,70,Actual
 AFG,2018,espar04,40,Actual
 AFG,2018,espar10,60,Actual
 AFG,2018,espar05,20,Actual
-AFG,2018,detect_respond,NA,Actual
+AFG,2018,detect_respond,,Actual
 AFG,2018,espar13,20,Actual
 AFG,2018,espar11,40,Actual
 AFG,2018,polio_routine_num,2343434,Actual
