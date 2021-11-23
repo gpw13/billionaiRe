@@ -12,5 +12,5 @@
 ^test$
 ^outputs$
 ^.*\.Rprofvis
-^\.pre-commit-config\.yaml$
 ^.RDataTmp*$
+^\.pre-commit-config\.yaml$
