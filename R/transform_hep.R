@@ -65,6 +65,7 @@ transform_hep_data <- function(df,
       ind,
       value,
       transform_value,
+      type_col,
       ind_ids
     )
 
@@ -92,6 +93,7 @@ transform_prev_routine_data <- function(df,
                                         ind,
                                         value,
                                         transform_value,
+                                        type_col,
                                         ind_ids) {
   routine_inds <- ind_ids[c("measles_routine", "polio_routine", "meningitis_routine", "yellow_fever_routine")]
   inf_ind <- ind_ids[c("surviving_infants")]
@@ -102,6 +104,19 @@ transform_prev_routine_data <- function(df,
   # get data frame of surviving infants, the denominator for routine data
 
   inf_val_names <- paste0("_inf_temp_", value)
+
+  inf_ind_values <- df %>%
+    dplyr::filter(.data[[ind]] %in% !!routine_match) %>%
+    dplyr::select(dplyr::all_of(c(!!iso3, !!year))) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate(!!sym(ind) := inf_ind,
+                  !!sym(value) := wppdistro::get_population(.data[[iso3]], .data[[year]], age_range = "under_1"),
+                  !!sym(type_col) := dplyr::if_else(.data[[year]] <= 2019, "reported", "projected")
+                  )
+
+  df <- df %>%
+    dplyr::filter(!.data[[ind]] %in% inf_ind) %>%
+    dplyr::bind_rows(inf_ind_values)
 
   inf_df <- df %>%
     dplyr::filter(.data[[ind]] %in% !!inf_ind) %>%
