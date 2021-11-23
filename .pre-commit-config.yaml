@@ -32,7 +32,6 @@ repos:
         -    tidyr
         -    tidyselect
         -    usethis
-        -    xmart4
         -    zoo
         -    gpw13/whoville
         -    gpw13/xmart4

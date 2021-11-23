@@ -15,13 +15,12 @@ recycle_data <- function(df,
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
                          ind_ids = NULL) {
-
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
   assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
 
   billion <- rlang::arg_match(billion)
-  if(is.null(ind_ids)){
+  if (is.null(ind_ids)) {
     ind_ids <- billion_ind_codes(billion)
   }
 
@@ -44,103 +43,115 @@ recycle_data <- function(df,
   )
 
   reported_not_in_scenario <- dplyr::anti_join(reported_estimated_df, scenario_df,
-                                                  by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
-                                              by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   tp_not_in_scenario <- dplyr::anti_join(tp_df, scenario_df,
-                                            by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   tp_not_in_default <- dplyr::anti_join(tp_not_in_scenario, default_not_in_scenario,
-                                              by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
     dplyr::bind_rows(tp_not_in_default) %>%
     dplyr::mutate(recycled = TRUE)
 
-  if(!include_projection){
+  if (!include_projection) {
     not_in_scenario_projs <- default_not_in_scenario %>%
       dplyr::filter(!.data[[type]] %in% c("imputed", "projected"))
 
     not_in_scenario <- dplyr::bind_rows(not_in_scenario_projs, reported_not_in_default) %>%
       dplyr::bind_rows(tp_not_in_default) %>%
-      dplyr::mutate(recycled = TRUE,
-                    !!sym(scenario_col) := scenario)
-
+      dplyr::mutate(
+        recycled = TRUE,
+        !!sym(scenario_col) := scenario
+      )
   }
 
-  if(recycle_campaigns & billion == "hep"){
+  if (recycle_campaigns & billion == "hep") {
     not_in_scenario_campaigns <- not_in_scenario %>%
-      dplyr::filter(stringr::str_detect(ind, "campaign"),
-                    .data[[type]] %in% c("reported", "estimated"))
+      dplyr::filter(
+        stringr::str_detect(ind, "campaign"),
+        .data[[type]] %in% c("reported", "estimated")
+      )
 
     not_in_scenario_surviving_infants <- not_in_scenario %>%
       dplyr::filter(stringr::str_detect(ind, "surviving_infants")) %>%
       dplyr::anti_join(scenario_df,
-                       by = c(iso3, ind, year))
+        by = c(iso3, ind, year)
+      )
 
     not_in_scenario_no_campaigns_no_surviving <- not_in_scenario %>%
       dplyr::anti_join(not_in_scenario_campaigns,
-                       by = c(iso3, ind, year)) %>%
+        by = c(iso3, ind, year)
+      ) %>%
       dplyr::anti_join(not_in_scenario_surviving_infants,
-                       by = c(iso3, ind, year))
+        by = c(iso3, ind, year)
+      )
 
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
       dplyr::bind_rows(not_in_scenario) %>%
-      dplyr::filter(.data[[year]] >= start_year,
-                    .data[[ind]] %in% ind_ids) %>%
+      dplyr::filter(
+        .data[[year]] >= start_year,
+        .data[[ind]] %in% ind_ids
+      ) %>%
       dplyr::bind_rows(not_in_scenario_campaigns) %>%
       dplyr::bind_rows(not_in_scenario_surviving_infants) %>%
       dplyr::distinct() %>%
       dplyr::mutate(!!sym(scenario_col) := !!scenario) %>%
       dplyr::arrange(iso3, ind, year)
-  } else{
+  } else {
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
       dplyr::bind_rows(not_in_scenario) %>%
-      dplyr::filter(.data[[year]] >= start_year,
-                    .data[[ind]] %in% ind_ids) %>%
+      dplyr::filter(
+        .data[[year]] >= start_year,
+        .data[[ind]] %in% ind_ids
+      ) %>%
       dplyr::mutate(!!sym(scenario_col) := !!scenario) %>%
       dplyr::arrange(iso3, ind, year)
   }
 
-  if(billion == "hpop"){
+  if (billion == "hpop") {
     assert_data_calculation_hpop(scenario_df_final,
-                               ind = ind,
-                               year = year,
-                               iso3 = iso3,
-                               value = value,
-                               scenario = scenario_col,
-                               start_year = start_year,
-                               end_year = end_year,
-                               ind_ids = ind_ids)
-  }else if(billion == "uhc"){
+      ind = ind,
+      year = year,
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col,
+      start_year = start_year,
+      end_year = end_year,
+      ind_ids = ind_ids
+    )
+  } else if (billion == "uhc") {
     assert_data_calculation_uhc(scenario_df_final,
-                                 ind = ind,
-                                 year = year,
-                                 iso3 = iso3,
-                                 value = value,
-                                 scenario = scenario_col,
-                                 start_year = start_year,
-                                 end_year = end_year,
-                                 ind_ids = ind_ids)
-  }else{
+      ind = ind,
+      year = year,
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col,
+      start_year = start_year,
+      end_year = end_year,
+      ind_ids = ind_ids
+    )
+  } else {
     assert_data_calculation_hep(scenario_df_final,
-                                ind = ind,
-                                year = year,
-                                iso3 = iso3,
-                                value = value,
-                                scenario = scenario_col,
-                                start_year = start_year,
-                                end_year = end_year,
-                                ind_ids = ind_ids)
-
+      ind = ind,
+      year = year,
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col,
+      start_year = start_year,
+      end_year = end_year,
+      ind_ids = ind_ids
+    )
   }
 
   return(scenario_df_final)

@@ -35,7 +35,6 @@ transform_hep_data <- function(df,
                                source = "WUENIC/IVB/WHO Technical Programme",
                                ind_ids = billion_ind_codes("hep", include_calculated = TRUE),
                                extrapolate_to = 2025) {
-
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
@@ -107,13 +106,14 @@ transform_prev_routine_data <- function(df,
   inf_val_names <- paste0("_inf_temp_", value)
 
   inf_ind_values <- df %>%
-    dplyr::filter(.data[[ind]] %in% !!routine_match) %>%
+    dplyr::filter(.data[[ind]] %in% c(!!routine_match, !!routine_inds)) %>%
     dplyr::select(dplyr::all_of(c(!!iso3, !!year))) %>%
     dplyr::distinct() %>%
-    dplyr::mutate(!!sym(ind) := inf_ind,
-                  !!sym(value) := wppdistro::get_population(.data[[iso3]], .data[[year]], age_range = "under_1"),
-                  !!sym(type_col) := dplyr::if_else(.data[[year]] <= 2019, "reported", "projected")
-                  )
+    dplyr::mutate(
+      !!sym(ind) := inf_ind,
+      !!sym(value) := wppdistro::get_population(.data[[iso3]], .data[[year]], age_range = "under_1"),
+      !!sym(type_col) := dplyr::if_else(.data[[year]] <= 2019, "reported", "projected")
+    )
 
   df <- df %>%
     dplyr::filter(!.data[[ind]] %in% inf_ind) %>%
@@ -149,10 +149,11 @@ transform_prev_routine_data <- function(df,
         .data[[value[i]]],
         .data[[transform_value[i]]]
       )
-    )
+    ) %>%
+      dplyr::distinct()
   }
 
-  final_df
+  return(final_df)
 }
 
 #' Transform Prevent campaigns data
