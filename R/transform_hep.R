@@ -66,6 +66,7 @@ transform_hep_data <- function(df,
       value,
       transform_value,
       type_col,
+      scenario,
       ind_ids
     )
 
@@ -94,6 +95,7 @@ transform_prev_routine_data <- function(df,
                                         value,
                                         transform_value,
                                         type_col,
+                                        scenario,
                                         ind_ids) {
   routine_inds <- ind_ids[c("measles_routine", "polio_routine", "meningitis_routine", "yellow_fever_routine")]
   inf_ind <- ind_ids[c("surviving_infants")]
@@ -106,8 +108,9 @@ transform_prev_routine_data <- function(df,
   inf_val_names <- paste0("_inf_temp_", value)
 
   inf_ind_values <- df %>%
+    dplyr::group_by(.data[[scenario]]) %>%
     dplyr::filter(.data[[ind]] %in% c(!!routine_match, !!routine_inds)) %>%
-    dplyr::select(dplyr::all_of(c(!!iso3, !!year))) %>%
+    dplyr::select(dplyr::all_of(c(!!iso3, !!year, !!scenario))) %>%
     dplyr::distinct() %>%
     dplyr::mutate(
       !!sym(ind) := inf_ind,
