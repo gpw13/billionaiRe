@@ -108,7 +108,7 @@ transform_prev_routine_data <- function(df,
   inf_val_names <- paste0("_inf_temp_", value)
 
   inf_ind_values <- df %>%
-    dplyr::group_by(.data[[scenario]]) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(!!scenario))) %>%
     dplyr::filter(.data[[ind]] %in% c(!!routine_match, !!routine_inds)) %>%
     dplyr::select(dplyr::all_of(c(!!iso3, !!year, !!scenario))) %>%
     dplyr::distinct() %>%

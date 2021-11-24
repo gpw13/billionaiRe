@@ -118,7 +118,8 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
   untransform_hpop_data() %>%
   untransform_uhc_data() %>%
   filter(year >= 2020 & !type %in% c("reported", "estimated")) %>%
-  mutate(scenario = "covid_dip_lag")
+  mutate(scenario = "covid_dip_lag") %>%
+  filter(!str_detect(ind, "routine_num"))
 
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
