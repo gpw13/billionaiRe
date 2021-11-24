@@ -52,9 +52,6 @@ By default, projected and imputed values will be recycled from `default`. Simila
 ```{r recycling-example, include = TRUE, eval = FALSE}
 
 test_data <- billionaiRe::load_billion_data("all", "test_data")
-
-
-
 ```
 
 ## Scenarios integration into data pipeline
@@ -80,26 +77,39 @@ library(billionaiRe)
 # TODO: update with real scenario function when available
 hep_df %>%
   add_scenario("covid_never_return", # picks from a pre-determined list of scenarios
-               scenario = "scenario",
-               recycle = TRUE,
-               default_scenario = "pre_covid_bau") %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
+    scenario = "scenario",
+    recycle = TRUE,
+    default_scenario = "pre_covid_bau"
+  ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
   add_scenario("aroc_fix_percent", # picks from a pre-determined list of scenarios
-               scenario = "scenario",
-               recycle = TRUE,
-               default_scenario = "covid_never_return") %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
-  prepare_data_hep(scenario = "scenario",
-                   recycle = TRUE,
-                   default_scenario = "pre_covid_bau",
-                   transform = FALSE) %>% # transform value is a parameter.
-  transform_hep_data(scenario = "scenario", # this call to transform_hep_data could have been redundant if `transform` was TRUE in `prepare_hep_data`
-                     recycle_minimum = TRUE) %>% # adds a parameter to `transform_` functions to recycle minimum data required for calculations
-  calculate_hep_components( scenario = "scenario") %>%
+    scenario = "scenario",
+    recycle = TRUE,
+    default_scenario = "covid_never_return"
+  ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
+  recycle_data(
+    billion = "hep", # One function for all billions, so need to specify which one this is applied to.
+    scenario_col = "scenario",
+    default_scenario = "pre_covid_bau",
+    scenario_reported_estimated = "none", # This scenarios will not be recycled
+    scenario_tp = "tp", # This scenario will not be recycled.
+    include_projection = TRUE,
+    recycle_campaigns = TRUE
+  ) %>%
+  transform_hep_data(
+    scenario = "scenario", # this call to transform_hep_data could have been redundant if `transform` was TRUE in `prepare_hep_data`
+    recycle_minimum = TRUE
+  ) %>% # adds a parameter to `transform_` functions to recycle. In this pipeline it is redundant as data was already recycled.
+  calculate_hep_components(scenario = "scenario") %>%
   calculate_hep_billion(scenario = "scenario", end_year = 2025) %>%
-  dplyr::filter(ind %in% c("prevent",
-                           "espar",
-                           "detect_respond",
-                           "hep_idx"),
-                year == 2025)
+  dplyr::filter(
+    ind %in% c(
+      "prevent",
+      "espar",
+      "detect_respond",
+      "hep_idx"
+    ),
+    year == 2025
+  )
 ```
 
 The `add_scenario` functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called : 
