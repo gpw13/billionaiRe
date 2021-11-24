@@ -15,8 +15,10 @@ uhc_calculated <- uhc_df %>%
   transform_uhc_data() %>%
   calculate_uhc_billion() %>%
   calculate_uhc_contribution(end_year = 2023, pop_year = 2023) %>%
-  dplyr::filter(ind %in% c("uhc_sm", "asc", "fh"),
-                year == 2023)
+  dplyr::filter(
+    ind %in% c("uhc_sm", "asc", "fh"),
+    year == 2023
+  )
 
 hpop_df <- read_csv("data-raw/hpop.csv") %>%
   dplyr::mutate(type = case_when(
@@ -40,11 +42,15 @@ hep_calculated <- hep_df %>%
   transform_hep_data(extrapolate_to = 2023) %>%
   calculate_hep_components() %>%
   calculate_hep_billion(end_year = 2023, pop_year = 2023) %>%
-  dplyr::filter(ind %in% c("prevent",
-                           "espar",
-                           "detect_respond",
-                           "hep_idx"),
-                year == 2023)
+  dplyr::filter(
+    ind %in% c(
+      "prevent",
+      "espar",
+      "detect_respond",
+      "hep_idx"
+    ),
+    year == 2023
+  )
 
 basic_test_calculated <- uhc_calculated %>%
   bind_rows(hpop_calculated) %>%
@@ -116,4 +122,7 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
 
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
-  select(-transform_value)
+  select(-transform_value) %>%
+  distinct()
+
+# arrow::write_parquet(test_data, "data-raw/test_data.parquet")

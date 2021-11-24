@@ -1,5 +1,4 @@
 recycle_data <- function(df,
-                         scenario,
                          billion = c("hep", "hpop", "uhc"),
                          iso3 = "iso3",
                          ind = "ind",
@@ -15,6 +14,66 @@ recycle_data <- function(df,
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
                          ind_ids = NULL) {
+  assert_columns(df, iso3, ind, value, year, scenario_col, type)
+  assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
+  assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_tp), scenario_col)
+
+  billion <- rlang::arg_match(billion)
+  if (is.null(ind_ids)) {
+    ind_ids <- billion_ind_codes(billion)
+  }
+
+  scenarios_recycle <- unique(df[[scenario_col]])[!unique(df[[scenario_col]]) %in% c(scenario_reported_estimated, scenario_tp)]
+  # scenarios_recycle <- unique(df[[scenario_col]])
+
+  df_reported_tp <- df %>%
+    dplyr::filter(
+      .data[[scenario_col]] %in% c(scenario_reported_estimated, scenario_tp),
+      .data[[ind]] %in% ind_ids
+    )
+
+  purrr::map_dfr(
+    scenarios_recycle,
+    ~ recycle_data_scenario_single(
+      df = df,
+      scenario = .x,
+      billion = billion,
+      iso3 = iso3,
+      ind = ind,
+      value = value,
+      year = year,
+      type = type,
+      start_year = start_year,
+      end_year = end_year,
+      default_scenario = default_scenario,
+      scenario_reported_estimated = scenario_reported_estimated,
+      scenario_tp = scenario_tp,
+      include_projection = include_projection,
+      recycle_campaigns = recycle_campaigns,
+      ind_ids = ind_ids
+    )
+  )
+  # %>%
+  #   dplyr::bind_rows(df_reported_tp)
+}
+
+recycle_data_scenario_single <- function(df,
+                                         scenario,
+                                         billion = c("hep", "hpop", "uhc"),
+                                         iso3 = "iso3",
+                                         ind = "ind",
+                                         value = "value",
+                                         year = "year",
+                                         type = "type",
+                                         start_year = 2018,
+                                         end_year = 2025,
+                                         scenario_col = "scenario",
+                                         default_scenario = "pre_covid_bau",
+                                         scenario_reported_estimated = "none",
+                                         scenario_tp = "tp",
+                                         include_projection = TRUE,
+                                         recycle_campaigns = TRUE,
+                                         ind_ids = NULL) {
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
   assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
