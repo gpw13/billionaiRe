@@ -17,7 +17,7 @@ remove_recycled_data <- function(df,
                                  scenario_reported_estimated = "none",
                                  scenario_tp = "tp") {
   calculated_inds <- billionaiRe::indicator_df %>%
-    dplyr::filter(.data[["calculated"]]) %>%
+    dplyr::filter(.data[["calculated"]] | .data[["ind"]] == "surviving_infants") %>%
     dplyr::pull(.data[["ind"]])
 
   df %>%

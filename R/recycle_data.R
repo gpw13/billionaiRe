@@ -200,17 +200,8 @@ recycle_data_scenario_single <- function(df,
         .data[[type]] %in% c("reported", "estimated")
       )
 
-    not_in_scenario_surviving_infants <- not_in_scenario %>%
-      dplyr::filter(stringr::str_detect(ind, "surviving_infants")) %>%
-      dplyr::anti_join(scenario_df,
-        by = c(iso3, ind, year)
-      )
-
-    not_in_scenario_no_campaigns_no_surviving <- not_in_scenario %>%
+    not_in_scenario_no_campaigns <- not_in_scenario %>%
       dplyr::anti_join(not_in_scenario_campaigns,
-        by = c(iso3, ind, year)
-      ) %>%
-      dplyr::anti_join(not_in_scenario_surviving_infants,
         by = c(iso3, ind, year)
       )
 
@@ -222,7 +213,7 @@ recycle_data_scenario_single <- function(df,
         .data[[ind]] %in% ind_ids
       ) %>%
       dplyr::bind_rows(not_in_scenario_campaigns) %>%
-      dplyr::bind_rows(not_in_scenario_surviving_infants) %>%
+      dplyr::bind_rows(not_in_scenario_no_campaigns) %>%
       dplyr::distinct() %>%
       dplyr::mutate(!!sym(scenario_col) := !!scenario) %>%
       dplyr::arrange(iso3, ind, year)
