@@ -10,7 +10,9 @@ transform_hpop_data(
   ind = "ind",
   value = "value",
   transform_glue = "transform_{value}",
-  ind_ids = billion_ind_codes("hpop")
+  ind_ids = billion_ind_codes("hpop"),
+  recycle = FALSE,
+  ...
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ to the original name.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{recycle}{Boolean to indicate if data should be recycled}
+
+\item{...}{additional parameters to to pass to \code{recycle_data}}
 }
 \value{
 Data frame in long format.

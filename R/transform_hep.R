@@ -34,10 +34,55 @@ transform_hep_data <- function(df,
                                source_col = "source",
                                source = "WUENIC/IVB/WHO Technical Programme",
                                ind_ids = billion_ind_codes("hep", include_calculated = TRUE),
-                               extrapolate_to = 2025) {
+                               extrapolate_to = 2025,
+                               recycle = FALSE,
+                               ...) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
+
+  params <- list(...)
+  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_hep)
+
+  if (!is.null(params_assert_data_calculations)) {
+    assert_data_calculation_hep(df,
+      iso3 = iso3, value = value, ind = ind,
+      scenario = scenario, ind_ids = ind_ids,
+      params_assert_data_calculations
+    )
+  } else {
+    assert_data_calculation_hep(df,
+      iso3 = iso3, value = value, ind = ind,
+      scenario = scenario, ind_ids = ind_ids
+    )
+  }
+
+  if (recycle) {
+    params_recycle <- get_right_params(params, recycle_data)
+
+    if (!is.null(params_recycle)) {
+      df <- df %>%
+        recycle_data(
+          billion = "hep",
+          iso3 = iso3,
+          ind = ind,
+          scenario = scenario,
+          value = value,
+          ind_ids = ind_ids,
+          params_recycle
+        )
+    } else {
+      df <- df %>%
+        recycle_data(
+          billion = "hep",
+          iso3 = iso3,
+          ind = ind,
+          scenario = scenario,
+          value = value,
+          ind_ids = ind_ids
+        )
+    }
+  }
 
   transform_value <- glue::glue(transform_glue)
 

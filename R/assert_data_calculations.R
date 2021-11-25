@@ -131,14 +131,9 @@ assert_data_calculation_hep <- function(df,
 #' @return Data frame in long format.
 
 assert_data_calculation_hpop <- function(df,
-                                         ind = "ind",
-                                         year = "year",
                                          iso3 = "iso3",
                                          value = "value",
-                                         scenario = NULL,
-                                         start_year = 2018,
-                                         end_year = 2025,
-                                         ind_ids = billion_ind_codes("hpop")) {
+                                         scenario = NULL) {
   assert_iso3_not_empty(df, iso3, scenario, value)
 
   return(df)

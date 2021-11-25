@@ -205,40 +205,39 @@ recycle_data_scenario_single <- function(df,
         by = c(iso3, ind, year)
       )
 
+    not_in_scenario <- not_in_scenario %>%
+      dplyr::filter(
+        .data[[year]] >= start_year
+      )
+
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
       dplyr::bind_rows(not_in_scenario) %>%
-      dplyr::filter(
-        .data[[year]] >= start_year,
-        .data[[ind]] %in% ind_ids
-      ) %>%
       dplyr::bind_rows(not_in_scenario_campaigns) %>%
       dplyr::bind_rows(not_in_scenario_no_campaigns) %>%
       dplyr::distinct() %>%
       dplyr::mutate(!!sym(scenario_col) := !!scenario) %>%
-      dplyr::arrange(iso3, ind, year)
+      dplyr::arrange(iso3, ind, year) %>%
+      dplyr::filter(.data[[ind]] %in% ind_ids)
   } else {
+    not_in_scenario <- not_in_scenario %>%
+      dplyr::filter(
+        .data[[year]] >= start_year
+      )
+
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
       dplyr::bind_rows(not_in_scenario) %>%
-      dplyr::filter(
-        .data[[year]] >= start_year,
-        .data[[ind]] %in% ind_ids
-      ) %>%
       dplyr::mutate(!!sym(scenario_col) := !!scenario) %>%
-      dplyr::arrange(iso3, ind, year)
+      dplyr::arrange(iso3, ind, year) %>%
+      dplyr::filter(.data[[ind]] %in% ind_ids)
   }
 
   if (billion == "hpop") {
     assert_data_calculation_hpop(scenario_df_final,
-      ind = ind,
-      year = year,
       iso3 = iso3,
       value = value,
-      scenario = scenario_col,
-      start_year = start_year,
-      end_year = end_year,
-      ind_ids = ind_ids
+      scenario = scenario_col
     )
   } else if (billion == "uhc") {
     assert_data_calculation_uhc(scenario_df_final,

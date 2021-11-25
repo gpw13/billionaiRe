@@ -13,6 +13,7 @@ repos:
     -   id: readme-rmd-rendered
     -   id: roxygenize
         additional_dependencies:
+        -    arrow
         -    dplyr
         -    glue
         -    knitr
@@ -35,6 +36,7 @@ repos:
         -    zoo
         -    gpw13/whoville
         -    gpw13/xmart4
+        -    WorldHealthOrganization/whdh
         -    WorldHealthOrganization/wppdistro
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
