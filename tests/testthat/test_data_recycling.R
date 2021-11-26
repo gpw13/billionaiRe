@@ -1,38 +1,64 @@
-testthat::test_that("data recycling returns right number of rows", {
-  f <- tempfile()
-  whdh::download_from_data_lake(data_lake_name = "srhdteuwstdsa", source_path = "3B/Bronze/misc/test_data.parquet", destination_path = f, latest_version_only = FALSE)
-  test_data <- arrow::read_parquet(f)
+test_data <- suppressMessages(billionaiRe:::load_test_data("test_data"))
 
-  f <- tempfile()
-  whdh::download_from_data_lake(data_lake_name = "srhdteuwstdsa", source_path = "3B/Bronze/misc/test_data_calculated.parquet", destination_path = f, latest_version_only = FALSE)
-  test_data_calculated <- arrow::read_parquet(f)
+test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data_calculated"))
 
-  nrow_max_calculated <- test_data_calculated %>%
+testthat::test_that("HEP data recycling returns right number of rows", {
+  test_data_calculated_hep <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
-    remove_recycled_data() %>%
+    dplyr::filter(!stringr::str_detect(ind, "routine_num$|campaign|surviving_infants")) %>%
+    dplyr::select(iso3, year, ind, scenario, value) %>%
+    dplyr::distinct() %>%
     dplyr::group_by(scenario) %>%
     dplyr::tally()
 
-  recycled_data <- test_data %>%
+  test_data_hep <- test_data %>%
     recycle_data("hep") %>%
-    transform_hep_data(scenario = "scenario") %>%
-    calculate_hep_components(scenario = "scenario") %>%
-    calculate_hep_billion(scenario = "scenario") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
-    remove_recycled_data()
-
-  nrow_recycled <- recycled_data %>%
-    dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
+    dplyr::filter(!stringr::str_detect(ind, "routine_num$|campaign")) %>%
     dplyr::group_by(scenario) %>%
     dplyr::tally()
-  #
-  # testthat::expect_equal(nrow_recycled, nrow_max_calculated)
+
+  testthat::expect_equal(test_data_hep, test_data_calculated_hep)
 })
 
+testthat::test_that("HPOP data recycling returns right number of rows", {
+  test_data_calculated_hpop <- test_data_calculated %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
+    dplyr::group_by(scenario) %>%
+    dplyr::tally()
+
+  test_data_hpop <- test_data %>%
+    recycle_data("hpop") %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
+    dplyr::group_by(scenario) %>%
+    dplyr::tally()
+
+  testthat::expect_equal(test_data_hpop, test_data_calculated_hpop)
+})
+
+testthat::test_that("UHC data recycling returns right number of rows", {
+  test_data_calculated_uhc <- test_data_calculated %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
+    dplyr::filter(!(ind == "espar" & recycled == TRUE & year < 2018)) %>%
+    dplyr::select(iso3, ind, year, scenario, value) %>%
+    dplyr::distinct() %>%
+    dplyr::group_by(scenario) %>%
+    dplyr::tally()
+
+  test_data_uhc <- test_data %>%
+    recycle_data("uhc") %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
+    dplyr::select(iso3, ind, year, scenario, value) %>%
+    dplyr::distinct() %>%
+    dplyr::group_by(scenario) %>%
+    dplyr::tally()
+
+  testthat::expect_equal(test_data_uhc, test_data_calculated_uhc)
+})
+
+
 testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results", {
-  f <- tempfile()
-  whdh::download_from_data_lake(data_lake_name = "srhdteuwstdsa", source_path = "3B/Bronze/misc/test_data.parquet", destination_path = f, latest_version_only = FALSE)
-  test_data <- arrow::read_parquet(f)
+  test_data <- load_test_data("test_data")
 
   hep_recycle <- test_data %>%
     recycle_data("hep") %>%

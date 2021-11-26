@@ -55,7 +55,7 @@ calculate_hep_billion <- function(df,
 
   for (i in 1:length(contribution)) {
     bill_df <- bill_df %>%
-      dplyr::group_by(dplyr::across(c(iso3, ind, scenario))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind, scenario)))) %>%
       dplyr::mutate(
         !!sym(contribution_pct[i]) := calculate_hep_contribution_pct(
           .data[[ind]],
@@ -71,7 +71,7 @@ calculate_hep_billion <- function(df,
         )
       ) %>%
       dplyr::ungroup() %>%
-      dplyr::group_by(dplyr::across(c(iso3, year, scenario))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
       dplyr::mutate(
         !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
           sum(.data[[contribution[i]]], na.rm = T),

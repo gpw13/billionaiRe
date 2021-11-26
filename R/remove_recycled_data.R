@@ -25,6 +25,5 @@ remove_recycled_data <- function(df,
       .data[[ind]] %in% calculated_inds & is.na(.data[[recycled]]) ~ FALSE,
       TRUE ~ recycled
     )) %>%
-    dplyr::filter(!.data[[recycled]]) %>%
-    dplyr::filter(!.data[[scenario]] %in% c(scenario_reported_estimated, scenario_tp))
+    dplyr::filter(!.data[[recycled]])
 }

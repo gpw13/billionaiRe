@@ -143,3 +143,20 @@ load_billion_table <- function(tbl, format, ...) {
     ...
   )
 }
+
+load_test_data <- function(tbl = c("test_data", "test_data_calculated")) {
+  f <- tempfile()
+
+  suppressMessages(
+    whdh::download_from_data_lake(
+      data_lake_name = "srhdteuwstdsa",
+      source_path = sprintf("3B/Bronze/misc/%s.parquet", tbl),
+      destination_path = f,
+      latest_version_only = FALSE
+    )
+  )
+
+  data <- arrow::read_parquet(f)
+
+  return(data)
+}

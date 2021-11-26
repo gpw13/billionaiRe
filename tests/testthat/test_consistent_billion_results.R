@@ -1,4 +1,8 @@
 
+test_data <- billionaiRe:::load_test_data("test_data")
+
+test_data_calculated <- billionaiRe:::load_test_data("test_data_calculated")
+
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
@@ -35,70 +39,153 @@ testthat::test_that("basic billion calculations are consistent", {
   testthat::expect_equal(all_basic_calculated, billionaiRe:::basic_test_calculated)
 })
 
-testthat::test_that("complexe billion calculations without scenarios are consistent", {
-  # test_data <- billionaiRe::load_billion_data("all", "test_data")
-  # test_data_calculated <- billionaiRe::load_billion_data("all", "test_data_calculated")
-  #
-  # test_data_one_scenario_hep <- test_data %>%
-  #   recycle_data(billion = "hep") %>%
-  #   dplyr::filter(scenario == "pre_covid_bau") %>%
-  #   transform_hep_data() %>%
-  #   calculate_hep_components() %>%
-  #   calculate_hep_billion()
-  #
-  # test_data_one_scenario_hpop <- test_data %>%
-  #   recycle_data(billion = "hpop") %>%
-  #   dplyr::filter(scenario == "pre_covid_bau") %>%
-  #   transform_hpop_data() %>%
-  #   add_hpop_populations() %>%
-  #   calculate_hpop_billion()
-  #
-  # test_data_one_scenario_uhc <- test_data %>%
-  #   recycle_data(billion = "uhc") %>%
-  #   dplyr::filter(scenario == "pre_covid_bau") %>%
-  #   transform_uhc_data() %>%
-  #   calculate_uhc_billion() %>%
-  #   calculate_uhc_contribution()
-  #
-  # test_data_one_scenario_all <- test_data_one_scenario_hep %>%
-  #   dplyr::bind_rows (test_data_one_scenario_hpop) %>%
-  #   dplyr::bind_rows(test_data_one_scenario_uhc) %>%
-  #   dplyr::distinct()
-  #
-  # test_data_calculated_one_scenario <- test_data_calculated %>%
-  #   dplyr::filter(scenario == "pre_covid_bau")
-  #
-  # testthat::expect_equal(all_basic_calculated, test_data_calculated)
+testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
+  # Reference data frame:
+
+  test_data_calculated_one_scenario <- test_data_calculated %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  test_data_calculated_one_scenario_hep <- test_data_calculated_one_scenario %>%
+    dplyr::mutate(transform_value = dplyr::case_when(
+      ind == "espar" & is.na(level) ~ NA_real_,
+      TRUE ~ transform_value
+    )) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::filter(ind %in% billion_ind_codes("hep", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, transform_value, level) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  # HEP
+  test_data_one_scenario_hep <- test_data %>%
+    recycle_data(billion = "hep") %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    transform_hep_data() %>%
+    calculate_hep_components() %>%
+    calculate_hep_billion() %>%
+    dplyr::filter(ind %in% billion_ind_codes("hep", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, transform_value, level) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  testthat::expect_equal(test_data_one_scenario_hep, test_data_calculated_one_scenario_hep)
 })
 
-testthat::test_that("complexe billion calculations with scenarios are consistent", {
-  # test_data <- billionaiRe::load_billion_data("all", "test_data")
-  # test_data_calculated <- billionaiRe::load_billion_data("all", "test_data_calculated")
-  #
-  # test_data_scenarios_hep <- test_data %>%
-  #   recycle_data(billion = "hep") %>%
-  #   transform_hep_data(scenario = "scenario") %>%
-  #   calculate_hep_components(scenario = "scenario") %>%
-  #   calculate_hep_billion(scenario = "scenario")
-  #
-  # test_data_scenarios_hpop <- test_data %>%
-  #   recycle_data(billion = "hpop") %>%
-  #   transform_hpop_data() %>%
-  #   add_hpop_populations() %>%
-  #   calculate_hpop_billion(scenario = "scenario")
-  #
-  # test_data_scenarios_uhc <- test_data %>%
-  #   recycle_data(billion = "uhc") %>%
-  #   transform_uhc_data() %>%
-  #   calculate_uhc_billion(scenario = "scenario") %>%
-  #   calculate_uhc_contribution(scenario = "scenario")
-  #
-  # test_data_scenarios_all <- test_data_scenarios_hep %>%
-  #   dplyr::bind_rows (test_data_scenarios_hpop) %>%
-  #   dplyr::bind_rows(test_data_scenarios_uhc) %>%
-  #   dplyr::distinct()
-  #
-  # test_data_calculated_scenarios <- test_data_calculated
-  #
-  # testthat::expect_equal(test_data_calculated_scenarios, test_data_scenarios_all)
+
+testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
+  test_data_one_scenario_hpop <- test_data %>%
+    recycle_data(billion = "hpop") %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    transform_hpop_data() %>%
+    add_hpop_populations() %>%
+    calculate_hpop_billion() %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, transform_value, population) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  test_data_calculated_one_scenario <- test_data_calculated %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  test_data_calculated_one_scenario_hpop <- test_data_calculated_one_scenario %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, transform_value, population) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  testthat::expect_equal(test_data_one_scenario_hpop, test_data_calculated_one_scenario_hpop)
+})
+
+testthat::test_that("UHC complexe billion calculations without scenarios are consistent", {
+  test_data_one_scenario_uhc <- test_data %>%
+    recycle_data(billion = "uhc") %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    transform_uhc_data() %>%
+    calculate_uhc_billion() %>%
+    calculate_uhc_contribution() %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::select(iso3, ind, year, transform_value) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  test_data_calculated_one_scenario <- test_data_calculated %>%
+    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  test_data_calculated_one_scenario_uhc <- test_data_calculated_one_scenario %>%
+    dplyr::mutate(transform_value = dplyr::case_when(
+      ind == "espar" & !is.na(level) ~ NA_real_,
+      TRUE ~ transform_value
+    )) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, transform_value) %>%
+    dplyr::arrange(iso3, ind, year)
+
+
+  testthat::expect_equal(test_data_one_scenario_uhc, test_data_calculated_one_scenario_uhc)
+})
+
+testthat::test_that("HEP complexe billion calculations with scenarios are consistent", {
+  test_data_calculated <- test_data_calculated %>%
+    dplyr::mutate(transform_value = dplyr::case_when(
+      ind == "espar" & is.na(level) ~ NA_real_,
+      TRUE ~ transform_value
+    )) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::filter(ind %in% billion_ind_codes("hep", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, scenario, transform_value, level) %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  # HEP
+  test_data_hep <- test_data %>%
+    recycle_data(billion = "hep") %>%
+    transform_hep_data(scenario = "scenario") %>%
+    calculate_hep_components(scenario = "scenario") %>%
+    calculate_hep_billion(scenario = "scenario") %>%
+    dplyr::filter(ind %in% billion_ind_codes("hep", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, scenario, transform_value, level) %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  testthat::expect_equal(test_data_hep, test_data_calculated)
+})
+
+testthat::test_that("HPOP complexe billion calculations with scenarios are consistent", {
+  test_data_one_scenario_hpop <- test_data %>%
+    recycle_data(billion = "hpop") %>%
+    transform_hpop_data() %>%
+    add_hpop_populations() %>%
+    calculate_hpop_billion(scenario = "scenario") %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, scenario, transform_value, population) %>%
+    dplyr::arrange(iso3, scenario, ind, year)
+
+  test_data_calculated_one_scenario_hpop <- test_data_calculated %>%
+    dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
+    dplyr::select(iso3, ind, year, scenario, transform_value, population) %>%
+    dplyr::arrange(iso3, scenario, ind, year)
+
+  testthat::expect_equal(test_data_one_scenario_hpop, test_data_calculated_one_scenario_hpop)
+})
+
+testthat::test_that("UHC complexe billion calculations with scenarios are consistent", {
+  test_data_one_scenario_uhc <- test_data %>%
+    recycle_data(billion = "uhc") %>%
+    transform_uhc_data() %>%
+    calculate_uhc_billion(scenario = "scenario") %>%
+    calculate_uhc_contribution(scenario = "scenario") %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::select(iso3, scenario, ind, year, transform_value) %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  test_data_calculated_one_scenario_uhc <- test_data_calculated %>%
+    dplyr::mutate(transform_value = dplyr::case_when(
+      ind == "espar" & !is.na(level) ~ NA_real_,
+      TRUE ~ transform_value
+    )) %>%
+    dplyr::filter(!is.na(transform_value)) %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
+    dplyr::select(iso3, scenario, ind, year, transform_value) %>%
+    dplyr::arrange(scenario, iso3, ind, year)
+
+  testthat::expect_equal(test_data_one_scenario_uhc, test_data_calculated_one_scenario_uhc)
 })

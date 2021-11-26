@@ -109,7 +109,7 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=AIYN4CVYBO4ZHKFSJFQRX4LBRZSTE")
+source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=AIYN4CV6G6CV7MR7E2OQDFTBUCR5W")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -117,13 +117,42 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
   select(-source, -baseline_value) %>%
   untransform_hpop_data() %>%
   untransform_uhc_data() %>%
-  filter(year >= 2020 & !type %in% c("reported", "estimated")) %>%
-  mutate(scenario = "covid_dip_lag") %>%
-  filter(!str_detect(ind, "routine_num"))
+  # filter(year >= 2020 & !type %in% c("reported", "estimated")) %>%
+  mutate(
+    scenario = "covid_dip_lag",
+    value = case_when(
+      year >= 2020 & !type %in% c("reported", "estimated") & str_detect(ind, "campaign") ~ NA_real_,
+      TRUE ~ value
+    )
+  ) %>%
+  filter(!str_detect(ind, "routine_num")) %>%
+  filter(!is.na(value))
 
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
   select(-transform_value) %>%
-  distinct()
+  distinct() %>%
+  filter(ind != "surviving_infants") %>%
+  dplyr::distinct()
 
 # arrow::write_parquet(test_data, "data-raw/test_data.parquet")
+
+test_data_calculated_hep <- test_data %>%
+  transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
+  calculate_hep_components(scenario = "scenario") %>%
+  calculate_hep_billion(scenario = "scenario")
+
+test_data_calculated_hpop <- test_data %>%
+  transform_hpop_data(recycle = TRUE) %>%
+  add_hpop_populations() %>%
+  calculate_hpop_billion(scenario = "scenario")
+
+test_data_calculated_uhc <- test_data %>%
+  transform_uhc_data(recycle = TRUE) %>%
+  calculate_uhc_billion(scenario = "scenario") %>%
+  calculate_uhc_contribution(scenario = "scenario")
+
+test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
+  bind_rows(test_data_calculated_hpop)
+
+arrow::write_parquet(test_data_calculated, "data-raw/test_data_calculated.parquet")
