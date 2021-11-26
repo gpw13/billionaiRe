@@ -16,7 +16,7 @@ recycle_data_scenario_single(
   start_year = 2018,
   end_year = 2025,
   scenario_col = "scenario",
-  default_scenario = "pre_covid_bau",
+  default_scenario = "default",
   scenario_reported_estimated = "none",
   scenario_tp = "tp",
   include_projection = TRUE,

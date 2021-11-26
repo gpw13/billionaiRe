@@ -43,7 +43,7 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
   # Reference data frame:
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_hep <- test_data_calculated_one_scenario %>%
@@ -59,7 +59,7 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
   # HEP
   test_data_one_scenario_hep <- test_data %>%
     recycle_data(billion = "hep") %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     transform_hep_data() %>%
     calculate_hep_components() %>%
     calculate_hep_billion() %>%
@@ -74,7 +74,7 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
 testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     transform_hpop_data() %>%
     add_hpop_populations() %>%
     calculate_hpop_billion() %>%
@@ -83,7 +83,7 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
     dplyr::arrange(iso3, ind, year)
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_hpop <- test_data_calculated_one_scenario %>%
@@ -97,7 +97,7 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
 testthat::test_that("UHC complexe billion calculations without scenarios are consistent", {
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     transform_uhc_data() %>%
     calculate_uhc_billion() %>%
     calculate_uhc_contribution() %>%
@@ -107,7 +107,7 @@ testthat::test_that("UHC complexe billion calculations without scenarios are con
     dplyr::arrange(iso3, ind, year)
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "pre_covid_bau") %>%
+    dplyr::filter(scenario == "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_uhc <- test_data_calculated_one_scenario %>%
