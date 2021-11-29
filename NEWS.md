@@ -1,3 +1,10 @@
+# billionaiRe 0.5.3
+* Export functions introduced in version 0.5.0 were moved the code to
+a new package: [rapporteur](https://github.com/gpw13/rapporteur). This reduces
+the size of the billionaiRe package and maintain a better logic in the package
+environment.
+* Introduce basic testing (input-output) of the package.
+
 # billionaiRe 0.5.2
 * Added further definitions to `indicator_df.xlsx`
 * Renamed column `analysis_code` by `ind` of `indicator_df.xlsx`. 
