@@ -6,10 +6,10 @@
 \usage{
 load_billion_data(
   billion = c("hep", "hpop", "uhc", "all"),
-  mart_table = c("full_data", "raw_data", "unproj_data", "proj_data"),
+  mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
   date_filter = "latest",
   na_rm = TRUE,
-  format = c("none", "csv", "streaming"),
+  format = c("csv", "streaming", "none"),
   ...
 )
 }
@@ -21,7 +21,8 @@ load_billion_data(
 \item \code{full_data}: Full Billions data with transformed values, contributions,
 and all calculations available. (default)
 \item \code{raw_data}: Raw input Billions data, that has yet to be transformed or
-calculated upon, but has been fully projected.
+calculated upon, but has been fully projected. Includes full history.
+\item \code{projected_data}: A copy of \code{raw_data} with only the latest data.
 \item \code{proj_data}: Raw input Billions data that has been projected by the
 technical programme(s).
 \item \code{unproj_data}: Raw input Billions that has has not been projected by the
@@ -37,10 +38,10 @@ date into the xMart4 database.}
 where \code{value} is not missing. Defaults to \code{TRUE}.}
 
 \item{format}{Specification of the output format to be returned by the xMart API.
-Defaults to \code{"none"}, but consider switching to \code{"csv"} if you are
-loading an extremely large table. Passed to \code{\link[xmart4:xmart4_table]{xmart4::xmart4_table()}}. See the
+Defaults to \code{"csv"} for faster download and processing times.
+Passed to \code{\link[xmart4:xmart4_table]{xmart4::xmart4_table()}}. See the
 \href{https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html}{xMart4 API documentation}
-for details on the three options.}
+for details on all three options ("csv", "streaming", and "none").}
 
 \item{...}{Additional arguments passed to \code{xmart4::xmart4_table()}. Use if
 you need to provide additional token specifications for Azure authentication.}

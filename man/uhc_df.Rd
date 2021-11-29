@@ -5,12 +5,13 @@
 \alias{uhc_df}
 \title{UHC example data}
 \format{
-A data frame with 30 rows and 4 variables:
+A data frame with 30 rows and 5 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{year}{Year.}
 \item{ind}{UHC indicator code.}
 \item{value}{Raw indicator value.}
+\item{type}{Data type.}
 }
 }
 \usage{

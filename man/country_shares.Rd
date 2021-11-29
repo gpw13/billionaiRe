@@ -5,7 +5,7 @@
 \alias{country_shares}
 \title{Country shares data}
 \format{
-A data frame with 30 rows and 4 variables:
+A data frame with 582 rows and 4 variables:
 \describe{
 \item{iso3}{Country ISO3 codes.}
 \item{billion}{Relevant billion}

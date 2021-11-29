@@ -33,7 +33,7 @@ transform_hep_data <- function(df,
                                type_col = "type",
                                source_col = "source",
                                source = "WUENIC/IVB/WHO Technical Programme",
-                               ind_ids = billion_ind_codes("hep"),
+                               ind_ids = billion_ind_codes("hep", include_calculated = TRUE),
                                extrapolate_to = 2025) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, "hep")

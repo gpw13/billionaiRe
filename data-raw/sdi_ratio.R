@@ -2,7 +2,7 @@
 library(tidyverse)
 library(whoville)
 
-sdi_df <- readxl::read_excel("data-raw/ihme_sdi_gbd_2019.xlsx", skip = 1)
+sdi_df <- readr::read_csv("data-raw/ihme_sdi_gbd_2019.csv")
 
 sdi_df2 <- sdi_df %>%
   mutate(iso3 = names_to_iso3(Location,

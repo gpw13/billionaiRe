@@ -1,7 +1,7 @@
 Type: Package
 Package: billionaiRe
 Title: Calculate the WHO Triple Billions
-Version: 0.5.0
+Version: 0.5.2
 Authors@R: c(
     person("Seth", "Caldwell", , "caldwellst@gmail.com", role = c("aut", "cre")),
     person("Alice", "Robson", , "robsona@who.int", role = "aut"),
@@ -27,14 +27,15 @@ Imports:
     rlang,
     scales,
     stringr,
+    testit,
     tibble,
     tidyr,
     tidyselect,
     usethis,
     whoville,
-    zoo,
-    testit
+    zoo
 Suggests: 
+    testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     wppdistro (>= 0.1.0),
@@ -42,10 +43,11 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
-    gpw13/whoville,
     WorldHealthOrganization/wppdistro,
+    gpw13/whoville,
     gpw13/xmart4
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Config/testthat/edition: 3
