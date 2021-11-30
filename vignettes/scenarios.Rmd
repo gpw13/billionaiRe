@@ -100,7 +100,8 @@ A `recycle` and `...`parameters were added to the `transform_` functions to ease
 test_data <- billionaiRe:::load_test_data("test_data")
 
 test_data_hep <- test_data %>%
-  recycle_data("hep", include_projection = FALSE)
+  recycle_data("hep", include_projection = FALSE) %>%
+  transform_hep_data(include_projection = FALSE)
 
 # Exactly equivalent to above:
 test_data_hep_transform <- test_data %>%
@@ -141,12 +142,10 @@ library(billionaiRe)
 hep_df %>%
   add_scenario("covid_never_return", # picks from a pre-determined list of scenarios
     scenario = "scenario",
-    recycle = TRUE,
     default_scenario = "pre_covid_bau"
   ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
   add_scenario("aroc_fix_percent", # picks from a pre-determined list of scenarios
     scenario = "scenario",
-    recycle = TRUE,
     default_scenario = "covid_never_return"
   ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
   recycle_data(
@@ -178,7 +177,10 @@ hep_df %>%
 The `add_scenario` functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called : 
 
 1.    **base scenario functions**: they are the building blocs of the wrapper functions. For instance, `scenario_fixed_target` sets the values on a linear trajectory towards a target by a certain year, `scenario_percent_baseline` sets a progression from the baseline with a fix percentage increase.
-2.    **wrappers function** combine base scenario functions to generate more complex scenarios like `covid_never_return` or `acceleration`.
+2.    **wrappers function** combine base scenario functions to generate more complex scenarios like `covid_never_return` or `acceleration`, etc.
+
+### Base scenario functions:
+
 
 ## Scenarios naming convention
 
