@@ -16,8 +16,13 @@ scenario_linear_percent_change(
   baseline_year = start_year,
   target_year = end_year,
   scenario_name = glue::glue("linear_percent_change"),
+  scenario = "scenario",
+  trim = TRUE,
+  small_is_best = TRUE,
+  keep_better_values = FALSE,
   upper_limit = 100,
-  lower_limit = 0
+  lower_limit = 0,
+  trim_years = TRUE
 )
 }
 \arguments{
@@ -46,14 +51,32 @@ achieved. Defaults to \code{end_year}}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
+\item{trim}{logical to indicate if the data should be trimmed between
+\code{upper_limit} and \code{lower_limit}.}
+
+\item{small_is_best}{Logical to identify if a lower value is better than a higher
+one (e.g. lower obesity in a positive public health outcome, so obesity rate
+should have small_is_best = TRUE).}
+
+\item{keep_better_values}{logical to indicate if "better" values should be
+kept from \code{value} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+than \code{col} will be kept.}
+
 \item{upper_limit}{numeric indicating the upper bound of the data after
 calculation. If \code{value} is already higher before calculation it will be kept}
 
 \item{lower_limit}{numeric indicating the lower bound of the data after
 calculation. If \code{value} is already lower before calculation it will be kept}
+
+\item{trim_years}{logical to indicate if years before \code{start_year} and after
+\code{end_year} should be removed}
 }
 \value{
-Dataframe with additional scenario rows
+Dataframe with scenario rows
 }
 \description{
 Scenario to add a \code{linear_value} percentage point change to \code{baseline_value}
@@ -66,6 +89,9 @@ The calculation is done by taking the \code{baseline_year} \code{value} and addi
 current year. For instance, if \code{baseline_year} is 2018, \code{linear_value} is 2,
 and \code{baseline_year} \code{value} is 10, then 2019 \code{value} will be 12, 2020 14,
 etc.
+
+It differs from \code{scenario_aroc} \verb{percent change} in two ways: it is not
+compounded and it adds percentage points and not percentage of values.
 
 \code{upper_limit} and \code{lower_limit} allow to trim values when they are exceeding
 the bounds after calculations. If values were already exceeding the bounds

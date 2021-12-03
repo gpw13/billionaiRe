@@ -2,7 +2,7 @@
 % Please edit documentation in R/scenarios_percent_change.R
 \name{calculate_percent_change_baseline}
 \alias{calculate_percent_change_baseline}
-\title{Calculate percent change}
+\title{Calculate percent change from baseline}
 \usage{
 calculate_percent_change_baseline(
   baseline_value,
@@ -26,5 +26,5 @@ Defaults to \code{start_year}}
 achieved. Defaults to \code{end_year}}
 }
 \description{
-Calculate percent change
+Calculate percent change from baseline
 }

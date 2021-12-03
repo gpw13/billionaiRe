@@ -17,9 +17,12 @@ scenario_percent_baseline(
   target_year = end_year,
   scenario = "scenario",
   scenario_name = glue::glue("{percent_change}_{baseline_year}"),
-  limit_change = TRUE,
+  trim = TRUE,
+  small_is_best = TRUE,
+  keep_better_values = FALSE,
   upper_limit = "guess",
-  lower_limit = "guess"
+  lower_limit = "guess",
+  trim_years = TRUE
 )
 }
 \arguments{
@@ -55,18 +58,31 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
-\item{limit_change}{Boolean to identify if change should be caped at a certain value.}
+\item{trim}{logical to indicate if the data should be trimmed between
+\code{upper_limit} and \code{lower_limit}.}
 
-\item{upper_limit}{lower_limit limit at which the indicator should be caped.
+\item{small_is_best}{Logical to identify if a lower value is better than a higher
+one (e.g. lower obesity in a positive public health outcome, so obesity rate
+should have small_is_best = TRUE).}
+
+\item{keep_better_values}{logical to indicate if "better" values should be
+kept from \code{value} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+than \code{col} will be kept.}
+
+\item{upper_limit}{limit at which the indicator should be caped.
 Can take any of "guess", or any numeric. \code{guess} (default) will take 100 as
 the limit if \code{percent_change} is positive, and 0 if negative.}
 
-\item{lower_limit}{lower_limit limit at which the indicator should be caped.
+\item{lower_limit}{limit at which the indicator should be caped.
 Can take any of "guess", or 0 to 100. \code{guess} (default) will take 0 as the
 limit if \code{percent_change} is positive, and 100 if negative.}
+
+\item{trim_years}{logical to indicate if years before \code{start_year} and after
+\code{end_year} should be removed}
 }
 \value{
-Dataframe with additional scenario rows
+Dataframe with scenario rows
 }
 \description{
 This scenario allows to change a value by a fixed percentage to a provided year
@@ -77,7 +93,7 @@ from a provided baseline year. It provides values for scenarios stated as
 The \code{percent_change} parameter is understood as a percentage change,
 and not a percentage point change, as this is usually what intended by those
 formulations. If it is indeed the percentage change that is required, please
-use \code{THIS_FUNCTION}. For instance, to calculate the scenario "reduce the 2018
+use \code{scenario_aroc}. For instance, to calculate the scenario "reduce the 2018
 value (90\%) by 30\% by 2025", will results to a 2025 value of 63\% and not 60\%.
 
 The returned scenario is a portion of the straight line drawn from the

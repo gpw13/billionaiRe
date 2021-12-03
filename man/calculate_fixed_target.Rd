@@ -31,7 +31,7 @@ achieved. Defaults to \code{end_year}}
 \item{baseline_value}{value at baseline_year}
 }
 \value{
-Dataframe with additional scenario rows
+Dataframe with scenario rows
 }
 \description{
 The returned values are a portion of the straight line drawn from the
@@ -42,7 +42,7 @@ The returned values are a portion of the straight line drawn from the
 The \code{percent_change} parameter is understood as a percentage change,
 and not a percentage point change, as this is usually what intended by those
 formulations. If it is indeed the percentage change that is required, please
-use \code{THIS_FUNCTION}. For instance, to calculate the scenario "reduce the 2018
+use \code{scenario_aroc}. For instance, to calculate the scenario "reduce the 2018
 value (90\%) by 30\% by 2025", will results to a 2025 value of 63\% and not 60\%.
 
 The returned scenario is a portion of the straight line drawn from the

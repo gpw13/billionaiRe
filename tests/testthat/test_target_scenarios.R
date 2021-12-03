@@ -47,6 +47,34 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
   testthat::expect_equal(df_fixed_percent, df_test)
 
   testthat::expect_equal(df_fixed_percent[[value]][df_fixed_percent$year == target_year], target_value)
+
+  df_fixed_percent_higher_values <- df %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year > baseline_year ~ as.numeric(value + 10),
+      TRUE ~ as.numeric(value)
+    )) %>%
+    scenario_fixed_target(
+      target_value = target_value,
+      value = value,
+      ind = ind,
+      iso3 = iso3,
+      year = year,
+      start_year = start_year,
+      end_year = end_year,
+      baseline_year = start_year,
+      target_year = end_year,
+      scenario_name = scenario_name,
+      small_is_best = small_is_best
+    )
+
+  df_test_higher_values <- df_test %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year == 2019 ~ 79,
+      year == 2020 ~ 80,
+      TRUE ~ value
+    ))
+
+  testthat::expect_equal(df_fixed_percent_higher_values, df_test_higher_values)
 })
 
 testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {

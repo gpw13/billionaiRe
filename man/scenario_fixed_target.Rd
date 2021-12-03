@@ -6,6 +6,7 @@
 \usage{
 scenario_fixed_target(
   df,
+  target_value,
   value = "value",
   ind = "ind",
   iso3 = "iso3",
@@ -14,15 +15,21 @@ scenario_fixed_target(
   start_year = 2018,
   end_year = 2025,
   baseline_year = start_year,
-  target_value,
   target_year = end_year,
   scenario_name = glue::glue("{target_value}_{target_year}"),
-  small_is_best = FALSE
+  small_is_best = FALSE,
+  trim = TRUE,
+  keep_better_values = TRUE,
+  upper_limit = 100,
+  lower_limit = 0,
+  trim_years = TRUE
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
+
+\item{target_value}{value to be achieved by scenario by \code{target_year}}
 
 \item{value}{Column name of column with indicator values.}
 
@@ -42,8 +49,6 @@ calculating contributions on data in long format rather than wide format.}
 \item{baseline_year}{Year from which the scenario is measured.
 Defaults to \code{start_year}}
 
-\item{target_value}{value to be achieved by scenario by \code{target_year}}
-
 \item{target_year}{Year by which the scenario should eventually be
 achieved. Defaults to \code{end_year}}
 
@@ -52,9 +57,28 @@ achieved. Defaults to \code{end_year}}
 \item{small_is_best}{Logical to identify if a lower value is better than a higher
 one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
+
+\item{trim}{logical to indicate if the data should be trimmed between
+\code{upper_limit} and \code{lower_limit}.}
+
+\item{keep_better_values}{logical to indicate if "better" values should be
+kept from \code{value} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+than \code{col} will be kept.}
+
+\item{upper_limit}{limit at which the indicator should be caped.
+Can take any of "guess", or any numeric. \code{guess} (default) will take 100 as
+the limit if \code{percent_change} is positive, and 0 if negative.}
+
+\item{lower_limit}{limit at which the indicator should be caped.
+Can take any of "guess", or 0 to 100. \code{guess} (default) will take 0 as the
+limit if \code{percent_change} is positive, and 100 if negative.}
+
+\item{trim_years}{logical to indicate if years before \code{start_year} and after
+\code{end_year} should be removed}
 }
 \value{
-Dataframe with additional scenario rows
+Dataframe with scenario rows
 }
 \description{
 This scenario allows to reach a target value from a baseline year by target
@@ -65,4 +89,9 @@ YEAR" or "Eliminate XX by YEAR".
 The returned scenario is a portion of the straight line drawn from the
 \code{baseline_year} value to the \code{target_year}. Only values for years between
 \code{start_year} and \code{end_year} will be returned.
+
+If \code{value} has values that are higher or lower than the scenario values, then
+only \code{value} will be kept, depending on \code{small_is_best}. For instance,
+if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
+80 will be kept.
 }

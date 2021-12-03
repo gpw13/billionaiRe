@@ -7,7 +7,7 @@
 #' The `percent_change` parameter is understood as a percentage change,
 #' and not a percentage point change, as this is usually what intended by those
 #' formulations. If it is indeed the percentage change that is required, please
-#' use `THIS_FUNCTION`. For instance, to calculate the scenario "reduce the 2018
+#' use `scenario_aroc`. For instance, to calculate the scenario "reduce the 2018
 #' value (90%) by 30% by 2025", will results to a 2025 value of 63% and not 60%.
 #'
 #' The returned scenario is a portion of the straight line drawn from the
@@ -16,6 +16,7 @@
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams trim_values
 #'
 #' @param percent_change Numeric with the percentage change in **points** that is
 #' to be achieved from `value` in `baseline_year` by `target_year`. Should be
@@ -29,15 +30,16 @@
 #' @param target_year Year by which the scenario should eventually be
 #' achieved. Defaults to `end_year`
 #' @param scenario_name Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}
-#' @param limit_change Boolean to identify if change should be caped at a certain value.
-#' @param upper_limit lower_limit limit at which the indicator should be caped.
+#' @param upper_limit limit at which the indicator should be caped.
 #' Can take any of "guess", or any numeric. `guess` (default) will take 100 as
 #' the limit if `percent_change` is positive, and 0 if negative.
-#' @param lower_limit lower_limit limit at which the indicator should be caped.
+#' @param lower_limit limit at which the indicator should be caped.
 #' Can take any of "guess", or 0 to 100. `guess` (default) will take 0 as the
 #' limit if `percent_change` is positive, and 100 if negative.
+#' @inheritParams trim_values
+#' @inheritParams scenario_fixed_target
 #'
-#' @return Dataframe with additional scenario rows
+#' @return Dataframe with scenario rows
 scenario_percent_baseline <- function(df,
                                       percent_change,
                                       value = "value",
@@ -50,20 +52,14 @@ scenario_percent_baseline <- function(df,
                                       target_year = end_year,
                                       scenario = "scenario",
                                       scenario_name = glue::glue("{percent_change}_{baseline_year}"),
-                                      limit_change = TRUE,
+                                      trim = TRUE,
+                                      small_is_best = TRUE,
+                                      keep_better_values = FALSE,
                                       upper_limit = "guess",
-                                      lower_limit = "guess") {
-  if (limit_change & upper_limit == "guess") {
-    upper_limit <- as.numeric(ifelse(percent_change >= 0, 100, Inf))
-  } else {
-    upper_limit <- as.numeric(upper_limit)
-  }
-
-  if (limit_change & lower_limit == "guess") {
-    lower_limit <- ifelse(percent_change >= 0, -Inf, 0)
-  } else {
-    lower_limit <- as.numeric(lower_limit)
-  }
+                                      lower_limit = "guess",
+                                      trim_years = TRUE) {
+  upper_limit <- guess_limit(percent_change, upper_limit, limit_type = "upper_limit")
+  lower_limit <- guess_limit(percent_change, lower_limit, limit_type = "lower_limit")
 
   df %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
@@ -80,23 +76,31 @@ scenario_percent_baseline <- function(df,
         !!baseline_year,
         !!target_year
       ),
-      !!sym(value) := dplyr::case_when(
-        limit_change & .data[[value]] >= upper_limit ~ upper_limit,
-        limit_change & .data[[value]] <= lower_limit ~ lower_limit,
-        TRUE ~ .data[[value]]
-      ),
       !!sym(scenario) := scenario_name
     ) %>%
-    dplyr::select(-c("_goal_value", "_baseline_value")) %>%
-    dplyr::filter(.data[[year]] >= start_year & .data[[year]] <= end_year)
+    trim_values(
+      col = value,
+      value = value,
+      year = year,
+      trim = trim,
+      small_is_best = small_is_best,
+      keep_better_values = keep_better_values,
+      upper_limit = upper_limit,
+      lower_limit = lower_limit,
+      trim_years = TRUE,
+      start_year = start_year,
+      end_year = end_year
+    ) %>%
+    dplyr::select(-c("_goal_value", "_baseline_value"))
 }
 
 
-#' Calculate percent change
+#' Calculate percent change from baseline
 #'
 #' @inheritParams scenario_percent_baseline
 #' @param baseline_value vector with the baseline value to be used
 #' @param goal_value vector with the goal value to be used
+#'
 calculate_percent_change_baseline <- function(baseline_value, goal_value, year, baseline_year, target_year) {
   dplyr::if_else(year >= baseline_year & year <= target_year,
     baseline_value + (goal_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
@@ -110,6 +114,8 @@ calculate_percent_change_baseline <- function(baseline_value, goal_value, year, 
 #' Provided as a convenience function.
 #'
 #' @inherit scenario_percent_baseline
+#' @inheritParams trim_values
+#' @inheritParams scenario_fixed_target
 scenario_halt_rise <- function(df,
                                value = "value",
                                ind = "ind",
@@ -121,9 +127,12 @@ scenario_halt_rise <- function(df,
                                target_year = end_year,
                                scenario = "scenario",
                                scenario_name = glue::glue("halt_rise"),
-                               limit_change = TRUE,
                                upper_limit = "guess",
-                               lower_limit = "guess") {
+                               lower_limit = "guess",
+                               trim = TRUE,
+                               keep_better_values = TRUE,
+                               small_is_best = TRUE,
+                               trim_years = TRUE) {
   percent_change <- 0
 
   scenario_percent_baseline(
@@ -139,8 +148,12 @@ scenario_halt_rise <- function(df,
     target_year = target_year,
     scenario = scenario,
     scenario_name = scenario_name,
+    trim = trim,
+    keep_better_values = keep_better_values,
+    small_is_best = small_is_best,
     upper_limit = upper_limit,
-    lower_limit = lower_limit
+    lower_limit = lower_limit,
+    trim_years = trim_years
   )
 }
 
@@ -156,6 +169,9 @@ scenario_halt_rise <- function(df,
 #' and `baseline_year` `value` is 10, then 2019 `value` will be 12, 2020 14,
 #' etc.
 #'
+#' It differs from `scenario_aroc` `percent change` in two ways: it is not
+#' compounded and it adds percentage points and not percentage of values.
+#'
 #' `upper_limit` and `lower_limit` allow to trim values when they are exceeding
 #' the bounds after calculations. If values were already exceeding the bounds
 #' before calculations, they are kept.
@@ -166,6 +182,7 @@ scenario_halt_rise <- function(df,
 #' @param lower_limit numeric indicating the lower bound of the data after
 #' calculation. If `value` is already lower before calculation it will be kept
 #' @inherit scenario_percent_baseline
+#' @inheritParams trim_values
 #'
 scenario_linear_percent_change <- function(df,
                                            linear_value,
@@ -178,38 +195,37 @@ scenario_linear_percent_change <- function(df,
                                            baseline_year = start_year,
                                            target_year = end_year,
                                            scenario_name = glue::glue("linear_percent_change"),
+                                           scenario = "scenario",
+                                           trim = TRUE,
+                                           small_is_best = TRUE,
+                                           keep_better_values = FALSE,
                                            upper_limit = 100,
-                                           lower_limit = 0) {
-  target_year <- ifelse(target_year > max(df[[year]]), max(df[[year]]), target_year)
-
-  target_df <- df %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::mutate(baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year)) %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(.data[[year]] == target_year) %>%
-    dplyr::mutate(
-      scenario_target = baseline_value + ((.data[[year]] - baseline_year) * linear_value),
-      scenario_target = pmin(
-        pmax(pmin(lower_limit, baseline_value), scenario_target),
-        pmax(upper_limit, baseline_value)
-      ),
-      trim_lin_col = (scenario_target - baseline_value) / (.data[[year]] - baseline_year)
-    ) %>%
-    dplyr::select(iso3, ind, trim_lin_col, baseline_value, scenario_target)
-
+                                           lower_limit = 0,
+                                           trim_years = TRUE) {
   df %>%
-    dplyr::left_join(target_df) %>%
-    dplyr::mutate(val = dplyr::if_else(
-      .data[[year]] >= baseline_year,
-      baseline_value + (.data[[year]] - baseline_year) * trim_lin_col,
-      NA_real_
-    )) %>%
-    dplyr::mutate(!!sym(value) := pmin(
-      pmax(pmin(lower_limit, scenario_target), val),
-      pmax(upper_limit, scenario_target)
-    )) %>%
-    dplyr::select(-baseline_value, -trim_lin_col, -val, -scenario_target) %>%
-    dplyr::filter(.data[[year]] >= start_year, .data[[year]] <= end_year)
+    dplyr::group_by(iso3, ind) %>%
+    dplyr::mutate(
+      baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
+      scenario_value = dplyr::case_when(
+        .data[[year]] >= baseline_year ~ .data[["baseline_value"]] + (linear_value * (.data[[year]] - baseline_year))
+      ),
+      !!sym(scenario) := scenario_name
+    ) %>%
+    dplyr::ungroup() %>%
+    trim_values("scenario_value",
+      value = value,
+      year = year,
+      trim = trim,
+      small_is_best = small_is_best,
+      keep_better_values = keep_better_values,
+      upper_limit = upper_limit,
+      lower_limit = lower_limit,
+      trim_years = trim_years,
+      start_year = start_year,
+      end_year = end_year
+    ) %>%
+    dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
+    dplyr::select(-c("baseline_value", "scenario_value"))
 }
 
 #' Scenario to add a linear percentage point change stored in a column
@@ -218,10 +234,12 @@ scenario_linear_percent_change <- function(df,
 #' `scenario_linear_percent_change` to provide linear values from a column
 #' specified in `linear_value` rather than a single value.
 #'
-#' @param linear_value name of column with linear values
+#' @param linear_value_col name of column with linear values
 #' @inherit scenario_fixed_target
+#' @inheritParams trim_values
+
 scenario_linear_percent_change_col <- function(df,
-                                               linear_value,
+                                               linear_value_col,
                                                value = "value",
                                                ind = "ind",
                                                iso3 = "iso3",
@@ -231,10 +249,14 @@ scenario_linear_percent_change_col <- function(df,
                                                baseline_year = start_year,
                                                target_year = end_year,
                                                scenario_name = glue::glue("linear_percent_change"),
+                                               trim = TRUE,
+                                               small_is_best = TRUE,
+                                               keep_better_values = FALSE,
                                                upper_limit = 100,
-                                               lower_limit = 0) {
+                                               lower_limit = 0,
+                                               trim_years = TRUE) {
   scenario_linear_percent_change(df,
-    linear_value = df[[linear_value]],
+    linear_value = df[[linear_value_col]],
     value = value,
     ind = ind,
     iso3 = iso3,
@@ -244,7 +266,11 @@ scenario_linear_percent_change_col <- function(df,
     baseline_year = baseline_year,
     target_year = target_year,
     scenario_name = scenario_name,
+    trim = trim,
+    small_is_best = small_is_best,
+    keep_better_values = keep_better_values,
     upper_limit = upper_limit,
-    lower_limit = lower_limit
+    lower_limit = lower_limit,
+    trim_years = trim_years
   )
 }

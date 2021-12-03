@@ -20,7 +20,6 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
   iso3 <- "iso3"
   year <- "year"
 
-
   df_test <- df %>%
     dplyr::filter(year %in% (start_year:end_year)) %>%
     dplyr::mutate(!!sym(scenario) := scenario_name,
@@ -319,4 +318,62 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
   testthat::expect_equal(df_scenario_halt_rise_through_base_function_with_limits_neg, df_test_halt_rise)
 })
 
-## HERE HERE HERE tests for scenario_linear_percent_change
+testthat::test_that("scenario_linear_percent_change provides accurate results:", {
+  df <- tibble::tibble(
+    value = 80:100,
+    year = 2010:2030,
+    ind = "test",
+    iso3 = "testalia",
+    scenario = "default"
+  )
+
+  df_test <- df %>%
+    dplyr::filter(year >= 2018, year <= 2025) %>%
+    dplyr::mutate(scenario = "linear_percent_change")
+
+  df_scenario_linear_percent_change <- scenario_linear_percent_change(df, linear_value = 1)
+
+  testthat::expect_equal(df_scenario_linear_percent_change, df_test)
+
+  df_scenario_linear_percent_change_higer_values <- df %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year > 2018 ~ as.numeric(value + 10),
+      TRUE ~ as.numeric(value)
+    )) %>%
+    scenario_linear_percent_change(linear_value = 1)
+
+  testthat::expect_equal(df_scenario_linear_percent_change_higer_values, df_test)
+})
+
+testthat::test_that("scenario_linear_percent_change in vectorized on linear_value:", {
+  df <- tibble::tibble(
+    value = 80:100,
+    year = 2010:2030,
+    ind = "test",
+    iso3 = "testalia",
+    scenario = "default",
+    linear_value = 1
+  )
+
+  df_test <- df %>%
+    dplyr::filter(year >= 2018, year <= 2025) %>%
+    dplyr::mutate(scenario = "linear_percent_change")
+
+  df_scenario_linear_percent_change <- scenario_linear_percent_change(df, linear_value = df[["linear_value"]])
+
+  testthat::expect_equal(df_scenario_linear_percent_change, df_test)
+
+  df_scenario_linear_percent_change_higer_values <- df %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year > 2018 ~ as.numeric(value + 10),
+      TRUE ~ as.numeric(value)
+    )) %>%
+    scenario_linear_percent_change(linear_value = df[["linear_value"]])
+
+  testthat::expect_equal(df_scenario_linear_percent_change_higer_values, df_test)
+
+  df_scenario_linear_percent_change_col <- df %>%
+    scenario_linear_percent_change_col(linear_value = "linear_value")
+
+  testthat::expect_equal(df_scenario_linear_percent_change_col, df_test)
+})

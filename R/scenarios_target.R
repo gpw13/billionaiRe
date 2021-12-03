@@ -8,13 +8,20 @@
 #' `baseline_year` value to the `target_year`. Only values for years between
 #' `start_year` and `end_year` will be returned.
 #'
+#' If `value` has values that are higher or lower than the scenario values, then
+#' only `value` will be kept, depending on `small_is_best`. For instance,
+#' if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
+#' 80 will be kept.
+#'
 #' @inherit scenario_percent_baseline
 #' @param target_value value to be achieved by scenario by `target_year`
 #' @param small_is_best Logical to identify if a lower value is better than a higher
 #' one (e.g. lower obesity in a positive public health outcome, so obesity rate
 #' should have small_is_best = TRUE).
+#' @inheritParams trim_values
 
 scenario_fixed_target <- function(df,
+                                  target_value,
                                   value = "value",
                                   ind = "ind",
                                   iso3 = "iso3",
@@ -23,10 +30,14 @@ scenario_fixed_target <- function(df,
                                   start_year = 2018,
                                   end_year = 2025,
                                   baseline_year = start_year,
-                                  target_value,
                                   target_year = end_year,
                                   scenario_name = glue::glue("{target_value}_{target_year}"),
-                                  small_is_best = FALSE) {
+                                  small_is_best = FALSE,
+                                  trim = TRUE,
+                                  keep_better_values = TRUE,
+                                  upper_limit = 100,
+                                  lower_limit = 0,
+                                  trim_years = TRUE) {
   df %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value]], .data[[year]], !!baseline_year)) %>%
@@ -34,14 +45,26 @@ scenario_fixed_target <- function(df,
     dplyr::mutate(
       scenario_value = calculate_fixed_target(target_value, small_is_best, .data[[year]], baseline_year, target_year, .data[["baseline_value_"]]),
       !!sym(value) := dplyr::case_when(
-        dplyr::case_when(
-          small_is_best & .data[[value]] < scenario_value
-        )
+        small_is_best & .data[[value]] < scenario_value ~ as.numeric(.data[[value]]),
+        !small_is_best & .data[[value]] > scenario_value ~ as.numeric(.data[[value]]),
+        TRUE ~ scenario_value
       ),
       !!sym(scenario) := scenario_name
     ) %>%
-    dplyr::select(-c("baseline_value_")) %>%
-    dplyr::filter(.data[[year]] >= start_year & .data[[year]] <= end_year)
+    dplyr::select(-c("baseline_value_", "scenario_value")) %>%
+    trim_values(
+      col = value,
+      value = value,
+      year = year,
+      trim = trim,
+      small_is_best = small_is_best,
+      keep_better_values = keep_better_values,
+      upper_limit = upper_limit,
+      lower_limit = lower_limit,
+      trim_years = trim_years,
+      start_year = start_year,
+      end_year = end_year
+    )
 }
 
 #' Calculate fixed target from a baseline year by a target year
@@ -86,6 +109,7 @@ calculate_fixed_target <- function(target_value,
 #'
 #' @param target_col name of column with targets
 #' @inherit scenario_fixed_target
+#' @inheritParams trim_values
 scenario_fixed_target_col <- function(df,
                                       value = "value",
                                       ind = "ind",
@@ -98,7 +122,12 @@ scenario_fixed_target_col <- function(df,
                                       target_col = "target",
                                       target_year = end_year,
                                       scenario_name = glue::glue("{target_value}_{target_year}"),
-                                      small_is_best = FALSE) {
+                                      small_is_best = FALSE,
+                                      trim = TRUE,
+                                      keep_better_values = TRUE,
+                                      upper_limit = 100,
+                                      lower_limit = 0,
+                                      trim_years = TRUE) {
   scenario_fixed_target(df,
     target_value = df[[target_col]],
     value = value,
@@ -110,6 +139,11 @@ scenario_fixed_target_col <- function(df,
     baseline_year = baseline_year,
     target_year = target_year,
     scenario_name = scenario_name,
-    small_is_best = small_is_best
+    small_is_best = small_is_best,
+    trim = trim,
+    keep_better_values = keep_better_values,
+    upper_limit = upper_limit,
+    lower_limit = lower_limit,
+    trim_years = trim_years
   )
 }
