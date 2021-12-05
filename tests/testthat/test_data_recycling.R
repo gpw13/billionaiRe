@@ -57,9 +57,7 @@ testthat::test_that("UHC data recycling returns right number of rows", {
 })
 
 
-testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results", {
-  test_data <- load_test_data("test_data")
-
+testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results:", {
   hep_recycle <- test_data %>%
     recycle_data("hep") %>%
     transform_hep_data(scenario = "scenario")
@@ -86,4 +84,49 @@ testthat::test_that("recycle_data and transform_(recycle = TRUE) get same result
     transform_uhc_data(recycle = TRUE)
 
   testthat::expect_equal(uhc_transform, uhc_recycle)
+})
+
+testthat::test_that("make_default_scenario adds a default scenario to data frame:", {
+  make_default <- make_default_scenario(test_data, billion = "all") %>%
+    dplyr::arrange(iso3, year, ind)
+
+  make_default_hep <- make_default_scenario(test_data, billion = "hep") %>%
+    dplyr::arrange(iso3, year, ind)
+
+  hep_recycle <- test_data %>%
+    recycle_data("hep", trim_years = FALSE) %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(iso3, year, ind)
+
+  testthat::expect_equal(make_default_hep, hep_recycle)
+
+  make_default_uhc <- make_default_scenario(test_data, billion = "uhc") %>%
+    dplyr::arrange(iso3, year, ind)
+
+  uhc_recycle <- test_data %>%
+    recycle_data("uhc", trim_years = FALSE) %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(iso3, year, ind)
+
+  testthat::expect_equal(make_default_uhc, uhc_recycle)
+
+  make_default_hpop <- make_default_scenario(test_data, billion = "hpop") %>%
+    dplyr::arrange(iso3, year, ind)
+
+  hpop_recycle <- test_data %>%
+    recycle_data("hpop", trim_years = FALSE) %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(iso3, year, ind)
+
+  testthat::expect_equal(make_default_hpop, hpop_recycle)
+
+  all_default <- dplyr::bind_rows(hep_recycle, uhc_recycle) %>%
+    dplyr::bind_rows(hpop_recycle) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(iso3, year, ind)
+
+  testthat::expect_equal(make_default, all_default)
 })

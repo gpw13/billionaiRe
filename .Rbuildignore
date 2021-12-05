@@ -13,6 +13,5 @@
 ^outputs$
 ^.*\.Rprofvis
 ^.RDataTmp*$
-^\.pre-commit-config\.yaml$
 ^doc$
 ^Meta$
