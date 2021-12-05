@@ -4,7 +4,8 @@
 #' The named vector returned by the function is the default names assumed to be
 #' in any data frame passed to calculate Billions.
 #'
-#' @param billion Billion indicator names to return, either "hep", "hpop", or "uhc".
+#' @param billion Billion indicator names to return, either "hep", "hpop", "uhc"
+#' , or "all".
 #' @param include_covariates Logical, whether or not to include covariates when getting
 #'     the Billions indicator codes.
 #' @param include_calculated Logical, whether or not to include variables calculated
@@ -14,7 +15,7 @@
 #' @return Character vector of indicator names.
 #'
 #' @export
-billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
+billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
                               include_covariates = FALSE,
                               include_calculated = FALSE) {
   billion <- rlang::arg_match(billion)
@@ -26,8 +27,11 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
   if (!include_calculated) {
     df <- dplyr::filter(df, !.data[["calculated"]])
   }
-
-  codes <- df[["ind"]][df[[billion]]]
+  if (billion == "all") {
+    codes <- df[["ind"]]
+  } else {
+    codes <- df[["ind"]][df[[billion]]]
+  }
   names(codes) <- codes
   return(codes)
 }
