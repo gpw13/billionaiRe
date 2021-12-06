@@ -234,3 +234,10 @@ get_aarr <- function(year, value) {
   coef <- fit[["coefficients"]][["x"]]
   100 * (1 - exp(coef))
 }
+
+
+get_quantile <- function(value, n) {
+  quantiles_limits <- stats::quantile(value, probs = seq(0, 1, 1 / n))
+
+  findInterval(value, quantiles_limits, rightmost.closed = TRUE)
+}

@@ -40,6 +40,7 @@
 #' AROC. Defaults to 0. Ignored if `limit_aroc_direction` is NULL (default).
 #' @inherit scenario_percent_baseline
 #' @inheritParams trim_values
+#' @inheritParams transform_hpop_data
 #'
 scenario_aroc <- function(df,
                           value = "value",
@@ -62,11 +63,17 @@ scenario_aroc <- function(df,
                           keep_better_values = TRUE,
                           upper_limit = 100,
                           lower_limit = 0,
-                          trim_years = TRUE) {
+                          trim_years = TRUE,
+                          ind_ids = billion_ind_codes("all")) {
+  assert_columns(df, year, iso3, ind, value)
+  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+
   aroc_type <- rlang::arg_match(aroc_type)
   # limit_aroc_direction <- rlang::arg_match(limit_aroc_direction)
 
   if (aroc_type == "latest") {
+    assert_ind_start_end_year(df, iso3, year, value, baseline_year - 1, baseline_year, ind, ind_ids[unique(df[[ind]])])
+
     aroc <- get_latest_aarc(df,
       baseline_year = baseline_year,
       value = value,
@@ -78,6 +85,8 @@ scenario_aroc <- function(df,
     if (is.null(target_value)) {
       stop("target_value must be provided for targeted AROC to be calculated. It was NULL.")
     }
+    assert_ind_start_end_year(df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(df[[ind]])])
+    assert_numeric(target_value)
     aroc <- get_target_aarc(df,
       target_value,
       baseline_year = baseline_year,
@@ -91,6 +100,8 @@ scenario_aroc <- function(df,
     if (is.null(percent_change)) {
       stop("percent_change must be provided for percent_change AROC to be calculated. It was NULL.")
     }
+    assert_numeric(target_value)
+    assert_ind_start_end_year(df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(df[[ind]])])
     aroc <- get_percent_change_aarc(df,
       percent_change,
       baseline_year,

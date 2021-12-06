@@ -427,11 +427,10 @@ Missing values in:\n",
 }
 
 
-assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario"){
-
+assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
   scenarios_in_col <- unique(df[[scenario_col]])
 
-  if(any(!scenario %in% scenarios_in_col)){
+  if (any(!scenario %in% scenarios_in_col)) {
     stop(sprintf(
       "%s not in `df` %s column",
       paste(scenario[!scenario %in% scenarios_in_col], collapse = ", "),
@@ -440,5 +439,4 @@ assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario"){
     call. = FALSE
     )
   }
-
 }

@@ -2,7 +2,7 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
   df <- tibble::tibble(
     value = 50:70,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -48,7 +48,7 @@ testthat::test_that("scenario_percent_baseline gets corrects with negative chang
   df <- tibble::tibble(
     value = 50:70,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -96,7 +96,7 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
   df <- tibble::tibble(
     value = 20:40,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -164,7 +164,7 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
   df <- tibble::tibble(
     value = 80:100,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -222,7 +222,7 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
   df <- tibble::tibble(
     value = 80:100,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -322,7 +322,7 @@ testthat::test_that("scenario_linear_percent_change provides accurate results:",
   df <- tibble::tibble(
     value = 80:100,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -349,7 +349,7 @@ testthat::test_that("scenario_linear_percent_change in vectorized on linear_valu
   df <- tibble::tibble(
     value = 80:100,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default",
     linear_value = 1

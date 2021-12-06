@@ -2,7 +2,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with positiv
   df <- tibble::tibble(
     value = 80:100,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -31,7 +31,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with negativ
   df <- tibble::tibble(
     value = 100:80,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -61,7 +61,7 @@ testthat::test_that("scenario_aroc target produces accurate results with positiv
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -75,7 +75,7 @@ testthat::test_that("scenario_aroc target produces accurate results with negativ
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -89,7 +89,7 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -105,7 +105,7 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -121,7 +121,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
   df <- tibble::tibble(
     value = seq(60, 70, length.out = length(2017:2027)),
     year = 2017:2027,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )
@@ -162,7 +162,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
   df <- tibble::tibble(
     value = seq(80, 60, length.out = length(2017:2027)),
     year = 2017:2027,
-    ind = "test",
+    ind = "water",
     iso3 = "testalia",
     scenario = "default"
   )

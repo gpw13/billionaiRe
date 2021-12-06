@@ -26,7 +26,8 @@ scenario_aroc(
   keep_better_values = TRUE,
   upper_limit = 100,
   lower_limit = 0,
-  trim_years = TRUE
+  trim_years = TRUE,
+  ind_ids = billion_ind_codes("all")
 )
 }
 \arguments{
@@ -98,6 +99,11 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 }
 \value{
 Dataframe with scenario rows

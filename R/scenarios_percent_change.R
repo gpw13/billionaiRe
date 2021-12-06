@@ -38,6 +38,7 @@
 #' limit if `percent_change` is positive, and 100 if negative.
 #' @inheritParams trim_values
 #' @inheritParams scenario_fixed_target
+#' @inheritParams transform_hpop_data
 #'
 #' @return Dataframe with scenario rows
 scenario_percent_baseline <- function(df,
@@ -57,7 +58,11 @@ scenario_percent_baseline <- function(df,
                                       keep_better_values = FALSE,
                                       upper_limit = "guess",
                                       lower_limit = "guess",
-                                      trim_years = TRUE) {
+                                      trim_years = TRUE,
+                                      ind_ids = billion_ind_codes("all")) {
+  assert_columns(df, year, iso3, ind, value)
+  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+
   upper_limit <- guess_limit(percent_change, upper_limit, limit_type = "upper_limit")
   lower_limit <- guess_limit(percent_change, lower_limit, limit_type = "lower_limit")
 
@@ -116,6 +121,7 @@ calculate_percent_change_baseline <- function(baseline_value, goal_value, year, 
 #' @inherit scenario_percent_baseline
 #' @inheritParams trim_values
 #' @inheritParams scenario_fixed_target
+#' @inheritParams transform_hpop_data
 scenario_halt_rise <- function(df,
                                value = "value",
                                ind = "ind",
@@ -132,7 +138,11 @@ scenario_halt_rise <- function(df,
                                trim = TRUE,
                                keep_better_values = TRUE,
                                small_is_best = TRUE,
-                               trim_years = TRUE) {
+                               trim_years = TRUE,
+                               ind_ids = billion_ind_codes("all")) {
+  assert_columns(df, year, iso3, ind, value)
+  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+
   percent_change <- 0
 
   scenario_percent_baseline(
@@ -183,6 +193,7 @@ scenario_halt_rise <- function(df,
 #' calculation. If `value` is already lower before calculation it will be kept
 #' @inherit scenario_percent_baseline
 #' @inheritParams trim_values
+#' @inheritParams transform_hpop_data
 #'
 scenario_linear_percent_change <- function(df,
                                            linear_value,
@@ -201,7 +212,12 @@ scenario_linear_percent_change <- function(df,
                                            keep_better_values = FALSE,
                                            upper_limit = 100,
                                            lower_limit = 0,
-                                           trim_years = TRUE) {
+                                           trim_years = TRUE,
+                                           ind_ids = billion_ind_codes("all")) {
+  assert_columns(df, year, iso3, ind, value)
+  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+  assert_numeric(linear_value)
+
   df %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
@@ -237,6 +253,7 @@ scenario_linear_percent_change <- function(df,
 #' @param linear_value_col name of column with linear values
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
+#' @inheritParams transform_hpop_data
 
 scenario_linear_percent_change_col <- function(df,
                                                linear_value_col,
@@ -248,29 +265,41 @@ scenario_linear_percent_change_col <- function(df,
                                                end_year = 2025,
                                                baseline_year = start_year,
                                                target_year = end_year,
+                                               scenario = "scenario",
                                                scenario_name = glue::glue("linear_percent_change"),
                                                trim = TRUE,
                                                small_is_best = TRUE,
                                                keep_better_values = FALSE,
                                                upper_limit = 100,
                                                lower_limit = 0,
-                                               trim_years = TRUE) {
-  scenario_linear_percent_change(df,
-    linear_value = df[[linear_value_col]],
-    value = value,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
-    start_year = start_year,
-    end_year = end_year,
-    baseline_year = baseline_year,
-    target_year = target_year,
-    scenario_name = scenario_name,
-    trim = trim,
-    small_is_best = small_is_best,
-    keep_better_values = keep_better_values,
-    upper_limit = upper_limit,
-    lower_limit = lower_limit,
-    trim_years = trim_years
-  )
+                                               trim_years = TRUE,
+                                               ind_ids = billion_ind_codes("all")) {
+  assert_columns(df, year, iso3, ind, value)
+  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+  assert_strings(linear_value_col)
+
+  df %>%
+    dplyr::group_by(iso3, ind) %>%
+    dplyr::mutate(
+      baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
+      scenario_value = dplyr::case_when(
+        .data[[year]] >= baseline_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[[year]] - baseline_year))
+      ),
+      !!sym(scenario) := scenario_name
+    ) %>%
+    dplyr::ungroup() %>%
+    trim_values("scenario_value",
+      value = value,
+      year = year,
+      trim = trim,
+      small_is_best = small_is_best,
+      keep_better_values = keep_better_values,
+      upper_limit = upper_limit,
+      lower_limit = lower_limit,
+      trim_years = trim_years,
+      start_year = start_year,
+      end_year = end_year
+    ) %>%
+    dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
+    dplyr::select(-c("baseline_value", "scenario_value"))
 }

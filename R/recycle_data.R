@@ -163,23 +163,23 @@ recycle_data_scenario_single <- function(df,
     dplyr::filter(.data[[scenario_col]] == !!scenario)
 
   default_not_in_scenario <- dplyr::anti_join(default_df, scenario_df,
-                                              by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   reported_not_in_scenario <- dplyr::anti_join(reported_estimated_df, scenario_df,
-                                               by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
-                                              by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   tp_not_in_scenario <- dplyr::anti_join(tp_df, scenario_df,
-                                         by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   tp_not_in_default <- dplyr::anti_join(tp_not_in_scenario, default_not_in_scenario,
-                                        by = c(iso3, ind, year)
+    by = c(iso3, ind, year)
   )
 
   not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
@@ -207,10 +207,10 @@ recycle_data_scenario_single <- function(df,
 
     not_in_scenario_no_campaigns <- not_in_scenario %>%
       dplyr::anti_join(not_in_scenario_campaigns,
-                       by = c(iso3, ind, year)
+        by = c(iso3, ind, year)
       )
 
-    if(trim_years){
+    if (trim_years) {
       not_in_scenario <- not_in_scenario %>%
         trim_years(trim_years, year, start_year, end_year)
     }
@@ -225,8 +225,7 @@ recycle_data_scenario_single <- function(df,
       dplyr::arrange(iso3, ind, year) %>%
       dplyr::filter(.data[[ind]] %in% ind_ids)
   } else {
-
-    if(trim_years){
+    if (trim_years) {
       not_in_scenario <- not_in_scenario %>%
         dplyr::filter(
           .data[[year]] >= start_year
@@ -243,31 +242,31 @@ recycle_data_scenario_single <- function(df,
 
   if (billion == "hpop") {
     assert_data_calculation_hpop(scenario_df_final,
-                                 iso3 = iso3,
-                                 value = value,
-                                 scenario = scenario_col
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col
     )
   } else if (billion == "uhc") {
     assert_data_calculation_uhc(scenario_df_final,
-                                ind = ind,
-                                year = year,
-                                iso3 = iso3,
-                                value = value,
-                                scenario = scenario_col,
-                                start_year = start_year,
-                                end_year = end_year,
-                                ind_ids = ind_ids
+      ind = ind,
+      year = year,
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col,
+      start_year = start_year,
+      end_year = end_year,
+      ind_ids = ind_ids
     )
   } else {
     assert_data_calculation_hep(scenario_df_final,
-                                ind = ind,
-                                year = year,
-                                iso3 = iso3,
-                                value = value,
-                                scenario = scenario_col,
-                                start_year = start_year,
-                                end_year = end_year,
-                                ind_ids = ind_ids
+      ind = ind,
+      year = year,
+      iso3 = iso3,
+      value = value,
+      scenario = scenario_col,
+      start_year = start_year,
+      end_year = end_year,
+      ind_ids = ind_ids
     )
   }
 
@@ -322,7 +321,7 @@ make_default_scenario <- function(df,
 
   if (is.null(ind_ids)) {
     ind_ids <- purrr::map(billion, billion_ind_codes) %>%
-      setNames(billion)
+      stats::setNames(billion)
   }
 
   purrr::map_dfr(
