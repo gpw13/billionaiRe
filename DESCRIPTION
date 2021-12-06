@@ -47,7 +47,7 @@ VignetteBuilder:
 Remotes: 
     gpw13/whoville,
     gpw13/xmart4,
-    WorldHealthOrganization/wppdistro
+    WorldHealthOrganization/wppdistro,
     WorldHealthOrganization/whdh
 Config/testthat/edition: 3
 Encoding: UTF-8

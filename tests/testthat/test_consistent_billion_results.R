@@ -11,7 +11,11 @@ testthat::test_that("basic billion calculations are consistent", {
     dplyr::filter(
       ind %in% c("uhc_sm", "asc", "fh"),
       year == 2023
-    )
+    ) %>%
+    dplyr::mutate(source = dplyr::case_when(
+      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, November 2021",
+      TRUE ~ source
+    ))
 
   hpop_basic_calculated <- hpop_df %>%
     transform_hpop_data() %>%
@@ -30,7 +34,11 @@ testthat::test_that("basic billion calculations are consistent", {
         "hep_idx"
       ),
       year == 2023
-    )
+    ) %>%
+    dplyr::mutate(source = dplyr::case_when(
+      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
+      TRUE ~ source
+    ))
 
   all_basic_calculated <- uhc_basic_calculated %>%
     dplyr::bind_rows(hpop_basic_calculated) %>%
