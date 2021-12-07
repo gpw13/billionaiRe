@@ -22,7 +22,8 @@ scenario_halt_rise(
   keep_better_values = TRUE,
   small_is_best = TRUE,
   trim_years = TRUE,
-  ind_ids = billion_ind_codes("all")
+  ind_ids = billion_ind_codes("all"),
+  default_scenario = "default"
 )
 }
 \arguments{
@@ -79,6 +80,8 @@ should have small_is_best = TRUE).}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{default_scenario}{name of the default scenario to be used.}
 }
 \value{
 Dataframe with scenario rows

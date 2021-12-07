@@ -18,6 +18,7 @@
 #' @param small_is_best Logical to identify if a lower value is better than a higher
 #' one (e.g. lower obesity in a positive public health outcome, so obesity rate
 #' should have small_is_best = TRUE).
+#' @param default_scenario name of the default scenario to be used.
 #' @inheritParams trim_values
 
 scenario_fixed_target <- function(df,
@@ -37,8 +38,14 @@ scenario_fixed_target <- function(df,
                                   keep_better_values = TRUE,
                                   upper_limit = 100,
                                   lower_limit = 0,
-                                  trim_years = TRUE) {
-  df %>%
+                                  trim_years = TRUE,
+                                  ind_ids = billion_ind_codes("all"),
+                                  default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, value, scenario)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+
+  scenario_df <- df %>%
+    dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value]], .data[[year]], !!baseline_year)) %>%
     dplyr::ungroup() %>%
@@ -65,6 +72,9 @@ scenario_fixed_target <- function(df,
       start_year = start_year,
       end_year = end_year
     )
+
+  df %>%
+    dplyr::bind_rows(scenario_df)
 }
 
 #' Calculate fixed target from a baseline year by a target year
@@ -127,7 +137,8 @@ scenario_fixed_target_col <- function(df,
                                       keep_better_values = TRUE,
                                       upper_limit = 100,
                                       lower_limit = 0,
-                                      trim_years = TRUE) {
+                                      trim_years = TRUE,
+                                      default_scenario = "default") {
   scenario_fixed_target(df,
     target_value = df[[target_col]],
     value = value,
@@ -144,6 +155,7 @@ scenario_fixed_target_col <- function(df,
     keep_better_values = keep_better_values,
     upper_limit = upper_limit,
     lower_limit = lower_limit,
-    trim_years = trim_years
+    trim_years = trim_years,
+    default_scenario = default_scenario
   )
 }

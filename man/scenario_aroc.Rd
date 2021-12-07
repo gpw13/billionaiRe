@@ -27,7 +27,8 @@ scenario_aroc(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
-  ind_ids = billion_ind_codes("all")
+  ind_ids = billion_ind_codes("all"),
+  default_scenario = "default"
 )
 }
 \arguments{
@@ -104,6 +105,8 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{default_scenario}{name of the default scenario to be used.}
 }
 \value{
 Dataframe with scenario rows

@@ -13,7 +13,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with positiv
 
   df_proj_2025_values <- df$value[df$year == 2018] * (1 + latest_aroc)^(2025 - 2018)
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df_proj_2025_values)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values)
 
   df_more_gap <- df %>%
     dplyr::mutate(value = seq(20, 60, length.out = length(2010:2030)))
@@ -24,7 +24,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with positiv
 
   df_proj_2025_values_more_gap <- df_more_gap$value[df_more_gap$year == 2018] * (1 + latest_aroc_more_gap)^(2025 - 2018)
 
-  testthat::expect_equal(df_aroc_latest_more_gap$value[df_aroc_latest_more_gap$year == 2025], df_proj_2025_values_more_gap)
+  testthat::expect_equal(df_aroc_latest_more_gap$value[df_aroc_latest_more_gap$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values_more_gap)
 })
 
 testthat::test_that("scenario_aroc latest produces accurate results with negative AROC", {
@@ -42,7 +42,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with negativ
 
   df_proj_2025_values <- df$value[df$year == 2018] * (1 + latest_aroc)^(2025 - 2018)
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df_proj_2025_values)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values)
 
   df_more_gap <- df %>%
     dplyr::mutate(value = seq(60, 20, length.out = length(2010:2030)))
@@ -53,7 +53,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with negativ
 
   df_proj_2025_values_more_gap <- df_more_gap$value[df_more_gap$year == 2018] * (1 + latest_aroc_more_gap)^(2025 - 2018)
 
-  testthat::expect_equal(df_aroc_latest_more_gap$value[df_aroc_latest_more_gap$year == 2025], df_proj_2025_values_more_gap)
+  testthat::expect_equal(df_aroc_latest_more_gap$value[df_aroc_latest_more_gap$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values_more_gap)
 })
 
 
@@ -68,7 +68,7 @@ testthat::test_that("scenario_aroc target produces accurate results with positiv
 
   df_aroc_target <- scenario_aroc(df, aroc_type = "target", target_value = 99, target_year = 2025)
 
-  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025], 99)
+  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025 & df_aroc_target$scenario == "aroc_target"], 99)
 })
 
 testthat::test_that("scenario_aroc target produces accurate results with negative AROC", {
@@ -82,7 +82,7 @@ testthat::test_that("scenario_aroc target produces accurate results with negativ
 
   df_aroc_target <- scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2025)
 
-  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025], 3)
+  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025 & df_aroc_target$scenario == "aroc_target"], 3)
 })
 
 testthat::test_that("scenario_aroc percent_change produces accurate results with positive percent_change", {
@@ -94,11 +94,11 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
     scenario = "default"
   )
 
-  df_aroc_target <- scenario_aroc(df, aroc_type = "percent_change", percent_change = 3, target_year = 2025)
+  df_aroc_percent_change <- scenario_aroc(df, aroc_type = "percent_change", percent_change = 3, target_year = 2025)
 
   test_percent_change <- df$value[df$year == 2018] * 1.03
 
-  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025], test_percent_change)
+  testthat::expect_equal(df_aroc_percent_change$value[df_aroc_percent_change$year == 2025 & df_aroc_percent_change$scenario == "aroc_percent_change"], test_percent_change)
 })
 
 testthat::test_that("scenario_aroc percent_change produces accurate results with negative percent_change", {
@@ -110,11 +110,11 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
     scenario = "default"
   )
 
-  df_aroc_target <- scenario_aroc(df, aroc_type = "percent_change", percent_change = -3, target_year = 2025)
+  df_aroc_percent_change <- scenario_aroc(df, aroc_type = "percent_change", percent_change = -3, target_year = 2025)
 
   test_percent_change <- df$value[df$year == 2018] * 0.97
 
-  testthat::expect_equal(df_aroc_target$value[df_aroc_target$year == 2025], test_percent_change)
+  testthat::expect_equal(df_aroc_percent_change$value[df_aroc_percent_change$year == 2025 & df_aroc_percent_change$scenario == "aroc_percent_change"], test_percent_change)
 })
 
 testthat::test_that("scenario_aroc produces accurate results with limit_aroc_direction positive", {
@@ -128,7 +128,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest", limit_aroc_direction = "positive")
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df$value[df$year == 2018])
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df$value[df$year == 2018])
 
   df_more_gap <- df %>%
     dplyr::mutate(
@@ -146,7 +146,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
     trim = FALSE
   )
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df_proj_2025_values)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values)
 
   df_aroc_latest <- scenario_aroc(df_more_gap,
     aroc_type = "latest",
@@ -155,7 +155,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
     trim = TRUE
   )
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], 100)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], 100)
 })
 
 testthat::test_that("scenario_aroc produces accurate results with limit_aroc_direction positive", {
@@ -169,7 +169,7 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest", limit_aroc_direction = "negative")
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df$value[df$year == 2018])
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df$value[df$year == 2018])
 
   df_more_gap <- df %>%
     dplyr::mutate(
@@ -182,9 +182,9 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
 
   df_aroc_latest <- scenario_aroc(df_more_gap, aroc_type = "latest", limit_aroc_direction = "negative", limit_aroc_value = -.05, trim = FALSE)
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], df_proj_2025_values)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], df_proj_2025_values)
 
   df_aroc_latest <- scenario_aroc(df_more_gap, aroc_type = "latest", limit_aroc_direction = "negative", limit_aroc_value = -.05, trim = TRUE)
 
-  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025], 100)
+  testthat::expect_equal(df_aroc_latest$value[df_aroc_latest$year == 2025 & df_aroc_latest$scenario == "aroc_latest"], 100)
 })

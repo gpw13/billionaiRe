@@ -22,7 +22,8 @@ scenario_fixed_target_col(
   keep_better_values = TRUE,
   upper_limit = 100,
   lower_limit = 0,
-  trim_years = TRUE
+  trim_years = TRUE,
+  default_scenario = "default"
 )
 }
 \arguments{
@@ -76,6 +77,8 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{default_scenario}{name of the default scenario to be used.}
 }
 \value{
 Dataframe with scenario rows

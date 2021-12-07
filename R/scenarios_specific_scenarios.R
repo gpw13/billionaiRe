@@ -43,7 +43,62 @@ scenario_best_of <- function(df,
       dplyr::filter(.data[[value]] == max(.data[[value]]))
   }
 
-  best %>%
+  best_df <- df %>%
+    dplyr::semi_join(best, by = c(iso3, ind, scenario)) %>%
+    trim_values(
+      col = value,
+      value = value,
+      year = year,
+      trim = trim,
+      small_is_best = small_is_best,
+      keep_better_values = keep_better_values,
+      upper_limit = upper_limit,
+      lower_limit = lower_limit,
+      trim_years = trim_years,
+      start_year = start_year,
+      end_year = end_year
+    ) %>%
+    dplyr::mutate(!!sym(scenario) := scenario_name)
+
+  df %>%
+    dplyr::bind_rows(best_df)
+}
+
+#' Scenario establish a business as usual scenario
+#'
+#' `scenario_bau` filters for values between start_year and end_year for `default_scenario` and
+#' returns values in value.
+#' @inherit scenario_fixed_target
+#' @inheritParams trim_values
+#' @inheritParams transform_hpop_data
+
+scenario_bau <- function(df,
+                         value = "value",
+                         ind = "ind",
+                         iso3 = "iso3",
+                         year = "year",
+                         start_year = 2018,
+                         end_year = 2025,
+                         target_year = 2025,
+                         scenario_name = glue::glue("business_as_usual"),
+                         scenario = "scenario",
+                         trim = TRUE,
+                         small_is_best = FALSE,
+                         keep_better_values = TRUE,
+                         upper_limit = 100,
+                         lower_limit = 0,
+                         trim_years = TRUE,
+                         ind_ids = billion_ind_codes("all"),
+                         default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, scenario, value)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+
+  bau <- df %>%
+    dplyr::filter(
+      .data[[year]] %in% start_year:end_year,
+      .data[[scenario]] == default_scenario
+    ) %>%
+    dplyr::mutate(!!sym(scenario) := scenario_name) %>%
     trim_values(
       col = value,
       value = value,
@@ -57,4 +112,7 @@ scenario_best_of <- function(df,
       start_year = start_year,
       end_year = end_year
     )
+
+  df %>%
+    dplyr::bind_rows(bau)
 }

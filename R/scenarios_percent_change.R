@@ -59,14 +59,15 @@ scenario_percent_baseline <- function(df,
                                       upper_limit = "guess",
                                       lower_limit = "guess",
                                       trim_years = TRUE,
-                                      ind_ids = billion_ind_codes("all")) {
-  assert_columns(df, year, iso3, ind, value)
-  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+                                      ind_ids = billion_ind_codes("all"),
+                                      default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, value, scenario)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   upper_limit <- guess_limit(percent_change, upper_limit, limit_type = "upper_limit")
   lower_limit <- guess_limit(percent_change, lower_limit, limit_type = "lower_limit")
 
-  df %>%
+  percent_baseline_df <- df %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     dplyr::mutate(
       "_goal_value" := get_goal(.data[[value]], .data[[year]], !!baseline_year, !!percent_change),
@@ -97,6 +98,9 @@ scenario_percent_baseline <- function(df,
       end_year = end_year
     ) %>%
     dplyr::select(-c("_goal_value", "_baseline_value"))
+
+  df %>%
+    dplyr::bind_rows(percent_baseline_df)
 }
 
 
@@ -139,9 +143,10 @@ scenario_halt_rise <- function(df,
                                keep_better_values = TRUE,
                                small_is_best = TRUE,
                                trim_years = TRUE,
-                               ind_ids = billion_ind_codes("all")) {
-  assert_columns(df, year, iso3, ind, value)
-  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+                               ind_ids = billion_ind_codes("all"),
+                               default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, value, scenario)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   percent_change <- 0
 
@@ -163,7 +168,8 @@ scenario_halt_rise <- function(df,
     small_is_best = small_is_best,
     upper_limit = upper_limit,
     lower_limit = lower_limit,
-    trim_years = trim_years
+    trim_years = trim_years,
+    default_scenario = default_scenario
   )
 }
 
@@ -213,12 +219,14 @@ scenario_linear_percent_change <- function(df,
                                            upper_limit = 100,
                                            lower_limit = 0,
                                            trim_years = TRUE,
-                                           ind_ids = billion_ind_codes("all")) {
-  assert_columns(df, year, iso3, ind, value)
-  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+                                           ind_ids = billion_ind_codes("all"),
+                                           default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, value, scenario)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_numeric(linear_value)
 
-  df %>%
+  scenario_linear_change <- df %>%
+    dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
       baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
@@ -242,6 +250,9 @@ scenario_linear_percent_change <- function(df,
     ) %>%
     dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
     dplyr::select(-c("baseline_value", "scenario_value"))
+
+  df %>%
+    dplyr::bind_rows(scenario_linear_change)
 }
 
 #' Scenario to add a linear percentage point change stored in a column
@@ -273,12 +284,14 @@ scenario_linear_percent_change_col <- function(df,
                                                upper_limit = 100,
                                                lower_limit = 0,
                                                trim_years = TRUE,
-                                               ind_ids = billion_ind_codes("all")) {
-  assert_columns(df, year, iso3, ind, value)
-  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
+                                               ind_ids = billion_ind_codes("all"),
+                                               default_scenario = "default") {
+  assert_columns(df, year, iso3, ind, value, scenario)
+  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_strings(linear_value_col)
 
-  df %>%
+  scenario_linear_percent_change_col_df <- df %>%
+    dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
       baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
@@ -302,4 +315,7 @@ scenario_linear_percent_change_col <- function(df,
     ) %>%
     dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
     dplyr::select(-c("baseline_value", "scenario_value"))
+
+  df %>%
+    dplyr::bind_rows(scenario_linear_percent_change_col_df)
 }

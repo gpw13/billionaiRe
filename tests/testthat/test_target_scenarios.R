@@ -41,8 +41,8 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
     baseline_year = start_year,
     target_year = end_year,
     scenario_name = scenario_name,
-    small_is_best = small_is_best
-  )
+    small_is_best = small_is_best) %>%
+    dplyr::filter(scenario == "99_2025")
 
   testthat::expect_equal(df_fixed_percent, df_test)
 
@@ -65,7 +65,8 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
       target_year = end_year,
       scenario_name = scenario_name,
       small_is_best = small_is_best
-    )
+    ) %>%
+    dplyr::filter(scenario == "99_2025")
 
   df_test_higher_values <- df_test %>%
     dplyr::mutate(value = dplyr::case_when(
@@ -122,7 +123,8 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
     target_year = end_year,
     scenario_name = scenario_name,
     small_is_best = small_is_best
-  )
+  ) %>%
+    dplyr::filter(scenario == "99_2025")
 
   testthat::expect_equal(df_target_col, df_test)
 
