@@ -1,3 +1,12 @@
+#' Add scenario to adult obese indicator
+#'
+#' Essentially passes `...` values to `add_scenario_dispatch` while forcing
+#' `small_is_best` = TRUE.
+#'
+#' @param ... additional parameters pass
+#' @inherit add_scenario
+#' @inheritParams transform_hpop_data
+#' @inheritParams scenario_fixed_target
 add_scenario_adult_obese <- function(df,
                                      scenario_function,
                                      ind = "ind",
