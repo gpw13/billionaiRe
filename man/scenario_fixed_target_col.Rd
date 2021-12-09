@@ -16,13 +16,14 @@ scenario_fixed_target_col(
   baseline_year = start_year,
   target_col = "target",
   target_year = end_year,
-  scenario_name = glue::glue("{target_value}_{target_year}"),
+  scenario_name = glue::glue("{target_col}_{target_year}"),
   small_is_best = FALSE,
   trim = TRUE,
   keep_better_values = TRUE,
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  ind_ids = billion_ind_codes("all"),
   default_scenario = "default"
 )
 }
@@ -77,6 +78,11 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
 
 \item{default_scenario}{name of the default scenario to be used.}
 }

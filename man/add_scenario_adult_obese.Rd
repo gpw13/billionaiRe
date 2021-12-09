@@ -29,6 +29,7 @@ of the following:
 \item \code{best_in_region}: calls \code{\link{scenario_best_in_region}}
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
+\item \code{accelerate}: calls indicator accelerate function.
 }}
 
 \item{ind}{Column name of column with indicator names.}

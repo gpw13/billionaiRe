@@ -186,7 +186,7 @@ scenario_halt_rise <- function(df,
 #' and `baseline_year` `value` is 10, then 2019 `value` will be 12, 2020 14,
 #' etc.
 #'
-#' It differs from `scenario_aroc` `percent change` in two ways: it is not
+#' It differs from `scenario_aroc` `percent_change` in two ways: it is not
 #' compounded and it adds percentage points and not percentage of values.
 #'
 #' `upper_limit` and `lower_limit` allow to trim values when they are exceeding

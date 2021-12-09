@@ -96,7 +96,7 @@ scenario_quantile <- function(df,
 
 #' Scenario to add a linear percentage point aimed at regional values
 #'
-#' `scenario_quantile` aims to reach the mean regional average annual change in
+#' `scenario_best_in_region` aims to reach the mean regional average annual change in
 #' which a country is at `quantile_year`. The target is based on the ARC between
 #' `quantile_year` and `quantile_year` - 5. If ARC is under the mean of the
 #' region, it will aim at the mean, and at the best value of the quantile if

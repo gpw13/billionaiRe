@@ -181,6 +181,56 @@ The `add_scenario` functions is built on a range of pre-defined set of scenarios
 
 ### Base scenario functions:
 
+- `scenario_aroc`: sets the values on the annual rate of change (AROC) from the data. Three cases of AROC are possible:
+  * `target`: aims at a specific `target_value` by `target_year`
+  * `latest`: takes the AROC between `baseline_year` and the previous year
+  * `percent_change`: applies `percent_change`  for the AROC from `baseline_year`.
+- `scenario_halt_rise`: stops the rise of the indicator 
+- `scenario_percent_baseline`: change by a fixed percentage from a baseline value by target year. Done in percentage of value and not percentage points.
+- `scenario_linear_percent_change`: change by a fixed percentage point from a baseline value by target year. Done in percentage points.
+- `scenario_linear_percent_change_col`: change by a fixed percentage point from a baseline value by target year, with the percentage change value provided in a column and not as a a single value. This allow for instance to have a different change for every country, indicator and year combinationss. Done in percentage points.
+- `scenario_quantile`: aims at a change in value based on the quantile's AROC.
+- `scenario_best_in_region`: aims at the AROC of the best country in the region.
+- `scenario_fixed_target`: aims at a fixed target (e.g. 90, 5, etc.)
+- `scenario_fixed_target_col`: aims at a fixed target provided in a column.
+
+Each of those functions use their own parameters.
+
+In order to have clean scenarios, a series of parameters are passed to the functions to run properly:
+
+- `small_is_best`: if TRUE, a lower value is considered as better. For instance, lower obesity pevalence is considered as a better public health outcome.
+- `trim_values`: if TRUE, values will be trimed around:
+  - `keep_better_values`: if TRUE, if values before running the scenario are better than after, the original values will be kept.
+  - `upper_limit`, `lower_limit`: if `trim` is TRUE, values above the upper_limit will have upper_limit and values below lower_limit will hasve lower_limit.
+  - `trim_year`: if TRUE values before `start_year` and after `end_year` will be removed.
+
+### Wrappers functions:
+
+Each of the base scenario is wrapped in `add_scenario`. This function calls a `add_` function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:
+```{r scenario-wrapper-example, include = TRUE, eval = TRUE}
+library(billionaiRe)
+
+df <- tibble::tibble(
+  value = 80:100,
+  year = 2010:2030,
+  ind = "adult_obese",
+  iso3 = "testalia",
+  scenario = "default"
+)
+
+adult_obese_halt_rise_df <- add_scenario(df, scenario_function = "halt_rise") %>%
+  dplyr::filter(scenario == "halt_rise")
+
+print(adult_obese_halt_rise_df)
+```
+
+Behind the scenes, `add_scenario` first get all unique indicators present in `df`, then passed each of them to `add_scenario_indicator`. `add_scenario_indicator` then find the `add_scenario_adult_obese` function and runs it with `df` and `halt_rise`. `add_scenario_adult_obese` then passes appropriate parameters to `scenario_halt_rise`. In this case, this is mostly to pass `small_is_best` to the scenario function.
+
+The `...` ellipsis is used to based down parameters down the functions.
+
+#### Acceleration scenarios
+
+Acceleration scenarios are a special case scenario that wraps different base scenario for each indicator. This is to take into consideration the specific cases of each indicator and what accelerating means for each of each individually. They can then be called directly from `add_scenario` or through indicator level function following the `accelerate_{indicator}` naming convention.
 
 ## Scenarios naming convention
 

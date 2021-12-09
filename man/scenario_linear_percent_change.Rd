@@ -99,7 +99,7 @@ current year. For instance, if \code{baseline_year} is 2018, \code{linear_value}
 and \code{baseline_year} \code{value} is 10, then 2019 \code{value} will be 12, 2020 14,
 etc.
 
-It differs from \code{scenario_aroc} \verb{percent change} in two ways: it is not
+It differs from \code{scenario_aroc} \code{percent_change} in two ways: it is not
 compounded and it adds percentage points and not percentage of values.
 
 \code{upper_limit} and \code{lower_limit} allow to trim values when they are exceeding

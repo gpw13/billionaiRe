@@ -16,6 +16,7 @@
 #' - `best_in_region`: calls \code{\link{scenario_best_in_region}}
 #' - `fixed_target`: calls \code{\link{scenario_fixed_target}}
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
+#' - `accelerate`: calls indicator accelerate function.
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #'
@@ -31,7 +32,8 @@ add_scenario <- function(df,
                            "quantile",
                            "best_in_region",
                            "fixed_target",
-                           "fixed_target_col"
+                           "fixed_target_col",
+                           "accelerate"
                          ),
                          ind_ids = billion_ind_codes("all"),
                          ind = "ind",
@@ -74,7 +76,11 @@ add_scenario_indicator <- function(df,
                                    ...) {
   this_ind <- ind_ids[indicator]
 
-  indicator_function <- get(as.character(paste0("add_scenario_", this_ind)), mode = "function")
+  if (scenario_function == "accelerate") {
+    indicator_function <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
+  } else {
+    indicator_function <- get(as.character(paste0("add_scenario_", this_ind)), mode = "function")
+  }
 
   df %>%
     indicator_function(

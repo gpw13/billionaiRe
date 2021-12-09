@@ -84,7 +84,7 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 Dataframe with scenario rows
 }
 \description{
-\code{scenario_quantile} aims to reach the mean regional average annual change in
+\code{scenario_best_in_region} aims to reach the mean regional average annual change in
 which a country is at \code{quantile_year}. The target is based on the ARC between
 \code{quantile_year} and \code{quantile_year} - 5. If ARC is under the mean of the
 region, it will aim at the mean, and at the best value of the quantile if

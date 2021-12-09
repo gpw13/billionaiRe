@@ -131,13 +131,14 @@ scenario_fixed_target_col <- function(df,
                                       baseline_year = start_year,
                                       target_col = "target",
                                       target_year = end_year,
-                                      scenario_name = glue::glue("{target_value}_{target_year}"),
+                                      scenario_name = glue::glue("{target_col}_{target_year}"),
                                       small_is_best = FALSE,
                                       trim = TRUE,
                                       keep_better_values = TRUE,
                                       upper_limit = 100,
                                       lower_limit = 0,
                                       trim_years = TRUE,
+                                      ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
   scenario_fixed_target(df,
     target_value = df[[target_col]],
@@ -156,6 +157,7 @@ scenario_fixed_target_col <- function(df,
     upper_limit = upper_limit,
     lower_limit = lower_limit,
     trim_years = trim_years,
+    ind_ids = ind_ids,
     default_scenario = default_scenario
   )
 }
