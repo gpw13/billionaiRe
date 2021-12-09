@@ -12,7 +12,6 @@ scenario_bau(
   year = "year",
   start_year = 2018,
   end_year = 2025,
-  target_year = 2025,
   scenario_name = glue::glue("business_as_usual"),
   scenario = "scenario",
   trim = TRUE,
@@ -40,9 +39,6 @@ country, year, and indicator.}
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
-
-\item{target_year}{Year by which the scenario should eventually be
-achieved. Defaults to \code{end_year}}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 

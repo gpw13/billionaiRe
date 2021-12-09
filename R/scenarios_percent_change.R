@@ -68,6 +68,7 @@ scenario_percent_baseline <- function(df,
   lower_limit <- guess_limit(percent_change, lower_limit, limit_type = "lower_limit")
 
   percent_baseline_df <- df %>%
+    dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     dplyr::mutate(
       "_goal_value" := get_goal(.data[[value]], .data[[year]], !!baseline_year, !!percent_change),
