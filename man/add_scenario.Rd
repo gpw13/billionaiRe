@@ -11,6 +11,8 @@ add_scenario(
     "fixed_target", "fixed_target_col", "accelerate"),
   ind_ids = billion_ind_codes("all"),
   ind = "ind",
+  start_year = 2018,
+  end_year = 2025,
   ...
 )
 }
@@ -39,6 +41,10 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional arguments passed to \code{add_scenario_indicator}}
 }

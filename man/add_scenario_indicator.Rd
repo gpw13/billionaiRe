@@ -9,6 +9,8 @@ add_scenario_indicator(
   scenario_function,
   indicator,
   ind_ids = billion_ind_codes("all"),
+  start_year = 2018,
+  end_year = 2025,
   ...
 )
 }
@@ -37,6 +39,10 @@ of the following:
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional parameters to be passed to the add_scenario_indicator
 function (e.g. \code{add_scenario_adult_obese}).}

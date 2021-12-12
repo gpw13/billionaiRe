@@ -18,7 +18,7 @@ scenario_percent_baseline(
   scenario = "scenario",
   scenario_name = glue::glue("{percent_change}_{baseline_year}"),
   trim = TRUE,
-  small_is_best = TRUE,
+  small_is_best = FALSE,
   keep_better_values = FALSE,
   upper_limit = "guess",
   lower_limit = "guess",

@@ -19,6 +19,7 @@
 #' - `accelerate`: calls indicator accelerate function.
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
+#' @inheritParams calculate_hpop_billion
 #'
 #' @return data frame with additional rows with scenario values.
 #' @export
@@ -37,6 +38,8 @@ add_scenario <- function(df,
                          ),
                          ind_ids = billion_ind_codes("all"),
                          ind = "ind",
+                         start_year = 2018,
+                         end_year = 2025,
                          ...) {
   assert_columns(df, ind)
   scenario_function <- rlang::arg_match(scenario_function)
@@ -51,10 +54,13 @@ add_scenario <- function(df,
         scenario_function = scenario_function,
         indicator = x,
         ind_ids = ind_ids,
+        start_year = start_year,
+        end_year = end_year,
         ...
       )
     }
-  )
+  ) %>%
+    dplyr::distinct()
 }
 
 #' Add scenario for a specific indicator
@@ -68,27 +74,53 @@ add_scenario <- function(df,
 #'
 #' @inheritParams add_scenario
 #' @inheritParams transform_hpop_data
+#' @inheritParams calculate_hpop_billion
 #'
 add_scenario_indicator <- function(df,
                                    scenario_function,
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
+                                   start_year = 2018,
+                                   end_year = 2025,
                                    ...) {
   this_ind <- ind_ids[indicator]
 
   if (scenario_function == "accelerate") {
-    indicator_function <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
+    accelerate_function <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
+    df %>%
+      accelerate_function(
+        ind_ids = ind_ids,
+        start_year = start_year,
+        end_year = end_year,
+        ...
+      )
   } else {
-    indicator_function <- get(as.character(paste0("add_scenario_", this_ind)), mode = "function")
+    if (!get_small_is_best(this_ind)) {
+      params <- list(...)
+      params["small_is_best"] <- FALSE
+      do.call(
+        add_scenario_dispatch, c(list(df = df, scenario_function = scenario_function, start_year = start_year, end_year = end_year), params)
+      )
+    } else if (get_small_is_best(this_ind)) {
+      params <- list(...)
+      params["small_is_best"] <- TRUE
+      do.call(
+        add_scenario_dispatch, c(list(df = df, scenario_function = scenario_function, start_year = start_year, end_year = end_year), params)
+      )
+    } else {
+      indicator_function <- get(as.character(paste0("add_scenario_", this_ind)), mode = "function")
+      df %>%
+        indicator_function(
+          scenario_function = scenario_function,
+          ind_ids = ind_ids,
+          start_year = start_year,
+          end_year = end_year,
+          ...
+        )
+    }
   }
-
-  df %>%
-    indicator_function(
-      scenario_function = scenario_function,
-      ind_ids = ind_ids,
-      ...
-    )
 }
+
 
 
 #' Add scenario to the data frame

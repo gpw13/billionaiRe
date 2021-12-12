@@ -20,7 +20,7 @@ scenario_halt_rise(
   lower_limit = "guess",
   trim = TRUE,
   keep_better_values = TRUE,
-  small_is_best = TRUE,
+  small_is_best = FALSE,
   trim_years = TRUE,
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default"

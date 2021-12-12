@@ -18,7 +18,7 @@ scenario_linear_percent_change_col(
   scenario = "scenario",
   scenario_name = glue::glue("linear_percent_change"),
   trim = TRUE,
-  small_is_best = TRUE,
+  small_is_best = FALSE,
   keep_better_values = FALSE,
   upper_limit = 100,
   lower_limit = 0,

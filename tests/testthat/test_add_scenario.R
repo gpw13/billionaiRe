@@ -1,30 +1,22 @@
 test_scenario_function <- function(df, scenario_function, expected_value, scenario_name, ...) {
   testthat::test_that(glue::glue("{scenario_function} returns appropriate results:"), {
-    df_adult_obese <- add_scenario_adult_obese(df,
-      scenario_function = scenario_function,
-      ...
-    )
-
-    df_adult_obese_acc_2025 <- df_adult_obese %>%
-      dplyr::filter(scenario == scenario_name, year == 2025) %>%
-      dplyr::pull(value)
-
-    testthat::expect_equal(df_adult_obese_acc_2025, expected_value)
-
     df_add_indicator <- add_scenario_indicator(df,
       indicator = "adult_obese",
       scenario_function = scenario_function,
       ...
     )
+    df_adult_obese_halt_rise_2025 <- df_add_indicator %>%
+      dplyr::filter(scenario == scenario_name, year == 2025) %>%
+      dplyr::pull(value)
 
-    testthat::expect_equal(df_add_indicator, df_adult_obese)
+    testthat::expect_equal(df_adult_obese_halt_rise_2025, expected_value)
 
     df_add_scenario_hpop <- add_scenario(df,
       scenario_function = scenario_function,
       ...
     )
 
-    testthat::expect_equal(df_add_scenario_hpop, df_adult_obese)
+    testthat::expect_equal(df_add_scenario_hpop, df_add_indicator)
   })
 }
 
