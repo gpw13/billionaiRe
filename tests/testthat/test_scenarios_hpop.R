@@ -25,14 +25,14 @@ test_hpop_scenarios <- function(ind) {
       target_year = 2025,
       scenario_function = "fixed_target",
       target_value = 90,
-      small_is_best = TRUE # Test that is replaced by get_small_is_best(ind) value in add_scenario_indicator
+      small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
     )
 
     df_add_indicator_90_2025_2025 <- df_add_indicator_fixed_target %>%
       dplyr::filter(scenario == "90_2025", year == 2025) %>%
       dplyr::pull(value)
 
-    expected_value <- dplyr::if_else(get_small_is_best(ind), 68, 90)
+    expected_value <- dplyr::if_else(get_ind_metadata(ind, "small_is_best"), 68, 90)
 
     testthat::expect_equal(df_add_indicator_90_2025_2025, expected_value)
 
@@ -49,14 +49,14 @@ test_hpop_scenarios <- function(ind) {
       target_year = 2025,
       scenario_function = "fixed_target",
       target_value = 30,
-      small_is_best = TRUE # Test that is replaced by get_small_is_best(ind) value in add_scenario_indicator
+      small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
     )
 
     df_add_indicator_30_2025_2025 <- df_add_indicator_fixed_target %>%
       dplyr::filter(scenario == "30_2025", year == 2025) %>%
       dplyr::pull(value)
 
-    expected_value <- dplyr::if_else(get_small_is_best(ind), 30, 52)
+    expected_value <- dplyr::if_else(get_ind_metadata(ind, "small_is_best"), 30, 52)
 
     testthat::expect_equal(df_add_indicator_30_2025_2025, expected_value)
   })

@@ -36,23 +36,6 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
   return(codes)
 }
 
-#' Gets the direction of indicator
-#'
-#' `get_small_is_best()` pulls from `billionaiRe::indicator_df` the value stored
-#' in the `small_is_best` column. If `small_is_best` is TRUE, a lower value means
-#' a better public health outcome for this indicator. For instance, lower
-#' child obesity prevalence is a positive public health outcome, so `small_is_best`
-#' is TRUE for `child_obese`.
-#'
-#' @param ind_codes Character vector of indicator codes
-#'
-#' @return A logical vector.
-get_small_is_best <- function(ind_codes) {
-  billionaiRe::indicator_df %>%
-    dplyr::filter(.data[["ind"]] %in% ind_codes) %>%
-    dplyr::pull(.data[["small_is_best"]])
-}
-
 #' Convert indicator codes between types
 #'
 #' `convert_ind_codes()` allows easy conversion of indicator codes from dashboard
