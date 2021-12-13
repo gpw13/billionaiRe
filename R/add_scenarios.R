@@ -77,76 +77,39 @@ add_scenario <- function(df,
 #' @inheritParams calculate_hpop_billion
 #'
 add_scenario_indicator <- function(df,
-                                   scenario_function,
+                                   scenario_function = c(
+                                     "aroc",
+                                     "halt_rise",
+                                     "percent_baseline",
+                                     "linear_percent_change",
+                                     "linear_percent_change_col",
+                                     "quantile",
+                                     "best_in_region",
+                                     "fixed_target",
+                                     "fixed_target_col",
+                                     "accelerate"
+                                   ),
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
-                                   start_year = 2018,
-                                   end_year = 2025,
                                    ...) {
   this_ind <- ind_ids[indicator]
 
-  if (scenario_function == "accelerate") {
-    accelerate_function <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
-    df %>%
-      accelerate_function(
-        ind_ids = ind_ids,
-        start_year = start_year,
-        end_year = end_year,
-        ...
-      )
-  } else {
-    if (!get_small_is_best(this_ind)) {
-      params <- list(...)
-      params["small_is_best"] <- FALSE
-      do.call(
-        add_scenario_dispatch, c(list(df = df, scenario_function = scenario_function, start_year = start_year, end_year = end_year), params)
-      )
-    } else if (get_small_is_best(this_ind)) {
-      params <- list(...)
-      params["small_is_best"] <- TRUE
-      do.call(
-        add_scenario_dispatch, c(list(df = df, scenario_function = scenario_function, start_year = start_year, end_year = end_year), params)
-      )
-    } else {
-      indicator_function <- get(as.character(paste0("add_scenario_", this_ind)), mode = "function")
-      df %>%
-        indicator_function(
-          scenario_function = scenario_function,
-          ind_ids = ind_ids,
-          start_year = start_year,
-          end_year = end_year,
-          ...
-        )
-    }
-  }
-}
-
-
-
-#' Add scenario to the data frame
-#'
-#' `add_scenario_dispatch` adds the right scenario_function
-#'
-#' @inherit add_scenario
-#' @inheritParams transform_hpop_data
-#' @param ... additional parameters passed to `scenario_function`
-#'
-add_scenario_dispatch <- function(df,
-                                  scenario_function = c(
-                                    "aroc",
-                                    "halt_rise",
-                                    "percent_baseline",
-                                    "linear_percent_change",
-                                    "linear_percent_change_col",
-                                    "quantile",
-                                    "best_in_region",
-                                    "fixed_target",
-                                    "fixed_target_col"
-                                  ),
-                                  ...) {
   scenario_function <- rlang::arg_match(scenario_function)
 
-  scenario_function <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
+  params <- list(...)
+  params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
 
-  scenario_function(df = df, ...)
+  if (scenario_function == "accelerate") {
+    accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
+
+    do.call(
+      accelerate_fn, c(list(df = df), params)
+    )
+  } else {
+    scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
+
+    do.call(
+      scenario_fn, c(list(df = df), params)
+    )
+  }
 }
