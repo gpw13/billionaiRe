@@ -226,14 +226,10 @@ NA,yellow_fever,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Yellow fever - Campa
 HE_yellowfever_CampignSize,yellow_fever_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow Fever - Campaign target population (denominator),Yellow fever Campaign Denominator,NA,NA
 HE_yellowfever_Campign,yellow_fever_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Campaign reached population (numerator),Yellow fever Campaign Numerator,NA,NA
 NA,yellow_fever_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Routine reached population (numerator),Yellow fever - Routine (numerator),NA,NA
-<<<<<<< HEAD
 HE_ihr,espar,SDGIHR2018,unproj_data,TRUE,FALSE,TRUE,FALSE,FALSE,SDG 3.8.1.16,Health security,%,%,IHR core capacity index*,IHR core capacity index,37,service_cap_access
->>>>>>> bd39e159 (indicator_df: set calculated = TRUE for cholera and removed covid/ebola rows)
-=======
 NA,covid,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,covid_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,covid_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,ebola,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,ebola_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
 NA,ebola_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA
->>>>>>> 2a48284a (Adding ebola, covid, and measles campaigns to indicator_df)

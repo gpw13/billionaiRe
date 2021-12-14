@@ -1,4 +1,8 @@
-testthat::test_that("basic billion calculations are consistent", {
+
+
+# test_data <- billionaiRe::load_billion_data("all", "test_data")
+
+testthat::test_that("billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
     calculate_uhc_billion() %>%
@@ -37,7 +41,12 @@ testthat::test_that("basic billion calculations are consistent", {
 
   all_basic_calculated <- uhc_basic_calculated %>%
     dplyr::bind_rows(hpop_basic_calculated) %>%
-    dplyr::bind_rows(hep_basic_calculated)
+    dplyr::bind_rows(hep_basic_calculated) %>%
+    dplyr::mutate(source = dplyr::case_when(
+      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, November 2021",
+      stringr::str_detect(source, "WHO DDI,") ~ "WHO DDI, November 2021",
+      TRUE ~ source
+    ))
 
   testthat::expect_equal(all_basic_calculated, billionaiRe:::basic_test_calculated)
 })
