@@ -80,8 +80,9 @@ scenario_percent_baseline <- function(df,
         .data[["_baseline_value"]],
         .data[["_goal_value"]],
         .data[[year]],
-        !!baseline_year,
-        !!target_year
+        !!start_year,
+        !!target_year,
+        !!baseline_year
       ),
       !!sym(scenario) := scenario_name
     ) %>%
@@ -111,8 +112,8 @@ scenario_percent_baseline <- function(df,
 #' @param baseline_value vector with the baseline value to be used
 #' @param goal_value vector with the goal value to be used
 #'
-calculate_percent_change_baseline <- function(baseline_value, goal_value, year, baseline_year, target_year) {
-  dplyr::if_else(year >= baseline_year & year <= target_year,
+calculate_percent_change_baseline <- function(baseline_value, goal_value, year, start_year, target_year, baseline_year) {
+  dplyr::if_else(year >= start_year & year <= target_year,
     baseline_value + (goal_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
     NA_real_
   )

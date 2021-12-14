@@ -8,8 +8,9 @@ calculate_percent_change_baseline(
   baseline_value,
   goal_value,
   year,
-  baseline_year,
-  target_year
+  start_year,
+  target_year,
+  baseline_year
 )
 }
 \arguments{
@@ -19,11 +20,13 @@ calculate_percent_change_baseline(
 
 \item{year}{Column name of column with years.}
 
-\item{baseline_year}{Year from which the scenario is measured.
-Defaults to \code{start_year}}
+\item{start_year}{Start year for scenario, defaults to 2018.}
 
 \item{target_year}{Year by which the scenario should eventually be
 achieved. Defaults to \code{end_year}}
+
+\item{baseline_year}{Year from which the scenario is measured.
+Defaults to \code{start_year}}
 }
 \description{
 Calculate percent change from baseline
