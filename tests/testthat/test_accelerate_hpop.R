@@ -187,6 +187,26 @@ testthat::test_that(paste0("accelerate_hpop_tobacco returns accurate values:"), 
 })
 
 testthat::test_that(paste0("accelerate_ipv returns accurate values:"), {
+  ind <- "ipv"
+  df <- tibble::tibble(
+    value = 60:80,
+    year = 2010:2030,
+    ind = ind,
+    iso3 = "testalia",
+    scenario = "default"
+  )
+
+  df_add_indicator <- add_scenario_indicator(df,
+    indicator = ind,
+    scenario_function = "accelerate",
+    baseline_year = 2018
+  )
+
+  df_add_indicator_halt_rise_2025 <- df_add_indicator %>%
+    dplyr::filter(scenario == "acceleration", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_add_indicator_halt_rise_2025, 28.3333333)
 })
 
 testthat::test_that(paste0("accelerate_overweight returns accurate values:"), {

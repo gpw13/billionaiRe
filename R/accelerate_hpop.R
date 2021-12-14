@@ -6,7 +6,7 @@ accelerate_adult_obese <- function(df,
                                    ...) {
   this_ind <- ind_ids["adult_obese"]
 
-  params <- list(...)
+  params <- get_right_params(list(...), scenario_halt_rise)
   params["baseline_year"] <- 2010
   params["scenario_name"] <- "acceleration"
 
@@ -77,7 +77,8 @@ accelerate_child_obese <- function(df,
                                    ...) {
   accelerate_adult_obese(
     df = df,
-    ind_ids = list(adult_obese = "child_obese")
+    ind_ids = list(adult_obese = "child_obese"),
+    ...
   )
 }
 
@@ -94,7 +95,7 @@ accelerate_child_viol <- function(df,
 
   assert_ind_start_end_year(df_this_ind,
     start_year = 2010, end_year = 2018,
-    ind = ind, ind_ids = ind_ids[this_ind], scenario = scenario
+    ind = ind, ind_ids = ind_ids["child_viol"], scenario = scenario
   )
 
   params <- list(...)
@@ -157,7 +158,7 @@ accelerate_fuel <- function(df,
 
   if ("HIC" %in% unique(this_ind_df$wb_ig)) {
     high_income_df <- this_ind_df %>%
-      dplyr::filter(wb_ig == "HIC") %>%
+      dplyr::filter(.data[["wb_ig"]] == "HIC") %>%
       dplyr::mutate("{scenario}" := "acceleration")
 
     high_income <- do.call(
@@ -171,7 +172,7 @@ accelerate_fuel <- function(df,
   # for non hic a regional approach is used using years 2018 to 2023.
   if (sum(c("LMC", "LIC", "UMC") %in% unique(this_ind_df$wb_ig)) > 0 | sum(is.na(this_ind_df$wb_ig)) > 0) {
     other_df <- this_ind_df %>%
-      dplyr::filter(wb_ig != "HIC" | is.na(wb_ig))
+      dplyr::filter(.data[["wb_ig"]] != "HIC" | is.na(.data[["wb_ig"]]))
 
     params_others <- params
     params_others["target_year"] <- 2013
@@ -186,11 +187,10 @@ accelerate_fuel <- function(df,
     other <- this_ind_df[0, ]
   }
 
-
   df %>%
     dplyr::bind_rows(other) %>%
     dplyr::bind_rows(high_income) %>%
-    dplyr::select(-wb_ig)
+    dplyr::select(-"wb_ig")
 }
 
 accelerate_hpop_sanitation <- function(df,
@@ -236,6 +236,11 @@ accelerate_hpop_tobacco <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
+  assert_ind_start_end_year(df_this_ind,
+    start_year = 2010, end_year = 2018,
+    ind = ind, ind_ids = ind_ids[this_ind], scenario = scenario
+  )
+
   params <- list(...)
 
   df_scenario_percent_baseline <- df_this_ind %>%
@@ -249,8 +254,8 @@ accelerate_hpop_tobacco <- function(df,
     dplyr::mutate(
       goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (2025 - 2010),
       "{scenario}" := "-30_2020",
-      "{value}" := if_else(
-        .data[[year]] >= start_year & .data[[year]] <= 2025 & has_estimates,
+      "{value}" := dplyr::if_else(
+        .data[[year]] >= start_year & .data[[year]] <= 2025 & .data[["has_estimates"]],
         .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[[year]] - 2018) / (end_year - start_year),
         NA_real_
       )
@@ -289,6 +294,18 @@ accelerate_hpop_tobacco <- function(df,
 
   df %>%
     dplyr::bind_rows(df_accelerated)
+}
+
+accelerate_ipv <- function(df,
+                           ...) {
+  ind_ids <- "ipv"
+  names(ind_ids) <- "child_viol"
+
+  accelerate_child_viol(
+    df = df,
+    ind_ids = ind_ids,
+    ...
+  )
 }
 
 accelerate_water <- function(df,
