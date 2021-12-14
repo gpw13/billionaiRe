@@ -39,7 +39,6 @@ accelerate_alcohol <- function(df,
   )
 
   params <- list(...)
-  params[["small_is_best"]] <- TRUE
   params_bau <- get_right_params(params, scenario_bau)
 
   params_perc_baseline <- get_right_params(params, scenario_percent_baseline)
@@ -66,6 +65,7 @@ accelerate_alcohol <- function(df,
 
   df_accelerated <- df_perc_baseline %>%
     dplyr::bind_rows(df_halt_rise) %>%
+    dplyr::bind_rows(df_bau) %>%
     scenario_best_of(c("-10_2010", "halt_rise", "business_as_usual"), scenario_name = "acceleration", small_is_best = params[["small_is_best"]]) %>%
     dplyr::filter(scenario == "acceleration")
 
@@ -209,12 +209,83 @@ accelerate_hpop_sanitation <- function(df,
   params["scenario_name"] <- "acceleration"
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[[ind]] == "hpop_sanitation")
+    dplyr::filter(.data[[ind]] == this_ind)
 
   df_accelerated <- do.call(
     scenario_quantile, c(list(df = df_this_ind), params)
   ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration")
+
+  df %>%
+    dplyr::bind_rows(df_accelerated)
+}
+
+accelerate_hpop_tobacco <- function(df,
+                                    ind_ids = billion_ind_codes("hpop"),
+                                    ind = "ind",
+                                    scenario = "scenario",
+                                    iso3 = "iso3",
+                                    value = "value",
+                                    year = "year",
+                                    start_year = 2018,
+                                    end_year = 2025,
+                                    type = "type",
+                                    ...) {
+  this_ind <- ind_ids["hpop_tobacco"]
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[[ind]] == this_ind)
+
+  params <- list(...)
+
+  df_scenario_percent_baseline <- df_this_ind %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(
+      has_estimates = any(.data[[type]] == "estimated"),
+      baseline_value = .data[[value]][.data[[year]] == start_year],
+      old_baseline_value = .data[[value]][.data[[year]] == 2010]
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (2025 - 2010),
+      "{scenario}" := "-30_2020",
+      "{value}" := if_else(
+        .data[[year]] >= start_year & .data[[year]] <= 2025 & has_estimates,
+        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[[year]] - 2018) / (end_year - start_year),
+        NA_real_
+      )
+    ) %>%
+    dplyr::select(-c("baseline_value", "goalend", "old_baseline_value", "has_estimates")) %>%
+    trim_values(
+      col = value,
+      trim = TRUE,
+      small_is_best = params[["small_is_best"]],
+      keep_better_values = FALSE,
+      upper_limit = 100,
+      lower_limit = 0,
+      trim_years = TRUE
+    )
+
+  params_bau <- get_right_params(params, scenario_bau)
+
+  params_halt_rise <- get_right_params(params, scenario_halt_rise)
+  params_halt_rise["baseline_year"] <- 2018
+
+  df_bau <- do.call(
+    scenario_bau, c(list(df = df_this_ind), params_bau)
+  ) %>%
+    dplyr::filter(scenario == "business_as_usual")
+
+  df_halt_rise <- do.call(
+    scenario_halt_rise, c(list(df = df_this_ind, target_year = end_year), params_halt_rise)
+  ) %>%
+    dplyr::filter(scenario == "halt_rise")
+
+  df_accelerated <- df_scenario_percent_baseline %>%
+    dplyr::bind_rows(df_halt_rise) %>%
+    dplyr::bind_rows(df_bau) %>%
+    scenario_best_of(c("-30_2020", "halt_rise", "business_as_usual"), scenario_name = "acceleration", small_is_best = params[["small_is_best"]]) %>%
+    dplyr::filter(scenario == "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
