@@ -23,9 +23,11 @@ trim_values(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{col}{column to trim values from}
+\item{col}{column to trim values from. Will be removed before returning the
+data frame.}
 
-\item{value}{Column name of column with indicator values.}
+\item{value}{Column name of column with indicator values. This column will be
+used to return the results.}
 
 \item{year}{Column name of column with years.}
 
@@ -53,7 +55,8 @@ than \code{col} will be kept.}
 \item{end_year}{End year for scenario, defaults to 2025}
 }
 \value{
-Dataframe with scenario rows
+trimed data frame, removing the \code{col} column, and putting the trimmed
+values in \code{value}
 }
 \description{
 This scenario allows to change a value by a fixed percentage to a provided year

@@ -11,7 +11,7 @@
 #' If `value` has values that are higher or lower than the scenario values, then
 #' only `value` will be kept, depending on `small_is_best`. For instance,
 #' if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
-#' 80 will be kept.
+#' 75 will be kept.
 #'
 #' @inherit scenario_percent_baseline
 #' @param target_value value to be achieved by scenario by `target_year`
@@ -51,16 +51,11 @@ scenario_fixed_target <- function(df,
     dplyr::ungroup() %>%
     dplyr::mutate(
       scenario_value = calculate_fixed_target(target_value, small_is_best, .data[[year]], baseline_year, target_year, .data[["baseline_value_"]]),
-      !!sym(value) := dplyr::case_when(
-        small_is_best & .data[[value]] < scenario_value ~ as.numeric(.data[[value]]),
-        !small_is_best & .data[[value]] > scenario_value ~ as.numeric(.data[[value]]),
-        TRUE ~ scenario_value
-      ),
       !!sym(scenario) := scenario_name
     ) %>%
-    dplyr::select(-c("baseline_value_", "scenario_value")) %>%
+    dplyr::select(-c("baseline_value_")) %>%
     trim_values(
-      col = value,
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,

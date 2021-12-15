@@ -76,7 +76,7 @@ scenario_percent_baseline <- function(df,
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      !!sym(value) := calculate_percent_change_baseline(
+      scenario_value = calculate_percent_change_baseline(
         .data[["_baseline_value"]],
         .data[["_goal_value"]],
         .data[[year]],
@@ -87,7 +87,7 @@ scenario_percent_baseline <- function(df,
       !!sym(scenario) := scenario_name
     ) %>%
     trim_values(
-      col = value,
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,
@@ -142,7 +142,7 @@ scenario_halt_rise <- function(df,
                                upper_limit = "guess",
                                lower_limit = "guess",
                                trim = TRUE,
-                               keep_better_values = TRUE,
+                               keep_better_values = FALSE,
                                small_is_best = FALSE,
                                trim_years = TRUE,
                                ind_ids = billion_ind_codes("all"),
@@ -238,7 +238,8 @@ scenario_linear_percent_change <- function(df,
       !!sym(scenario) := scenario_name
     ) %>%
     dplyr::ungroup() %>%
-    trim_values("scenario_value",
+    trim_values(
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,
@@ -250,8 +251,7 @@ scenario_linear_percent_change <- function(df,
       start_year = start_year,
       end_year = end_year
     ) %>%
-    dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
-    dplyr::select(-c("baseline_value", "scenario_value"))
+    dplyr::select(-c("baseline_value"))
 
   df %>%
     dplyr::bind_rows(scenario_linear_change)
@@ -303,7 +303,8 @@ scenario_linear_percent_change_col <- function(df,
       !!sym(scenario) := scenario_name
     ) %>%
     dplyr::ungroup() %>%
-    trim_values("scenario_value",
+    trim_values(
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,
@@ -315,8 +316,7 @@ scenario_linear_percent_change_col <- function(df,
       start_year = start_year,
       end_year = end_year
     ) %>%
-    dplyr::mutate(!!sym(value) := .data[["scenario_value"]]) %>%
-    dplyr::select(-c("baseline_value", "scenario_value"))
+    dplyr::select(-c("baseline_value"))
 
   df %>%
     dplyr::bind_rows(scenario_linear_percent_change_col_df)

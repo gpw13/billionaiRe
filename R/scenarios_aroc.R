@@ -130,19 +130,20 @@ scenario_aroc <- function(df,
 
   aroc_df <- df %>%
     dplyr::group_by(iso3, ind) %>%
-    dplyr::mutate(baseline_value = value[year == baseline_year]) %>%
+    dplyr::mutate(baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year)) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(aroc, by = c(iso3, ind)) %>%
     dplyr::mutate(
-      !!sym(value) := dplyr::case_when(
-        .data[[year]] >= baseline_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[[year]] - baseline_year)),
+      scenario_value = dplyr::case_when(
+        .data[[year]] == baseline_year ~ as.numeric(.data[[value]]),
+        .data[[year]] > baseline_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[[year]] - baseline_year)),
         TRUE ~ NA_real_
       ),
       !!sym(scenario) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value", "aroc")) %>%
     trim_values(
-      col = value, value = value, year = year, trim = trim, small_is_best = small_is_best,
+      col = "scenario_value", value = value, year = year, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,
       lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
     )

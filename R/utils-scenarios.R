@@ -2,7 +2,10 @@
 #'
 #' @inherit scenario_percent_baseline
 #' @inheritParams scenario_fixed_target
-#' @param col column to trim values from
+#' @param col column to trim values from. Will be removed before returning the
+#' data frame.
+#' @param value Column name of column with indicator values. This column will be
+#' used to return the results.
 #' @param trim logical to indicate if the data should be trimmed between
 #' `upper_limit` and `lower_limit`.
 #' @param keep_better_values logical to indicate if "better" values should be
@@ -13,6 +16,9 @@
 #' @param lower_limit lower_limit limit at which the indicator should be caped.
 #' @param trim_years logical to indicate if years before `start_year` and after
 #' `end_year` should be removed
+#'
+#' @return trimed data frame, removing the `col` column, and putting the trimmed
+#' values in `value`
 #'
 trim_values <- function(df,
                         col,
@@ -34,13 +40,13 @@ trim_values <- function(df,
           keep_better_values & !small_is_best ~ pmax(.data[[col]], .data[[value]]),
           !keep_better_values ~ .data[[col]]
         ),
-        !!sym(col) := dplyr::case_when(
+        !!sym(value) := dplyr::case_when(
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),
           .data[["better_value"]] > upper_limit ~ as.numeric(upper_limit),
           TRUE ~ as.numeric(.data[["better_value"]])
         )
       ) %>%
-      dplyr::select(-c("better_value")) %>%
+      dplyr::select(-c("better_value", .data[[col]])) %>%
       trim_years(trim_years, year, start_year, end_year)
   } else {
     return(df)
@@ -92,7 +98,7 @@ get_goal <- function(value, year, start_year, perc_change) {
 #'
 #' @param value vector of values
 #' @param year vector of years. Must be the same length as `value`
-#' @param start_year Year at which the
+#' @param baseline_year Year integer at which to get the baseline_value
 #'
 #' @noRd
 get_baseline_value <- function(value, year, baseline_year) {

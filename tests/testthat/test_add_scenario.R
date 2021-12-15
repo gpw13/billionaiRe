@@ -30,7 +30,7 @@ df <- tibble::tibble(
 
 test_scenario_function(df, "halt_rise", 80, baseline_year = 2010, scenario_name = "halt_rise")
 
-test_scenario_function(df, "aroc", 95.329345, aroc_type = "latest", scenario_name = "aroc_latest")
+test_scenario_function(df, "aroc", 95.329345, aroc_type = "latest", scenario_name = "aroc_latest", keep_better_values = FALSE)
 
 test_scenario_function(df, "percent_baseline", 100, percent_change = 40, scenario_name = glue::glue("40_2018"))
 

@@ -31,22 +31,24 @@ scenario_best_of <- function(df,
   assert_ind_start_end_year(df, iso3, year, value, target_year, target_year, ind, scenario, ind_ids = ind_ids[unique(df[[ind]])])
 
   best <- df %>%
-    dplyr::filter(.data[[year]] == target_year)
+    dplyr::filter(.data[[year]] == target_year) %>%
+    dplyr::mutate(scenario_value = .data[[value]])
 
   if (small_is_best) {
     best <- best %>%
       dplyr::group_by(iso3, ind) %>%
-      dplyr::filter(.data[[value]] == min(.data[[value]]))
+      dplyr::filter(.data[["scenario_value"]] == min(.data[["scenario_value"]]))
   } else {
     best <- best %>%
       dplyr::group_by(iso3, ind) %>%
-      dplyr::filter(.data[[value]] == max(.data[[value]]))
+      dplyr::filter(.data[["scenario_value"]] == max(.data[["scenario_value"]]))
   }
 
   best_df <- df %>%
+    dplyr::mutate(scenario_value = .data[[value]]) %>%
     dplyr::semi_join(best, by = c(iso3, ind, scenario)) %>%
     trim_values(
-      col = value,
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,
@@ -97,9 +99,10 @@ scenario_bau <- function(df,
       .data[[year]] %in% start_year:end_year,
       .data[[scenario]] == default_scenario
     ) %>%
+    dplyr::mutate(scenario_value = .data[[value]]) %>%
     dplyr::mutate(!!sym(scenario) := scenario_name) %>%
     trim_values(
-      col = value,
+      col = "scenario_value",
       value = value,
       year = year,
       trim = trim,

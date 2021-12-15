@@ -101,5 +101,5 @@ The returned scenario is a portion of the straight line drawn from the
 If \code{value} has values that are higher or lower than the scenario values, then
 only \code{value} will be kept, depending on \code{small_is_best}. For instance,
 if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
-80 will be kept.
+75 will be kept.
 }
