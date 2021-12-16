@@ -29,7 +29,7 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
 
-\item{...}{additional parameters to to pass to \code{recycle_data}}
+\item{...}{additional parameters to be passed to scenario function}
 }
 \value{
 data frame with acceleration scenario binded to \code{df}. \code{scenario} is

@@ -44,7 +44,7 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{type_col}{Column name of column with type data.}
 
-\item{...}{additional parameters to to pass to \code{recycle_data}}
+\item{...}{additional parameters to be passed to scenario function}
 }
 \value{
 data frame with acceleration scenario binded to \code{df}. \code{scenario} is

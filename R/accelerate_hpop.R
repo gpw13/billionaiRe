@@ -6,6 +6,7 @@
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario` is
 #' set to `acceleration`

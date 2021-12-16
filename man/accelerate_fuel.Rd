@@ -29,7 +29,7 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{...}{additional parameters to to pass to \code{recycle_data}}
+\item{...}{additional parameters to be passed to scenario function}
 }
 \value{
 data frame with acceleration scenario binded to \code{df}. \code{scenario} is

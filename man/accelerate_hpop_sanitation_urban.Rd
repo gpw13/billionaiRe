@@ -10,7 +10,7 @@ accelerate_hpop_sanitation_urban(df, ...)
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{...}{additional parameters to to pass to \code{recycle_data}}
+\item{...}{additional parameters to be passed to scenario function}
 }
 \value{
 data frame with acceleration scenario binded to \code{df}. \code{scenario} is
