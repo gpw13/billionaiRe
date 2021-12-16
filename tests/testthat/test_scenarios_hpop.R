@@ -81,23 +81,3 @@ testthat::test_that("add_scenarios runs properly on hpop_df", {
 
   testthat::expect_equal(hpop_halt_rise_2023, hpop_2018)
 })
-
-testthat::test_that("add_scenarios runs properly on test_data", {
-  test_data <- billionaiRe:::load_test_data("test_data") %>%
-    dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
-    make_default_scenario(billion = "hpop") %>%
-    dplyr::filter(!ind %in% c("child_viol", "devontrack", "ipv"))
-
-  hpop_halt_rise <- test_data %>%
-    add_scenario("halt_rise", baseline_year = 2018)
-
-  hpop_halt_rise_2023 <- hpop_halt_rise %>%
-    dplyr::filter(scenario == "halt_rise", year == 2025) %>%
-    dplyr::select(iso3, ind, value)
-
-  hpop_2018 <- test_data %>%
-    dplyr::filter(year == 2018) %>%
-    dplyr::select(iso3, ind, value)
-
-  testthat::expect_equal(hpop_halt_rise_2023, hpop_2018)
-})
