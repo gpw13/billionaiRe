@@ -73,13 +73,21 @@ scenario_aroc <- function(df,
   aroc_type <- rlang::arg_match(aroc_type)
   # limit_aroc_direction <- rlang::arg_match(limit_aroc_direction)
 
-  df <- df %>%
+  full_years_df <- tidyr::expand_grid(
+    "{year}" := start_year:end_year,
+    "{iso3}" := unique(df[[iso3]]),
+    "{ind}" := unique(df[[ind]]),
+    "{scenario}" := default_scenario
+  )
+
+  scenario_df <- df %>%
+    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
     dplyr::filter(.data[[scenario]] == default_scenario)
 
   if (aroc_type == "latest") {
-    assert_ind_start_end_year(df, iso3, year, value, baseline_year - 1, baseline_year, ind, ind_ids[unique(df[[ind]])])
+    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year - 1, baseline_year, ind, ind_ids[unique(scenario_df[[ind]])])
 
-    aroc <- get_latest_aarc(df,
+    aroc <- get_latest_aarc(scenario_df,
       baseline_year = baseline_year,
       value = value,
       year = year,
@@ -90,9 +98,9 @@ scenario_aroc <- function(df,
     if (is.null(target_value)) {
       stop("target_value must be provided for targeted AROC to be calculated. It was NULL.")
     }
-    assert_ind_start_end_year(df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(df[[ind]])])
+    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(scenario_df[[ind]])])
     assert_numeric(target_value)
-    aroc <- get_target_aarc(df,
+    aroc <- get_target_aarc(scenario_df,
       target_value,
       baseline_year = baseline_year,
       target_year = target_year,
@@ -106,8 +114,8 @@ scenario_aroc <- function(df,
       stop("percent_change must be provided for percent_change AROC to be calculated. It was NULL.")
     }
     assert_numeric(target_value)
-    assert_ind_start_end_year(df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(df[[ind]])])
-    aroc <- get_percent_change_aarc(df,
+    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year, target_year, ind, ind_ids[unique(scenario_df[[ind]])])
+    aroc <- get_percent_change_aarc(scenario_df,
       percent_change,
       baseline_year,
       target_year,
@@ -128,7 +136,7 @@ scenario_aroc <- function(df,
     }
   }
 
-  aroc_df <- df %>%
+  aroc_df <- scenario_df %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year)) %>%
     dplyr::ungroup() %>%

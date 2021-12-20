@@ -67,7 +67,17 @@ scenario_percent_baseline <- function(df,
   upper_limit <- guess_limit(percent_change, upper_limit, limit_type = "upper_limit")
   lower_limit <- guess_limit(percent_change, lower_limit, limit_type = "lower_limit")
 
-  percent_baseline_df <- df %>%
+  full_years_df <- tidyr::expand_grid(
+    "{year}" := start_year:end_year,
+    "{iso3}" := unique(df[[iso3]]),
+    "{ind}" := unique(df[[ind]]),
+    "{scenario}" := default_scenario
+  )
+
+  scenario_df <- df %>%
+    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario))
+
+  percent_baseline_df <- scenario_df %>%
     dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
     dplyr::mutate(
@@ -227,7 +237,17 @@ scenario_linear_change <- function(df,
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_numeric(linear_value)
 
-  scenario_linear_change <- df %>%
+  full_years_df <- tidyr::expand_grid(
+    "{year}" := start_year:end_year,
+    "{iso3}" := unique(df[[iso3]]),
+    "{ind}" := unique(df[[ind]]),
+    "{scenario}" := default_scenario
+  )
+
+  scenario_df <- df %>%
+    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario))
+
+  scenario_linear_change <- scenario_df %>%
     dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
@@ -292,7 +312,23 @@ scenario_linear_change_col <- function(df,
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_strings(linear_value_col)
 
-  scenario_linear_change_col_df <- df %>%
+  full_years_df <- tidyr::expand_grid(
+    "{year}" := start_year:end_year,
+    "{iso3}" := unique(df[[iso3]]),
+    "{ind}" := unique(df[[ind]]),
+    "{scenario}" := default_scenario
+  )
+
+  linear_value_col_df <- df %>%
+    dplyr::select(dplyr::all_of(c(iso3, ind, linear_value_col))) %>%
+    dplyr::distinct()
+
+  scenario_df <- df %>%
+    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
+    dplyr::select(-.data[[linear_value_col]]) %>%
+    dplyr::left_join(linear_value_col_df, by = c(iso3, ind))
+
+  scenario_linear_change_col_df <- scenario_df %>%
     dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
