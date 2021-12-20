@@ -6,11 +6,12 @@
 \usage{
 add_scenario_indicator(
   df,
-  scenario_function = c("aroc", "halt_rise", "percent_baseline",
-    "linear_percent_change", "linear_percent_change_col", "quantile", "best_in_region",
-    "fixed_target", "fixed_target_col", "accelerate"),
+  scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
+    "linear_change_col", "quantile", "best_in_region", "fixed_target",
+    "fixed_target_col", "accelerate"),
   indicator,
   ind_ids = billion_ind_codes("all"),
+  scenario = "sceanrio",
   ...
 )
 }
@@ -24,8 +25,8 @@ of the following:
 \item \code{aroc}: calls \code{\link{scenario_aroc}}
 \item \code{halt_rise}: calls \code{\link{scenario_halt_rise}}
 \item \code{percent_baseline}: calls \code{\link{scenario_percent_baseline}}
-\item \code{linear_percent_change}: calls \code{\link{scenario_linear_percent_change}}
-\item \code{linear_percent_change_col}: calls \code{\link{scenario_linear_percent_change_col}}
+\item \code{linear_change}: calls \code{\link{scenario_linear_change}}
+\item \code{linear_change_col}: calls \code{\link{scenario_linear_change_col}}
 \item \code{quantile}: calls \code{\link{scenario_quantile}}
 \item \code{best_in_region}: calls \code{\link{scenario_best_in_region}}
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
@@ -39,6 +40,9 @@ of the following:
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to the add_scenario_indicator
 function (e.g. \code{add_scenario_adult_obese}).}

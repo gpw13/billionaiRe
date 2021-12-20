@@ -7,7 +7,7 @@
 #' quantile if above the mean.
 #'
 #' Calculates the quantile target, then wraps around
-#' `scenario_linear_percent_change_col` to aim at the target.
+#' `scenario_linear_change_col` to aim at the target.
 #'
 #' @param n number of quantile to create (5 for quintile, 4 for quartiles, etc.)
 #' @param quantile_year year at which the the quantiles ARC should be calculated.
@@ -72,7 +72,7 @@ scenario_quantile <- function(df,
 
   df %>%
     dplyr::left_join(quantile_df, by = c(iso3, ind)) %>%
-    scenario_linear_percent_change_col(
+    scenario_linear_change_col(
       linear_value_col = "qtarget",
       value = value,
       ind = ind,
@@ -104,7 +104,7 @@ scenario_quantile <- function(df,
 #' best or not.
 #'
 #' Calculates the regional target, then wraps around
-#' `scenario_linear_percent_change_col` to aim at the target.
+#' `scenario_linear_change_col` to aim at the target.
 #'
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
@@ -163,7 +163,7 @@ scenario_best_in_region <- function(df,
 
   df %>%
     dplyr::left_join(region_df, by = c(iso3, ind)) %>%
-    scenario_linear_percent_change_col(
+    scenario_linear_change_col(
       linear_value_col = "rtarget",
       value = value,
       ind = ind,

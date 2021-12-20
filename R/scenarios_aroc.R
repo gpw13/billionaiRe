@@ -9,7 +9,7 @@
 #' `baseline_year`.
 #'
 #' This function is different than `scenario_percent_baseline` or
-#' `scenario_linear_percent_change` as it uses percentage difference and not
+#' `scenario_linear_change` as it uses percentage difference and not
 #' percentage points difference.
 #'
 #' AROC use a general [compounded rate of change](https://en.wikipedia.org/wiki/Compound_annual_growth_rate)

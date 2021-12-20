@@ -101,5 +101,5 @@ quantile if above the mean.
 }
 \details{
 Calculates the quantile target, then wraps around
-\code{scenario_linear_percent_change_col} to aim at the target.
+\code{scenario_linear_change_col} to aim at the target.
 }

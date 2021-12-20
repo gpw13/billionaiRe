@@ -34,12 +34,12 @@ test_scenario_function(df, "aroc", 95.329345, aroc_type = "latest", scenario_nam
 
 test_scenario_function(df, "percent_baseline", 100, percent_change = 40, scenario_name = glue::glue("40_2018"))
 
-test_scenario_function(df, "linear_percent_change", 95, linear_value = 1, scenario_name = "linear_percent_change")
+test_scenario_function(df, "linear_change", 95, linear_value = 1, scenario_name = "linear_change")
 
 df_linear_col <- df %>%
   dplyr::mutate(linear_value = 1)
 
-test_scenario_function(df_linear_col, "linear_percent_change_col", 95, scenario_name = "linear_percent_change", linear_value_col = "linear_value")
+test_scenario_function(df_linear_col, "linear_change_col", 95, scenario_name = "linear_change", linear_value_col = "linear_value")
 
 test_scenario_function(df, "quantile", 95, n = 5, scenario_name = "quantile_5")
 

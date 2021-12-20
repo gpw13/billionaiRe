@@ -124,7 +124,7 @@ calculate the values of the scenario:
 }
 
 This function is different than \code{scenario_percent_baseline} or
-\code{scenario_linear_percent_change} as it uses percentage difference and not
+\code{scenario_linear_change} as it uses percentage difference and not
 percentage points difference.
 
 AROC use a general \href{https://en.wikipedia.org/wiki/Compound_annual_growth_rate}{compounded rate of change}

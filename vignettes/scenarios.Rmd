@@ -187,8 +187,8 @@ The `add_scenario` functions is built on a range of pre-defined set of scenarios
   * `percent_change`: applies `percent_change`  for the AROC from `baseline_year`.
 - `scenario_halt_rise`: stops the rise of the indicator 
 - `scenario_percent_baseline`: change by a fixed percentage from a baseline value by target year. Done in percentage of value and not percentage points.
-- `scenario_linear_percent_change`: change by a fixed percentage point from a baseline value by target year. Done in percentage points.
-- `scenario_linear_percent_change_col`: change by a fixed percentage point from a baseline value by target year, with the percentage change value provided in a column and not as a a single value. This allow for instance to have a different change for every country, indicator and year combinationss. Done in percentage points.
+- `scenario_linear_change`: change by a fixed percentage point from a baseline value by target year. Done in percentage points.
+- `scenario_linear_change_col`: change by a fixed percentage point from a baseline value by target year, with the percentage change value provided in a column and not as a a single value. This allow for instance to have a different change for every country, indicator and year combinationss. Done in percentage points.
 - `scenario_quantile`: aims at a change in value based on the quantile's AROC.
 - `scenario_best_in_region`: aims at the AROC of the best country in the region.
 - `scenario_fixed_target`: aims at a fixed target (e.g. 90, 5, etc.)

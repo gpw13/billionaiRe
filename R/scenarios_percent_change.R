@@ -175,7 +175,7 @@ scenario_halt_rise <- function(df,
   )
 }
 
-#' Scenario to add a linear percentage point change
+#' Scenario to add a linear  point change
 #'
 #' Scenario to add a `linear_value` percentage point change to `baseline_value`
 #' from a `baseline_year`. It provides values for scenarios stated as "Increase
@@ -203,26 +203,26 @@ scenario_halt_rise <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #'
-scenario_linear_percent_change <- function(df,
-                                           linear_value,
-                                           value = "value",
-                                           ind = "ind",
-                                           iso3 = "iso3",
-                                           year = "year",
-                                           start_year = 2018,
-                                           end_year = 2025,
-                                           baseline_year = start_year,
-                                           target_year = end_year,
-                                           scenario_name = glue::glue("linear_percent_change"),
-                                           scenario = "scenario",
-                                           trim = TRUE,
-                                           small_is_best = FALSE,
-                                           keep_better_values = FALSE,
-                                           upper_limit = 100,
-                                           lower_limit = 0,
-                                           trim_years = TRUE,
-                                           ind_ids = billion_ind_codes("all"),
-                                           default_scenario = "default") {
+scenario_linear_change <- function(df,
+                                   linear_value,
+                                   value = "value",
+                                   ind = "ind",
+                                   iso3 = "iso3",
+                                   year = "year",
+                                   start_year = 2018,
+                                   end_year = 2025,
+                                   baseline_year = start_year,
+                                   target_year = end_year,
+                                   scenario_name = glue::glue("linear_change"),
+                                   scenario = "scenario",
+                                   trim = TRUE,
+                                   small_is_best = FALSE,
+                                   keep_better_values = FALSE,
+                                   upper_limit = 100,
+                                   lower_limit = 0,
+                                   trim_years = TRUE,
+                                   ind_ids = billion_ind_codes("all"),
+                                   default_scenario = "default") {
   assert_columns(df, year, iso3, ind, value, scenario)
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_numeric(linear_value)
@@ -259,8 +259,8 @@ scenario_linear_percent_change <- function(df,
 
 #' Scenario to add a linear percentage point change stored in a column
 #'
-#' `scenario_linear_percent_change_col` wraps around
-#' `scenario_linear_percent_change` to provide linear values from a column
+#' `scenario_linear_change_col` wraps around
+#' `scenario_linear_change` to provide linear values from a column
 #' specified in `linear_value` rather than a single value.
 #'
 #' @param linear_value_col name of column with linear values
@@ -268,31 +268,31 @@ scenario_linear_percent_change <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 
-scenario_linear_percent_change_col <- function(df,
-                                               linear_value_col,
-                                               value = "value",
-                                               ind = "ind",
-                                               iso3 = "iso3",
-                                               year = "year",
-                                               start_year = 2018,
-                                               end_year = 2025,
-                                               baseline_year = start_year,
-                                               target_year = end_year,
-                                               scenario = "scenario",
-                                               scenario_name = glue::glue("linear_percent_change"),
-                                               trim = TRUE,
-                                               small_is_best = FALSE,
-                                               keep_better_values = FALSE,
-                                               upper_limit = 100,
-                                               lower_limit = 0,
-                                               trim_years = TRUE,
-                                               ind_ids = billion_ind_codes("all"),
-                                               default_scenario = "default") {
+scenario_linear_change_col <- function(df,
+                                       linear_value_col,
+                                       value = "value",
+                                       ind = "ind",
+                                       iso3 = "iso3",
+                                       year = "year",
+                                       start_year = 2018,
+                                       end_year = 2025,
+                                       baseline_year = start_year,
+                                       target_year = end_year,
+                                       scenario = "scenario",
+                                       scenario_name = glue::glue("linear_change"),
+                                       trim = TRUE,
+                                       small_is_best = FALSE,
+                                       keep_better_values = FALSE,
+                                       upper_limit = 100,
+                                       lower_limit = 0,
+                                       trim_years = TRUE,
+                                       ind_ids = billion_ind_codes("all"),
+                                       default_scenario = "default") {
   assert_columns(df, year, iso3, ind, value, scenario)
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
   assert_strings(linear_value_col)
 
-  scenario_linear_percent_change_col_df <- df %>%
+  scenario_linear_change_col_df <- df %>%
     dplyr::filter(.data[[scenario]] == default_scenario) %>%
     dplyr::group_by(iso3, ind) %>%
     dplyr::mutate(
@@ -319,5 +319,5 @@ scenario_linear_percent_change_col <- function(df,
     dplyr::select(-c("baseline_value"))
 
   df %>%
-    dplyr::bind_rows(scenario_linear_percent_change_col_df)
+    dplyr::bind_rows(scenario_linear_change_col_df)
 }

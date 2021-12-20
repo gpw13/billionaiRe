@@ -10,8 +10,8 @@
 #' - `aroc`: calls \code{\link{scenario_aroc}}
 #' - `halt_rise`: calls \code{\link{scenario_halt_rise}}
 #' - `percent_baseline`: calls \code{\link{scenario_percent_baseline}}
-#' - `linear_percent_change`: calls \code{\link{scenario_linear_percent_change}}
-#' - `linear_percent_change_col`: calls \code{\link{scenario_linear_percent_change_col}}
+#' - `linear_change`: calls \code{\link{scenario_linear_change}}
+#' - `linear_change_col`: calls \code{\link{scenario_linear_change_col}}
 #' - `quantile`: calls \code{\link{scenario_quantile}}
 #' - `best_in_region`: calls \code{\link{scenario_best_in_region}}
 #' - `fixed_target`: calls \code{\link{scenario_fixed_target}}
@@ -28,8 +28,8 @@ add_scenario <- function(df,
                            "aroc",
                            "halt_rise",
                            "percent_baseline",
-                           "linear_percent_change",
-                           "linear_percent_change_col",
+                           "linear_change",
+                           "linear_change_col",
                            "quantile",
                            "best_in_region",
                            "fixed_target",
@@ -81,8 +81,8 @@ add_scenario_indicator <- function(df,
                                      "aroc",
                                      "halt_rise",
                                      "percent_baseline",
-                                     "linear_percent_change",
-                                     "linear_percent_change_col",
+                                     "linear_change",
+                                     "linear_change_col",
                                      "quantile",
                                      "best_in_region",
                                      "fixed_target",
@@ -91,8 +91,13 @@ add_scenario_indicator <- function(df,
                                    ),
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
+                                   scenario = "sceanrio",
                                    ...) {
   this_ind <- ind_ids[indicator]
+
+  if (!scenario %in% names(df)) {
+    billionaiRe_add_columns(df, scenario, NA)
+  }
 
   scenario_function <- rlang::arg_match(scenario_function)
 
@@ -104,12 +109,14 @@ add_scenario_indicator <- function(df,
 
     do.call(
       accelerate_fn, c(list(df = df), params)
-    )
+    ) %>%
+      dplyr::distinct()
   } else {
     scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
 
     do.call(
       scenario_fn, c(list(df = df), params)
-    )
+    ) %>%
+      dplyr::distinct()
   }
 }

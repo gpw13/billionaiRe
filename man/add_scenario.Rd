@@ -6,9 +6,9 @@
 \usage{
 add_scenario(
   df,
-  scenario_function = c("aroc", "halt_rise", "percent_baseline",
-    "linear_percent_change", "linear_percent_change_col", "quantile", "best_in_region",
-    "fixed_target", "fixed_target_col", "accelerate"),
+  scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
+    "linear_change_col", "quantile", "best_in_region", "fixed_target",
+    "fixed_target_col", "accelerate"),
   ind_ids = billion_ind_codes("all"),
   ind = "ind",
   start_year = 2018,
@@ -26,8 +26,8 @@ of the following:
 \item \code{aroc}: calls \code{\link{scenario_aroc}}
 \item \code{halt_rise}: calls \code{\link{scenario_halt_rise}}
 \item \code{percent_baseline}: calls \code{\link{scenario_percent_baseline}}
-\item \code{linear_percent_change}: calls \code{\link{scenario_linear_percent_change}}
-\item \code{linear_percent_change_col}: calls \code{\link{scenario_linear_percent_change_col}}
+\item \code{linear_change}: calls \code{\link{scenario_linear_change}}
+\item \code{linear_change_col}: calls \code{\link{scenario_linear_change_col}}
 \item \code{quantile}: calls \code{\link{scenario_quantile}}
 \item \code{best_in_region}: calls \code{\link{scenario_best_in_region}}
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}

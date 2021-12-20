@@ -93,5 +93,5 @@ best or not.
 }
 \details{
 Calculates the regional target, then wraps around
-\code{scenario_linear_percent_change_col} to aim at the target.
+\code{scenario_linear_change_col} to aim at the target.
 }

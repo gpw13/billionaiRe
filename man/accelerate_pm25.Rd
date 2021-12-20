@@ -40,7 +40,7 @@ linear change of -2\% * 2018 \code{value} per year.
 Runs:
 \itemize{
 \item \code{scenario_bau(df, small_is_best = TRUE,...)}
-\item \code{scenario_linear_percent_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)}
+\item \code{scenario_linear_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)}
 }
 
 Then picks the best result between the two scenarios.

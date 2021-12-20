@@ -16,6 +16,7 @@ accelerate_adult_obese <- function(df,
                                    scenario = "scenario",
                                    ind = "ind",
                                    ...) {
+  assert_columns(df, scenario, ind)
   this_ind <- ind_ids["adult_obese"]
 
   params <- get_right_params(list(...), scenario_halt_rise)
@@ -60,6 +61,8 @@ accelerate_alcohol <- function(df,
                                scenario = "scenario",
                                ind = "ind",
                                ...) {
+  assert_columns(df, scenario, ind)
+
   this_ind <- ind_ids[stringr::str_detect(ind_ids, "alcohol")]
 
   df_this_ind <- df %>%
@@ -148,6 +151,8 @@ accelerate_child_viol <- function(df,
                                   scenario = "scenario",
                                   ind = "ind",
                                   ...) {
+  assert_columns(df, scenario, ind)
+
   this_ind <- ind_ids["child_viol"]
 
   df_this_ind <- df %>%
@@ -188,6 +193,8 @@ accelerate_devontrack <- function(df,
                                   scenario = "scenario",
                                   ind = "ind",
                                   ...) {
+  assert_columns(df, scenario, ind)
+
   this_ind <- ind_ids["devontrack"]
 
   df_this_ind <- df %>%
@@ -235,6 +242,8 @@ accelerate_fuel <- function(df,
                             ind = "ind",
                             scenario = "scenario",
                             ...) {
+  assert_columns(df, scenario, ind, iso3)
+
   this_ind <- ind_ids["fuel"]
 
   this_ind_df <- df %>%
@@ -302,6 +311,8 @@ accelerate_hpop_sanitation <- function(df,
                                        scenario = "scenario",
                                        ind = "ind",
                                        ...) {
+  assert_columns(df, scenario, ind)
+
   this_ind <- ind_ids["hpop_sanitation"]
 
   params <- get_right_params(list(...), scenario_quantile)
@@ -546,7 +557,7 @@ accelerate_overweight <- function(df,
 #' Runs:
 #'
 #'  - `scenario_bau(df, small_is_best = TRUE,...)`
-#'  - `scenario_linear_percent_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)`
+#'  - `scenario_linear_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)`
 #'
 #' Then picks the best result between the two scenarios.
 #'
@@ -560,7 +571,7 @@ accelerate_pm25 <- function(df,
 
   params <- list(...)
 
-  params_linear <- get_right_params(params, scenario_linear_percent_change)
+  params_linear <- get_right_params(params, scenario_linear_change)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
@@ -574,9 +585,9 @@ accelerate_pm25 <- function(df,
     dplyr::filter(.data[[scenario]] == "business_as_usual")
 
   df_linear <- do.call(
-    scenario_linear_percent_change, c(list(df = df_this_ind), params_linear)
+    scenario_linear_change, c(list(df = df_this_ind), params_linear)
   ) %>%
-    dplyr::filter(.data[[scenario]] == "linear_percent_change")
+    dplyr::filter(.data[[scenario]] == "linear_change")
 
   df_binded <- df_bau %>%
     dplyr::bind_rows(df_linear)
@@ -587,7 +598,7 @@ accelerate_pm25 <- function(df,
   df_accelerated <- do.call(
     scenario_best_of, c(list(df = df_binded, scenario_names = c(
       "business_as_usual",
-      "linear_percent_change"
+      "linear_change"
     )), params_best_of)
   ) %>%
     dplyr::filter(scenario == "acceleration")
