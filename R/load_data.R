@@ -143,3 +143,42 @@ load_billion_table <- function(tbl, format, ...) {
     ...
   )
 }
+
+#' Load miscellaneous data
+#'
+#' This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
+#' WHDH data lake.
+#'
+#' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
+#' and `readxl::read_excel()` based on the file extension.
+#'
+#' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
+#' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+load_misc_data <- function(file_name, ...) {
+  f <- tempfile()
+
+  whdh::download_from_data_lake(
+    data_lake_name = "srhdteuwstdsa",
+    source_path = paste("3B/Bronze/misc", file_name, sep = "/"),
+    destination_path = f,
+    latest_version_only = FALSE,
+    silent = TRUE
+  )
+
+  ext = stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
+
+  if (ext %in% c("xls", "xlsx")) {
+    output_df <- readxl::read_excel(f, ...)
+  } else if (ext == "parquet") {
+    output_df <- arrow::read_parquet(f, ...)
+  } else if (ext == "csv") {
+    output_df <- readr::read_csv(f, show_col_types = FALSE, ...)
+  }
+
+  output_df
+}
