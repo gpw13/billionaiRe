@@ -69,7 +69,9 @@ scenario_best_of <- function(df,
 #' Scenario establish a business as usual scenario
 #'
 #' `scenario_bau` filters for values between start_year and end_year for `default_scenario` and
-#' returns values in value.
+#' returns values in value. If values are missing for years between `start_year` and `end_year`,
+#' the last available value will be imputed.
+#'
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -94,7 +96,29 @@ scenario_bau <- function(df,
   assert_columns(df, year, iso3, ind, scenario, value)
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
-  bau <- df %>%
+  full_years <- tidyr::expand_grid(
+    "{year}" := start_year:end_year,
+    "{iso3}" := unique(df[[iso3]]),
+    "{ind}" := unique(df[[ind]]),
+    "{scenario}" := default_scenario
+  )
+
+  scenario_df <- df %>%
+    dplyr::full_join(full_years, by = c(year, iso3, ind, scenario)) %>%
+    dplyr::filter(.data[[scenario]] == default_scenario) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind)))) %>%
+    dplyr::mutate(
+      last_value = max(.data[[value]], na.rm = TRUE),
+      last_year = max(.data[[year]][!is.na(.data[[value]])], na.rm = TRUE),
+      "{value}" := dplyr::case_when(
+        is.na(.data[[value]]) & .data[[year]] > last_year ~ last_value,
+        TRUE ~ .data[[value]]
+      )
+    ) %>%
+    dplyr::select(-c("last_value", "last_year"))
+
+
+  bau <- scenario_df %>%
     dplyr::filter(
       .data[[year]] %in% start_year:end_year,
       .data[[scenario]] == default_scenario

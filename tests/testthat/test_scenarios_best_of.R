@@ -56,7 +56,7 @@ testthat::test_that("scenario_best_of takes the best and only the best scenario"
   testthat::expect_equal(df_best_high_is_best_two_iso_2025, c(95, 95))
 })
 
-testthat::test_that("scenario_best_of takes the best and only the best scenario", {
+testthat::test_that("scenario_bau returns accurate values", {
   df <- tibble::tibble(
     value = c(80:100, 10:30, 30:50),
     year = rep(2010:2030, 3),
@@ -76,4 +76,23 @@ testthat::test_that("scenario_best_of takes the best and only the best scenario"
     dplyr::mutate(scenario = "business_as_usual")
 
   testthat::expect_equal(df_scenario_bau, df_test)
+
+  df_scenario_bau <- df %>%
+    dplyr::filter(year <= 2018) %>%
+    scenario_bau(default_scenario = "a") %>%
+    dplyr::filter(scenario == "business_as_usual")
+
+  df_test_2018 <- df %>%
+    dplyr::filter(
+      scenario == "a",
+      year %in% 2018:2025
+    ) %>%
+    dplyr::mutate(
+      value = dplyr::case_when(
+        year >= 2018 ~ .data[["value"]][.data[["year"]] == 2018]
+      ),
+      scenario = "business_as_usual"
+    )
+
+  testthat::expect_equal(df_scenario_bau, df_test_2018)
 })

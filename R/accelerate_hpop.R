@@ -254,6 +254,7 @@ accelerate_fuel <- function(df,
 
   if ("HIC" %in% unique(this_ind_df$wb_ig)) {
     params_bau <- get_right_params(params, "scenario_bau")
+    params_bau["default_scenario"] <- "acceleration"
 
     high_income_df <- this_ind_df %>%
       dplyr::filter(.data[["wb_ig"]] == "HIC") %>%

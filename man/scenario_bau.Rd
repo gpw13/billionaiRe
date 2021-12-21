@@ -80,7 +80,8 @@ Dataframe with scenario rows
 }
 \description{
 \code{scenario_bau} filters for values between start_year and end_year for \code{default_scenario} and
-returns values in value.
+returns values in value. If values are missing for years between \code{start_year} and \code{end_year},
+the last available value will be imputed.
 }
 \details{
 The returned scenario is a portion of the straight line drawn from the
