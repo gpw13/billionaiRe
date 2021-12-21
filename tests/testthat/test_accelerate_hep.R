@@ -46,3 +46,62 @@ testthat::test_that("espar returns appropriate values", {
 
   testthat::expect_equal(df_add_indicator_2025, df_accelerated_2025)
 })
+
+basic_hep_test <- function(ind) {
+  testthat::test_that(paste0(ind, " returns appropriate values"), {
+    df <- tibble::tibble(
+      value = 60:80,
+      year = 2010:2030,
+      ind = ind,
+      iso3 = "testalia",
+      scenario = "default"
+    )
+
+    df_add_indicator <- add_scenario_indicator(df,
+      indicator = ind,
+      scenario_function = "accelerate",
+      baseline_year = 2018
+    )
+
+    df_add_indicator_2025 <- df_add_indicator %>%
+      dplyr::filter(scenario == "acceleration", year == 2025) %>%
+      dplyr::pull(value)
+
+    testthat::expect_equal(df_add_indicator_2025, 75)
+
+    df_2018 <- df %>%
+      dplyr::filter(year <= 2018)
+
+    df_add_indicator <- add_scenario_indicator(df_2018,
+      indicator = ind,
+      scenario_function = "accelerate",
+      baseline_year = 2018
+    )
+
+    df_add_indicator_2025 <- df_add_indicator %>%
+      dplyr::filter(scenario == "acceleration", year == 2025) %>%
+      dplyr::pull(value)
+
+    testthat::expect_equal(df_add_indicator_2025, 68)
+  })
+}
+
+purrr::walk(c("respond", "notify", "detect", "detect_respond"), basic_hep_test)
+
+testthat::test_that("accelerate can be run on all hep indicators:", {
+  hep_test_df <- tibble::tibble(
+    value = 60:80,
+    year = 2010:2030,
+    iso3 = "testalia",
+    scenario = "default",
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
+  ) %>%
+    tidyr::expand_grid(ind = billion_ind_codes("hep"))
+
+  calculated_test_data <- add_scenario(hep_test_df, "accelerate")
+
+  testthat::expect_equal(nrow(calculated_test_data), 609)
+})

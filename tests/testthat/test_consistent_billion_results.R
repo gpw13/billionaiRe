@@ -1,7 +1,7 @@
 
-test_data <- billionaiRe:::load_test_data("test_data")
+test_data <- load_misc_data("test_data/test_data.parquet")
 
-test_data_calculated <- billionaiRe:::load_test_data("test_data_calculated")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated.parquet")
 
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%

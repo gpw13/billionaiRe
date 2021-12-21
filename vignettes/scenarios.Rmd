@@ -97,7 +97,7 @@ A `recycle` and `...`parameters were added to the `transform_` functions to ease
 
 ```{r recycling-example, include = TRUE, eval = FALSE}
 
-test_data <- billionaiRe:::load_test_data("test_data")
+test_data <- load_misc_data("test_data/test_data.parquet")
 
 test_data_hep <- test_data %>%
   recycle_data("hep", include_projection = FALSE) %>%

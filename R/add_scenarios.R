@@ -44,7 +44,16 @@ add_scenario <- function(df,
   assert_columns(df, ind)
   scenario_function <- rlang::arg_match(scenario_function)
 
-  those_inds <- ind_ids[unique(df[[ind]])]
+  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids, paste0(c(
+    "espar[0-9].{0,3}",
+    "_num$",
+    "_denom$",
+    "surviving_infants"
+  ),
+  collapse = "|"
+  ))]
+
+  those_inds <- sub_set_inds[unique(df[[ind]])]
 
   purrr::map_dfr(
     those_inds,
