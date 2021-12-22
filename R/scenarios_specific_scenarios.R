@@ -3,6 +3,11 @@
 #' `scenario_best_of` picks the best value between multiple scenarios specified
 #' in `scenario_names`. `small_is_best` allows to pick if higher value or
 #' smaller values are best.
+#'
+#' If multiple scenario are tied for the best scenario, the scenario with the best time
+#' series for each `iso3` and `ind` is picked. If they are still tied scenarios for
+#' the best value, the first in alphabetical order is picked.
+#'
 #' @param scenario_names names of the scenario to pick from.
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
@@ -44,6 +49,44 @@ scenario_best_of <- function(df,
       dplyr::filter(.data[["scenario_value"]] == max(.data[["scenario_value"]]))
   }
 
+  if (length(unique(best[[scenario]])) > 1) {
+    those_scenarios <- unique(best[[scenario]])
+
+    best <- df %>%
+      dplyr::mutate(scenario_value = .data[[value]]) %>%
+      dplyr::select(c({{ iso3 }}, {{ year }}, {{ ind }}, {{ scenario }}, "scenario_value")) %>%
+      dplyr::filter(.data[[scenario]] %in% those_scenarios) %>%
+      dplyr::group_by(iso3, ind, scenario) %>%
+      dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+
+    if (small_is_best) {
+      best <- best %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(iso3, ind) %>%
+        dplyr::filter(.data[["sum_values"]] == min(.data[["sum_values"]], na.rm = T))
+    } else {
+      best <- best %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(iso3, ind) %>%
+        dplyr::filter(.data[["sum_values"]] == max(.data[["sum_values"]], na.rm = T))
+    }
+
+    best <- best %>%
+      dplyr::group_by(iso3, ind) %>%
+      dplyr::group_modify(
+        ~ {
+          if (length(unique(.x[[scenario]])) > 1) {
+            one_scenario <- unique(.x[[scenario]])[[1]]
+
+            .x %>%
+              dplyr::filter(.data[[scenario]] == one_scenario)
+          } else {
+            .x
+          }
+        }
+      )
+  }
+
   best_df <- df %>%
     dplyr::mutate(scenario_value = .data[[value]]) %>%
     dplyr::semi_join(best, by = c(iso3, ind, scenario)) %>%
@@ -64,6 +107,16 @@ scenario_best_of <- function(df,
 
   df %>%
     dplyr::bind_rows(best_df)
+}
+
+get_best_equal_scenarios <- function(df,
+                                     scenario = "scenario",
+                                     iso3 = "iso3",
+                                     ind = "ind",
+                                     value = "scenario_value") {
+  best <- df %>%
+    dplyr::group_by(iso3, ind) %>%
+    tidyr::pivot_wider(values_from = value, names_from = scenario)
 }
 
 #' Scenario establish a business as usual scenario

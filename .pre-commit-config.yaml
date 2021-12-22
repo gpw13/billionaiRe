@@ -23,6 +23,7 @@ repos:
         -    openxlsx
         -    purrr
         -    readr
+        -    readxl
         -    rlang
         -    rmarkdown
         -    scales

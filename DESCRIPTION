@@ -25,6 +25,7 @@ Imports:
     openxlsx,
     purrr,
     readr,
+    readxl,
     rlang,
     scales,
     stringr,

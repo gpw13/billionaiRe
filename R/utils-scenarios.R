@@ -36,9 +36,10 @@ trim_values <- function(df,
     df %>%
       dplyr::mutate(
         better_value = dplyr::case_when(
-          keep_better_values & small_is_best ~ pmin(.data[[col]], .data[[value]], na.rm = TRUE),
-          keep_better_values & !small_is_best ~ pmax(.data[[col]], .data[[value]], na.rm = TRUE),
-          !keep_better_values ~ .data[[col]]
+          is.na(.data[[col]]) & is.na(.data[[value]]) ~ NA_real_,
+          keep_better_values & small_is_best ~ as.numeric(pmin(.data[[col]], .data[[value]], na.rm = TRUE)),
+          keep_better_values & !small_is_best ~ as.numeric(pmax(.data[[col]], .data[[value]], na.rm = TRUE)),
+          !keep_better_values ~ as.numeric(.data[[col]])
         ),
         !!sym(value) := dplyr::case_when(
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),

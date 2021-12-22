@@ -11,7 +11,7 @@ add_scenario_indicator(
     "fixed_target_col", "accelerate"),
   indicator,
   ind_ids = billion_ind_codes("all"),
-  scenario = "sceanrio",
+  scenario = "scenario",
   ...
 )
 }

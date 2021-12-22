@@ -88,12 +88,7 @@ in \code{scenario_names}. \code{small_is_best} allows to pick if higher value or
 smaller values are best.
 }
 \details{
-The returned scenario is a portion of the straight line drawn from the
-\code{baseline_year} value to the \code{target_year}. Only values for years between
-\code{start_year} and \code{end_year} will be returned.
-
-If \code{value} has values that are higher or lower than the scenario values, then
-only \code{value} will be kept, depending on \code{small_is_best}. For instance,
-if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
-75 will be kept.
+If multiple scenario are tied for the best scenario, the scenario with the best time
+series for each \code{iso3} and \code{ind} is picked. If they are still tied scenarios for
+the best value, the first in alphabetical order is picked.
 }

@@ -46,14 +46,14 @@ add_scenario <- function(df,
 
   sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids, paste0(c(
     "espar[0-9].{0,3}",
-    "_num$",
-    "_denom$",
     "surviving_infants"
   ),
   collapse = "|"
   ))]
 
-  those_inds <- sub_set_inds[unique(df[[ind]])]
+  those_inds <- sub_set_inds[sub_set_inds %in% unique(df[[ind]])]
+
+  those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$"))
 
   purrr::map_dfr(
     those_inds,
@@ -100,7 +100,7 @@ add_scenario_indicator <- function(df,
                                    ),
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
-                                   scenario = "sceanrio",
+                                   scenario = "scenario",
                                    ...) {
   this_ind <- ind_ids[indicator]
 
