@@ -1,33 +1,37 @@
 # Should arguments be part of params or do.call? baseline_year is part of params
 # but end_year is part of do.call for adult_obese
 
+# Elliott: if passed to do.call as a named parameters (e.g. do.call(scenario, list(df = a))), an error will be thrown
+# if the named parameters is present in params. It is then safer to pass to params rather than do.call.
+
 # CHECK: error, potentially because of without_data
+# Elliott: The error is due to duplicated rows in df_with_data_accelerated
 accelerate_anc4 <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                            ind_ids = billion_ind_codes("uhc"),
+                            end_year = 2025,
+                            scenario = "scenario",
+                            ind = "ind",
+                            ...) {
   this_ind <- ind_ids["anc4"]
 
   params <- list(...)
 
-  params_without_data_bau = c(
+  params_without_data_bau <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "acceleration")
   )
 
-  params_with_data_bau = c(
+  params_with_data_bau <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "with_data_bau")
   )
 
-  params_with_data_fixed_target = c(
+  params_with_data_fixed_target <- c(
     get_right_params(params, scenario_fixed_target),
     list(scenario_name = "with_data_fixed_target", target_value = 95, target_year = 2030)
   )
 
-  params_with_data_linear = c(
+  params_with_data_linear <- c(
     get_right_params(params, scenario_linear_change),
     list(scenario_name = "with_data_linear", linear_value = 2.6)
   )
@@ -37,7 +41,7 @@ accelerate_anc4 <- function(df,
 
   df_without_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
-    dplyr::filter(sum(type == "reported",na.rm=TRUE) <= 1)
+    dplyr::filter(sum(type == "reported", na.rm = TRUE) <= 1)
 
   df_with_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
@@ -61,15 +65,22 @@ accelerate_anc4 <- function(df,
   ) %>%
     dplyr::filter(.data[["scenario"]] == "with_data_linear")
 
+  # Elliott: see art for call to scenario_best_of with do.call
+
   df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear) %>%
     scenario_best_of(
       scenario_names = c("with_data_fixed_target", "with_data_linear"),
       scenario_name = "best_of_linear_and_fixed_target",
       small_is_best = TRUE # hard-coding true because we want to take whichever of the two options is easiest for the country to accomplish
+      # elliott: not necessary to hard code, it should be included in params
     ) %>%
     dplyr::filter(.data[["scenario"]] == "best_of_linear_and_fixed_target")
 
+  # Elliott: when binding the df_with_data_best and df_with_data_bau duplicated rows are created. adding a distinct to remove them for now.
+  # With new version of scenario_best_of, this shouldn't happen though.
+
   df_with_data_accelerated <- dplyr::bind_rows(df_with_data_best, df_with_data_bau) %>%
+    dplyr::distinct() %>%
     scenario_best_of(
       scenario_names = c("with_data_bau", "best_of_linear_and_fixed_target"),
       scenario_name = "acceleration",
@@ -77,7 +88,7 @@ accelerate_anc4 <- function(df,
     ) %>%
     dplyr::filter(.data[["scenario"]] == "acceleration")
 
-  df_without_data_accelerated = do.call(
+  df_without_data_accelerated <- do.call(
     scenario_bau, c(list(df = df_without_data), params_without_data_bau)
   ) %>%
     dplyr::filter(.data[["scenario"]] == "acceleration")
@@ -88,21 +99,20 @@ accelerate_anc4 <- function(df,
 
 # CHECK
 accelerate_art <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                           ind_ids = billion_ind_codes("uhc"),
+                           end_year = 2025,
+                           scenario = "scenario",
+                           ind = "ind",
+                           ...) {
   this_ind <- ind_ids["art"]
 
   params <- list(...)
 
-  params_with_data_bau = get_right_params(params, scenario_bau)
-  params_without_data_bau = get_right_params(params, scenario_bau)
-  params_without_data_bau[["scenario_name"]] = "acceleration"
+  params_with_data_bau <- get_right_params(params, scenario_bau)
+  params_without_data_bau <- get_right_params(params, scenario_bau)
+  params_without_data_bau[["scenario_name"]] <- "acceleration"
 
-
-  params_with_data_fixed_target = c(
+  params_with_data_fixed_target <- c(
     get_right_params(params, scenario_fixed_target),
     list(target_value = 90.25, scenario_name = "fixed_target")
   )
@@ -110,38 +120,57 @@ accelerate_art <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  df_with_data = df_this_ind %>%
+  df_with_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
     dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= 2018) > 1) %>%
     dplyr::ungroup()
 
-  df_without_data = df_this_ind %>%
+  # Elliott: get warnings here because df_without_data is empty (with test_data at least).
+  # You could simply have an if-else statement to avoid this:
+
+  df_without_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
     dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= 2018) <= 1) %>%
     dplyr::ungroup()
 
-  df_without_data_accelerated = do.call(
-    scenario_bau, c(list(df = df_without_data), params_without_data_bau)
-  ) %>%
-    filter(scenario == "business_as_usual")
-
-  df_with_data_bau = do.call(
-    scenario_bau, c(list(df = df_with_data), params_with_data_bau)
-  ) %>%
-    filter(scenario == "business_as_usual")
-
-  df_with_data_fixed_target = do.call(
-    scenario_fixed_target, c(list(df = df_with_data), params_with_data_fixed_target)
-  ) %>%
-    filter(scenario == "fixed_target")
-
-  df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_fixed_target) %>%
-    scenario_best_of(
-      scenario_names = c("business_as_usual", "fixed_target"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
+  if (nrow(df_without_data) > 0) {
+    df_without_data_accelerated <- do.call(
+      scenario_bau, c(list(df = df_without_data), params_without_data_bau)
     ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration")
+      dplyr::filter(scenario == "business_as_usual")
+  } else {
+    df_without_data_accelerated <- df_without_data
+  }
+
+  if (nrow(df_with_data) > 0) {
+    df_with_data_bau <- do.call(
+      scenario_bau, c(list(df = df_with_data), params_with_data_bau)
+    ) %>%
+      dplyr::filter(scenario == "business_as_usual")
+
+    df_with_data_fixed_target <- do.call(
+      scenario_fixed_target, c(list(df = df_with_data), params_with_data_fixed_target)
+    ) %>%
+      dplyr::filter(scenario == "fixed_target")
+
+    # Elliott: better to pass scenario_best_of to do.call to be able to pass params.
+    # Can be done for all scenario_best_of calls.
+
+    params_scenario_best_of <- c(get_right_params(params, scenario_best_of),
+      scenario_name = "acceleration"
+    )
+
+    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_fixed_target)
+    df_with_data_accelerated <- do.call(
+      scenario_best_of, c(list(
+        df = df_with_data_accelerated,
+        scenario_names = c("business_as_usual", "fixed_target")
+      ), params_scenario_best_of)
+    ) %>%
+      dplyr::filter(.data[[scenario]] == "acceleration")
+  } else {
+    df_with_data_accelerated <- df_with_data
+  }
 
   df %>%
     dplyr::bind_rows(df_with_data_accelerated, df_without_data_accelerated)
@@ -150,11 +179,11 @@ accelerate_art <- function(df,
 # CHECK
 # scenario_fixed_target from original file ignored because it's for SDGs.
 accelerate_beds <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                            ind_ids = billion_ind_codes("uhc"),
+                            end_year = 2025,
+                            scenario = "scenario",
+                            ind = "ind",
+                            ...) {
   this_ind <- ind_ids["beds"]
 
   params <- list(...)
@@ -178,19 +207,25 @@ accelerate_beds <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_with_scenario <- df_this_ind %>%
-    group_by(iso3) %>%
-    filter(any((value < 18 & year >= 2018))) %>%
-    ungroup()
+    dplyr::group_by(iso3) %>%
+    dplyr::filter(any((value < 18 & year >= 2018))) %>%
+    dplyr::ungroup()
 
   df_no_scenario <- df_this_ind %>%
-    group_by(iso3) %>%
-    filter(!any((value < 18 & year >= 2018))) %>%
-    ungroup()
+    dplyr::group_by(iso3) %>%
+    dplyr::filter(!any((value < 18 & year >= 2018))) %>%
+    dplyr::ungroup()
 
-  df_no_scenario_accelerated <- do.call(
-    scenario_bau, c(list(df = df_no_scenario), params_no_sceanrio_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+  # Empty df (with test_data), so returns warnings. if-else statement as in art?
+
+  if (nrow(df_no_scenario) > 0) {
+    df_no_scenario_accelerated <- do.call(
+      scenario_bau, c(list(df = df_no_scenario), params_no_sceanrio_bau)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_no_scenario_accelerated <- df_no_scenario
+  }
 
   df_with_scenario_bau <- do.call(
     scenario_bau, c(list(df = df_with_scenario), params_with_sceanrio_bau)
@@ -201,6 +236,8 @@ accelerate_beds <- function(df,
     scenario_linear_change, c(list(df = df_with_scenario), params_with_sceanrio_linear)
   ) %>%
     dplyr::filter(.data[["scenario"]] == "with_scenario_linear")
+
+  # Elliott: see art for call to scenario_best_of with do.call
 
   df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear) %>%
     scenario_best_of(
@@ -225,17 +262,19 @@ accelerate_bp <- function(df,
 
   params <- list(...)
 
-  params_perc_baseline = c(
+  params_perc_baseline <- c(
     get_right_params(params, scenario_percent_baseline),
-    list(value = "crude",
-         percent_change = -25,
-         baseline_year = 2010,
-         start_year = 2018,
-         end_year = 2025,
-         scenario_name = "percent_baseline")
+    list(
+      value = "crude",
+      percent_change = -25,
+      baseline_year = 2010,
+      start_year = 2018,
+      end_year = 2025,
+      scenario_name = "percent_baseline"
+    )
   )
 
-  params_bau = c(
+  params_bau <- c(
     get_right_params(params, scenario_bau),
     list(value = "crude", scenario_name = "business_as_usual")
   )
@@ -243,10 +282,10 @@ accelerate_bp <- function(df,
   # Preliminary wrangling from the bp.R script to get bp_as_cr_ratio
   bp_agestd <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Age-standardised.csv") %>%
     dplyr::filter(Metric == "Hypertension") %>%
-    dplyr::select (-Type, -Metric) %>%
+    dplyr::select(-Type, -Metric) %>%
     dplyr::mutate(
-      Country = ifelse (Country == "Macedonia (TFYR)", "Macedonia", Country),
-      iso3 = whoville::names_to_iso3(Country)
+      Country = ifelse(Country == "Macedonia (TFYR)", "Macedonia", Country),
+      iso3 = whoville::names_to_iso3(Country) # Elliott: could you silence the fuzzy match here? Or wrangle the file to avoid the messages?
     ) %>%
     dplyr::rename(
       country = "Country",
@@ -258,15 +297,15 @@ accelerate_bp <- function(df,
     ) %>%
     dplyr::filter(whoville::is_who_member(iso3)) %>%
     dplyr::group_by(iso3, year) %>%
-    dplyr::summarize(value = mean(value, na.rm=TRUE), .groups = "drop") %>% # total value is average of male and female
+    dplyr::summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
     dplyr::mutate(ind = "bp_agestd", type = ifelse(year <= 2019, "estimated", "projected")) # check
 
   bp_crude <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Crude.csv") %>%
     dplyr::filter(Metric == "Hypertension") %>%
-    dplyr::select (-Type, -Metric) %>%
+    dplyr::select(-Type, -Metric) %>%
     dplyr::mutate(ind = "bp_crude") %>%
     dplyr::mutate(
-      Country = ifelse (Country == "Macedonia (TFYR)", "Macedonia", Country),
+      Country = ifelse(Country == "Macedonia (TFYR)", "Macedonia", Country),
       iso3 = whoville::names_to_iso3(Country)
     ) %>%
     dplyr::rename(
@@ -285,13 +324,13 @@ accelerate_bp <- function(df,
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::group_by(iso3, year) %>%
     dplyr::summarize(value = stats::weighted.mean(value, w = pop_30_79), .groups = "drop") %>%
-    dplyr::mutate(ind = "bp_crude", type = ifelse(year <= 2019,"estimated","projected"))
+    dplyr::mutate(ind = "bp_crude", type = ifelse(year <= 2019, "estimated", "projected"))
 
   bp_ratio <- bp_agestd %>%
     dplyr::bind_rows(bp_crude) %>%
     tidyr::pivot_wider(names_from = ind, values_from = value) %>%
-    #filter(year==2019) %>%
-    dplyr::mutate(ratio_agestd_over_crude = bp_agestd/bp_crude) %>%
+    # filter(year==2019) %>%
+    dplyr::mutate(ratio_agestd_over_crude = bp_agestd / bp_crude) %>%
     dplyr::select(year, iso3, ratio_agestd_over_crude)
 
   bp_agestd_crude_ratio <- bp_ratio %>%
@@ -336,13 +375,15 @@ accelerate_bp <- function(df,
   ) %>%
     dplyr::filter(.data[[scenario]] == "percent_baseline")
 
+  # Elliott: see art for call to scenario_best_of with do.call
+
   df_accelerated <- dplyr::bind_rows(df_bau, df_perc_baseline) %>%
     scenario_best_of(
       value = "crude",
       scenario_names = c("business_as_usual", "percent_baseline"),
       scenario_name = "acceleration",
       small_is_best = params[["small_is_best"]]
-  ) %>%
+    ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration") %>%
     # convert crude values back to age-standardised
     dplyr::mutate(value = value * ratio_agestd_over_crude)
@@ -354,11 +395,11 @@ accelerate_bp <- function(df,
 # CHECK: warnings with column last_value
 # default scenario
 accelerate_doctors <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                               ind_ids = billion_ind_codes("uhc"),
+                               end_year = 2025,
+                               scenario = "scenario",
+                               ind = "ind",
+                               ...) {
   this_ind <- ind_ids["doctors"]
 
   params <- list(...)
@@ -371,13 +412,12 @@ accelerate_doctors <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_accelerated <- do.call(
-    scenario_bau, c(list(df = df), params)
+    scenario_bau, c(list(df = df_this_ind), params)
   ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
-
 }
 
 # CHECK: warnings with column last_value
@@ -400,7 +440,7 @@ accelerate_nurses <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_accelerated <- do.call(
-    scenario_bau, c(list(df = df), params)
+    scenario_bau, c(list(df = df_this_ind), params)
   ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration")
 
@@ -425,12 +465,12 @@ accelerate_hwf <- function(df,
 
   params <- list(...)
 
-  params_with_scenario_linear = c(
+  params_with_scenario_linear <- c(
     get_right_params(params, scenario_linear_change),
     list(scenario_name = "acceleration", linear_value = 4.54)
   )
 
-  params_no_scenario_bau = c(
+  params_no_scenario_bau <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "acceleration")
   )
@@ -480,7 +520,7 @@ accelerate_dtp3 <- function(df,
                             target_year = 2030,
                             scenario = "scenario",
                             ind = "ind",
-                          ...) {
+                            ...) {
   this_ind <- ind_ids["dtp3"]
 
   params <- list(...)
@@ -488,10 +528,10 @@ accelerate_dtp3 <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  df_target_values = load_misc_data(
+  df_target_values <- load_misc_data(
     file_name = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
-  )  %>%
+  ) %>%
     select(iso3 = ISO, target = "DTP 3 Target") %>%
     mutate(iso3 = toupper(iso3), target = target * 100)
 
@@ -504,13 +544,13 @@ accelerate_dtp3 <- function(df,
       "acceleration" := case_when(
         year > 2018 & year <= 2020 ~ baseline_value,
         year >= baseline_year + 1 & year <= target_year & baseline_value < target ~
-            baseline_value + (target - baseline_value) * (year - baseline_year - 1) / (target_year - baseline_year - 1),
+        baseline_value + (target - baseline_value) * (year - baseline_year - 1) / (target_year - baseline_year - 1),
         year >= baseline_year + 1 & year <= target_year & baseline_value >= target ~ baseline_value,
         year == 2018 ~ value,
         TRUE ~ NA_real_
       )
     ) %>%
-    dplyr::select (!c("baseline_value", "target")) %>%
+    dplyr::select(!c("baseline_value", "target")) %>%
     dplyr::filter(!is.na(.data[["acceleration"]])) %>%
     # Replace value column with {scenario_name} column and set scenario = {scenario_name}
     select(-value) %>%
@@ -531,30 +571,30 @@ accelerate_fh <- function(df,
   this_ind <- ind_ids["fh"]
 
   params <- list(...)
-  params["small_is_best"] = get_ind_metadata(this_ind, "small_is_best")
+  params["small_is_best"] <- get_ind_metadata(this_ind, "small_is_best")
 
-  params_bau = get_right_params(params, scenario_bau)
-  params_halt_rise = get_right_params(params, scenario_halt_rise)
+  params_bau <- get_right_params(params, scenario_bau)
+  params_halt_rise <- get_right_params(params, scenario_halt_rise)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_bau <- do.call(
-    scenario_bau, c(list(df = df), params_bau)
+    scenario_bau, c(list(df = df_this_ind), params_bau) # need to pass df_this_ind
   ) %>%
     dplyr::filter(.data[[scenario]] == "business_as_usual")
 
   df_halt_rise <- do.call(
-    scenario_halt_rise, c(list(df = df), params_halt_rise)
+    scenario_halt_rise, c(list(df = df_this_ind), params_halt_rise)
   ) %>%
     dplyr::filter(.data[[scenario]] == "halt_rise")
 
   df_accelerated <- dplyr::bind_rows(df_bau, df_halt_rise) %>%
-  scenario_best_of(
-    scenario_names = c("business_as_usual", "halt_rise"),
-    scenario_name = "acceleration",
-    small_is_best = params[["small_is_best"]]
-  ) %>%
+    scenario_best_of(
+      scenario_names = c("business_as_usual", "halt_rise"),
+      scenario_name = "acceleration",
+      small_is_best = params[["small_is_best"]]
+    ) %>%
     dplyr::filter(scenario == "acceleration")
 
   df %>%
@@ -570,8 +610,10 @@ accelerate_fp <- function(df,
                           ...) {
   this_ind <- ind_ids["fp"]
 
-  exclude_countries <- c(whoville::who_member_states("small"),
-                     "BRN", "CYP", "FSM", "ISL", "LUX", "SYC")
+  exclude_countries <- c(
+    whoville::who_member_states("small"),
+    "BRN", "CYP", "FSM", "ISL", "LUX", "SYC"
+  )
 
   params <- list(...)
   params["small_is_best"] <- get_ind_metadata(this_ind, "small_is_best")
@@ -583,7 +625,7 @@ accelerate_fp <- function(df,
   params_main_bau["scenario_name"] <- "business_as_usual"
 
   params_main_quantile <- get_right_params(params, scenario_quantile)
-  params_main_quantile["n"] = 5
+  params_main_quantile["n"] <- 5
   params_main_quantile["scenario_name"] <- "quantile_5"
 
   df_this_ind <- df %>%
@@ -604,7 +646,7 @@ accelerate_fp <- function(df,
   # Run scenario_bau and scenario_quantile(n = 5) on the remaining countries
   # then find the best of the two options
   df_main_bau <- do.call(
-      scenario_bau, c(list(df = df_main), params_main_bau)
+    scenario_bau, c(list(df = df_main), params_main_bau)
   ) %>%
     dplyr::filter(.data[[scenario]] == "business_as_usual")
 
@@ -623,6 +665,8 @@ accelerate_fp <- function(df,
     dplyr::mutate("value" := pmin(.data[["value"]], .data[["regional_max"]])) %>%
     dplyr::select(!c("region", "regional_max"))
 
+  # Elliott: see art for call to scenario_best_of with do.call
+
   df_main_accelerated <- dplyr::bind_rows(df_main_bau, df_main_quantile) %>%
     scenario_best_of(
       scenario_names = c("business_as_usual", "quantile_5"),
@@ -637,11 +681,11 @@ accelerate_fp <- function(df,
 
 # CHECK: warnings, also returns 24,800 scenario rows when it should only around 1,500 or so.
 accelerate_fpg <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                           ind_ids = billion_ind_codes("uhc"),
+                           end_year = 2025,
+                           scenario = "scenario",
+                           ind = "ind",
+                           ...) {
   this_ind <- ind_ids["fpg"]
 
   params <- list(...)
@@ -654,7 +698,7 @@ accelerate_fpg <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_accelerated <- do.call(
-    scenario_bau, c(list(df = df), params)
+    scenario_bau, c(list(df = df_this_ind), params)
   ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration")
 
@@ -664,20 +708,20 @@ accelerate_fpg <- function(df,
 
 # CHECK: warnings
 accelerate_itn <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                           ind_ids = billion_ind_codes("uhc"),
+                           end_year = 2025,
+                           scenario = "scenario",
+                           ind = "ind",
+                           ...) {
   this_ind <- ind_ids["itn"]
 
   params <- list(...)
 
-  params_bau = get_right_params(params, scenario_bau)
-  params_bau["scenario_name"] = "business_as_usual"
+  params_bau <- get_right_params(params, scenario_bau)
+  params_bau["scenario_name"] <- "business_as_usual"
 
-  params_fixed_target = get_right_params(params, scenario_fixed_target)
-  params_fixed_target = c(
+  params_fixed_target <- get_right_params(params, scenario_fixed_target)
+  params_fixed_target <- c(
     params_fixed_target,
     list(target_value = 80, target_year = 2030, scenario_name = "fixed_target")
   )
@@ -685,15 +729,17 @@ accelerate_itn <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  df_bau = do.call(
+  df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
     dplyr::filter(scenario == "business_as_usual")
 
-  df_fixed_target = do.call(
+  df_fixed_target <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
   ) %>%
     dplyr::filter(scenario == "fixed_target")
+
+  # Elliott: see art for call to scenario_best_of with do.call
 
   df_accelerated <- dplyr::bind_rows(df_fixed_target, df_bau) %>%
     scenario_best_of(
@@ -709,20 +755,20 @@ accelerate_itn <- function(df,
 
 # CHECK
 accelerate_pneumo <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                              ind_ids = billion_ind_codes("uhc"),
+                              end_year = 2025,
+                              scenario = "scenario",
+                              ind = "ind",
+                              ...) {
   this_ind <- ind_ids["pneumo"]
 
   params <- list(...)
 
-  params_bau = get_right_params(params, scenario_bau)
-  params_bau["scenario_name"] = "business_as_usual"
+  params_bau <- get_right_params(params, scenario_bau)
+  params_bau["scenario_name"] <- "business_as_usual"
 
-  params_fixed_target = get_right_params(params, scenario_fixed_target)
-  params_fixed_target = c(
+  params_fixed_target <- get_right_params(params, scenario_fixed_target)
+  params_fixed_target <- c(
     params_fixed_target,
     list(target_value = 90, target_year = 2025, scenario_name = "fixed_target")
   )
@@ -730,15 +776,17 @@ accelerate_pneumo <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  df_bau = do.call(
+  df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
     dplyr::filter(scenario == "business_as_usual")
 
-  df_fixed_target = do.call(
+  df_fixed_target <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
   ) %>%
     dplyr::filter(scenario == "fixed_target")
+
+  # Elliott: see art for call to scenario_best_of with do.call
 
   df_accelerated <- dplyr::bind_rows(df_fixed_target, df_bau) %>%
     scenario_best_of(
@@ -754,6 +802,7 @@ accelerate_pneumo <- function(df,
 
 # CHECK
 # @Elliott, Should target value be hard-coded or an argument of this function?
+# Yes, it's a scenario requirement.
 accelerate_tb <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           end_year = 2025,
@@ -780,26 +829,28 @@ accelerate_tb <- function(df,
 
 # CHECK: error becuase of missing values
 accelerate_uhc_sanitation <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                                      ind_ids = billion_ind_codes("uhc"),
+                                      end_year = 2025,
+                                      scenario = "scenario",
+                                      ind = "ind",
+                                      ...) {
   this_ind <- ind_ids["uhc_sanitation"]
 
   params <- list(...)
   params <- get_right_params(params, scenario_quantile)
-  params = c(
+  params <- c(
     params,
-    list(n = 5, quantile_year = 2017, trim = TRUE, lower_limit = 0,
-         upper_limit = 99)
+    list(
+      n = 5, quantile_year = 2017, trim = TRUE, lower_limit = 0,
+      upper_limit = 99
+    )
   )
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_accelerated <- do.call(
-    scenario_quantile, c(list(df = df), params)
+    scenario_quantile, c(list(df = df_this_ind), params)
   ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration")
 
@@ -813,26 +864,26 @@ accelerate_uhc_sanitation <- function(df,
 # @Alice, need explanation on following comments:
 # NB cannot take hpop outputs because the imputed data (45 coutnries) is removed for hpop tobacco
 accelerate_uhc_tobacco <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                                   ind_ids = billion_ind_codes("uhc"),
+                                   end_year = 2025,
+                                   scenario = "scenario",
+                                   ind = "ind",
+                                   ...) {
   this_ind <- ind_ids["uhc_tobacco"]
 
   params <- list(...)
 
-  params_without_data_bau = c(
+  params_without_data_bau <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "acceleration")
   )
 
-  params_with_data_bau = c(
+  params_with_data_bau <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "with_data_bau", value = "crude")
   )
 
-  params_with_data_perc_baseline = c(
+  params_with_data_perc_baseline <- c(
     get_right_params(params, scenario_percent_baseline),
     list(
       scenario_name = "with_data_perc_baseline",
@@ -845,7 +896,7 @@ accelerate_uhc_tobacco <- function(df,
     )
   )
 
-  par_wd_pb = params_with_data_perc_baseline
+  par_wd_pb <- params_with_data_perc_baseline
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
@@ -917,7 +968,7 @@ accelerate_uhc_tobacco <- function(df,
     dplyr::mutate(goal2025 = old_baseline_value * (100 + par_wd_pb[["percent_change"]]) / 100) %>%
     dplyr::mutate(
       goalend = old_baseline_value + (goal2025 - old_baseline_value) *
-          (par_wd_pb[["end_year"]] - par_wd_pb[["baseline_year"]]) / (par_wd_pb[["target_year"]] - par_wd_pb[["baseline_year"]])
+        (par_wd_pb[["end_year"]] - par_wd_pb[["baseline_year"]]) / (par_wd_pb[["target_year"]] - par_wd_pb[["baseline_year"]])
     ) %>%
     dplyr::mutate(
       "{par_wd_pb[['scenario_name']]}" := ifelse(
@@ -937,6 +988,8 @@ accelerate_uhc_tobacco <- function(df,
     rename(crude = .data[[par_wd_pb[["scenario_name"]]]]) %>%
     mutate(scenario = par_wd_pb[["scenario_name"]])
 
+  # Elliott: see art for call to scenario_best_of with do.call
+
   df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline) %>%
     scenario_best_of(
       value = "crude",
@@ -954,27 +1007,25 @@ accelerate_uhc_tobacco <- function(df,
 }
 
 
-test_uhc_acceleration = function(df_type = c("test_data", "alice")) {
-  df_type = rlang::arg_match(df_type)
+test_uhc_acceleration <- function(df_type = c("test_data", "alice")) {
+  df_type <- rlang::arg_match(df_type)
 
   if (df_type == "test_data") {
     df <- load_misc_data("test_data/test_data.parquet") %>%
       make_default_scenario(billion = "uhc")
   } else {
-    df <- read_csv("C:/Users/mjkan/OneDrive - World Health Organization/Files - DDI/GPW13/data_update/new_pipeline/02_projecting/output/uhc_calc_data_new_tobacco.csv") %>%
-      filter(is.na(other_detail)) %>% # removing the 2020 duplicates
-      mutate(scenario = "default") # adding missing scenario column
+    df <- readr::read_csv("C:/Users/ellio/OneDrive - World Health Organization/Files - DDI/GPW13/data_update/new_pipeline/02_projecting/output/uhc_calc_data_new_tobacco.csv") %>%
+      dplyr::filter(is.na(other_detail)) %>% # removing the 2020 duplicates
+      dplyr::mutate(scenario = "default") # adding missing scenario column
   }
 
   # anc4 removed from the list because it's raising errors
-  for (my_ind in c("art", "beds", "bp", "doctors", "nurses", "hwf",
-                   "dtp3", "fh", "fpg", "itn", "pneumo", "tb", "uhc_sanitation",
-                   "uhc_tobacco")) {
+  for (my_ind in c(
+    "art", "beds", "bp", "doctors", "nurses", "hwf",
+    "dtp3", "fh", "fpg", "itn", "pneumo", "tb", "uhc_sanitation",
+    "uhc_tobacco"
+  )) {
     print(paste("****", my_ind, "****"))
     add_scenario_indicator(df, "accelerate", my_ind)
   }
 }
-
-
-
-
