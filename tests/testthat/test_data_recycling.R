@@ -1,8 +1,13 @@
-test_data <- suppressMessages(billionaiRe:::load_test_data("test_data"))
+test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
 
-test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data_calculated"))
+test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
 testthat::test_that("HEP data recycling returns right number of rows", {
+
+  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
+
+  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
+
   test_data_calculated_hep <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
     dplyr::filter(!stringr::str_detect(ind, "routine_num$|campaign|surviving_infants")) %>%
@@ -22,6 +27,11 @@ testthat::test_that("HEP data recycling returns right number of rows", {
 })
 
 testthat::test_that("HPOP data recycling returns right number of rows", {
+
+  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
+
+  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
+
   test_data_calculated_hpop <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
     dplyr::group_by(scenario) %>%
@@ -37,6 +47,11 @@ testthat::test_that("HPOP data recycling returns right number of rows", {
 })
 
 testthat::test_that("UHC data recycling returns right number of rows", {
+
+  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
+
+  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
+
   test_data_calculated_uhc <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
     dplyr::filter(!(ind == "espar" & recycled == TRUE & year < 2018)) %>%
@@ -58,7 +73,9 @@ testthat::test_that("UHC data recycling returns right number of rows", {
 
 
 testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results", {
-  test_data <- load_test_data("test_data")
+  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
+
+  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
   hep_recycle <- test_data %>%
     recycle_data("hep") %>%

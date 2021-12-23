@@ -1,9 +1,6 @@
 
-test_data <- billionaiRe:::load_test_data("test_data")
-
-test_data_calculated <- billionaiRe:::load_test_data("test_data_calculated")
-
 testthat::test_that("basic billion calculations are consistent", {
+
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
     calculate_uhc_billion() %>%
@@ -11,7 +8,11 @@ testthat::test_that("basic billion calculations are consistent", {
     dplyr::filter(
       ind %in% c("uhc_sm", "asc", "fh"),
       year == 2023
-    )
+    ) %>%
+    dplyr::mutate(source = dplyr::case_when(
+      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, November 2021",
+      TRUE ~ source
+    ))
 
   hpop_basic_calculated <- hpop_df %>%
     transform_hpop_data() %>%
@@ -30,7 +31,11 @@ testthat::test_that("basic billion calculations are consistent", {
         "hep_idx"
       ),
       year == 2023
-    )
+    ) %>%
+    dplyr::mutate(source = dplyr::case_when(
+      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
+      TRUE ~ source
+    ))
 
   all_basic_calculated <- uhc_basic_calculated %>%
     dplyr::bind_rows(hpop_basic_calculated) %>%
@@ -41,6 +46,10 @@ testthat::test_that("basic billion calculations are consistent", {
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
   # Reference data frame:
+
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
     dplyr::filter(scenario == "default") %>%
@@ -72,6 +81,10 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
 
 
 testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
     dplyr::filter(scenario == "default") %>%
@@ -95,6 +108,10 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
 })
 
 testthat::test_that("UHC complexe billion calculations without scenarios are consistent", {
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%
     dplyr::filter(scenario == "default") %>%
@@ -125,6 +142,10 @@ testthat::test_that("UHC complexe billion calculations without scenarios are con
 })
 
 testthat::test_that("HEP complexe billion calculations with scenarios are consistent", {
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+
   test_data_calculated <- test_data_calculated %>%
     dplyr::mutate(transform_value = dplyr::case_when(
       ind == "espar" & is.na(level) ~ NA_real_,
@@ -149,6 +170,10 @@ testthat::test_that("HEP complexe billion calculations with scenarios are consis
 })
 
 testthat::test_that("HPOP complexe billion calculations with scenarios are consistent", {
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
     transform_hpop_data() %>%
@@ -167,6 +192,10 @@ testthat::test_that("HPOP complexe billion calculations with scenarios are consi
 })
 
 testthat::test_that("UHC complexe billion calculations with scenarios are consistent", {
+  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+
+  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%
     transform_uhc_data() %>%
