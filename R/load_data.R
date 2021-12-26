@@ -194,10 +194,8 @@ load_misc_data <- function(file_name, ...) {
 #' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
 #' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
 #'
-#' @return
+#' @return a data frame
 #' @export
-#'
-#' @examples
 load_misc_data <- function(file_name, ...) {
   f <- tempfile()
 
@@ -209,7 +207,7 @@ load_misc_data <- function(file_name, ...) {
     silent = TRUE
   )
 
-  ext = stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
+  ext <- stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
 
   if (ext %in% c("xls", "xlsx")) {
     output_df <- readxl::read_excel(f, ...)

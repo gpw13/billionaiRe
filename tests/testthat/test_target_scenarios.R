@@ -41,7 +41,8 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
     baseline_year = start_year,
     target_year = end_year,
     scenario_name = scenario_name,
-    small_is_best = small_is_best) %>%
+    small_is_best = small_is_best
+  ) %>%
     dplyr::filter(scenario == "99_2025")
 
   testthat::expect_equal(df_fixed_percent, df_test)
