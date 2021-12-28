@@ -38,7 +38,7 @@ set to \code{acceleration}
 \description{
 Accelerate beds by first dividing countries into two groups:
 \itemize{
-\item For countries which have more than 18 beds for all years after 2018, business
+\item For countries with 18 or more beds for all years after 2018, business
 as usual is returned.
 \item For countries which have less than 18 beds for any of the years after 2018 (inclusive),
 the best of business as usual and a \strong{linear change of 0.36 per year up to 2025},

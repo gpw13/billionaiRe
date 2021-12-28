@@ -62,50 +62,58 @@ accelerate_anc4 <- function(df,
     dplyr::filter(sum(type == "reported", na.rm = TRUE) > 1) %>%
     dplyr::ungroup()
 
-  # With data: take easiest out of 95% by 2030 and 2.6/year which is top 10 performers
-  # if bau is better take that
-  df_with_data_bau <- do.call(
-    scenario_bau, c(list(df = df_with_data), params_with_data_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_data_bau")
-
-  df_with_data_fixed_target <- do.call(
-    scenario_fixed_target, c(list(df = df_with_data), params_with_data_fixed_target)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_data_fixed_target")
-
-  df_with_data_linear <- do.call(
-    scenario_linear_change, c(list(df = df_with_data), params_with_data_linear)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_data_linear")
-
-  # Elliott: see art for call to scenario_best_of with do.call
-
-  df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear) %>%
-    scenario_best_of(
-      scenario_names = c("with_data_fixed_target", "with_data_linear"),
-      scenario_name = "best_of_linear_and_fixed_target",
-      small_is_best = TRUE # hard-coding true because we want to take whichever of the two options is easiest for the country to accomplish
-      # elliott: not necessary to hard code, it should be included in params
+  if (nrow(df_with_data) > 0) {
+    # With data: take easiest out of 95% by 2030 and 2.6/year which is top 10 performers
+    # if bau is better take that
+    df_with_data_bau <- do.call(
+      scenario_bau, c(list(df = df_with_data), params_with_data_bau)
     ) %>%
-    dplyr::filter(.data[["scenario"]] == "best_of_linear_and_fixed_target")
+      dplyr::filter(.data[["scenario"]] == "with_data_bau")
 
-  # Elliott: when binding the df_with_data_best and df_with_data_bau duplicated rows are created. adding a distinct to remove them for now.
-  # With new version of scenario_best_of, this shouldn't happen though.
-
-  df_with_data_accelerated <- dplyr::bind_rows(df_with_data_best, df_with_data_bau) %>%
-    dplyr::distinct() %>%
-    scenario_best_of(
-      scenario_names = c("with_data_bau", "best_of_linear_and_fixed_target"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
+    df_with_data_fixed_target <- do.call(
+      scenario_fixed_target, c(list(df = df_with_data), params_with_data_fixed_target)
     ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+      dplyr::filter(.data[["scenario"]] == "with_data_fixed_target")
 
-  df_without_data_accelerated <- do.call(
-    scenario_bau, c(list(df = df_without_data), params_without_data_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+    df_with_data_linear <- do.call(
+      scenario_linear_change, c(list(df = df_with_data), params_with_data_linear)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "with_data_linear")
+
+    # Elliott: see art for call to scenario_best_of with do.call
+
+    df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear) %>%
+      scenario_best_of(
+        scenario_names = c("with_data_fixed_target", "with_data_linear"),
+        scenario_name = "best_of_linear_and_fixed_target",
+        small_is_best = TRUE # hard-coding true because we want to take whichever of the two options is easiest for the country to accomplish
+        # elliott: not necessary to hard code, it should be included in params
+      ) %>%
+      dplyr::filter(.data[["scenario"]] == "best_of_linear_and_fixed_target")
+
+    # Elliott: when binding the df_with_data_best and df_with_data_bau duplicated rows are created. adding a distinct to remove them for now.
+    # With new version of scenario_best_of, this shouldn't happen though.
+
+    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_best, df_with_data_bau) %>%
+      dplyr::distinct() %>%
+      scenario_best_of(
+        scenario_names = c("with_data_bau", "best_of_linear_and_fixed_target"),
+        scenario_name = "acceleration",
+        small_is_best = params[["small_is_best"]]
+      ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_with_data_accelerated <- tibble::tibble()
+  }
+
+  if (nrow(df_without_data) > 0) {
+    df_without_data_accelerated <- do.call(
+      scenario_bau, c(list(df = df_without_data), params_without_data_bau)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_without_data_accelerated <- tibble::tibble()
+  }
 
   df %>%
     dplyr::bind_rows(df_without_data_accelerated, df_with_data_accelerated)
@@ -160,9 +168,9 @@ accelerate_art <- function(df,
     df_without_data_accelerated <- do.call(
       scenario_bau, c(list(df = df_without_data), params_without_data_bau)
     ) %>%
-      dplyr::filter(scenario == "business_as_usual")
+      dplyr::filter(scenario == "acceleration")
   } else {
-    df_without_data_accelerated <- df_without_data
+    df_without_data_accelerated <- tibble::tibble()
   }
 
   if (nrow(df_with_data) > 0) {
@@ -192,7 +200,7 @@ accelerate_art <- function(df,
     ) %>%
       dplyr::filter(.data[[scenario]] == "acceleration")
   } else {
-    df_with_data_accelerated <- df_with_data
+    df_with_data_accelerated <- tibble::tibble()
   }
 
   df %>%
@@ -203,7 +211,7 @@ accelerate_art <- function(df,
 #' Accelerate beds
 #'
 #' Accelerate beds by first dividing countries into two groups:
-#' - For countries which have more than 18 beds for all years after 2018, business
+#' - For countries with 18 or more beds for all years after 2018, business
 #' as usual is returned.
 #' - For countries which have less than 18 beds for any of the years after 2018 (inclusive),
 #' the best of business as usual and a **linear change of 0.36 per year up to 2025**,
@@ -257,28 +265,32 @@ accelerate_beds <- function(df,
     ) %>%
       dplyr::filter(.data[["scenario"]] == "acceleration")
   } else {
-    df_no_scenario_accelerated <- df_no_scenario
+    df_no_scenario_accelerated <- tibble::tibble()
   }
 
-  df_with_scenario_bau <- do.call(
-    scenario_bau, c(list(df = df_with_scenario), params_with_sceanrio_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_scenario_bau")
-
-  df_with_scenario_linear <- do.call(
-    scenario_linear_change, c(list(df = df_with_scenario), params_with_sceanrio_linear)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_scenario_linear")
-
-  # Elliott: see art for call to scenario_best_of with do.call
-
-  df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear) %>%
-    scenario_best_of(
-      scenario_names = c("with_scenario_bau", "with_scenario_linear"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
+  if (nrow(df_with_scenario) > 0) {
+    df_with_scenario_bau <- do.call(
+      scenario_bau, c(list(df = df_with_scenario), params_with_sceanrio_bau)
     ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+      dplyr::filter(.data[["scenario"]] == "with_scenario_bau")
+
+    df_with_scenario_linear <- do.call(
+      scenario_linear_change, c(list(df = df_with_scenario), params_with_sceanrio_linear)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "with_scenario_linear")
+
+    # Elliott: see art for call to scenario_best_of with do.call
+
+    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear) %>%
+      scenario_best_of(
+        scenario_names = c("with_scenario_bau", "with_scenario_linear"),
+        scenario_name = "acceleration",
+        small_is_best = params[["small_is_best"]]
+      ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_with_scenario_accelerated <- tibble::tibble()
+  }
 
   df %>%
     dplyr::bind_rows(df_no_scenario_accelerated, df_with_scenario_accelerated)
@@ -552,15 +564,23 @@ accelerate_hwf <- function(df,
     dplyr::filter(!any(value < glob_med & year == 2018)) %>%
     dplyr::ungroup()
 
-  df_with_scenario_accelerated <- do.call(
-    scenario_linear_change, c(list(df = df_with_scenario), params_with_scenario_linear)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+  if (nrow(df_with_scenario) > 0) {
+    df_with_scenario_accelerated <- do.call(
+      scenario_linear_change, c(list(df = df_with_scenario), params_with_scenario_linear)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_with_scenario_accelerated <- tibble::tibble()
+  }
 
-  df_no_scenario_accelerated <- do.call(
-    scenario_bau, c(list(df = df_no_scenario), params_no_scenario_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
+  if (nrow(df_no_scenario) > 0) {
+    df_no_scenario_accelerated <- do.call(
+      scenario_bau, c(list(df = df_no_scenario), params_no_scenario_bau)
+    ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_with_scenario_accelerated <- tibble::tibble()
+  }
 
   df %>%
     dplyr::bind_rows(df_with_scenario_accelerated, df_no_scenario_accelerated)
@@ -645,7 +665,6 @@ accelerate_fh <- function(df,
   this_ind <- ind_ids["fh"]
 
   params <- list(...)
-  params["small_is_best"] <- get_ind_metadata(this_ind, "small_is_best")
 
   params_bau <- get_right_params(params, scenario_bau)
   params_halt_rise <- get_right_params(params, scenario_halt_rise)
@@ -682,7 +701,8 @@ accelerate_fh <- function(df,
 #' Accelerate fp by dividing the countries into two groups:
 #' - For BRN, CYP, FSM, ISL, LUX, and SYC, return business as usual.
 #' - For all other countries, take the best of business as usual and the quantile
-#' target for quantile_year = 2018 and 5 quantiles.
+#' target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
+#' value in 2018).
 #'
 #' @inherit accelerate_anc4
 #'
@@ -721,43 +741,51 @@ accelerate_fp <- function(df,
   df_main <- df_this_ind %>%
     dplyr::filter(!.data[["iso3"]] %in% exclude_countries)
 
-  # Run only scenario_bau for exclude_countries defined above
-  df_exclude_accelerated <- do.call(
-    scenario_bau, c(list(df = df_exclude), params_exclude_bau)
-  ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration")
-
-  # Run scenario_bau and scenario_quantile(n = 5) on the remaining countries
-  # then find the best of the two options
-  df_main_bau <- do.call(
-    scenario_bau, c(list(df = df_main), params_main_bau)
-  ) %>%
-    dplyr::filter(.data[[scenario]] == "business_as_usual")
-
-  # scenario_quantile values have an upper cap defined by the maximum regional value in 2018
-  df_regional <- df_main %>%
-    dplyr::filter(year == 2018) %>%
-    dplyr::group_by("region" := whoville::iso3_to_regions(.data[["iso3"]])) %>%
-    dplyr::summarise(regional_max = max(.data[["value"]]))
-
-  df_main_quantile <- do.call(
-    scenario_quantile, c(list(df = df_main), params_main_quantile)
-  ) %>%
-    dplyr::filter(.data[[scenario]] == "quantile_5") %>%
-    dplyr::mutate("region" := whoville::iso3_to_regions(.data[["iso3"]])) %>%
-    dplyr::left_join(df_regional, by = "region") %>%
-    dplyr::mutate("value" := pmin(.data[["value"]], .data[["regional_max"]])) %>%
-    dplyr::select(!c("region", "regional_max"))
-
-  # Elliott: see art for call to scenario_best_of with do.call
-
-  df_main_accelerated <- dplyr::bind_rows(df_main_bau, df_main_quantile) %>%
-    scenario_best_of(
-      scenario_names = c("business_as_usual", "quantile_5"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
+  if (nrow(df_exclude) > 0) {
+    # Run only scenario_bau for exclude_countries defined above
+    df_exclude_accelerated <- do.call(
+      scenario_bau, c(list(df = df_exclude), params_exclude_bau)
     ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration")
+      dplyr::filter(.data[[scenario]] == "acceleration")
+  } else {
+    df_exclude_accelerated <- tibble::tibble()
+  }
+
+  if (nrow(df_main) > 0) {
+    # Run scenario_bau and scenario_quantile(n = 5) on the remaining countries
+    # then find the best of the two options
+    df_main_bau <- do.call(
+      scenario_bau, c(list(df = df_main), params_main_bau)
+    ) %>%
+      dplyr::filter(.data[[scenario]] == "business_as_usual")
+
+    # scenario_quantile values have an upper cap defined by the maximum regional value in 2018
+    df_regional <- df_main %>%
+      dplyr::filter(year == 2018) %>%
+      dplyr::group_by("region" := whoville::iso3_to_regions(.data[["iso3"]])) %>%
+      dplyr::summarise(regional_max = max(.data[["value"]]))
+
+    df_main_quantile <- do.call(
+      scenario_quantile, c(list(df = df_main), params_main_quantile)
+    ) %>%
+      dplyr::filter(.data[[scenario]] == "quantile_5") %>%
+      dplyr::mutate("region" := whoville::iso3_to_regions(.data[["iso3"]])) %>%
+      dplyr::left_join(df_regional, by = "region") %>%
+      dplyr::mutate("value" := pmin(.data[["value"]], .data[["regional_max"]])) %>%
+      dplyr::select(!c("region", "regional_max"))
+
+    # Elliott: see art for call to scenario_best_of with do.call
+
+    df_main_accelerated <- dplyr::bind_rows(df_main_bau, df_main_quantile) %>%
+      scenario_best_of(
+        scenario_names = c("business_as_usual", "quantile_5"),
+        scenario_name = "acceleration",
+        small_is_best = params[["small_is_best"]]
+      ) %>%
+      dplyr::filter(.data[[scenario]] == "acceleration")
+  } else {
+    df_main_accelerated <- tibble::tibble()
+  }
 
   df %>%
     dplyr::bind_rows(df_exclude_accelerated, df_main_accelerated)
@@ -1034,37 +1062,6 @@ accelerate_uhc_tobacco <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  trajectory_df <- load_misc_data(
-    file_name = "scenarios/uhc_tobacco/Tobacco_UHC Billion_Trajectory conversion.xlsx",
-    sheet = "Tobacco Data",
-    range = cellranger::cell_cols(2:7)
-  ) %>%
-    filter(sex == "Total") %>%
-    select(iso3, measure, year, value)
-
-  tobacco_ratio_df <- trajectory_df %>%
-    dplyr::mutate(measure = if_else(measure == "Crude", "crude", "agestd")) %>%
-    tidyr::pivot_wider(names_from = measure, values_from = value) %>%
-    dplyr::mutate(ratio_agestd_over_crude = agestd / crude)
-
-  # Extending the input trajectories to 2025, using flat_extrap from 2023 values
-  tobacco_ratio_df <- augury::expand_df(
-    tobacco_ratio_df,
-    iso3 = unique(tobacco_ratio_df$iso3),
-    year = 2000:2025,
-    response = c("agestd", "crude"),
-    keep_before_obs = TRUE,
-    keep_no_obs = TRUE
-  ) %>%
-    augury::predict_simple("flat_extrap", col = "agestd") %>%
-    augury::predict_simple("flat_extrap", col = "crude") %>%
-    augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
-    select(-pred)
-
-  tobm <- tobacco_ratio_df %>%
-    dplyr::group_by(.data[["year"]]) %>%
-    dplyr::summarise(m = mean(.data[["ratio_agestd_over_crude"]]))
-
   df_without_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
     dplyr::filter(!any(type == "estimated")) %>%
@@ -1073,67 +1070,108 @@ accelerate_uhc_tobacco <- function(df,
   df_with_data <- df_this_ind %>%
     dplyr::group_by(iso3) %>%
     dplyr::filter(any(type == "estimated")) %>%
-    dplyr::ungroup() %>%
-    dplyr::left_join(tobacco_ratio_df) %>%
-    dplyr::left_join(tobm) %>%
-    dplyr::mutate(
-      ratio_agestd_over_crude = ifelse(is.na(ratio_agestd_over_crude), m, ratio_agestd_over_crude),
-      crude = value / ratio_agestd_over_crude
+    dplyr::ungroup()
+
+  if (nrow(df_without_data) > 0) {
+    df_without_data_accelerated <- do.call(
+      scenario_bau, c(list(df = df_without_data), params_without_data_bau)
     ) %>%
-    dplyr::select(-m)
+      dplyr::filter(.data[["scenario"]] == "acceleration")
+  } else {
+    df_without_data_accelerated <- tibble::tibble()
+  }
 
-  df_without_data_accelerated <- do.call(
-    scenario_bau, c(list(df = df_without_data), params_without_data_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration")
-
-  df_with_data_bau <- do.call(
-    scenario_bau, c(list(df = df_with_data), params_with_data_bau)
-  ) %>%
-    dplyr::filter(.data[["scenario"]] == "with_data_bau")
-
-  df_with_data_perc_baseline <- df_with_data %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::mutate(valtemp = .data[[par_wd_pb[["value"]]]]) %>%
-    dplyr::mutate(baseline_value = valtemp[year == par_wd_pb[["start_year"]]]) %>%
-    dplyr::mutate(old_baseline_value = valtemp[year == par_wd_pb[["baseline_year"]]]) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(goal2025 = old_baseline_value * (100 + par_wd_pb[["percent_change"]]) / 100) %>%
-    dplyr::mutate(
-      goalend = old_baseline_value + (goal2025 - old_baseline_value) *
-        (par_wd_pb[["end_year"]] - par_wd_pb[["baseline_year"]]) / (par_wd_pb[["target_year"]] - par_wd_pb[["baseline_year"]])
+  if (nrow(df_with_data) > 0) {
+    trajectory_df <- load_misc_data(
+      file_name = "scenarios/uhc_tobacco/Tobacco_UHC Billion_Trajectory conversion.xlsx",
+      sheet = "Tobacco Data",
+      range = cellranger::cell_cols(2:7)
     ) %>%
-    dplyr::mutate(
-      "{par_wd_pb[['scenario_name']]}" := ifelse(
-        year >= par_wd_pb[["start_year"]] & year <= par_wd_pb[["target_year"]],
-        baseline_value + (goalend - baseline_value) * (year - par_wd_pb[["start_year"]]) / (par_wd_pb[["end_year"]] - par_wd_pb[["start_year"]]),
-        NA_real_
-      )
+      filter(sex == "Total") %>%
+      select(iso3, measure, year, value)
+
+    tobacco_ratio_df <- trajectory_df %>%
+      dplyr::mutate(measure = if_else(measure == "Crude", "crude", "agestd")) %>%
+      tidyr::pivot_wider(names_from = measure, values_from = value) %>%
+      dplyr::mutate(ratio_agestd_over_crude = agestd / crude)
+
+    # Extending the input trajectories to 2025, using flat_extrap from 2023 values
+    tobacco_ratio_df <- augury::expand_df(
+      tobacco_ratio_df,
+      iso3 = unique(tobacco_ratio_df$iso3),
+      year = 2000:2025,
+      response = c("agestd", "crude"),
+      keep_before_obs = TRUE,
+      keep_no_obs = TRUE
     ) %>%
-    dplyr::select(!c("valtemp", "baseline_value", "goalend", "goal2025", "old_baseline_value")) %>%
-    dplyr::filter(!is.na(.data[[par_wd_pb[["scenario_name"]]]]))
+      augury::predict_simple("flat_extrap", col = "agestd") %>%
+      augury::predict_simple("flat_extrap", col = "crude") %>%
+      augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
+      select(-pred)
 
-  # Replace crude column with {scenario_name} column and set scenario = {scenario_name}
-  # Now both df_with_data_bau and df_with_data_perc_baseline have the scenario-projected values in the crude column
-  # with the scenario column disambiguating between the two scenarios
-  df_with_data_perc_baseline <- df_with_data_perc_baseline %>%
-    select(-crude) %>%
-    rename(crude = .data[[par_wd_pb[["scenario_name"]]]]) %>%
-    mutate(scenario = par_wd_pb[["scenario_name"]])
+    tobm <- tobacco_ratio_df %>%
+      dplyr::group_by(.data[["year"]]) %>%
+      dplyr::summarise(m = mean(.data[["ratio_agestd_over_crude"]]))
 
-  # Elliott: see art for call to scenario_best_of with do.call
+    df_with_data <- df_with_data %>%
+      dplyr::left_join(tobacco_ratio_df) %>%
+      dplyr::left_join(tobm) %>%
+      dplyr::mutate(
+        ratio_agestd_over_crude = ifelse(is.na(ratio_agestd_over_crude), m, ratio_agestd_over_crude),
+        crude = value / ratio_agestd_over_crude
+      ) %>%
+      dplyr::select(-m)
 
-  df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline) %>%
-    scenario_best_of(
-      value = "crude",
-      scenario_names = c("with_data_bau", "with_data_perc_baseline"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
+    df_with_data_bau <- do.call(
+      scenario_bau, c(list(df = df_with_data), params_with_data_bau)
     ) %>%
-    dplyr::filter(.data[["scenario"]] == "acceleration") %>%
-    # Converting crude values back to age-standardised
-    dplyr::mutate(value = crude * ratio_agestd_over_crude) %>%
-    select(-c("agestd", "crude", "ratio_agestd_over_crude"))
+      dplyr::filter(.data[["scenario"]] == "with_data_bau")
+
+    df_with_data_perc_baseline <- df_with_data %>%
+      dplyr::group_by(iso3) %>%
+      dplyr::mutate(valtemp = .data[[par_wd_pb[["value"]]]]) %>%
+      dplyr::mutate(baseline_value = valtemp[year == par_wd_pb[["start_year"]]]) %>%
+      dplyr::mutate(old_baseline_value = valtemp[year == par_wd_pb[["baseline_year"]]]) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(goal2025 = old_baseline_value * (100 + par_wd_pb[["percent_change"]]) / 100) %>%
+      dplyr::mutate(
+        goalend = old_baseline_value + (goal2025 - old_baseline_value) *
+          (par_wd_pb[["end_year"]] - par_wd_pb[["baseline_year"]]) / (par_wd_pb[["target_year"]] - par_wd_pb[["baseline_year"]])
+      ) %>%
+      dplyr::mutate(
+        "{par_wd_pb[['scenario_name']]}" := ifelse(
+          year >= par_wd_pb[["start_year"]] & year <= par_wd_pb[["target_year"]],
+          baseline_value + (goalend - baseline_value) * (year - par_wd_pb[["start_year"]]) / (par_wd_pb[["end_year"]] - par_wd_pb[["start_year"]]),
+          NA_real_
+        )
+      ) %>%
+      dplyr::select(!c("valtemp", "baseline_value", "goalend", "goal2025", "old_baseline_value")) %>%
+      dplyr::filter(!is.na(.data[[par_wd_pb[["scenario_name"]]]]))
+
+    # Replace crude column with {scenario_name} column and set scenario = {scenario_name}
+    # Now both df_with_data_bau and df_with_data_perc_baseline have the scenario-projected values in the crude column
+    # with the scenario column disambiguating between the two scenarios
+    df_with_data_perc_baseline <- df_with_data_perc_baseline %>%
+      select(-crude) %>%
+      rename(crude = .data[[par_wd_pb[["scenario_name"]]]]) %>%
+      mutate(scenario = par_wd_pb[["scenario_name"]])
+
+    # Elliott: see art for call to scenario_best_of with do.call
+
+    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline) %>%
+      scenario_best_of(
+        value = "crude",
+        scenario_names = c("with_data_bau", "with_data_perc_baseline"),
+        scenario_name = "acceleration",
+        small_is_best = params[["small_is_best"]]
+      ) %>%
+      dplyr::filter(.data[["scenario"]] == "acceleration") %>%
+      # Converting crude values back to age-standardised
+      dplyr::mutate(value = crude * ratio_agestd_over_crude) %>%
+      select(-c("agestd", "crude", "ratio_agestd_over_crude"))
+  } else {
+    df_with_data_accelerated <- tibble::tibble()
+  }
 
   df %>%
     dplyr::bind_rows(df_with_data_accelerated, df_without_data_accelerated)

@@ -40,6 +40,7 @@ Accelerate fp by dividing the countries into two groups:
 \itemize{
 \item For BRN, CYP, FSM, ISL, LUX, and SYC, return business as usual.
 \item For all other countries, take the best of business as usual and the quantile
-target for quantile_year = 2018 and 5 quantiles.
+target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
+value in 2018).
 }
 }
