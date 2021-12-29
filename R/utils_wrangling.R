@@ -3,13 +3,29 @@
 #' Returns a character vector with the names of all the columns expected by the
 #' Triple Billions xMart tables.
 #'
+#' @param data_type (string): the type of data
+#'
 #' @return character vector
 #' @export
-xmart_cols <- function() {
-  c(
-    "iso3", "year", "ind", "value", "lower", "upper", "use_dash", "use_calc",
-    "source", "type", "type_detail", "other_detail", "upload_detail"
-  )
+xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
+  data_type = rlang::arg_match(data_type)
+
+  key_cols = c("iso3", "year", "ind")
+  value_cols = c("value", "lower", "upper")
+  other_cols = c("use_dash", "use_calc","source", "type", "type_detail",
+                 "other_detail", "upload_detail")
+
+  if (data_type != "wrangled_data") {
+    key_cols = c(key_cols, "scenario", "scenario_detail")
+  }
+
+  if (data_type == "final_data") {
+    value_cols = c(value_cols, "transform_value", "transform_lower", "transform_upper",
+                   "contribution", "contribution_percent", "contribution_percent_total_pop",
+                   "population", "level")
+  }
+
+  return(c(key_cols, value_cols, other_cols))
 }
 
 #' Get the col_types for xMart columns
