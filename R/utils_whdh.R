@@ -1,11 +1,3 @@
-#' Return the name of the 3B data lake
-#'
-#' @return A string. The name of the Triple Billions WHDH data lake.
-#' @export
-get_data_lake_name = function() {
-  "srhdteuwstdsa"
-}
-
 #' Backup GHO data to the WHDH Data Lake
 #'
 #' This function simplifies the process of creating backups snapshots of GHO data
@@ -34,7 +26,7 @@ save_gho_backup_to_whdh = function(df,
                                     billion = billion,
                                     ind_code = ind_code,
                                     data_type = "ingestion_data",
-                                    file_name = file_name)
+                                    file_names = file_name)
 
   # Save the data frame to a temporary parquet file
   temp_file <- tempfile(fileext = ".parquet")
@@ -57,166 +49,153 @@ save_gho_backup_to_whdh = function(df,
 #' `get_whdh_path()` simplifies the process of generating accurate file paths for
 #' downloading/uploading files from the Triple Billions WHDH data lake.
 #'
-#' Using this function where working with the data lake is highly recommended as
-#' it ensures file paths abide by the established standard and directory structure
+#' Using this function when working with the data lake is highly recommended as
+#' it ensures file paths abide by the established standards and directory structure
 #' for the data lake.
 #'
-#' @param operation Either "download" or "upload".
-#' @param billion The billion to which the indicator belongs.
-#' @param ind_code The GPW13 code for the indicator.
-#' @param data_type The type of file/data asset. Cane be one of "ingestion_data",
-#'   "gho_backup", "unproj_data", "proj_data", "calc_data" and "full_data"
-#' @param file_name The name of the file to download. NULL by default.
+#' @param operation (string) Either "download" or "upload".
+#' @param data_type (string) The type of data to load.
+#' * `wrangled_data` (default): raw data that has been wrangled into a suitable
+#'   form for analysis.
+#' * `projected_data`:  data that has been fully projected to the target year but
+#'   has not yet been transformed or calculated upon.
+#' * `final_data`: the complete set of billions data with transformed values, contributions,
+#'   and all calculations available.
+#' * `ingestion_data`: raw data in its original form as received from the technical
+#'  program, GHO, or other sources. These files have not been wrangled or modified
+#'  in any way.
+#' @param billion (string) One of "all" (default), "hep", "hpop", or "uhc". If "all",
+#' the file paths for all indicators in all three bilions are returned.
+#' @param ind_codes (character vector) The name of the indicator (or indicators) to load data for.
+#'   If `all`, returns paths for all indicators for a given billion. If `billion = "all"`,
+#'   this argument is ignored and the file paths for all indicators in all three bilions
+#'   are returned.
+#' @param file_names (character vector) The name(s) of the file(s) to download.
+#'   NULL by default. Ignored if either `billion = "all"` or `ind_codes = "all"`.
+#' @param sandbox (logical) Whether or not to use the sandbox folders in the data lake.
 #'
-#' @return A string with the properly formatted file path, abiding by the standardised
-#'   directory structure and naming conventions for the 3B WHDH data lake.
+#' @return A character vector.
 #' @export
+#'
 get_whdh_path = function(operation = c("download", "upload"),
-                         data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
-                         billion = c("hep", "hpop", "uhc"),
-                         ind_code,
-                         file_name = NULL) {
+                         data_type = c("wrangled_data", "projected_data", "final_data", "ingestion_data"),
+                         billion = c("all", "hep", "hpop", "uhc"),
+                         ind_codes = "all",
+                         file_names = NULL,
+                         sandbox = TRUE) {
 
   # Argument checks and assertions
   operation = rlang::arg_match(operation)
   data_type = rlang::arg_match(data_type)
-  assert_type(ind_code, "character")
-  assert_type(file_name, "character")
+  billion = rlang::arg_match(billion)
+  assert_type(billion, "character")
+  assert_type(ind_codes, "character")
 
-  data_layer = data_layer = get_data_layer(data_type)
+  # For billion = "all", recursively call the function with each billion
+  if (billion == "all" && data_type != "final_data") {
 
-  # If final_data, no data_asset is needed
+    message("`ind_codes` and `file_names` arguments ignored when billion = \"all\"")
+    paths = c("hep", "hpop", "uhc") %>%
+      # rlang::set_names() %>%
+      purrr::map(~ get_whdh_path(operation, data_type, .x, "all", NULL, sandbox)) %>%
+      unlist() %>%
+      unique() %>%
+      suppressMessages()
+
+    return(paths)
+  }
+
+  # file_names is required for uploads
+  # And only single files can be uploaded so billion and ind_codes arguments cannot be "all"
+  if (operation == "upload") {
+    # TODO: removing these assertions for now. Dealing with billion and ind_codes for final_data is ambiguous
+    # assert_equals(billion, "all", reverse = TRUE, msg_suffix = "when uploading.")
+    # assert_equals(ind_codes, "all", reverse = TRUE, msg_suffix = "when uploading.")
+    assert_arg_exists(file_names, "The %s argument is required when uploading to the data lake.")
+  }
+
+  # When downloading_ingestion data, require file_names because this folder is not
+  # versioned an does not abide by WHDH naming conventions
+  if (operation == "download" && data_type == "ingestion_data") {
+    assert_arg_exists(file_names, "The %s argument is required when data_type = \"ingestion_data\".")
+  }
+
+  team = if (sandbox) "3B/Sandbox" else "3B"
+  data_layer = get_data_layer(data_type)
+
+  # If final_data, data_asset is just final_data
   if (data_type == "final_data") {
-    message("`billion` and `ind_code` arguments ignored when data_type = \"final_data\"")
-    data_asset = ""
-  }
-  # Otherwise check billion and ind_code are provided and
-  # set data_asset = {billion}_{ind_code}
-  else {
-    billion = rlang::arg_match(billion)
-    assert_arg_exists(ind_code, "The %s argument is required for all data types except \"final_data\".")
-    data_asset = sprintf("%s_%s/", billion, ind_code)
-  }
 
-  if (operation == "download") {
-
-    # When downloading_ingestion data, require a file_name because this folder
-    # is not versioned an does not abide by WHDH naming conventions
-    if (data_type == "ingestion_data") {
-      assert_arg_exists(file_name, "The %s argument is required when data_type = \"ingestion_data\".")
-    }
+    message("`billion` and `ind_codes` arguments ignored when data_type = \"final_data\"")
+    data_asset = "final_data"
 
   } else {
-    # A file_name is required for uploads
-    assert_arg_exists(file_name, "The %s argument is required when uploading to the data lake.")
 
+    # Remove later
+    # billion = rlang::arg_match(billion)
+    # assert_arg_exists(ind_codes, "The %s argument is required for all data types except \"final_data\".")
+
+    valid_inds = get_valid_inds(data_type, billion)
+
+    if (identical(ind_codes, "all")) {
+
+      # Set ind_codes equal to list of all valid indicators
+      message("`file_names` argument ignored when ind_codes = \"all\"")
+      ind_codes = valid_inds
+      file_names = NULL
+
+    } else {
+      # Or check that given indicators are valid indicators
+      assert_x_in_y(ind_codes, valid_inds)
+    }
+
+    data_asset = paste(billion, ind_codes, sep = "_")
   }
 
   # If a file name is provided, append it to the data_asset
-  if (!is.null(file_name) && !is.na(file_name)) {
+  if (!is.null(file_names) && !is.na(file_names)) {
 
-    # Ensure that ind_code and file_name have a 1-to-1 mapping or that one of them
+    # Ensure that ind_codes and file_names have a 1-to-1 mapping or that one of them
     # is of length 1 and can be recycled to match the length of the other
-    assert_same_length(ind_code, file_name, recycle = TRUE, remove_null = FALSE)
+    assert_same_length(ind_codes, file_names, recycle = TRUE, remove_null = FALSE)
 
     # Ensure that the file has the right extension
-    assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
-    data_asset = paste0(data_asset, file_name)
+    assert_fileext(file_names, c("csv", "xls", "xlsx", "parquet", "feather"))
+
+  } else {
+    # Set file_names to be an empty string so data asset folders end with /
+    file_names = ""
   }
 
-  sprintf("3B/%s/%s/%s", data_layer, data_type, data_asset)
+  path = paste(team, data_layer, data_type, data_asset, file_names, sep = "/") %>%
+    stringr::str_replace("uhc_espar", "hep_espar")
+
+  return(path)
 }
 
-# #' Returns the correct download paths for the Triple Billions WHDH data lake
-# #'
-# #' @noRd
-# get_whdh_download_path = function(data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
-#                                   billion = c("hep", "hpop", "uhc"),
-#                                   ind_code,
-#                                   file_name = NULL) {
-#
-#   data_layer = data_layer = get_data_layer(data_type)
-#
-#   # Ensure that a file_name is always provided for ingestion_data
-#   if (data_type == "ingestion_data") {
-#     assert_arg_exists(file_name, "The %s argument is required when data_type = 'ingestion_data' and cannot be NA or NULL")
-#   }
-#
-#   # If final_data, no data_asset is needed
-#   if (data_type == "final_data") {
-#     message("`billion` and `ind_code` arguments ignored when data_type = \"final_data\"")
-#     data_asset = ""
-#   } # Otherwise check ind_code is provided and set data_asset = {billion}_{ind_code}
-#   else {
-#     assert_arg_exists(ind_code, "The %s argument is required for all data types except \"final_data\".")
-#     data_asset = sprintf("%s_%s/", billion, ind_code)
-#   }
-#
-#   # If a file name is provided, append it to the data_asset
-#   if (!is.null(file_name) && !is.na(file_name)) {
-#     # Ensure that the file has the right extension
-#     assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
-#     data_asset = paste0(data_asset, file_name)
-#   }
-#
-#   # if (data_type == "final_data") {
-#   #   path = sprintf("3B/%s/%s/", data_layer, data_type)
-#   # } else {
-#   #   path = sprintf("3B/%s/%s/%s/", data_layer, data_type, data_asset)
-#   # }
-#   #
-#   # if (data_type == "ingestion_data") {
-#   #
-#   #   # Ensure the file_name argument exists
-#   #   assert_arg_exists(file_name, "The %s argument is required when data_type = 'ingestion_data' and cannot be NA or NULL")
-#   #
-#   #   # Ensure that the file has the right extension
-#   #   assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
-#   #
-#   #   path = sprintf("3B/%s/%s/%s/%s", data_layer, data_type, data_asset, file_name)
-#   #
-#   # } else if (data_type == "final_data") {
-#   #
-#   #   # TODO: Decide on file structure for gold layer/final_data
-#   #   return(NULL)
-#   #
-#   # } else {
-#   #
-#   #   # If a file_name is not provided, then return the data asset folder
-#   #   if (is.null(file_name)) {
-#   #
-#   #     path = sprintf("3B/%s/%s/%s/", data_layer, data_type, data_asset)
-#   #
-#   #   } else {
-#   #
-#   #     # Ensure that the file has the right extension
-#   #     assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
-#   #
-#   #     path = sprintf("3B/%s/%s/%s/%s", data_layer, data_type, data_asset, file_name)
-#   #   }
-#   # }
-#
-#   sprintf("3B/%s/%s/%s", data_layer, data_type, data_asset)
-# }
-#
-# #' Returns the correct upload paths for the Triple Billions WHDH data lake
-# #'
-# #' @noRd
-# get_whdh_upload_path = function(data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
-#                                 billion = c("hep", "hpop", "uhc"),
-#                                 ind_code,
-#                                 file_name = NULL) {
-#
-#   # All upload paths must have a file_name with a valid extension
-#   assert_arg_exists(file_name, "The %s argument is required when uploading to the data lake.")
-#   assert_fileext(file_name, c("csv", "xls", "xlsx", "parquet", "feather"))
-#
-#   data_layer = get_data_layer(data_type)
-#   data_asset = sprintf("%s_%s", billion, ind_code)
-#
-#   path = sprintf("3B/%s/%s/%s/%s/%s", data_layer, data_type, billion, data_asset, file_name)
-#   return(path)
-# }
+#' Get correct set of indicators for WHDH operations
+#'
+#' @inheritParams get_whdh_path
+#' @param billion (string) One of "hep", "hpop", and "uhc".
+#'
+#' @return
+#'
+get_valid_inds = function(data_type, billion) {
+  assert_type(data_type, "character")
+  assert_type(billion, "character")
+  assert_length(data_type, 1)
+  assert_length(data_type, 1)
+
+  # include_covariates = TRUE to include pneumo_mort for wrangled_data but not other data types
+  incl_covars = ifelse(data_type == "wrangled_data", TRUE, FALSE)
+
+  valid_inds = billion_ind_codes(billion,
+                                 include_covariates = incl_covars,
+                                 include_calculated = FALSE,
+                                 include_subindicators = FALSE)
+
+  valid_inds
+}
 
 #' @noRd
 get_data_layer = function(data_type) {
@@ -226,4 +205,12 @@ get_data_layer = function(data_type) {
          projected_data = "Silver",
          final_data = "Gold"
   )
+}
+
+#' Return the name of the 3B data lake
+#'
+#' @return A string. The name of the Triple Billions WHDH data lake.
+#' @export
+get_data_lake_name = function() {
+  "srhdteuwstdsa"
 }
