@@ -1,3 +1,5 @@
+# Unclassified ------------------------------------------------------------
+
 #' Assert that ind_ids is the correct named vector
 #'
 #' @param ind_ids Indicator ids to check
@@ -29,28 +31,35 @@ assert_years <- function(start_year, end_year) {
 
 #' Assert that a file's extension is one of a few options
 #'
-#' @param file_name A string. The name of the file
-#' @param valid_exts A character vector. The list of valid extensions.
-assert_fileext = function(file_name, valid_exts) {
-  # Check that file_name and valid_exts are character vectors
-  assert_type(file_name, "character")
+#' @param file_names (character vector) The file names.
+#' @param valid_exts (character vector) A list of the valid extensions.
+assert_fileext = function(file_names, valid_exts) {
+  # Check that file_names and valid_exts are character vectors
+  assert_type(file_names, "character")
   assert_type(valid_exts, "character")
 
-  if (!is.null(file_name)) {
-    # Extract the file extension
-    ext = stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
+  # Extract the file extensions
+  ext = stringr::str_match(file_names, "(.+)\\.(.+)")[, 3]
 
-    if (is.na(ext)) {
-      stop("The file does not have an extension.", call. = FALSE)
-    }
+  if (any(is.na(ext))) {
+    stop("One or more files do not have an extension.", call. = FALSE)
+  }
 
-    if (!(ext %in% valid_exts)) {
-      stop(
-        sprintf("The file extension is %s but needs to be one of: %s.",
-                ext,
-                paste(valid_exts, collapse = ", ")),
-        call. = FALSE)
-    }
+  cond = all(ext %in% valid_exts)
+  if (!cond) {
+    stop(
+      sprintf("File extensions must be one of: {%s}.", paste(valid_exts, collapse = ", ")),
+      call. = FALSE
+    )
+  }
+}
+
+#' Assert that the elements of the vector are unique
+#'
+#' @param x (vector)
+assert_unique_vector = function(x) {
+  if (length(x) != length(unique(x))) {
+    stop(sprintf("%s has duplicate elements", deparse(substitute(x))))
   }
 }
 
@@ -177,7 +186,7 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 #' Assert that an object is of a given type
 #'
 #' @param x The input object
-#' @param expected_type The expected type of x
+#' @param expected_type (string) The expected type of x
 assert_type = function(x, expected_type) {
   assert_string(expected_type, 1)
 
@@ -249,8 +258,8 @@ assert_strings <- function(...) {
 
 #' Assert that a vector is of length n
 #'
-#' @param x vector
-#' @param n integer, the expected length
+#' @param x (vector)
+#' @param n (integer) the expected length of x
 assert_length = function(x, n) {
   l <- length(x)
   if (l != n) {
@@ -261,8 +270,8 @@ assert_length = function(x, n) {
 
 #' Assert that a vector has a minimum length n
 #'
-#' @param x vector
-#' @param n integer, the minimum allowed size of the vector
+#' @param x (vector)
+#' @param n (integer) the minimum allowed size of the vector
 assert_min_length = function(x, n) {
   l <- length(x)
   if (l < n) {
@@ -273,13 +282,39 @@ assert_min_length = function(x, n) {
 
 # Object matching ---------------------------------------------------------
 
+#' Assert that x and y are (or are not) equal/identical
+#'
+#' @param x (vector)
+#' @param y (vector)
+assert_equals = function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = NULL) {
+  cond = if (identical) identical(x, y) else x == y
+  cond = if (reverse) !cond else cond
+  msg = "%s must "
+  msg = if (reverse) paste0(msg, "not be ") else paste0(msg, "be ")
+  msg = if (identical) paste0(msg, "identical ") else paste0(msg, "equal ")
+  msg = paste0(msg, "to %s")
+
+  if (!is.null(msg_suffix)) {
+    assert_type(msg_suffix, "character")
+    assert_length(msg_suffix, 1)
+    msg = paste(msg, msg_suffix)
+  }
+
+  if (!cond) {
+    stop(
+      sprintf(msg, deparse(substitute(x)), deparse(substitute(y))),
+      call. = FALSE
+    )
+  }
+}
+
 #' Assert that all elements in x are members of y
 #'
 #' In other words, assert that x is a subset of y. Useful for ensuring that an
 #' argument is one of a given set of options.
 #'
-#' @param x vector
-#' @param y vector
+#' @param x (vector)
+#' @param y (vector)
 assert_x_in_y = function(x, y) {
   cond = x %in% y
   if (!all(cond)) {
@@ -294,10 +329,16 @@ assert_x_in_y = function(x, y) {
 #' Assert that two or more vectors are the same length
 #'
 #' @param ... Two or more vectors that should be the same length.
-#' @param recycle Whether vectors of length one can be recycled to match the length
+#' @param recycle (logical) Whether vectors of length one can be recycled to match the length
 #'   of the other vectors.
+#' @param remove_null (logical) whether NULL values should be removed from the inputs before
+#'   comparison
 assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
-  arg_names <- sys.call()[-1]
+  # Extract just the names of the ... arguments
+  arg_names <- sys.call()
+  end_idx = length(arg_names) - 2
+  arg_names <- arg_names[2:end_idx]
+
   args <- list(...)
 
   # Ensure that the input has at least two vectors for comparison
