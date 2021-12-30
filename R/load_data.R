@@ -1,7 +1,133 @@
-#' Load Raw Billions Indicator Data
+#' Load Billions indicator data
 #'
 #' `load_billion_data()` provides access to the raw inputs to the Billions stored
-#' within the World Health Organization's xMart4 database. By default, it filters
+#' within the World Health Data Hub or the World Health Organization's xMart4 database.
+#' By default, it filters the loaded data to take the most recently uploaded data
+#' for each indicator, country, and year. The user can also specify to take the
+#' latest data before a certain time period, or to extract all data from the database.
+#'
+#' This function requires that the user have the [xmart4](https://github.com/gpw13/xmart4)
+#' and [whdh](https://github.com/WorldHealthOrganization/whdh) packages installed
+#' and setup to access the data. For quetions about getting the relevant permissions,
+#' please contact <kanjim@who.int> or <messeillere@who.int>.
+#'
+#' @param data_type (string) The type of data to load.
+#' * `wrangled_data` (default): raw data that has been wrangled into a suitable
+#'   form for analysis.
+#' * `projected_data`:  data that has been fully projected to the target year but
+#'   has not yet been transformed or calculated upon.
+#' * `final_data`: the complete set of billions data with transformed values, contributions,
+#'   and all calculations available.
+#' @param billion (string) One of "all" (default), "hep", "hpop", or "uhc". If "all",
+#'   downloads all indicators for all three billions.
+#' @param ind_codes (character vector) The name of the indicator (or indicators) to load data for.
+#'   If `all`, downloads data for all indicators for a given billion. Ignored if
+#'   billion = "all".
+#' @param date_filter (string) Either "latest", or a single date string. The date
+#'   string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+#'   If a date is provided, the returned data frame is a snapshot of the data as
+#'   stored on that date (if no updates were made on the given date, then the most
+#'   recent update before that date is used).
+#' @param na_rm (logical) Specifies whether to filter the data to only rows
+#'   where `value` is not missing. Defaults to `TRUE`.
+#' @param sandbox (logical) Whether or not to use the sandbox folders in the data lake.
+#' @param silent (logical) Specifies whether to show authentication messages and
+#'   a download progress bar. Defaults to `TRUE`.
+#' @param data_source (string) Ether "whdh" or "xmart". Indicates where to download
+#'   the data from
+#' @param ... Additional arguments passed to `xmart4::xmart4_table()`. Use if
+#'   you need to provide additional token specifications for Azure authentication.
+#'
+#' @return A data frame.
+#'
+load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
+                              billion = c("all", "hep", "hpop", "uhc"),
+                              ind_codes = "all",
+                              date_filter = "latest",
+                              na_rm = TRUE,
+                              sandbox = FALSE,
+                              silent = TRUE,
+                              data_source = c("whdh", "xmart"),
+                              ...) {
+
+  data_type = rlang::arg_match(data_type)
+  billion = rlang::arg_match(billion)
+  data_source = rlang::arg_match(data_source)
+
+  # Temporary error
+  if (data_source == "xmart") {
+    stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")
+  }
+
+  if (data_source == "whdh") {
+    load_whdh_billion_data(data_type, billion, ind_codes, date_filter, na_rm, ...)
+  } else {
+    load_xmart_billion_data(data_type, billion, ind_codes, date_filter, na_rm, ...)
+  }
+}
+
+#' Load Billions indicator data from WHDH
+#'
+#' @inheritParams load_billion_data
+#'
+#' @return A data frame.
+#'
+load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data", "final_data"),
+                                  billion = c("all", "hep", "hpop", "uhc"),
+                                  ind_codes = "all",
+                                  date_filter = "latest",
+                                  na_rm = TRUE,
+                                  sandbox = FALSE,
+                                  silent = TRUE) {
+
+  # Assertions and checks
+  requireNamespace("whdh", quietly = TRUE)
+  billion = rlang::arg_match(billion)
+  data_type = rlang::arg_match(data_type)
+  assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
+
+  # Paths of items to download
+  paths = get_whdh_path("download", data_type, billion, ind_codes, sandbox = sandbox)
+  assert_unique_vector(paths)
+
+  # Ensure that each path has a corresponding data asset in the data lake
+  data_lake = get_data_lake_name()
+  team = if (sandbox) "3B/Sandbox" else "3B"
+  data_layer = get_data_layer(data_type)
+  dir_path = sprintf("%s/%s/%s/", team, data_layer, data_type)
+
+  valid_data_assets = whdh::list_blobs_in_directory(data_lake,
+                                dir_path,
+                                silent = TRUE) %>%
+    dplyr::filter(.data[["isdir"]]) %>%
+    dplyr::pull("name") %>%
+    paste0(., "/")
+
+  assert_x_in_y(paths, valid_data_assets)
+
+  df = purrr::map_dfr(paths, ~ {
+    temp_file = tempfile()
+
+    whdh::download_from_data_lake(
+      data_lake_name = data_lake,
+      source_path = .x,
+      destination_path = temp_file,
+      latest_version_only = TRUE,
+      silent = silent
+    )
+
+    arrow::read_parquet(temp_file)
+  })
+
+  df %>%
+    filter_billion_na(na_rm)
+}
+
+#' Load Raw Billions Indicator Data
+#'
+#' `load_billion_data_legacy()` is the legacy version of [load_billion_data()].
+#' It provides access to the raw inputs to the Billions stored within the World
+#' Health Organization's xMart4 database. By default, it filters
 #' the loaded data to take the most recently uploaded data for each indicator,
 #' country, and year. The user can also specify to take the latest data before a
 #' certain time period, or to extract all data from the database.
@@ -38,23 +164,22 @@
 #' @return A data frame.
 #'
 #' @export
-load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
-                              date_filter = "latest",
-                              na_rm = TRUE,
-                              format = c("csv", "streaming", "none"),
-                              ...) {
+load_billion_data_legacy <- function(data_type = c("wrangled_data", "projected_data", "raw_data", "final_data"),
+                                     billion = c("all", "hep", "hpop", "uhc"),
+                                     ind_codes = "all",
+                                     date_filter = "latest",
+                                     na_rm = TRUE,
+                                     format = c("csv", "streaming", "none"),
+                                     ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
-  mart_table <- rlang::arg_match(mart_table)
-  mart_match <- c(
-    "full_data" = "FULL_BILLIONS",
-    "raw_data" = "RAW_INDICATOR",
-    "projected_data" = "PROJECTED_DATA",
-    "unproj_data" = "RAW_UNPROJ_DATA",
-    "proj_data" = "RAW_PROJ_DATA"
+  data_type <- rlang::arg_match(data_type)
+  mart_table <- switch(data_type,
+                       "wrangled_data" = "WRANGLED_DATA",
+                       "projected_data" = "PROJECTED_DATA",
+                       "raw_data" = "RAW_INDICATOR",
+                       "final_data" = "FULL_BILLIONS"
   )
-  mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
   format <- rlang::arg_match(format)
 
@@ -64,97 +189,6 @@ load_billion_data <- function(billion = c("hep", "hpop", "uhc", "all"),
   df <- filter_billion_date(df, date_filter)
   df <- filter_billion_na(df, na_rm)
   df
-}
-
-#' Load Billions indicator data
-#'
-#' @param billion String. Billions data to load, one of "hep" (default), "hpop",
-#'   or "uhc".
-#' @param ind_codes Character vector. The name of the indicator (or indicators) to load data for.
-#'   If `all`, downloads data for all indicators for a given billion.
-#' @param data_type The type of data to load.
-#' * `wrangled_data` (default): raw data that has been wrangled into a suitable
-#'   form for analysis.
-#' * `projected_data`:  data that has been fully projected to the target but has
-#'   not yet been transformed or calculated upon.
-#' * `final_data`: the complete set of billions data with transformed values, contributions,
-#' and all calculations available.
-#' @param na_rm Logical. Specifies whether to filter the data to only rows
-#'     where `value` is not missing. Defaults to `TRUE`.
-#' @param silent Logical. Specifies whether to show authentication messages and
-#'     a download progress bar. Defaults to `TRUE`.
-#'
-#' @return A data frame.
-#' @export
-load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data", "final_data"),
-                                  billion = c("hep", "hpop", "uhc"),
-                                  ind_codes = "all",
-                                  date_filter = "latest",
-                                  na_rm = TRUE,
-                                  silent = TRUE) {
-
-  # Assertions and checks
-  billion = rlang::arg_match(billion)
-  data_type = rlang::arg_match(data_type)
-  assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
-
-  if (ind_codes == "all" & data_type != "final_data") {
-
-    # include_covariates = TRUE to include pneumo_mort for wrangled_data but not for projected_data
-    incl_covars = if (data_type == "wrangled_data") TRUE else FALSE
-
-    ind_codes = billion_ind_codes(billion, include_covariates = incl_covars) %>%
-      purrr::keep(
-        ~ !stringr::str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+") & !is.na(get_ind_metadata(.x, "ind_type"))
-      )
-  }
-
-  if (data_type != "final_data") {
-
-    # Check if the input ind_codes are valid
-    valid_inds = billion_ind_codes(billion, include_covariates = TRUE) %>%
-      purrr::keep(~ !stringr::str_detect(.x, "rural|urban|denom|num|covid|ebola|espar.+") & !is.na(get_ind_metadata(.x, "ind_type")))
-    assert_x_in_y(ind_codes, valid_inds)
-
-  }
-
-  # Paths of items to download
-  paths = get_whdh_path("download", data_type, billion, ind_codes) %>%
-    stringr::str_replace("uhc_espar", "hep_espar")
-
-  # Ensure that each path has a corresponding data asset in the data lake
-  data_lake = get_data_lake_name()
-  data_layer = get_data_layer(data_type)
-
-  # For final_data, the data_layer is the directory because there are in indicator folders
-  if (data_type != "final_data") {
-    dir_path = sprintf("3B/%s/%s/", data_layer, data_type)
-  } else {
-    dir_path = sprintf("3B/%s/", data_layer)
-  }
-  valid_data_assets = whdh::list_blobs_in_directory(data_lake,
-                                dir_path,
-                                silent = TRUE) %>%
-    dplyr::filter(.data[["isdir"]]) %>%
-    dplyr::pull("name") %>%
-    paste(., "/", sep = "")
-  assert_x_in_y(paths, valid_data_assets)
-
-  df = purrr::map_dfr(paths, ~ {
-    temp_file = tempfile()
-    whdh::download_from_data_lake(
-      data_lake_name = data_lake,
-      source_path = .x,
-      destination_path = temp_file,
-      latest_version_only = TRUE,
-      silent = silent
-    )
-
-    arrow::read_parquet(temp_file)
-  })
-
-  df %>%
-    filter_billion_na(na_rm)
 }
 
 #' @noRd
