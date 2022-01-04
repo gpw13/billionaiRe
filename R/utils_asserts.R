@@ -191,9 +191,9 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 assert_type <- function(x, expected_type, reverse = FALSE) {
   assert_string(expected_type, 1)
 
-  cond = if (reverse) typeof(x) == expected_type else typeof(x) != expected_type
-  msg = if (reverse) "must not be" else "must be"
-  msg = paste("%s", msg, "of type %s")
+  cond <- if (reverse) typeof(x) == expected_type else typeof(x) != expected_type
+  msg <- if (reverse) "must not be" else "must be"
+  msg <- paste("%s", msg, "of type %s")
 
   if (!is.null(x) & cond) {
     stop(sprintf(msg, deparse(substitute(x)), expected_type), call. = FALSE)

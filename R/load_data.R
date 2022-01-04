@@ -40,6 +40,8 @@
 #'
 #' @return A data frame.
 #'
+#' @export
+#'
 load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                               billion = c("all", "hep", "hpop", "uhc"),
                               ind_codes = "all",
@@ -125,12 +127,12 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
 #' @return A data frame.
 #'
 load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
-                                   billion = c("all", "hep", "hpop", "uhc"),
-                                   ind_codes = "all",
-                                   date_filter = "latest",
-                                   na_rm = TRUE,
-                                   sandbox = FALSE,
-                                   silent = TRUE) {
+                                    billion = c("all", "hep", "hpop", "uhc"),
+                                    ind_codes = "all",
+                                    date_filter = "latest",
+                                    na_rm = TRUE,
+                                    sandbox = FALSE,
+                                    silent = TRUE) {
   # Temporary error
   stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")
 }
@@ -176,12 +178,13 @@ load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_da
 #' @return A data frame.
 #'
 #' @export
+#'
 load_billion_data_legacy <- function(billion = c("hep", "hpop", "uhc", "all"),
-                              mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
-                              date_filter = "latest",
-                              na_rm = TRUE,
-                              format = c("csv", "streaming", "none"),
-                              ...) {
+                                     mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
+                                     date_filter = "latest",
+                                     na_rm = TRUE,
+                                     format = c("csv", "streaming", "none"),
+                                     ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
   mart_table <- rlang::arg_match(mart_table)
