@@ -17,6 +17,7 @@ URL: https://www.who.int/data/triple-billion-dashboard,
 Depends: 
     R (>= 2.10)
 Imports: 
+    arrow,
     dplyr,
     glue,
     lubridate,
@@ -25,6 +26,7 @@ Imports:
     openxlsx,
     purrr,
     readr,
+    readxl,
     rlang,
     scales,
     stringr,
@@ -39,11 +41,13 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    whdh,
     wppdistro (>= 0.1.0),
     xmart4 (>= 0.2.2)
 VignetteBuilder: 
     knitr
 Remotes: 
+    WorldHealthOrganization/whdh,
     WorldHealthOrganization/wppdistro,
     gpw13/whoville,
     gpw13/xmart4
