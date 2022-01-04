@@ -191,8 +191,9 @@ get_valid_inds <- function(data_type, billion) {
   assert_length(data_type, 1)
   assert_length(data_type, 1)
 
-  # include_covariates = TRUE to include pneumo_mort for wrangled_data but not other data types
-  incl_covars <- ifelse(data_type == "wrangled_data", TRUE, FALSE)
+  # include_covariates = TRUE to include pneumo_mort for wrangled_data and
+  # ingestion_data but not other data types
+  incl_covars <- ifelse(data_type %in% c("ingestion_data", "wrangled_data"), TRUE, FALSE)
 
   valid_inds <- billion_ind_codes(billion,
     include_covariates = incl_covars,
