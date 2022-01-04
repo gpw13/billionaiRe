@@ -48,6 +48,12 @@ testthat::test_that(paste0("accelerate_art returns accurate values:"), {
     get_fixed_target(90.25, 68, 2019, 2025)
   )
 
+  # Fixed target value of 90.25 in 2025 is not better than bau (95), with
+  testthat::expect_equal(
+    get_2025_value(80:100, ind, "reported"),
+    95
+  )
+
   # No reported data, so bau result is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
 })
@@ -73,14 +79,12 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
 
 # bp ----------------------------
 
-# @Alice
-# TODO: Difficult to test due to dependencies on external targets
+# TODO: Difficult to test due to dependencies on external targets.
 
-# testthat::test_that(paste0("accelerate_bp returns accurate values:"), {
+# testthat::test_that("accelerate_bp returns accurate values:", {
 #   ind <- "bp"
 #
-#   # explanation
-#   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), )
+#   testthat::expect_equal(value_2025,expected_2024)
 # })
 
 # doctors ----------------------------
@@ -138,7 +142,6 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
 
 # dtp3 ----------------------------
 
-# @Alice
 # TODO: Difficult to test due to dependencies on external targets
 
 # testthat::test_that(paste0("accelerate_dtp3 returns accurate values:"), {

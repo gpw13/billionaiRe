@@ -9,6 +9,11 @@ accelerate_dtp3(
   ind_ids = billion_ind_codes("uhc"),
   scenario = "scenario",
   ind = "ind",
+  iso3 = "iso3",
+  year = "year",
+  value = "value",
+  start_year = 2018,
+  end_year = 2025,
   ...
 )
 }
@@ -25,6 +30,16 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{year}{Column name of column with years.}
+
+\item{value}{Column name of column with indicator values.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

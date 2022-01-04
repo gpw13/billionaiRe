@@ -9,6 +9,12 @@ accelerate_uhc_tobacco(
   ind_ids = billion_ind_codes("uhc"),
   scenario = "scenario",
   ind = "ind",
+  value = "value",
+  year = "year",
+  iso3 = "iso3",
+  type_col = "type",
+  end_year = 2025,
+  start_year = 2018,
   ...
 )
 }
@@ -25,6 +31,18 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{value}{Column name of column with indicator values.}
+
+\item{year}{Column name of column with years.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

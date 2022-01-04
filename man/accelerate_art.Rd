@@ -9,6 +9,10 @@ accelerate_art(
   ind_ids = billion_ind_codes("uhc"),
   scenario = "scenario",
   ind = "ind",
+  year = "year",
+  type_col = "type",
+  iso3 = "iso3",
+  start_year = 2018,
   ...
 )
 }
@@ -25,6 +29,14 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{year}{Column name of column with years.}
+
+\item{type_col}{Column name of column to store type.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

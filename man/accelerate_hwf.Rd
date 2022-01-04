@@ -9,6 +9,10 @@ accelerate_hwf(
   ind_ids = billion_ind_codes("uhc"),
   scenario = "scenario",
   ind = "ind",
+  iso3 = "iso3",
+  value = "value",
+  year = "year",
+  start_year = 2018,
   ...
 )
 }
@@ -25,6 +29,14 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{iso3}{Column name of column with country ISO3 codes.}
+
+\item{value}{Column name of column with indicator values.}
+
+\item{year}{Column name of column with years.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
