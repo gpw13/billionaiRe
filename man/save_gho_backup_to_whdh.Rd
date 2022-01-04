@@ -8,11 +8,14 @@ save_gho_backup_to_whdh(df, billion, ind_code, silent = FALSE)
 }
 \arguments{
 \item{df}{The response from the GHO API, typically the result of calling
-\code{ghost::gho_data()}.}
+\code{\link[ghost:gho_data]{ghost::gho_data()}}.}
 
 \item{billion}{The billion to which the indicator belongs}
 
 \item{ind_code}{The GPW13 code for the indicator}
+
+\item{silent}{Passed to \code{\link[whdh:upload_to_data_lake]{whdh::upload_to_data_lake()}}. Determines if upload
+messages and progress bar are shown}
 }
 \value{
 The original data frame

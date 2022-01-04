@@ -85,10 +85,11 @@ get_ind_metadata <- function(ind_codes,
   metadata_col <- rlang::arg_match(metadata_col)
   assert_type(ind_codes, "character")
   testit::assert("The indicator codes are valid", {
-    valid_inds = purrr::map(c("hep", "hpop", "uhc"),
-                            billion_ind_codes,
-                            include_covariates = TRUE,
-                            include_calculated = TRUE) %>%
+    valid_inds <- purrr::map(c("hep", "hpop", "uhc"),
+      billion_ind_codes,
+      include_covariates = TRUE,
+      include_calculated = TRUE
+    ) %>%
       unlist()
     all(ind_codes %in% valid_inds)
   })
@@ -110,7 +111,7 @@ get_ind_billion <- function(ind_code) {
   assert_type(ind_code, "character")
 
   # hep is the first condition so espar is always a hep indicator
-  case_when(
+  dplyr::case_when(
     get_ind_metadata(ind_code, "hep") == TRUE ~ "hep",
     get_ind_metadata(ind_code, "uhc") == TRUE ~ "uhc",
     get_ind_metadata(ind_code, "hpop") == TRUE ~ "hpop"

@@ -8,12 +8,14 @@
 #' @return character vector
 #' @export
 xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
-  data_type = rlang::arg_match(data_type)
+  data_type <- rlang::arg_match(data_type)
 
-  key_cols = c("iso3", "year", "ind")
-  value_cols = c("value", "lower", "upper")
-  other_cols = c("use_dash", "use_calc","source", "type", "type_detail",
-                 "other_detail", "upload_detail")
+  key_cols <- c("iso3", "year", "ind")
+  value_cols <- c("value", "lower", "upper")
+  other_cols <- c(
+    "use_dash", "use_calc", "source", "type", "type_detail",
+    "other_detail", "upload_detail"
+  )
 
   # TODO: to be added after scenarios are fully integrated into the data pipeline
   # if (data_type != "wrangled_data") {
@@ -21,9 +23,11 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
   # }
 
   if (data_type == "final_data") {
-    value_cols = c(value_cols, "transform_value", "transform_lower", "transform_upper",
-                   "contribution", "contribution_percent", "contribution_percent_total_pop",
-                   "population", "level")
+    value_cols <- c(
+      value_cols, "transform_value", "transform_lower", "transform_upper",
+      "contribution", "contribution_percent", "contribution_percent_total_pop",
+      "population", "level"
+    )
   }
 
   return(c(key_cols, value_cols, other_cols))

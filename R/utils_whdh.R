@@ -14,31 +14,35 @@
 #'
 #' @return The original data frame
 #' @export
-save_gho_backup_to_whdh = function(df,
-                                   billion,
-                                   ind_code,
-                                   silent = FALSE) {
+save_gho_backup_to_whdh <- function(df,
+                                    billion,
+                                    ind_code,
+                                    silent = FALSE) {
 
   # Generate the upload path for the data lake
-  tstamp = whdh::get_formatted_timestamp()
-  file_name = sprintf("%s_%s_gho_%s.parquet", billion, ind_code, tstamp)
-  gho_backup_path <-  get_whdh_path(operation = "upload",
-                                    billion = billion,
-                                    ind_code = ind_code,
-                                    data_type = "ingestion_data",
-                                    file_names = file_name)
+  tstamp <- whdh::get_formatted_timestamp()
+  file_name <- sprintf("%s_%s_gho_%s.parquet", billion, ind_code, tstamp)
+  gho_backup_path <- get_whdh_path(
+    operation = "upload",
+    billion = billion,
+    ind_codes = ind_code,
+    data_type = "ingestion_data",
+    file_names = file_name
+  )
 
   # Save the data frame to a temporary parquet file
   temp_file <- tempfile(fileext = ".parquet")
   arrow::write_parquet(df, temp_file, compression = "gzip")
 
   # Upload the parquet file to the data lake
-  whdh::upload_to_data_lake(data_lake_name = get_data_lake_name(),
-                            container = "dropzone",
-                            source_path = temp_file,
-                            destination_path = gho_backup_path,
-                            validate_user_input = FALSE,
-                            silent = silent)
+  whdh::upload_to_data_lake(
+    data_lake_name = get_data_lake_name(),
+    container = "dropzone",
+    source_path = temp_file,
+    destination_path = gho_backup_path,
+    validate_user_input = FALSE,
+    silent = silent
+  )
 
   # Return the input data frame
   df
@@ -77,25 +81,24 @@ save_gho_backup_to_whdh = function(df,
 #' @return A character vector.
 #' @export
 #'
-get_whdh_path = function(operation = c("download", "upload"),
-                         data_type = c("wrangled_data", "projected_data", "final_data", "ingestion_data"),
-                         billion = c("all", "hep", "hpop", "uhc"),
-                         ind_codes = "all",
-                         file_names = NULL,
-                         sandbox = TRUE) {
+get_whdh_path <- function(operation = c("download", "upload"),
+                          data_type = c("wrangled_data", "projected_data", "final_data", "ingestion_data"),
+                          billion = c("all", "hep", "hpop", "uhc"),
+                          ind_codes = "all",
+                          file_names = NULL,
+                          sandbox = TRUE) {
 
   # Argument checks and assertions
-  operation = rlang::arg_match(operation)
-  data_type = rlang::arg_match(data_type)
-  billion = rlang::arg_match(billion)
+  operation <- rlang::arg_match(operation)
+  data_type <- rlang::arg_match(data_type)
+  billion <- rlang::arg_match(billion)
   assert_type(billion, "character")
   assert_type(ind_codes, "character")
 
   # For billion = "all", recursively call the function with each billion
   if (billion == "all" && data_type != "final_data") {
-
     message("`ind_codes` and `file_names` arguments ignored when billion = \"all\"")
-    paths = c("hep", "hpop", "uhc") %>%
+    paths <- c("hep", "hpop", "uhc") %>%
       # rlang::set_names() %>%
       purrr::map(~ get_whdh_path(operation, data_type, .x, "all", NULL, sandbox)) %>%
       unlist() %>%
@@ -120,54 +123,55 @@ get_whdh_path = function(operation = c("download", "upload"),
     assert_arg_exists(file_names, "The %s argument is required when data_type = \"ingestion_data\".")
   }
 
-  team = if (sandbox) "3B/Sandbox" else "3B"
-  data_layer = get_data_layer(data_type)
+  team <- if (sandbox) "3B/Sandbox" else "3B"
+  data_layer <- get_data_layer(data_type)
 
   # If final_data, data_asset is just final_data
   if (data_type == "final_data") {
-
     message("`billion` and `ind_codes` arguments ignored when data_type = \"final_data\"")
-    data_asset = "final_data"
-
+    data_asset <- "final_data"
   } else {
 
     # Remove later
     # billion = rlang::arg_match(billion)
     # assert_arg_exists(ind_codes, "The %s argument is required for all data types except \"final_data\".")
 
-    valid_inds = get_valid_inds(data_type, billion)
+    valid_inds <- get_valid_inds(data_type, billion)
 
+    # Using identical instead of == to circumvent issues when ind_codes is a vector
     if (identical(ind_codes, "all")) {
 
       # Set ind_codes equal to list of all valid indicators
       message("`file_names` argument ignored when ind_codes = \"all\"")
-      ind_codes = valid_inds
-      file_names = NULL
-
+      ind_codes <- valid_inds
+      file_names <- NULL
     } else {
       # Or check that given indicators are valid indicators
       assert_x_in_y(ind_codes, valid_inds)
     }
 
-    data_asset = paste(billion, ind_codes, sep = "_")
+    data_asset <- paste(billion, ind_codes, sep = "_")
   }
 
-  # If a file name is provided, append it to the data_asset
-  if (!is.null(file_names) && !is.na(file_names)) {
+  # If none of file_names is NULL or NA
+  if (!is.null(file_names) && any(is.na(file_names))) {
+    stop("`file_names` cannot be NA")
+  } else if (!is.null(file_names) && all(!is.na(file_names))) {
 
     # Ensure that ind_codes and file_names have a 1-to-1 mapping or that one of them
     # is of length 1 and can be recycled to match the length of the other
     assert_same_length(ind_codes, file_names, recycle = TRUE, remove_null = FALSE)
 
-    # Ensure that the file has the right extension
+    # Ensure that file_names have the right extensions
     assert_fileext(file_names, c("csv", "xls", "xlsx", "parquet", "feather"))
-
+  } else if (is.null(file_names)) {
+    # Otherwise, set file_names to be an empty string so data asset folders end with /
+    file_names <- ""
   } else {
-    # Set file_names to be an empty string so data asset folders end with /
-    file_names = ""
+    stop("Invalid value passed to `file_names`.")
   }
 
-  path = paste(team, data_layer, data_type, data_asset, file_names, sep = "/") %>%
+  path <- paste(team, data_layer, data_type, data_asset, file_names, sep = "/") %>%
     stringr::str_replace("uhc_espar", "hep_espar")
 
   return(path)
@@ -178,32 +182,34 @@ get_whdh_path = function(operation = c("download", "upload"),
 #' @inheritParams get_whdh_path
 #' @param billion (string) One of "hep", "hpop", and "uhc".
 #'
-#' @return
+#' @return (character vector) a list of the indicators belonging to the given billion,
+#'   as used by the WHDH functions.
 #'
-get_valid_inds = function(data_type, billion) {
+get_valid_inds <- function(data_type, billion) {
   assert_type(data_type, "character")
   assert_type(billion, "character")
   assert_length(data_type, 1)
   assert_length(data_type, 1)
 
   # include_covariates = TRUE to include pneumo_mort for wrangled_data but not other data types
-  incl_covars = ifelse(data_type == "wrangled_data", TRUE, FALSE)
+  incl_covars <- ifelse(data_type == "wrangled_data", TRUE, FALSE)
 
-  valid_inds = billion_ind_codes(billion,
-                                 include_covariates = incl_covars,
-                                 include_calculated = FALSE,
-                                 include_subindicators = FALSE)
+  valid_inds <- billion_ind_codes(billion,
+    include_covariates = incl_covars,
+    include_calculated = FALSE,
+    include_subindicators = FALSE
+  )
 
   valid_inds
 }
 
 #' @noRd
-get_data_layer = function(data_type) {
+get_data_layer <- function(data_type) {
   switch(data_type,
-         ingestion_data = "Bronze",
-         wrangled_data = "Silver",
-         projected_data = "Silver",
-         final_data = "Gold"
+    ingestion_data = "Bronze",
+    wrangled_data = "Silver",
+    projected_data = "Silver",
+    final_data = "Gold"
   )
 }
 
@@ -211,6 +217,6 @@ get_data_layer = function(data_type) {
 #'
 #' @return A string. The name of the Triple Billions WHDH data lake.
 #' @export
-get_data_lake_name = function() {
+get_data_lake_name <- function() {
   "srhdteuwstdsa"
 }

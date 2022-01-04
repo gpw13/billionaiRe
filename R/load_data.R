@@ -49,20 +49,14 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
                               silent = TRUE,
                               data_source = c("whdh", "xmart"),
                               ...) {
-
-  data_type = rlang::arg_match(data_type)
-  billion = rlang::arg_match(billion)
-  data_source = rlang::arg_match(data_source)
-
-  # Temporary error
-  if (data_source == "xmart") {
-    stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")
-  }
+  data_type <- rlang::arg_match(data_type)
+  billion <- rlang::arg_match(billion)
+  data_source <- rlang::arg_match(data_source)
 
   if (data_source == "whdh") {
-    load_whdh_billion_data(data_type, billion, ind_codes, date_filter, na_rm, ...)
+    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, ...)
   } else {
-    load_xmart_billion_data(data_type, billion, ind_codes, date_filter, na_rm, ...)
+    load_billion_data_xmart(data_type, billion, ind_codes, date_filter, na_rm, ...)
   }
 }
 
@@ -72,41 +66,42 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
 #'
 #' @return A data frame.
 #'
-load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data", "final_data"),
-                                  billion = c("all", "hep", "hpop", "uhc"),
-                                  ind_codes = "all",
-                                  date_filter = "latest",
-                                  na_rm = TRUE,
-                                  sandbox = FALSE,
-                                  silent = TRUE) {
+load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
+                                   billion = c("all", "hep", "hpop", "uhc"),
+                                   ind_codes = "all",
+                                   date_filter = "latest",
+                                   na_rm = TRUE,
+                                   sandbox = FALSE,
+                                   silent = TRUE) {
 
   # Assertions and checks
   requireNamespace("whdh", quietly = TRUE)
-  billion = rlang::arg_match(billion)
-  data_type = rlang::arg_match(data_type)
+  billion <- rlang::arg_match(billion)
+  data_type <- rlang::arg_match(data_type)
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
 
   # Paths of items to download
-  paths = get_whdh_path("download", data_type, billion, ind_codes, sandbox = sandbox)
+  paths <- get_whdh_path("download", data_type, billion, ind_codes, sandbox = sandbox)
   assert_unique_vector(paths)
 
   # Ensure that each path has a corresponding data asset in the data lake
-  data_lake = get_data_lake_name()
-  team = if (sandbox) "3B/Sandbox" else "3B"
-  data_layer = get_data_layer(data_type)
-  dir_path = sprintf("%s/%s/%s/", team, data_layer, data_type)
+  data_lake <- get_data_lake_name()
+  team <- if (sandbox) "3B/Sandbox" else "3B"
+  data_layer <- get_data_layer(data_type)
+  dir_path <- sprintf("%s/%s/%s/", team, data_layer, data_type)
 
-  valid_data_assets = whdh::list_blobs_in_directory(data_lake,
-                                dir_path,
-                                silent = TRUE) %>%
+  valid_data_assets <- whdh::list_blobs_in_directory(data_lake,
+    dir_path,
+    silent = TRUE
+  ) %>%
     dplyr::filter(.data[["isdir"]]) %>%
     dplyr::pull("name") %>%
     paste0(., "/")
 
   assert_x_in_y(paths, valid_data_assets)
 
-  df = purrr::map_dfr(paths, ~ {
-    temp_file = tempfile()
+  df <- purrr::map_dfr(paths, ~ {
+    temp_file <- tempfile()
 
     whdh::download_from_data_lake(
       data_lake_name = data_lake,
@@ -121,6 +116,23 @@ load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data
 
   df %>%
     filter_billion_na(na_rm)
+}
+
+#' Load Billions indicator data from xMart
+#'
+#' @inheritParams load_billion_data
+#'
+#' @return A data frame.
+#'
+load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
+                                   billion = c("all", "hep", "hpop", "uhc"),
+                                   ind_codes = "all",
+                                   date_filter = "latest",
+                                   na_rm = TRUE,
+                                   sandbox = FALSE,
+                                   silent = TRUE) {
+  # Temporary error
+  stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")
 }
 
 #' Load Raw Billions Indicator Data
@@ -164,22 +176,23 @@ load_whdh_billion_data = function(data_type = c("wrangled_data", "projected_data
 #' @return A data frame.
 #'
 #' @export
-load_billion_data_legacy <- function(data_type = c("wrangled_data", "projected_data", "raw_data", "final_data"),
-                                     billion = c("all", "hep", "hpop", "uhc"),
-                                     ind_codes = "all",
-                                     date_filter = "latest",
-                                     na_rm = TRUE,
-                                     format = c("csv", "streaming", "none"),
-                                     ...) {
+load_billion_data_legacy <- function(billion = c("hep", "hpop", "uhc", "all"),
+                              mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
+                              date_filter = "latest",
+                              na_rm = TRUE,
+                              format = c("csv", "streaming", "none"),
+                              ...) {
   requireNamespace("xmart4", quietly = TRUE)
   billion <- rlang::arg_match(billion)
-  data_type <- rlang::arg_match(data_type)
-  mart_table <- switch(data_type,
-                       "wrangled_data" = "WRANGLED_DATA",
-                       "projected_data" = "PROJECTED_DATA",
-                       "raw_data" = "RAW_INDICATOR",
-                       "final_data" = "FULL_BILLIONS"
+  mart_table <- rlang::arg_match(mart_table)
+  mart_match <- c(
+    "full_data" = "FULL_BILLIONS",
+    "raw_data" = "RAW_INDICATOR",
+    "projected_data" = "PROJECTED_DATA",
+    "unproj_data" = "RAW_UNPROJ_DATA",
+    "proj_data" = "RAW_PROJ_DATA"
   )
+  mart_table <- mart_match[mart_table]
   assert_date_filter(date_filter)
   format <- rlang::arg_match(format)
 

@@ -9,9 +9,7 @@ get_ind_metadata(ind_codes, metadata_col = names(billionaiRe::indicator_df))
 \arguments{
 \item{ind_codes}{A character vector with indicator (analysis) codes}
 
-\item{metadata_col}{The name of the indicator_df column with the desired metadata.
-Must be One of "dashboard_id", "ind", "gho_code", "ind_type", "uhc",
-"hpop", "hep","covariate", and "calculated"}
+\item{metadata_col}{The name of the indicator_df column with the desired metadata.}
 }
 \value{
 A character vector with the metadata. The positions correspond to the

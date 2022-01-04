@@ -33,19 +33,19 @@ assert_years <- function(start_year, end_year) {
 #'
 #' @param file_names (character vector) The file names.
 #' @param valid_exts (character vector) A list of the valid extensions.
-assert_fileext = function(file_names, valid_exts) {
+assert_fileext <- function(file_names, valid_exts) {
   # Check that file_names and valid_exts are character vectors
   assert_type(file_names, "character")
   assert_type(valid_exts, "character")
 
   # Extract the file extensions
-  ext = stringr::str_match(file_names, "(.+)\\.(.+)")[, 3]
+  ext <- stringr::str_match(file_names, "(.+)\\.(.+)")[, 3]
 
   if (any(is.na(ext))) {
     stop("One or more files do not have an extension.", call. = FALSE)
   }
 
-  cond = all(ext %in% valid_exts)
+  cond <- all(ext %in% valid_exts)
   if (!cond) {
     stop(
       sprintf("File extensions must be one of: {%s}.", paste(valid_exts, collapse = ", ")),
@@ -57,7 +57,7 @@ assert_fileext = function(file_names, valid_exts) {
 #' Assert that the elements of the vector are unique
 #'
 #' @param x (vector)
-assert_unique_vector = function(x) {
+assert_unique_vector <- function(x) {
   if (length(x) != length(unique(x))) {
     stop(sprintf("%s has duplicate elements", deparse(substitute(x))))
   }
@@ -145,7 +145,7 @@ assert_unique_rows <- function(df,
   dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(ind, iso3, year, scenario))))
   if (nrow(ind_df) != nrow(dist_df)) {
     stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
-         call. = FALSE
+      call. = FALSE
     )
   }
 }
@@ -173,7 +173,7 @@ assert_homogeneous_col <- function(df, col_name) {
 #' @param error_template A template for generating the error message. Used as the
 #'   input to an `sprintf()` call. Must include %s, which corresponds to the input x.
 assert_arg_exists <- function(x, error_template = "The %s argument is required and cannot be NA or NULL") {
-  if ( is.null(x) || is.na(x) ) {
+  if (is.null(x) || is.na(x)) {
     stop(
       sprintf(error_template, deparse(substitute(x))),
       call. = FALSE
@@ -183,15 +183,20 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 
 # Object type checks -----------------------------------------------------------
 
-#' Assert that an object is of a given type
+#' Assert that an object is (or is not) of a given type
 #'
 #' @param x The input object
 #' @param expected_type (string) The expected type of x
-assert_type = function(x, expected_type) {
+#' @param reverse Invert the test (i.e., the type of x is not)
+assert_type <- function(x, expected_type, reverse = FALSE) {
   assert_string(expected_type, 1)
 
-  if (!is.null(x) & typeof(x) != expected_type) {
-    stop(sprintf("%s must be of type %s",  deparse(substitute(x)), expected_type), call. = FALSE)
+  cond = if (reverse) typeof(x) == expected_type else typeof(x) != expected_type
+  msg = if (reverse) "must not be" else "must be"
+  msg = paste("%s", msg, "of type %s")
+
+  if (!is.null(x) & cond) {
+    stop(sprintf(msg, deparse(substitute(x)), expected_type), call. = FALSE)
   }
 }
 
@@ -217,11 +222,13 @@ assert_string <- function(x, n) {
   if (!is.null(x)) {
     lx <- length(x)
     if (!((is.character(x) & (lx == n)))) {
-      stop(sprintf("`%s` must be a character vector of length %d, not %s of length %d.",
-                   deparse(substitute(x)),
-                   n,
-                   class(x),
-                   lx))
+      stop(sprintf(
+        "`%s` must be a character vector of length %d, not %s of length %d.",
+        deparse(substitute(x)),
+        n,
+        class(x),
+        lx
+      ))
     }
   }
 }
@@ -260,11 +267,12 @@ assert_strings <- function(...) {
 #'
 #' @param x (vector)
 #' @param n (integer) the expected length of x
-assert_length = function(x, n) {
+assert_length <- function(x, n) {
   l <- length(x)
   if (l != n) {
     stop(sprintf("%s must be a vector of length %s, not length %s", deparse(substitute(x)), n, l),
-      call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
@@ -272,11 +280,12 @@ assert_length = function(x, n) {
 #'
 #' @param x (vector)
 #' @param n (integer) the minimum allowed size of the vector
-assert_min_length = function(x, n) {
+assert_min_length <- function(x, n) {
   l <- length(x)
   if (l < n) {
     stop(sprintf("%s must have a minimum length of %s elements", deparse(substitute(x)), n),
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
@@ -286,18 +295,22 @@ assert_min_length = function(x, n) {
 #'
 #' @param x (vector)
 #' @param y (vector)
-assert_equals = function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = NULL) {
-  cond = if (identical) identical(x, y) else x == y
-  cond = if (reverse) !cond else cond
-  msg = "%s must "
-  msg = if (reverse) paste0(msg, "not be ") else paste0(msg, "be ")
-  msg = if (identical) paste0(msg, "identical ") else paste0(msg, "equal ")
-  msg = paste0(msg, "to %s")
+#' @param identical (logical) whether to use the `identical()` function for the test
+#' @param reverse (logical) whether to reverse the condition (i.e., the two vectors are
+#'   not equal/identical)
+#' @param msg_suffix (string) A string to be appended to the end of the error message
+assert_equals <- function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = NULL) {
+  cond <- if (identical) identical(x, y) else x == y
+  cond <- if (reverse) !cond else cond
+  msg <- "%s must "
+  msg <- if (reverse) paste0(msg, "not be ") else paste0(msg, "be ")
+  msg <- if (identical) paste0(msg, "identical ") else paste0(msg, "equal ")
+  msg <- paste0(msg, "to %s")
 
   if (!is.null(msg_suffix)) {
     assert_type(msg_suffix, "character")
     assert_length(msg_suffix, 1)
-    msg = paste(msg, msg_suffix)
+    msg <- paste(msg, msg_suffix)
   }
 
   if (!cond) {
@@ -315,13 +328,15 @@ assert_equals = function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = 
 #'
 #' @param x (vector)
 #' @param y (vector)
-assert_x_in_y = function(x, y) {
-  cond = x %in% y
+assert_x_in_y <- function(x, y) {
+  cond <- x %in% y
   if (!all(cond)) {
-    stop(sprintf("`%s` must be one of `%s`.",
-                 paste0(x[!cond], collapse = ", `"),
-                 deparse(substitute(y))),
-         call. = FALSE
+    stop(sprintf(
+      "`%s` must be one of `%s`.",
+      paste0(x[!cond], collapse = ", `"),
+      deparse(substitute(y))
+    ),
+    call. = FALSE
     )
   }
 }
@@ -336,7 +351,7 @@ assert_x_in_y = function(x, y) {
 assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   # Extract just the names of the ... arguments
   arg_names <- sys.call()
-  end_idx = length(arg_names) - 2
+  end_idx <- length(arg_names) - 2
   arg_names <- arg_names[2:end_idx]
 
   args <- list(...)
@@ -345,12 +360,12 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   assert_min_length(args, 2)
 
   if (remove_null) {
-    args = args[!sapply(args, is.null)]
+    args <- args[!sapply(args, is.null)]
   }
 
   # If recycle = TRUE
   if (recycle) {
-    length_one_vecs = args[sapply(args, length) == 1]
+    length_one_vecs <- args[sapply(args, length) == 1]
 
     # If all the vectors are of length 1, then return immediately
     if (length(length_one_vecs) == length(args)) {
@@ -359,11 +374,11 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
     # Otherwise, remove the length one vectors from the list of vector to check
     # because they can always be replicated
     else {
-      args = args[sapply(args, length) != 1]
+      args <- args[sapply(args, length) != 1]
     }
   }
 
-  cond = purrr::map(args, length) %>%
+  cond <- purrr::map(args, length) %>%
     purrr::reduce(`==`)
 
   if (!cond) {

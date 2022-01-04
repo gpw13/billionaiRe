@@ -6,34 +6,51 @@
 \usage{
 get_whdh_path(
   operation = c("download", "upload"),
-  billion = c("hep", "hpop", "uhc"),
-  ind_code,
-  data_type = c("ingestion_data", "wrangled_data", "projected_data", "final_data"),
-  file_name = NULL
+  data_type = c("wrangled_data", "projected_data", "final_data", "ingestion_data"),
+  billion = c("all", "hep", "hpop", "uhc"),
+  ind_codes = "all",
+  file_names = NULL,
+  sandbox = TRUE
 )
 }
 \arguments{
-\item{operation}{Either "download" or "upload".}
+\item{operation}{(string) Either "download" or "upload".}
 
-\item{billion}{The billion to which the indicator belongs.}
+\item{data_type}{(string) The type of data to load.
+\itemize{
+\item \code{wrangled_data} (default): raw data that has been wrangled into a suitable
+form for analysis.
+\item \code{projected_data}:  data that has been fully projected to the target year but
+has not yet been transformed or calculated upon.
+\item \code{final_data}: the complete set of billions data with transformed values, contributions,
+and all calculations available.
+\item \code{ingestion_data}: raw data in its original form as received from the technical
+program, GHO, or other sources. These files have not been wrangled or modified
+in any way.
+}}
 
-\item{ind_code}{The GPW13 code for the indicator.}
+\item{billion}{(string) One of "all" (default), "hep", "hpop", or "uhc". If "all",
+the file paths for all indicators in all three bilions are returned.}
 
-\item{data_type}{The type of file/data asset. Cane be one of "ingestion_data",
-"gho_backup", "unproj_data", "proj_data", "calc_data" and "full_data"}
+\item{ind_codes}{(character vector) The name of the indicator (or indicators) to load data for.
+If \code{all}, returns paths for all indicators for a given billion. If \code{billion = "all"},
+this argument is ignored and the file paths for all indicators in all three bilions
+are returned.}
 
-\item{file_name}{The name of the file to download. NULL by default}
+\item{file_names}{(character vector) The name(s) of the file(s) to download.
+NULL by default. Ignored if either \code{billion = "all"} or \code{ind_codes = "all"}.}
+
+\item{sandbox}{(logical) Whether or not to use the sandbox folders in the data lake.}
 }
 \value{
-A string with the properly formatted file path, abiding by the standardised
-directory structure and naming conventions for the 3B WHDH data lake.
+A character vector.
 }
 \description{
 \code{get_whdh_path()} simplifies the process of generating accurate file paths for
 downloading/uploading files from the Triple Billions WHDH data lake.
 }
 \details{
-Using this function where working with the data lake is highly recommended as
-it ensures file paths abide by the established standard and directory structure
+Using this function when working with the data lake is highly recommended as
+it ensures file paths abide by the established standards and directory structure
 for the data lake.
 }

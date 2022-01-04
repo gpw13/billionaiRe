@@ -4,12 +4,12 @@
 \alias{assert_fileext}
 \title{Assert that a file's extension is one of a few options}
 \usage{
-assert_fileext(file_name, valid_exts)
+assert_fileext(file_names, valid_exts)
 }
 \arguments{
-\item{file_name}{A string. The name of the file}
+\item{file_names}{(character vector) The file names.}
 
-\item{valid_exts}{A character vector. The list of valid extensions.}
+\item{valid_exts}{(character vector) A list of the valid extensions.}
 }
 \description{
 Assert that a file's extension is one of a few options

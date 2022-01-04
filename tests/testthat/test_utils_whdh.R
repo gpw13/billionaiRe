@@ -165,13 +165,12 @@ test_that("get_whdh_path: vector arguments are handled correctly", {
 })
 
 test_that("billion = all is handled correctly", {
-
   expect_message(
     get_whdh_path("download", "wrangled_data", "all"),
     "`ind_codes` and `file_names` arguments ignored when billion = \"all\""
   )
 
-  result = suppressMessages(get_whdh_path("download", "wrangled_data", "all"))
+  result <- suppressMessages(get_whdh_path("download", "wrangled_data", "all"))
 
   # These tests are defunct since the function no longer returns a list
   # expect_equal(length(result), 3)
@@ -192,6 +191,6 @@ test_that("ind_codes = all is handled correctly", {
     get_whdh_path("download", "wrangled_data", "uhc", "all"),
     "`file_names` argument ignored when ind_codes = \"all\""
   )
-  result = suppressMessages(get_whdh_path("download", "wrangled_data", "uhc", "all"))
+  result <- suppressMessages(get_whdh_path("download", "wrangled_data", "uhc", "all"))
   expect_equal(length(result), length(get_valid_inds("wrangled_data", "uhc")))
 })
