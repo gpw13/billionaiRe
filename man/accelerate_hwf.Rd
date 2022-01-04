@@ -7,7 +7,6 @@
 accelerate_hwf(
   df,
   ind_ids = billion_ind_codes("uhc"),
-  end_year = 2025,
   scenario = "scenario",
   ind = "ind",
   ...
@@ -21,8 +20,6 @@ country, year, and indicator.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

@@ -19,7 +19,6 @@
 #'
 accelerate_anc4 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
-                            end_year = 2025,
                             scenario = "scenario",
                             ind = "ind",
                             ...) {
@@ -54,12 +53,12 @@ accelerate_anc4 <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_without_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(sum(type == "reported", na.rm = TRUE) <= 1)
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) <= 1)
 
   df_with_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(sum(type == "reported", na.rm = TRUE) > 1) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) > 1) %>%
     dplyr::ungroup()
 
   if (nrow(df_with_data) > 0) {
@@ -131,7 +130,6 @@ accelerate_anc4 <- function(df,
 #'
 accelerate_art <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
-                           end_year = 2025,
                            scenario = "scenario",
                            ind = "ind",
                            ...) {
@@ -152,7 +150,7 @@ accelerate_art <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_with_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= 2018) > 1) %>%
     dplyr::ungroup()
 
@@ -160,7 +158,7 @@ accelerate_art <- function(df,
   # You could simply have an if-else statement to avoid this:
 
   df_without_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
+    dplyr::group_by(.data$iso3) %>%
     dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= 2018) <= 1) %>%
     dplyr::ungroup()
 
@@ -221,7 +219,6 @@ accelerate_art <- function(df,
 #'
 accelerate_beds <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
-                            end_year = 2025,
                             scenario = "scenario",
                             ind = "ind",
                             ...) {
@@ -248,13 +245,13 @@ accelerate_beds <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_with_scenario <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(any((value < 18 & year >= 2018))) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(any((.data[["value"]] < 18 & .data[["year"]] >= 2018))) %>%
     dplyr::ungroup()
 
   df_no_scenario <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(!any((value < 18 & year >= 2018))) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(!any((.data[["value"]] < 18 & .data[["year"]] >= 2018))) %>%
     dplyr::ungroup()
 
   # Empty df (with test_data), so returns warnings. if-else statement as in art?
@@ -306,7 +303,6 @@ accelerate_beds <- function(df,
 #'
 accelerate_bp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
                           scenario = "scenario",
                           ind = "ind",
                           ...) {
@@ -333,70 +329,72 @@ accelerate_bp <- function(df,
 
   # Preliminary wrangling from the bp.R script to get bp_as_cr_ratio
   bp_agestd <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Age-standardised.csv") %>%
-    dplyr::filter(Metric == "Hypertension") %>%
-    dplyr::select(-Type, -Metric) %>%
+    dplyr::filter(.data[["Metric"]] == "Hypertension") %>%
+    dplyr::select(-c("Type", "Metric")) %>%
     dplyr::mutate(
-      Country = ifelse(Country == "Macedonia (TFYR)", "Macedonia", Country),
-      iso3 = whoville::names_to_iso3(Country) # Elliott: could you silence the fuzzy match here? Or wrangle the file to avoid the messages?
+      Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
+      iso3 = whoville::names_to_iso3(.data[["Country"]])
     ) %>%
+    suppressMessages() %>%
     dplyr::rename(
-      country = "Country",
-      year = "Year",
-      sex = "Sex",
-      value = "Prevalence",
-      lower = "95% lower limit",
-      upper = "95% upper limit",
+      "country" = "Country",
+      "year" = "Year",
+      "sex" = "Sex",
+      "value" = "Prevalence",
+      "lower" = "95% lower limit",
+      "upper" = "95% upper limit",
     ) %>%
-    dplyr::filter(whoville::is_who_member(iso3)) %>%
-    dplyr::group_by(iso3, year) %>%
-    dplyr::summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
-    dplyr::mutate(ind = "bp_agestd", type = ifelse(year <= 2019, "estimated", "projected")) # check
+    dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
+    dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
+    dplyr::summarize("value" := mean(.data[["value"]], na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
+    dplyr::mutate(ind = "bp_agestd", type = ifelse(.data[["year"]] <= 2019, "estimated", "projected")) # check
 
   bp_crude <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Crude.csv") %>%
-    dplyr::filter(Metric == "Hypertension") %>%
-    dplyr::select(-Type, -Metric) %>%
+    dplyr::filter(.data[["Metric"]] == "Hypertension") %>%
+    dplyr::select(-c("Type", "Metric")) %>%
     dplyr::mutate(ind = "bp_crude") %>%
     dplyr::mutate(
-      Country = ifelse(Country == "Macedonia (TFYR)", "Macedonia", Country),
-      iso3 = whoville::names_to_iso3(Country)
+      Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
+      iso3 = whoville::names_to_iso3(.data[["Country"]])
     ) %>%
+    suppressMessages() %>%
     dplyr::rename(
-      country = "Country",
-      year = "Year",
-      sex = "Sex",
-      value = "Prevalence",
-      lower = "95% lower limit",
-      upper = "95% upper limit",
+      "country" = "Country",
+      "year" = "Year",
+      "sex" = "Sex",
+      "value" = "Prevalence",
+      "lower" = "95% lower limit",
+      "upper" = "95% upper limit",
     ) %>%
     dplyr::left_join(wppdistro::wpp_population, by = c("iso3", "year", "sex")) %>%
     dplyr::mutate(
-      pop_30_79 = `30_34` + `35_39` + `40_44` + `45_49` + `50_54` + `55_59` + `60_64` + `65_69` + `70_74` + `75_79`
+      pop_30_79 = .data[["30_34"]] + .data[["35_39"]] + .data[["40_44"]] + .data[["45_49"]] + .data[["50_54"]] + .data[["55_59"]] + .data[["60_64"]] + .data[["65_69"]] + .data[["70_74"]] + .data[["75_79"]]
     ) %>%
-    dplyr::select(iso3, year, ind, sex, value, lower, upper, pop_30_79) %>%
+    dplyr::select(c("iso3", "year", "ind", "sex", "value", "lower", "upper", "pop_30_79")) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
-    dplyr::group_by(iso3, year) %>%
-    dplyr::summarize(value = stats::weighted.mean(value, w = pop_30_79), .groups = "drop") %>%
-    dplyr::mutate(ind = "bp_crude", type = ifelse(year <= 2019, "estimated", "projected"))
+    dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
+    dplyr::summarize("value" := stats::weighted.mean(.data[["value"]], w = .data[["pop_30_79"]]), .groups = "drop") %>%
+    dplyr::mutate(ind = "bp_crude", type = ifelse(.data[["year"]] <= 2019, "estimated", "projected"))
 
   bp_ratio <- bp_agestd %>%
     dplyr::bind_rows(bp_crude) %>%
-    tidyr::pivot_wider(names_from = ind, values_from = value) %>%
+    tidyr::pivot_wider(names_from = .data[[ind]], values_from = .data[["value"]]) %>%
     # filter(year==2019) %>%
-    dplyr::mutate(ratio_agestd_over_crude = bp_agestd / bp_crude) %>%
-    dplyr::select(year, iso3, ratio_agestd_over_crude)
+    dplyr::mutate(ratio_agestd_over_crude = .data[["bp_agestd"]] / .data[["bp_crude"]]) %>%
+    dplyr::select(c("year", "iso3", "ratio_agestd_over_crude"))
 
   bp_agestd_crude_ratio <- bp_ratio %>%
     # @Alice, should there final year be 2023 or 2025?
     dplyr::full_join(tidyr::expand_grid(iso3 = unique(bp_agestd$iso3), year = 2020:2023)) %>%
     dplyr::left_join(
       bp_ratio %>%
-        dplyr::filter(year == 2019) %>%
-        dplyr::select(-year, ratio = ratio_agestd_over_crude)
+        dplyr::filter(.data[["year"]] == 2019) %>%
+        dplyr::select(-.data[["year"]], ratio = .data[["ratio_agestd_over_crude"]])
     ) %>%
     # @Alice, please explain the logic for the ifelse(is.na(...)) statement
     # given that ratio and ratio_agestd_over_crude are the same column
-    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(ratio_agestd_over_crude), ratio, ratio_agestd_over_crude)) %>%
-    dplyr::select(-ratio)
+    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), .data[["ratio"]], .data[["ratio_agestd_over_crude"]])) %>%
+    dplyr::select(!c("ratio"))
 
   bp_agestd_crude_ratio <- augury::expand_df(
     bp_agestd_crude_ratio,
@@ -414,8 +412,8 @@ accelerate_bp <- function(df,
     # convert to crude, run hpop scenario on crude, convert back to agrestd
     # NB need to recalculate ratios????
     dplyr::left_join(bp_agestd_crude_ratio) %>%
-    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(ratio_agestd_over_crude), 1, ratio_agestd_over_crude)) %>%
-    dplyr::mutate(crude = value / ratio_agestd_over_crude)
+    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), 1, .data[["ratio_agestd_over_crude"]])) %>%
+    dplyr::mutate(crude = .data[["value"]] / .data[["ratio_agestd_over_crude"]])
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
@@ -438,7 +436,7 @@ accelerate_bp <- function(df,
     ) %>%
     dplyr::filter(.data[[scenario]] == "acceleration") %>%
     # convert crude values back to age-standardised
-    dplyr::mutate(value = value * ratio_agestd_over_crude)
+    dplyr::mutate(value = .data$value * .data$ratio_agestd_over_crude)
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -453,7 +451,6 @@ accelerate_bp <- function(df,
 #'
 accelerate_doctors <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
-                               end_year = 2025,
                                scenario = "scenario",
                                ind = "ind",
                                ...) {
@@ -487,7 +484,6 @@ accelerate_doctors <- function(df,
 #'
 accelerate_nurses <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
-                              end_year = 2025,
                               scenario = "scenario",
                               ind = "ind",
                               ...) {
@@ -531,7 +527,6 @@ accelerate_nurses <- function(df,
 #'
 accelerate_hwf <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
-                           end_year = 2025,
                            scenario = "scenario",
                            ind = "ind",
                            ...) {
@@ -553,15 +548,15 @@ accelerate_hwf <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_with_scenario <- df_this_ind %>%
-    dplyr::mutate(glob_med = median(value[year == 2018])) %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(any(value < glob_med & year == 2018)) %>%
+    dplyr::mutate(glob_med = stats::median(.data$value[.data$year == 2018])) %>%
+    dplyr::group_by(.data$iso3) %>%
+    dplyr::filter(any(.data$value < .data$glob_med & .data$year == 2018)) %>%
     dplyr::ungroup()
 
   df_no_scenario <- df_this_ind %>%
-    dplyr::mutate(glob_med = median(value[year == 2018])) %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(!any(value < glob_med & year == 2018)) %>%
+    dplyr::mutate(glob_med = stats::median(.data$value[.data$year == 2018])) %>%
+    dplyr::group_by(.data$iso3) %>%
+    dplyr::filter(!any(.data$value < .data$glob_med & .data$year == 2018)) %>%
     dplyr::ungroup()
 
   if (nrow(df_with_scenario) > 0) {
@@ -600,13 +595,15 @@ accelerate_hwf <- function(df,
 #'
 accelerate_dtp3 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
-                            start_year = 2018,
-                            end_year = 2025,
-                            baseline_year = 2019,
-                            target_year = 2030,
                             scenario = "scenario",
                             ind = "ind",
                             ...) {
+
+  start_year = 2018
+  end_year = 2025
+  baseline_year = 2019
+  target_year = 2030
+
   this_ind <- ind_ids["dtp3"]
 
   params <- list(...)
@@ -618,30 +615,30 @@ accelerate_dtp3 <- function(df,
     file_name = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
   ) %>%
-    select(iso3 = ISO, target = "DTP 3 Target") %>%
-    mutate(iso3 = toupper(iso3), target = target * 100)
+    dplyr::select(iso3 = .data$ISO, target = "DTP 3 Target") %>%
+    dplyr::mutate(iso3 = toupper(.data$iso3), target = .data$target * 100)
 
   df_accelerated <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::mutate(baseline_value = value[year == baseline_year]) %>%
+    dplyr::group_by(.data$iso3) %>%
+    dplyr::mutate(baseline_value = .data$value[.data$year == baseline_year]) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(df_target_values, by = "iso3") %>%
     dplyr::mutate(
-      "acceleration" := case_when(
-        year > 2018 & year <= 2020 ~ baseline_value,
-        year >= baseline_year + 1 & year <= target_year & baseline_value < target ~
-        baseline_value + (target - baseline_value) * (year - baseline_year - 1) / (target_year - baseline_year - 1),
-        year >= baseline_year + 1 & year <= target_year & baseline_value >= target ~ baseline_value,
-        year == 2018 ~ value,
+      "acceleration" := dplyr::case_when(
+        .data$year > 2018 & .data$year <= 2020 ~ .data$baseline_value,
+        .data$year >= baseline_year + 1 & .data$year <= target_year & .data$baseline_value < .data$target ~
+            .data$baseline_value + (.data$target - .data$baseline_value) * (.data$year - baseline_year - 1) / (target_year - baseline_year - 1),
+        .data$year >= baseline_year + 1 & .data$year <= target_year & .data$baseline_value >= .data$target ~ .data$baseline_value,
+        .data$year == 2018 ~ .data$value,
         TRUE ~ NA_real_
       )
     ) %>%
     dplyr::select(!c("baseline_value", "target")) %>%
     dplyr::filter(!is.na(.data[["acceleration"]])) %>%
     # Replace value column with {scenario_name} column and set scenario = {scenario_name}
-    select(-value) %>%
-    rename(value = acceleration) %>%
-    mutate(scenario = "acceleration")
+    dplyr::select(!c("value")) %>%
+    dplyr::rename("value" = "acceleration") %>%
+    dplyr::mutate(scenario = "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -658,7 +655,6 @@ accelerate_dtp3 <- function(df,
 #'
 accelerate_fh <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
                           scenario = "scenario",
                           ind = "ind",
                           ...) {
@@ -708,7 +704,6 @@ accelerate_fh <- function(df,
 #'
 accelerate_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
                           scenario = "scenario",
                           ind = "ind",
                           ...) {
@@ -761,7 +756,7 @@ accelerate_fp <- function(df,
 
     # scenario_quantile values have an upper cap defined by the maximum regional value in 2018
     df_regional <- df_main %>%
-      dplyr::filter(year == 2018) %>%
+      dplyr::filter(.data$year == 2018) %>%
       dplyr::group_by("region" := whoville::iso3_to_regions(.data[["iso3"]])) %>%
       dplyr::summarise(regional_max = max(.data[["value"]]))
 
@@ -801,7 +796,6 @@ accelerate_fp <- function(df,
 #'
 accelerate_fpg <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
-                           end_year = 2025,
                            scenario = "scenario",
                            ind = "ind",
                            ...) {
@@ -836,7 +830,6 @@ accelerate_fpg <- function(df,
 #'
 accelerate_itn <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
-                           end_year = 2025,
                            scenario = "scenario",
                            ind = "ind",
                            ...) {
@@ -889,7 +882,6 @@ accelerate_itn <- function(df,
 #'
 accelerate_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
-                              end_year = 2025,
                               scenario = "scenario",
                               ind = "ind",
                               ...) {
@@ -943,7 +935,6 @@ accelerate_pneumo <- function(df,
 #'
 accelerate_tb <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
-                          end_year = 2025,
                           scenario = "scenario",
                           ind = "ind",
                           ...) {
@@ -977,10 +968,9 @@ accelerate_tb <- function(df,
 #'
 accelerate_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
-                                      end_year = 2025,
                                       scenario = "scenario",
                                       ind = "ind",
-                                      ...) {
+                                      ...){
   this_ind <- ind_ids["uhc_sanitation"]
 
   params <- list(...)
@@ -1026,7 +1016,6 @@ accelerate_uhc_sanitation <- function(df,
 #'
 accelerate_uhc_tobacco <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),
-                                   end_year = 2025,
                                    scenario = "scenario",
                                    ind = "ind",
                                    ...) {
@@ -1063,13 +1052,13 @@ accelerate_uhc_tobacco <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_without_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(!any(type == "estimated")) %>%
+    dplyr::group_by(.data$iso3) %>%
+    dplyr::filter(!any(.data$type == "estimated")) %>%
     dplyr::ungroup()
 
   df_with_data <- df_this_ind %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::filter(any(type == "estimated")) %>%
+    dplyr::group_by(.data$iso3) %>%
+    dplyr::filter(any(.data$type == "estimated")) %>%
     dplyr::ungroup()
 
   if (nrow(df_without_data) > 0) {
@@ -1087,13 +1076,13 @@ accelerate_uhc_tobacco <- function(df,
       sheet = "Tobacco Data",
       range = cellranger::cell_cols(2:7)
     ) %>%
-      filter(sex == "Total") %>%
-      select(iso3, measure, year, value)
+      dplyr::filter(.data$sex == "Total") %>%
+      dplyr::select(c("iso3", "measure", "year", "value"))
 
     tobacco_ratio_df <- trajectory_df %>%
-      dplyr::mutate(measure = if_else(measure == "Crude", "crude", "agestd")) %>%
-      tidyr::pivot_wider(names_from = measure, values_from = value) %>%
-      dplyr::mutate(ratio_agestd_over_crude = agestd / crude)
+      dplyr::mutate(measure = ifelse(.data$measure == "Crude", "crude", "agestd")) %>%
+      tidyr::pivot_wider(names_from = .data$measure, values_from = .data$value) %>%
+      dplyr::mutate(ratio_agestd_over_crude = .data$agestd / .data$crude)
 
     # Extending the input trajectories to 2025, using flat_extrap from 2023 values
     tobacco_ratio_df <- augury::expand_df(
@@ -1107,7 +1096,7 @@ accelerate_uhc_tobacco <- function(df,
       augury::predict_simple("flat_extrap", col = "agestd") %>%
       augury::predict_simple("flat_extrap", col = "crude") %>%
       augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
-      select(-pred)
+      dplyr::select(!c("pred"))
 
     tobm <- tobacco_ratio_df %>%
       dplyr::group_by(.data[["year"]]) %>%
@@ -1117,10 +1106,10 @@ accelerate_uhc_tobacco <- function(df,
       dplyr::left_join(tobacco_ratio_df) %>%
       dplyr::left_join(tobm) %>%
       dplyr::mutate(
-        ratio_agestd_over_crude = ifelse(is.na(ratio_agestd_over_crude), m, ratio_agestd_over_crude),
-        crude = value / ratio_agestd_over_crude
+        ratio_agestd_over_crude = ifelse(is.na(.data$ratio_agestd_over_crude), .data$m, .data$ratio_agestd_over_crude),
+        crude = .data$value / .data$ratio_agestd_over_crude
       ) %>%
-      dplyr::select(-m)
+      dplyr::select(-c("m"))
 
     df_with_data_bau <- do.call(
       scenario_bau, c(list(df = df_with_data), params_with_data_bau)
@@ -1128,20 +1117,20 @@ accelerate_uhc_tobacco <- function(df,
       dplyr::filter(.data[["scenario"]] == "with_data_bau")
 
     df_with_data_perc_baseline <- df_with_data %>%
-      dplyr::group_by(iso3) %>%
+      dplyr::group_by(.data$iso3) %>%
       dplyr::mutate(valtemp = .data[[par_wd_pb[["value"]]]]) %>%
-      dplyr::mutate(baseline_value = valtemp[year == par_wd_pb[["start_year"]]]) %>%
-      dplyr::mutate(old_baseline_value = valtemp[year == par_wd_pb[["baseline_year"]]]) %>%
+      dplyr::mutate(baseline_value = .data$valtemp[.data$year == par_wd_pb[["start_year"]]]) %>%
+      dplyr::mutate(old_baseline_value = .data$valtemp[.data$year == par_wd_pb[["baseline_year"]]]) %>%
       dplyr::ungroup() %>%
-      dplyr::mutate(goal2025 = old_baseline_value * (100 + par_wd_pb[["percent_change"]]) / 100) %>%
+      dplyr::mutate(goal2025 = .data$old_baseline_value * (100 + par_wd_pb[["percent_change"]]) / 100) %>%
       dplyr::mutate(
-        goalend = old_baseline_value + (goal2025 - old_baseline_value) *
+        goalend = .data$old_baseline_value + (.data$goal2025 - .data$old_baseline_value) *
           (par_wd_pb[["end_year"]] - par_wd_pb[["baseline_year"]]) / (par_wd_pb[["target_year"]] - par_wd_pb[["baseline_year"]])
       ) %>%
       dplyr::mutate(
         "{par_wd_pb[['scenario_name']]}" := ifelse(
-          year >= par_wd_pb[["start_year"]] & year <= par_wd_pb[["target_year"]],
-          baseline_value + (goalend - baseline_value) * (year - par_wd_pb[["start_year"]]) / (par_wd_pb[["end_year"]] - par_wd_pb[["start_year"]]),
+          .data$year >= par_wd_pb[["start_year"]] & .data$year <= par_wd_pb[["target_year"]],
+          .data$baseline_value + (.data$goalend - .data$baseline_value) * (.data$year - par_wd_pb[["start_year"]]) / (par_wd_pb[["end_year"]] - par_wd_pb[["start_year"]]),
           NA_real_
         )
       ) %>%
@@ -1152,9 +1141,9 @@ accelerate_uhc_tobacco <- function(df,
     # Now both df_with_data_bau and df_with_data_perc_baseline have the scenario-projected values in the crude column
     # with the scenario column disambiguating between the two scenarios
     df_with_data_perc_baseline <- df_with_data_perc_baseline %>%
-      select(-crude) %>%
-      rename(crude = .data[[par_wd_pb[["scenario_name"]]]]) %>%
-      mutate(scenario = par_wd_pb[["scenario_name"]])
+      dplyr::select(-c("crude")) %>%
+      dplyr::rename("crude" = .data[[par_wd_pb[["scenario_name"]]]]) %>%
+      dplyr::mutate(scenario = par_wd_pb[["scenario_name"]])
 
     # Elliott: see art for call to scenario_best_of with do.call
 
@@ -1167,36 +1156,12 @@ accelerate_uhc_tobacco <- function(df,
       ) %>%
       dplyr::filter(.data[["scenario"]] == "acceleration") %>%
       # Converting crude values back to age-standardised
-      dplyr::mutate(value = crude * ratio_agestd_over_crude) %>%
-      select(-c("agestd", "crude", "ratio_agestd_over_crude"))
+      dplyr::mutate(value = .data$crude * .data$ratio_agestd_over_crude) %>%
+      dplyr::select(-c("agestd", "crude", "ratio_agestd_over_crude"))
   } else {
     df_with_data_accelerated <- tibble::tibble()
   }
 
   df %>%
     dplyr::bind_rows(df_with_data_accelerated, df_without_data_accelerated)
-}
-
-
-test_uhc_acceleration <- function(df_type = c("test_data", "alice")) {
-  df_type <- rlang::arg_match(df_type)
-
-  if (df_type == "test_data") {
-    df <- load_misc_data("test_data/test_data.parquet") %>%
-      make_default_scenario(billion = "uhc")
-  } else {
-    df <- readr::read_csv("C:/Users/ellio/OneDrive - World Health Organization/Files - DDI/GPW13/data_update/new_pipeline/02_projecting/output/uhc_calc_data_new_tobacco.csv") %>%
-      dplyr::filter(is.na(other_detail)) %>% # removing the 2020 duplicates
-      dplyr::mutate(scenario = "default") # adding missing scenario column
-  }
-
-  # anc4 removed from the list because it's raising errors
-  for (my_ind in c(
-    "art", "beds", "bp", "doctors", "nurses", "hwf",
-    "dtp3", "fh", "fpg", "itn", "pneumo", "tb", "uhc_sanitation",
-    "uhc_tobacco"
-  )) {
-    print(paste("****", my_ind, "****"))
-    add_scenario_indicator(df, "accelerate", my_ind)
-  }
 }

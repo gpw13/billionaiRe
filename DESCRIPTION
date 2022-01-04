@@ -37,6 +37,8 @@ Imports:
     whoville,
     zoo
 Suggests: 
+    augury,
+    cellranger,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
