@@ -1,6 +1,5 @@
 
 testthat::test_that("basic billion calculations are consistent", {
-
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
     calculate_uhc_billion() %>%

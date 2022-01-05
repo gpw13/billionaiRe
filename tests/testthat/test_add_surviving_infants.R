@@ -11,6 +11,5 @@ testthat::test_that("surviving_infants added from wppdistro correctly:", {
     calculate_hep_components() %>%
     dplyr::filter(!ind %in% "surviving_infants")
 
-  testthat::expect_equal(test_data,correct_data)
-
+  testthat::expect_equal(test_data, correct_data)
 })

@@ -3,7 +3,6 @@ test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"
 test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
 testthat::test_that("HEP data recycling returns right number of rows", {
-
   test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
 
   test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
@@ -27,7 +26,6 @@ testthat::test_that("HEP data recycling returns right number of rows", {
 })
 
 testthat::test_that("HPOP data recycling returns right number of rows", {
-
   test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
 
   test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
@@ -47,7 +45,6 @@ testthat::test_that("HPOP data recycling returns right number of rows", {
 })
 
 testthat::test_that("UHC data recycling returns right number of rows", {
-
   test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
 
   test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
