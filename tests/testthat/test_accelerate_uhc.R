@@ -79,13 +79,13 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
 
 # bp ----------------------------
 
-# TODO: Difficult to test due to dependencies on external targets.
+testthat::test_that("accelerate_bp returns accurate values:", {
+  # TODO: Difficult to test due to dependencies on external targets.
 
-# testthat::test_that("accelerate_bp returns accurate values:", {
-#   ind <- "bp"
-#
-#   testthat::expect_equal(value_2025,expected_2024)
-# })
+  ind <- "bp"
+  # Verify that function can be run without errors or messages.
+  testthat::expect_error(get_2025_value(60:80, ind, "reported"), NA)
+})
 
 # doctors ----------------------------
 
@@ -142,14 +142,14 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
 
 # dtp3 ----------------------------
 
-# TODO: Difficult to test due to dependencies on external targets
+testthat::test_that(paste0("accelerate_dtp3 returns accurate values:"), {
+  # TODO: Difficult to test due to dependencies on external targets
 
-# testthat::test_that(paste0("accelerate_dtp3 returns accurate values:"), {
-#   ind <- "dtp3"
-#
-#   # explanation
-#   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), )
-# })
+  ind <- "dtp3"
+
+  # Verify that function can be run without errors or messages.
+  testthat::expect_error(get_2025_value(60:80, ind, "reported", iso3 = "AFG"), NA)
+})
 
 # fh ----------------------------
 
@@ -242,12 +242,13 @@ testthat::test_that(paste0("accelerate_tb returns accurate values:"), {
 
 # uhc_sanitation ----------------------------
 
-# testthat::test_that(paste0("accelerate_uhc_sanitation returns accurate values:"), {
-#   ind <- "uhc_sanitation"
-#
-#   #
-#   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), )
-# })
+testthat::test_that(paste0("accelerate_uhc_sanitation returns accurate values:"), {
+  ind <- "uhc_sanitation"
+  # TODO: Difficult to test due to dependencies on external targets
+
+  # Verify that function can be run without errors or messages.
+  testthat::expect_error(get_2025_value(60:80, ind, "reported"), NA)
+})
 
 # uhc_tobacco ----------------------------
 
@@ -259,4 +260,15 @@ testthat::test_that(paste0("accelerate_uhc_tobacco returns accurate values:"), {
 
   # TODO: Hard to test for countries with routine (estimated) data due to external dependencies
   # testthat::expect_equal(get_2025_value(60:80, ind, "estimated"), 75)
+})
+
+testthat::test_that("accelerate can be run on all UHC indicator:", {
+  uhc_test_df <- load_misc_data("test_data/test_data.parquet") %>%
+    make_default_scenario(billion = "uhc") %>%
+    dplyr::filter(
+      ind %in% billion_ind_codes("uhc"),
+      !ind %in% billion_ind_codes("uhc")[stringr::str_detect(billion_ind_codes("uhc"), "espar")]
+    )
+
+  testthat::expect_error(add_scenario(uhc_test_df, "accelerate"), NA)
 })

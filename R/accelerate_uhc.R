@@ -344,39 +344,39 @@ accelerate_bp <- function(df,
     dplyr::select(-c("Type", "Metric")) %>%
     dplyr::mutate(
       Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
-      "{{iso3}}" := whoville::names_to_iso3(.data[["Country"]])
+      !!sym(iso3) := whoville::names_to_iso3(.data[["Country"]])
     ) %>%
     suppressMessages() %>%
     dplyr::rename(
       "country" = "Country",
-      "{{year}}" := "Year",
+      !!sym(year) := "Year",
       "sex" = "Sex",
-      "{{value}}" := "Prevalence",
+      !!sym(value) := "Prevalence",
       "lower" = "95% lower limit",
       "upper" = "95% upper limit",
     ) %>%
     dplyr::filter(whoville::is_who_member(.data[[iso3]])) %>%
     dplyr::group_by(.data[[iso3]], .data[[year]]) %>%
-    dplyr::summarize("{{value}}" := mean(.data[[value]], na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
+    dplyr::summarize(!!sym(value) := mean(.data[[value]], na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
     dplyr::mutate(
-      "{{ind}}" := "bp_agestd",
-      "{{type_col}}" := ifelse(.data[[year]] <= 2019, "estimated", "projected")
+      !!sym(ind) := "bp_agestd",
+      !!sym(type_col) := ifelse(.data[[year]] <= 2019, "estimated", "projected")
     ) # check
 
   bp_crude <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Crude.csv") %>%
     dplyr::filter(.data[["Metric"]] == "Hypertension") %>%
     dplyr::select(-c("Type", "Metric")) %>%
-    dplyr::mutate("{{ind}}" := "bp_crude") %>%
+    dplyr::mutate(!!sym(ind) := "bp_crude") %>%
     dplyr::mutate(
       Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
-      "{{iso3}}" := whoville::names_to_iso3(.data[["Country"]])
+      !!sym(iso3) := whoville::names_to_iso3(.data[["Country"]])
     ) %>%
     suppressMessages() %>%
     dplyr::rename(
       "country" = "Country",
-      "{{year}}" := "Year",
+      !!sym(year) := "Year",
       "sex" = "Sex",
-      "{{value}}" := "Prevalence",
+      !!sym(value) := "Prevalence",
       "lower" = "95% lower limit",
       "upper" = "95% upper limit",
     ) %>%
@@ -387,25 +387,26 @@ accelerate_bp <- function(df,
     dplyr::select(c(iso3, year, ind, "sex", value, "lower", "upper", "pop_30_79")) %>%
     dplyr::filter(whoville::is_who_member(.data[[iso3]])) %>%
     dplyr::group_by(.data[[iso3]], .data[[year]]) %>%
-    dplyr::summarize("{{value}}" := stats::weighted.mean(.data[[value]], w = .data[["pop_30_79"]]), .groups = "drop") %>%
+    dplyr::summarize(!!sym(value) := stats::weighted.mean(.data[[value]], w = .data[["pop_30_79"]]), .groups = "drop") %>%
     dplyr::mutate(
       ind = "bp_crude",
-      "{{type_col}}" := ifelse(.data[[year]] <= 2019, "estimated", "projected")
+      !!sym(type_col) := ifelse(.data[[year]] <= 2019, "estimated", "projected")
     )
 
   bp_ratio <- bp_agestd %>%
     dplyr::bind_rows(bp_crude) %>%
     tidyr::pivot_wider(names_from = .data[[ind]], values_from = .data[[value]]) %>%
     dplyr::mutate(ratio_agestd_over_crude = .data[["bp_agestd"]] / .data[["bp_crude"]]) %>%
-    dplyr::select(c(year := "year", iso3 := "iso3", "ratio_agestd_over_crude"))
+    dplyr::select(c(year, iso3, "ratio_agestd_over_crude"))
 
   bp_agestd_crude_ratio <- bp_ratio %>%
     # @Alice, should there final year be 2023 or 2025? (if so, replace 2023 by end_year)
-    dplyr::full_join(tidyr::expand_grid(iso3 = unique(bp_agestd$iso3), year = 2020:2023)) %>%
+    dplyr::full_join(tidyr::expand_grid(!!sym(iso3) := unique(bp_agestd$iso3), !!sym(year) := 2020:2023), by = c(iso3, year)) %>%
     dplyr::left_join(
       bp_ratio %>%
         dplyr::filter(.data[[year]] == 2019) %>%
-        dplyr::select(-.data[[year]], ratio = .data[["ratio_agestd_over_crude"]])
+        dplyr::select(-.data[[year]], ratio = .data[["ratio_agestd_over_crude"]]),
+      by = iso3
     ) %>%
     # @Alice, please explain the logic for the ifelse(is.na(...)) statement
     # given that ratio and ratio_agestd_over_crude are the same column
@@ -414,13 +415,14 @@ accelerate_bp <- function(df,
 
   bp_agestd_crude_ratio <- augury::expand_df(
     bp_agestd_crude_ratio,
-    "{{iso3}}" := unique(bp_agestd_crude_ratio$iso3),
-    "{{year}}" = 1990:2025,
+    iso3 = unique(bp_agestd_crude_ratio$iso3),
+    year = 1990:2025,
     response = "ratio_agestd_over_crude",
     keep_before_obs = TRUE,
     keep_no_obs = TRUE
   ) %>%
-    augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude")
+    augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
+    dplyr::rename(!!sym(iso3) := "iso3", !!sym(year) := year)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind) %>%
@@ -632,8 +634,8 @@ accelerate_dtp3 <- function(df,
     file_name = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
   ) %>%
-    dplyr::select("{{iso3}}" := .data[["ISO"]], target = "DTP 3 Target") %>%
-    dplyr::mutate("{{iso3}}" := toupper(.data[[iso3]]), target = .data[["target"]] * 100)
+    dplyr::select(!!sym(iso3) := .data[["ISO"]], target = "DTP 3 Target") %>%
+    dplyr::mutate(!!sym(iso3) := toupper(.data[[iso3]]), target = .data[["target"]] * 100)
 
   df_accelerated <- df_this_ind %>%
     dplyr::group_by(.data[[iso3]]) %>%
@@ -642,19 +644,19 @@ accelerate_dtp3 <- function(df,
     dplyr::left_join(df_target_values, by = "iso3") %>%
     dplyr::mutate(
       "acceleration" := dplyr::case_when(
-        .data[[year]] > 2018 & .data[[year]] <= 2020 ~ .data[["baseline_value"]],
+        .data[[year]] > 2018 & .data[[year]] <= 2020 ~ as.numeric(.data[["baseline_value"]]),
         .data[[year]] >= baseline_year + 1 & .data[[year]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
-        .data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[[year]] - baseline_year - 1) / (target_year - baseline_year - 1),
-        .data[[year]] >= baseline_year + 1 & .data[[year]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ .data[["baseline_value"]],
-        .data[[year]] == 2018 ~ .data[[value]],
+        as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[[year]] - baseline_year - 1) / (target_year - baseline_year - 1)),
+        .data[[year]] >= baseline_year + 1 & .data[[year]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
+        .data[[year]] == 2018 ~ as.numeric(.data[[value]]),
         TRUE ~ NA_real_
       )
     ) %>%
     dplyr::select(!c("baseline_value", "target")) %>%
     dplyr::filter(!is.na(.data[["acceleration"]])) %>%
     dplyr::select(!c(value)) %>%
-    dplyr::rename("{{value}}" := "acceleration") %>%
-    dplyr::mutate("{{scenario}}" := "acceleration")
+    dplyr::rename(!!sym(value) := "acceleration") %>%
+    dplyr::mutate(!!sym(scenario) := "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -737,13 +739,6 @@ accelerate_fp <- function(df,
     "BRN", "CYP", "FSM", "ISL", "LUX", "SYC"
   )
 
-  # @Muhammad: why only the above iso3 and not all without reported values or the list in the scenarios repo?:
-  # exclude_countries <- df %>%
-  #   dplyr::group_by(.data[[iso3]]) %>%
-  #   dplyr::filter(sum(!.data[[type_col]] %in% c("imputed", "projected"), na.rm = TRUE) <= 1) %>%
-  #   dplyr::pull(.data[[iso3]]) %>%
-  #   unique()
-
   params <- list(...)
   params["small_is_best"] <- get_ind_metadata(this_ind, "small_is_best")
 
@@ -793,7 +788,7 @@ accelerate_fp <- function(df,
       dplyr::filter(.data[[scenario]] == "quantile_5") %>%
       dplyr::mutate("region" := whoville::iso3_to_regions(.data[[iso3]])) %>%
       dplyr::left_join(df_regional, by = "region") %>%
-      dplyr::mutate("{{value}}" := pmin(.data[[value]], .data[["regional_max"]])) %>%
+      dplyr::mutate(!!sym(value) := pmin(.data[[value]], .data[["regional_max"]])) %>%
       dplyr::select(!c("region", "regional_max"))
 
     params_best_of <- get_right_params(params, scenario_best_of)
@@ -1081,7 +1076,7 @@ accelerate_uhc_tobacco <- function(df,
 
   df_with_data <- df_this_ind %>%
     dplyr::group_by(.data[[iso3]]) %>%
-    dplyr::filter(!any(.data[[type_col]] == "estimated")) %>%
+    dplyr::filter(any(.data[[type_col]] == "estimated")) %>%
     dplyr::ungroup()
 
   if (nrow(df_without_data) > 0) {
@@ -1100,7 +1095,7 @@ accelerate_uhc_tobacco <- function(df,
       range = cellranger::cell_cols(2:7)
     ) %>%
       dplyr::filter(.data[["sex"]] == "Total") %>%
-      dplyr::select(c("{{iso3}}" := "iso3", "measure", "{{year}}" := "year", "{{value}}" := "value"))
+      dplyr::select(c("iso3", "measure", "year", "value"))
 
     tobacco_ratio_df <- trajectory_df %>%
       dplyr::mutate(measure = ifelse(.data[["measure"]] == "Crude", "crude", "agestd")) %>%
@@ -1110,8 +1105,8 @@ accelerate_uhc_tobacco <- function(df,
     # Extending the input trajectories to end_year, using flat_extrap from 2023 values
     tobacco_ratio_df <- augury::expand_df(
       tobacco_ratio_df,
-      "{{iso3}}" = unique(tobacco_ratio_df[[iso3]]),
-      "{{year}}" = 2000:end_year,
+      iso3 = unique(tobacco_ratio_df[[iso3]]),
+      year = 2000:end_year,
       response = c("agestd", "crude"),
       keep_before_obs = TRUE,
       keep_no_obs = TRUE
@@ -1119,15 +1114,16 @@ accelerate_uhc_tobacco <- function(df,
       augury::predict_simple("flat_extrap", col = "agestd") %>%
       augury::predict_simple("flat_extrap", col = "crude") %>%
       augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
-      dplyr::select(!c("pred"))
+      dplyr::select(!c("pred")) %>%
+      dplyr::rename(iso3 := "iso3", year := "year")
 
     tobm <- tobacco_ratio_df %>%
       dplyr::group_by(.data[[year]]) %>%
       dplyr::summarise(m = mean(.data[["ratio_agestd_over_crude"]]))
 
     df_with_data <- df_with_data %>%
-      dplyr::left_join(tobacco_ratio_df) %>%
-      dplyr::left_join(tobm) %>%
+      dplyr::left_join(tobacco_ratio_df, by = c(iso3, year)) %>%
+      dplyr::left_join(tobm, by = year) %>%
       dplyr::mutate(
         ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), .data[["m"]], .data[["ratio_agestd_over_crude"]]),
         crude = .data[[value]] / .data[["ratio_agestd_over_crude"]]
@@ -1177,7 +1173,7 @@ accelerate_uhc_tobacco <- function(df,
       scenario_best_of, c(list(df = dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline)), params_best_of)
     ) %>%
       dplyr::filter(.data[["scenario"]] == "acceleration") %>%
-      dplyr::mutate("{{value}}" := .data[[value]] * .data$ratio_agestd_over_crude) %>%
+      dplyr::mutate(!!sym(value) := .data[[value]] * .data[["ratio_agestd_over_crude"]]) %>%
       dplyr::select(-c("agestd", "crude", "ratio_agestd_over_crude"))
   } else {
     df_with_data_accelerated <- tibble::tibble()

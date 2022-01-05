@@ -15,4 +15,3 @@
 ^.RDataTmp*$
 ^doc$
 ^Meta$
-^\.pre-commit-config\.yaml$
