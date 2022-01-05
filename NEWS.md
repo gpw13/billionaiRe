@@ -1,3 +1,9 @@
+# billionaiRe 0.6.1
+* Add recycle_data functions to efficiently recycle data. See
+vignette("scenarios", "billionaiRe") for an overview of the functionality and 
+logic behind data recycling.
+
+
 # billionaiRe 0.5.2
 * Added further definitions to `indicator_df.xlsx`
 * Renamed column `analysis_code` by `ind` of `indicator_df.xlsx`. 
