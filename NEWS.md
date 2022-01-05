@@ -1,3 +1,9 @@
+# billionaiRe 0.6.1
+* Add scenario functions to billionaiRe. Those allow to calculate different
+scenarios based either in the application of one scenario to all indicators or
+through special-case scenarios where calculations might differ for all indicators.
+See the vignette("scenario", "billionaiRe")
+
 # billionaiRe 0.5.3
 * Export functions introduced in version 0.5.0 were moved the code to
 a new package: [rapporteur](https://github.com/gpw13/rapporteur). This reduces

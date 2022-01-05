@@ -1,10 +1,10 @@
 ---
-title: "scenarios"
+title: "Scenarios"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{scenarios}
+  %\VignetteIndexEntry{Scenarios}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r, include = FALSE}
@@ -18,16 +18,17 @@ knitr::opts_chunk$set(
 
 In the Triple Billions and the billionaiRe package context, `scenarios` are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.
 
-Two sets of scenarios can be identified:
+Three sets of scenarios can be identified:
 
--   Event-based scenarios: an event has a presumed but yet unknown impact on the Billions and so it cannot be (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series. 
--   Trajectory-based scenarios: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets, acceleration scenarios from technical programs).Those scenarios should start from 2019 as 2018 is the GPW13 baseline year.
+-   Event-based scenarios: an event has a presumed but yet unknown impact on the Billions (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series. 
+-   Trajectory-based scenarios: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets, or acceleration scenarios from technical programs). Those scenarios should start from 2019 as 2018 is the GPW13 baseline year.
 -   Internal use scenarios: scenarios provide the ability to deal with alternative time series of any kind, which could be include alternative projection methods, update to data sources, etc. While those scenarios might not be displayed for public use, they illustrate the versatility seeking in scenarios.
 
 Scenarios must:
 
 1.  Be [tidy](https://r4ds.had.co.nz/tidy-data.html): each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).
-2.  Contain **all** and **only** the data that is strictly needed for calculations with billionaiRe 2.1 If billionaiRe required data is missing in the scenario, they will be recycled from other scenarios (see [Data recycling]).
+2.  Contain **all** and **only** the data that is strictly needed for calculations with billionaiRe
+  -   If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see [Data recycling]).
 
 There are three special case scenario:
 
@@ -41,36 +42,36 @@ billionaiRe `transform_` and `calculate_` functions (as well as rapporteur expor
 
 For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: minimal storage before computation.
 
-Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call `default` by default, but as this is a parameter (`default_scenario`) of the `recycle_data` function, it can be modified as required. `default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`none` by default) and `scenario_tp` for values projected/imputed by technical programs (`tp` by default).
+Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call `default` by default, but as this is a parameter (`default_scenario`) of `recycle_data()`, it can be modified as required. `default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`none` by default) and `scenario_tp` for values imputed/projected by technical programs (`tp` by default).
 
 Data recycling works by adding to all scenarios present in the `scenario` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated` and `scenario_reported_estimated` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
 
-```{r, include = TRUE, eval = FALSE}
+```{r, include = TRUE, eval = TRUE}
 library(billionaiRe)
 
-df <- billionaiRe::load_billion_data("all", "test_data")
+df <- load_misc_data("test_data/test_data.parquet")
 
 scenario_df <- df %>%
-  dplyr::filter(.data[[scenario_col]] == !!scenario)
+  dplyr::filter(scenario == "covid_dip_lag")
 
 default_not_in_scenario <- df %>%
-  dplyr::filter(.data[[scenario_col]] == !!default_scenario) %>%
-  dplyr::anti_join(scenario_df, by = c(iso3, ind, year))
+  dplyr::filter(scenario == "default") %>%
+  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
 reported_not_in_scenario <- df %>%
-  dplyr::filter(.data[[scenario_col]] == !!scenario_reported_estimated) %>%
-  dplyr::anti_join(scenario_df, by = c(iso3, ind, year))
+  dplyr::filter(scenario == "none") %>%
+  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
 reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
-  by = c(iso3, ind, year)
+  by = c("iso3", "ind", "year")
 )
 
 tp_not_in_scenario <- df %>%
-  dplyr::filter(.data[[scenario_col]] == !!scenario_tp) %>%
-  dplyr::anti_join(scenario_df, by = c(iso3, ind, year))
+  dplyr::filter(scenario == "tp") %>%
+  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
 tp_not_in_default <- dplyr::anti_join(tp_not_in_scenario, default_not_in_scenario,
-  by = c(iso3, ind, year)
+  by = c("iso3", "ind", "year")
 )
 
 not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
@@ -80,10 +81,9 @@ not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_def
 
 As for projections, the track change offered by git will act as a history of what is contained in the default scenario at any given time. It could be interesting to have a log of what is meant by `default` at any given time in the future to make the retrieval of the history easier.
 
-
 ### Implementation of data recycling in billionaiRe
 
-Data recycling is implemented in billionaiRe through the `recycle_data()` function. This function wraps around `recycle_data_scenario_single` (not exported) to run the recycling over all the scenarios present in the input data frame.
+Data recycling is implemented in billionaiRe through the `recycle_data()` function. This function wraps around `recycle_data_scenario_single()` (not exported for public use) to run the recycling over all the scenarios present in the input data frame.
 
 `recycle_data` uses similar parameters than other exported billionaiRe functions. However it introduces specific parameters:
 
@@ -95,28 +95,33 @@ Data recycling is implemented in billionaiRe through the `recycle_data()` functi
 
 A `recycle` and `...`parameters were added to the `transform_` functions to ease recycling. If `recycle` is `TRUE`, data will be recycled, using the eventual parameters passed through the `...`. 
 
-```{r recycling-example, include = TRUE, eval = FALSE}
+```{r recycling-example, include = TRUE, eval = TRUE}
+df <- load_misc_data("test_data/test_data.parquet")
 
-test_data <- load_misc_data("test_data/test_data.parquet")
-
-test_data_hep <- test_data %>%
-  recycle_data("hep", include_projection = FALSE) %>%
-  transform_hep_data(include_projection = FALSE)
+test_data_hep <- df %>%
+  recycle_data(billion = "hep", include_projection = FALSE) %>%
+  transform_hep_data(scenario = "scenario")
 
 # Exactly equivalent to above:
-test_data_hep_transform <- test_data %>%
-  transform_hep_data(recyle = TRUE, include_projection = FALSE)
+test_data_hep_transform <- df %>%
+  transform_hep_data(scenario = "scenario", recycle = TRUE, include_projection = FALSE)
 
-test_data_hep <- test_data %>%
+dplyr::setdiff(test_data_hep, test_data_hep_transform)
+
+test_data_hpop <- df %>%
   recycle_data("hpop", include_projection = FALSE)
 
 # Exactly equivalent to above:
-test_data_hpop_transform <- test_data %>%
-  transform_hpop_data(scenario = "scenario", recyle = TRUE, include_projection = FALSE)
-```
-In order to facilitate the cleaning of data, a `recycled` column is added by the recyling function to identify data points that have been recycled. They can then be removed by the `remove_recycled_data` function that takes into account a few specific scenarios.
+test_data_hpop_transform <- df %>%
+  transform_hpop_data(recycle = TRUE, include_projection = FALSE)
 
-To avoid adding ellipses to all billionaiRe functions which could have opened a number of unknown issues, not all formally recycled data can be identified and thus removed through the `remove_recycled_data`, especially for the HEP billion. This includes mostly carried over campaign data.
+dplyr::setdiff(test_data_hep, test_data_hep_transform)
+```
+In order to facilitate the cleaning of data, a `recycled` column is added by the recycling function to identify data points that have been recycled. They can then be removed by the `remove_recycled_data()` function that takes into account a few specific scenarios.
+
+To avoid adding ellipses to all billionaiRe functions which could have opened a number of unforeseeable issues, not all formally recycled data can be identified and thus removed with `remove_recycled_data()`, especially for the HEP billion. This includes mostly carried over campaign data.
+
+A `make_default_scenario()` function is provided to combine the `default_scenario`, `scenario_reported_estimated`, and `scenario_tp` efficiently.
 
 ## Scenarios integration into data pipeline
 
@@ -129,34 +134,40 @@ The current GPW13 data pipeline is composed of four main steps:
 
 The integration of the scenario happens at stage 3 (Calculating), as does the rest of the billionaiRe calculations.
 
-Within the billionaiRe calculations pipeline, adding the scenarios values should be the first steps. Data recycling can happen in the `add_scenario` and `prepare_data_` functions.
+Within the billionaiRe calculations pipeline, adding the scenarios values should ideally be the first steps. However, some scenarios, especially event-based and trajectory-based scenarios, might require some level of data recycling before they are run. If this is the case, errors should be produced when user try to run them.
 
-In the `add_scenario` function, a `default_scenario` argument is provided to give a specific scenario what the default values should be. In this case, essential values not present in the data frame passed to the function will be recycled first from the `default_scenario`, then from `none` and `tp` scenarios.
+In the `add_scenario()` function, a `default_scenario` argument can be passed to provide a specific default_scenario.
 
-The `prepare_data_` functions recycle values where necessary to have the minimum required data to run billion's calculations. They also wrap the `transform_` functions to avoid to multiply unnecessary function calls.
+The `add_scenario` functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called : 
 
-```{r scenario-example-simple, include = TRUE, eval = FALSE}
+1.    **base scenario functions**: they are the building blocs of the wrapper functions. For instance, `scenario_fixed_target` sets the values on a linear trajectory towards a target by a certain year, `scenario_percent_baseline` sets a progression from the baseline with a fix percentage increase.
+2.    **wrappers functions** combine base scenario functions to generate more complex scenarios like `acceleration`, `sdg`, etc.
+
+
+```{r scenario-example-simple, include = TRUE, eval = TRUE}
 library(billionaiRe)
 
-# TODO: update with real scenario function when available
-hep_df %>%
-  add_scenario("covid_never_return", # picks from a pre-determined list of scenarios
+test_hep <- df %>%
+  add_scenario(
+    scenario_function = "halt_rise", # picks from a pre-determined list of scenarios
     scenario = "scenario",
-    default_scenario = "pre_covid_bau"
+    default_scenario = "covid_dip_lag"
   ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
-  add_scenario("aroc_fix_percent", # picks from a pre-determined list of scenarios
+  add_scenario(
+    scenario_function = "percent_baseline", # picks from a pre-determined list of scenarios
+    percent_change = 10,
     scenario = "scenario",
-    default_scenario = "covid_never_return"
+    default_scenario = "covid_dip_lag"
   ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
   recycle_data(
-    billion = "hep", # One function for all billions, so need to specify which one this is applied to.
-    scenario_col = "scenario",
-    default_scenario = "pre_covid_bau",
+    billion = "hep", # One function for each billions, so need to specify which one this is applied to.
+    scenario = "scenario",
+    default_scenario = "covid_dip_lag",
     scenario_reported_estimated = "none",
     scenario_tp = "tp",
     include_projection = TRUE,
     recycle_campaigns = TRUE
-  ) %>%
+  ) %>% # Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.
   transform_hep_data(
     scenario = "scenario",
     recycle = FALSE
@@ -173,11 +184,6 @@ hep_df %>%
     year == 2025
   )
 ```
-
-The `add_scenario` functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called : 
-
-1.    **base scenario functions**: they are the building blocs of the wrapper functions. For instance, `scenario_fixed_target` sets the values on a linear trajectory towards a target by a certain year, `scenario_percent_baseline` sets a progression from the baseline with a fix percentage increase.
-2.    **wrappers function** combine base scenario functions to generate more complex scenarios like `covid_never_return` or `acceleration`, etc.
 
 ### Base scenario functions:
 
@@ -198,7 +204,7 @@ Each of those functions use their own parameters.
 
 In order to have clean scenarios, a series of parameters are passed to the functions to run properly:
 
-- `small_is_best`: if TRUE, a lower value is considered as better. For instance, lower obesity pevalence is considered as a better public health outcome.
+- `small_is_best`: if TRUE, a lower value is considered as a better public health outcome (e.g. adult obesity)
 - `trim_values`: if TRUE, values will be trimed around:
   - `keep_better_values`: if TRUE, if values before running the scenario are better than after, the original values will be kept.
   - `upper_limit`, `lower_limit`: if `trim` is TRUE, values above the upper_limit will have upper_limit and values below lower_limit will hasve lower_limit.
@@ -206,7 +212,13 @@ In order to have clean scenarios, a series of parameters are passed to the funct
 
 ### Wrappers functions:
 
+Currently there are two wrapper functions implemented:
+
+-   `add_scenario` that wraps around any of the scenarios in its `scenario_function` parameter
+-   `acceleration` that implements the acceleration scenarios defined in coordination with WHO technical programs.
+
 Each of the base scenario is wrapped in `add_scenario`. This function calls a `add_` function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:
+
 ```{r scenario-wrapper-example, include = TRUE, eval = TRUE}
 library(billionaiRe)
 
@@ -218,13 +230,12 @@ df <- tibble::tibble(
   scenario = "default"
 )
 
-adult_obese_halt_rise_df <- add_scenario(df, scenario_function = "halt_rise") %>%
+add_scenario(df, scenario_function = "halt_rise") %>%
   dplyr::filter(scenario == "halt_rise")
 
-print(adult_obese_halt_rise_df)
 ```
 
-Behind the scenes, `add_scenario` first get all unique indicators present in `df`, then passed each of them to `add_scenario_indicator`. `add_scenario_indicator` then find the `add_scenario_adult_obese` function and runs it with `df` and `halt_rise`. `add_scenario_adult_obese` then passes appropriate parameters to `scenario_halt_rise`. In this case, this is mostly to pass `small_is_best` to the scenario function.
+Behind the scenes, `add_scenario` first get all unique indicators present in `df`, then passed each of them to `add_scenario_indicator()`. `add_scenario_indicator()` then find the `add_scenario_adult_obese` function and runs it with `df` and `halt_rise`. `add_scenario_adult_obese` then passes appropriate parameters to `scenario_halt_rise`. In this case, this is mostly to pass `small_is_best` to the scenario function.
 
 The `...` ellipsis is used to based down parameters down the functions.
 

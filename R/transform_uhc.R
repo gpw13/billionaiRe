@@ -40,24 +40,19 @@ transform_uhc_data <- function(df,
   if (recycle) {
     params_recycle <- get_right_params(params, recycle_data)
 
-    if (!is.null(params_recycle)) {
-      df <- df %>%
-        recycle_data(
-          billion = "uhc",
-          ind = ind,
-          value = value,
-          ind_ids = ind_ids,
-          params_recycle
-        )
-    } else {
-      df <- df %>%
-        recycle_data(
+    df <- do.call(
+      recycle_data,
+      c(
+        list(
+          df = df,
           billion = "uhc",
           ind = ind,
           value = value,
           ind_ids = ind_ids
-        )
-    }
+        ),
+        params_recycle
+      )
+    )
   }
 
 
