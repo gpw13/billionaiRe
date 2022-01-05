@@ -1,8 +1,9 @@
-# billionaiRe 0.6.1
+# billionaiRe 0.6.2
 * Add scenario functions to billionaiRe. Those allow to calculate different
 scenarios based either in the application of one scenario to all indicators or
 through special-case scenarios where calculations might differ for all indicators.
 See the vignette("scenario", "billionaiRe")
+* Bring improvements to data_recycling
 
 # billionaiRe 0.5.3
 * Export functions introduced in version 0.5.0 were moved the code to
