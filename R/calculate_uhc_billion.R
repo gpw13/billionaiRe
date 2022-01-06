@@ -94,7 +94,7 @@ calculate_uhc_billion_single <- function(df,
     dplyr::rowwise() %>%
     dplyr::mutate("asc" := mean(dplyr::c_across(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp")))) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate("uhc_sm" := .data[["asc"]] * (100 - .data[["_fh_temp"]]) / 100) %>%
+    dplyr::mutate("uhc_sm" := .data[["asc"]] * .data[["_fh_temp"]] / 100) %>%
     dplyr::select(-dplyr::any_of(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp", "_fh_temp"))) %>%
     tidyr::pivot_longer(c("asc", "uhc_sm"),
       names_to = "ind",

@@ -58,11 +58,11 @@ transform_uhc_single <- function(df,
     df,
     !!sym(transform_col) := dplyr::case_when(
       is.na(.data[[value]]) ~ .data[[transform_col]],
-      .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ trim_transforms(.data[[value]]),
+      .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "itn")] ~ trim_transforms(.data[[value]]),
       .data[[ind]] == ind_ids["bp"] ~ transform_bp(.data[[value]]),
       .data[[ind]] == ind_ids["fpg"] ~ transform_glucose(.data[[value]]),
       .data[[ind]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value]]),
-      .data[[ind]] == ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value]]),
+      .data[[ind]] %in% ind_ids[c("uhc_tobacco", "fh")] ~ transform_inversion(.data[[value]]),
       .data[[ind]] == ind_ids["hwf"] ~ transform_hwf(.data[[value]]),
       TRUE ~ .data[[transform_col]]
     )
