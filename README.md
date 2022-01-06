@@ -7,7 +7,7 @@
 
 [![R build
 status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
-[![codecov](https://codecov.io/gh/gpw13/billionaiRe/branch/master/graph/badge.svg?token=IT9RI3OOKV)](https://codecov.io/gh/gpw13/billionaiRe)
+[![codecov](https://codecov.io/gh/gpw13/billionaiRe/branch/main/graph/badge.svg?token=IT9RI3OOKV)](https://codecov.io/gh/gpw13/billionaiRe)
 <!-- badges: end -->
 
 The goal of billionaiRe is to provide an easy interface for using long
