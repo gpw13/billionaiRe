@@ -32,6 +32,7 @@ testthat::test_that("basic billion calculations are consistent", {
         "hep_idx"
       ),
       year == 2023
+
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
       stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
