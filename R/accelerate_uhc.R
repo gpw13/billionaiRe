@@ -413,15 +413,12 @@ accelerate_bp <- function(df,
     dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), .data[["ratio"]], .data[["ratio_agestd_over_crude"]])) %>%
     dplyr::select(!c("ratio"))
 
-  bp_agestd_crude_ratio <- augury::expand_df(
-    bp_agestd_crude_ratio,
+  bp_agestd_crude_ratio_org <- tidyr::expand_grid(
     iso3 = unique(bp_agestd_crude_ratio$iso3),
-    year = 1990:2025,
-    response = "ratio_agestd_over_crude",
-    keep_before_obs = TRUE,
-    keep_no_obs = TRUE
+    year = 1990:2025
   ) %>%
-    augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
+    dplyr::full_join(bp_agestd_crude_ratio, by = c(iso3, year)) %>%
+    flat_extrapolation(col = "ratio_agestd_over_crude", group_col = "iso3") %>%
     dplyr::rename(!!sym(iso3) := "iso3", !!sym(year) := year)
 
   df_this_ind <- df %>%
@@ -1103,17 +1100,14 @@ accelerate_uhc_tobacco <- function(df,
       dplyr::mutate(ratio_agestd_over_crude = .data[["agestd"]] / .data[["crude"]])
 
     # Extending the input trajectories to end_year, using flat_extrap from 2023 values
-    tobacco_ratio_df <- augury::expand_df(
-      tobacco_ratio_df,
+    tobacco_ratio_df <- tidyr::expand_grid(
       iso3 = unique(tobacco_ratio_df[[iso3]]),
-      year = 2000:end_year,
-      response = c("agestd", "crude"),
-      keep_before_obs = TRUE,
-      keep_no_obs = TRUE
+      year = 2000:end_year
     ) %>%
-      augury::predict_simple("flat_extrap", col = "agestd") %>%
-      augury::predict_simple("flat_extrap", col = "crude") %>%
-      augury::predict_simple("flat_extrap", col = "ratio_agestd_over_crude") %>%
+      dplyr::full_join(tobacco_ratio_df, by = c(iso3, year)) %>%
+      flat_extrapolation(col = "agestd") %>%
+      flat_extrapolation(col = "crude") %>%
+      flat_extrapolation(col = "ratio_agestd_over_crude") %>%
       dplyr::select(!c("pred")) %>%
       dplyr::rename(iso3 := "iso3", year := "year")
 

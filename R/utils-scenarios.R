@@ -248,3 +248,75 @@ get_quantile <- function(value, n) {
 
   findInterval(value, quantiles_limits, rightmost.closed = TRUE)
 }
+
+#' Flat extrapolation
+#'
+#' @param df Data frame of model data.#' @param col
+#' @param col Name of column to extrapolate/interpolate.
+#' @param group_col Column name(s) of group(s) to use in [dplyr::group_by()] when
+#'     supplying type, calculating mean absolute scaled error on data involving
+#'     time series, and if `group_models`, then fitting and predicting models too.
+#'     If `NULL`, not used. Defaults to `"iso3"`.
+#' @param sort_col Column name(s) to use to [dplyr::arrange()] the data prior to
+#'     supplying type and calculating mean absolute scaled error on data involving
+#'     time series. If `NULL`, not used. Defaults to `"year"`.
+#' @param pred_col Column name to store predicted value.
+#' @param sort_descending Logical value on whether the sorted values from `sort_col`
+#'     should be sorted in descending order. Defaults to `FALSE`.
+#' @param replace_obs Character value specifying how, if at all, observations should
+#'     be replaced by fitted values. Defaults to replacing only missing values,
+#'     but can be used to replace all values or none.
+#'
+#' @return a data frame with predicted data,
+#'
+flat_extrapolation <- function(df,
+                               col,
+                               group_col = NULL,
+                               sort_col = "year",
+                               pred_col = "pred",
+                               sort_descending = FALSE,
+                               replace_obs = c("missing", "none")) {
+  replace_obs <- rlang::arg_match(replace_obs)
+
+  df <- dplyr::group_by(df, dplyr::across(dplyr::all_of(group_col)))
+
+  if (!is.null(sort_col)) {
+    if (sort_descending) {
+      fn <- dplyr::desc
+    } else {
+      fn <- NULL
+    }
+    df <- dplyr::arrange(df, dplyr::across(dplyr::all_of(sort_col), fn),
+      .by_group = TRUE
+    )
+  }
+
+  df <- dplyr::mutate(
+    df,
+    !!sym(pred_col) := .data[[col]]
+  )
+
+  df <- dplyr::mutate(df, !!sym(pred_col) := simple_extrap(.data[[pred_col]]))
+
+  if (replace_obs == "missing") {
+    df <- df %>% dplyr::mutate(!!sym(col) := dplyr::case_when(
+      is.na(.data[[col]]) ~ .data[[pred_col]],
+      TRUE ~ .data[[col]]
+    ))
+  }
+
+  dplyr::ungroup(df)
+}
+
+
+#' Simple extrapolation
+#'
+#' @param x vector with values sorted
+#'
+#' @noRd
+simple_extrap <- function(x) {
+  missing_x <- is.na(x)
+
+  whr <- max(which(!missing_x))
+  x[whr:length(x)] <- x[whr]
+}
