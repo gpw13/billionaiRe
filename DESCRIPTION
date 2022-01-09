@@ -49,6 +49,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
+    gpw13/augury,
     gpw13/whoville,
     gpw13/xmart4,
     WorldHealthOrganization/wppdistro,
