@@ -344,4 +344,5 @@ testthat::test_that("accelerate can be run on all hep indicators:", {
   testthat::expect_error(add_scenario(df_espar,
     scenario_function = "accelerate"
   ), NA)
+
 })

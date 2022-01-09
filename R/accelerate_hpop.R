@@ -158,11 +158,6 @@ accelerate_child_viol <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  assert_ind_start_end_year(df_this_ind,
-    start_year = 2010, end_year = 2018,
-    ind = ind, ind_ids = ind_ids["child_viol"], scenario = scenario
-  )
-
   params <- get_right_params(list(...), scenario_fixed_target)
   params["target_value"] <- 0
   params["target_year"] <- 2030
@@ -199,11 +194,6 @@ accelerate_devontrack <- function(df,
 
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
-
-  assert_ind_start_end_year(df_this_ind,
-    start_year = 2010, end_year = 2018,
-    ind = ind, ind_ids = ind_ids[this_ind], scenario = scenario
-  )
 
   params <- list(...)
   params["target_value"] <- 80
@@ -563,22 +553,33 @@ accelerate_overweight <- function(df,
 #' Then picks the best result between the two scenarios.
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_hpop_tobacco
 accelerate_pm25 <- function(df,
                             ind_ids = billion_ind_codes("hpop"),
                             scenario = "scenario",
                             ind = "ind",
+                            iso3 = "iso3",
+                            value = "value",
+                            year = "year",
                             ...) {
   this_ind <- ind_ids["pm25"]
 
   params <- list(...)
 
-  params_linear <- get_right_params(params, scenario_linear_change)
-
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  params_linear["linear_value"] <- df_this_ind$value[df_this_ind$year == 2018] * -0.02
+  linear_value_df <- df_this_ind %>%
+    dplyr::filter(.data[[year]] == 2018) %>%
+    dplyr::mutate(linear_value = .data[[value]] * -0.02) %>%
+    dplyr::select(iso3, "linear_value")
 
+  df_this_ind <- df_this_ind %>%
+    dplyr::left_join(linear_value_df, by = iso3)
+
+  params_linear <- get_right_params(params, scenario_linear_change_col)
+
+  params_linear[["linear_value_col"]] <- "linear_value"
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params)
@@ -586,7 +587,7 @@ accelerate_pm25 <- function(df,
     dplyr::filter(.data[[scenario]] == "business_as_usual")
 
   df_linear <- do.call(
-    scenario_linear_change, c(list(df = df_this_ind), params_linear)
+    scenario_linear_change_col, c(list(df = df_this_ind), params_linear)
   ) %>%
     dplyr::filter(.data[[scenario]] == "linear_change")
 
