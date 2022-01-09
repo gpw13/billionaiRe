@@ -1,11 +1,12 @@
 Type: Package
 Package: billionaiRe
 Title: Calculate the WHO Triple Billions
-Version: 0.5.2
+Version: 0.5.3
 Authors@R: c(
     person("Seth", "Caldwell", , "caldwellst@gmail.com", role = c("aut", "cre")),
     person("Alice", "Robson", , "robsona@who.int", role = "aut"),
-    person("Nelly", "Biondi", , "biondin@who.int", role = "aut")
+    person("Nelly", "Biondi", , "biondin@who.int", role = "aut"),
+    person("Elliott", "Messeiller", , "elliott.messeiller@gmail.com", role = "aut")
   )
 Description: Apply methods to calculate Universal Health Coverage,
     Healthier Populations, and Health Emergencies Protection Billions.
@@ -16,6 +17,7 @@ URL: https://www.who.int/data/triple-billion-dashboard,
 Depends: 
     R (>= 2.10)
 Imports: 
+    arrow,
     dplyr,
     glue,
     lubridate,
@@ -24,6 +26,7 @@ Imports:
     openxlsx,
     purrr,
     readr,
+    readxl,
     rlang,
     scales,
     stringr,
@@ -35,19 +38,21 @@ Imports:
     whoville,
     zoo
 Suggests: 
-    testthat (>= 3.0.0),
     knitr,
     rmarkdown,
+    testthat (>= 3.0.0),
+    whdh,
     wppdistro (>= 0.1.0),
     xmart4 (>= 0.2.2)
 VignetteBuilder: 
     knitr
 Remotes: 
+    WorldHealthOrganization/whdh,
     WorldHealthOrganization/wppdistro,
     gpw13/whoville,
     gpw13/xmart4
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Config/testthat/edition: 3
