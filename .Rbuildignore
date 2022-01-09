@@ -8,10 +8,12 @@
 ^LICENSE\.md$
 ^data-raw$
 ^\.github$
-<<<<<<< HEAD
 ^test$
 ^outputs$
 ^.*\.Rprofvis
 ^.RDataTmp*$
 ^doc$
 ^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
