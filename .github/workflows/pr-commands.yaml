@@ -8,17 +8,17 @@ name: Commands
 
 jobs:
   document:
-    if: ${{ github.event.issue.pull_request && (github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'OWNER') && startsWith(github.event.comment.body, '/document') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.author_association == 'ADMIN' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'OWNER') && startsWith(github.event.comment.body, '/document') }}
     name: document
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.PAT_GITHUB }}
     steps:
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/pr-fetch@v1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.PAT_GITHUB }}
 
       - uses: r-lib/actions/setup-r@v1
         with:
@@ -37,23 +37,22 @@ jobs:
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add man/\* NAMESPACE
           git commit -m 'Document'
-
       - uses: r-lib/actions/pr-push@v1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.PAT_GITHUB }}
 
   style:
-    if: ${{ github.event.issue.pull_request && (github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'OWNER') && startsWith(github.event.comment.body, '/style') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.author_association == 'ADMIN' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'OWNER') && startsWith(github.event.comment.body, '/document') }}
     name: style
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.PAT_GITHUB }}
     steps:
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/pr-fetch@v1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.PAT_GITHUB }}
 
       - uses: r-lib/actions/setup-r@v1
 
@@ -69,7 +68,6 @@ jobs:
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add \*.R
           git commit -m 'Style'
-
       - uses: r-lib/actions/pr-push@v1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.PAT_GITHUB }}
