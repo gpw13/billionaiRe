@@ -56,7 +56,7 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
   data_source <- rlang::arg_match(data_source)
 
   if (data_source == "whdh") {
-    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, ...)
+    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, sandbox, silent, ...)
   } else {
     load_billion_data_xmart(data_type, billion, ind_codes, date_filter, na_rm, ...)
   }
