@@ -42,7 +42,8 @@ jobs:
           repo-token: ${{ secrets.PAT_GITHUB }}
 
   style:
-    if: startsWith(github.event.comment.body, '/document')
+
+    if: startsWith(github.event.comment.body, '/style')
     name: style
     runs-on: ubuntu-latest
     env:
