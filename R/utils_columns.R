@@ -19,4 +19,3 @@ billionaiRe_add_columns <- function(df, cols, fill) {
   names(fill) <- cols
   tibble::add_column(df, !!!fill[setdiff(cols, names(df))])
 }
-
