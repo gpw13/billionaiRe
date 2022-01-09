@@ -11,3 +11,4 @@ vignettes/.build.timestamp
 *.Rprofvis
 hep_data.RDS
 .RDataTmp*
+docs
