@@ -13,7 +13,7 @@ hep_data.RDS
 .RDataTmp*
 vignettes/scenarios.docx
 data-raw/test_data.parquet
-
 data-raw/test_data_calculated.parquet
 /doc/
 /Meta/
+docs
