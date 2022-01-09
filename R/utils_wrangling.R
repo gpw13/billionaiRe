@@ -90,7 +90,7 @@ has_xmart_cols <- function(df) {
 add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
   proj <- ifelse(projected == TRUE, "proj_data", "unproj_data")
 
-  exist_df <- load_billion_data(billion, proj) %>%
+  exist_df <- load_billion_data_legacy(billion, proj) %>%
     dplyr::filter(.data[["ind"]] %in% ind_code) %>%
     dplyr::select(xmart_cols())
 
