@@ -28,7 +28,7 @@ available in their individual documentation, but below you can see the quick
 and easy Billions calculation done using the sample fake HPOP data provided
 in the package, `hpop_df`.
 
-```{r setup_hpop}
+```{r setup_hpop, eval=FALSE}
 library(billionaiRe)
 
 hpop_df %>%

@@ -27,7 +27,7 @@ available in their individual documentation, but below you can see the quick
 and easy Billions calculation done using the sample fake HEP data provided
 in the package, `hep_df`.
 
-```{r setup_hep}
+```{r setup_hep, eval=FALSE}
 library(billionaiRe)
 
 hep_df %>%
