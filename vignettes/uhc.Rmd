@@ -28,7 +28,7 @@ available in their individual documentation, but below you can see the quick
 and easy Billions calculation done using the the sample fake UHC data provided
 in the package, `uhc_df`.
 
-```{r setup_uhc}
+```{r setup_uhc, eval=FALSE}
 library(billionaiRe)
 
 uhc_df %>%
