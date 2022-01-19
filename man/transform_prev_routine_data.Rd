@@ -12,6 +12,7 @@ transform_prev_routine_data(
   value,
   transform_value,
   type_col,
+  scenario,
   ind_ids
 )
 }
@@ -31,6 +32,9 @@ country, year, and indicator.}
 used to calculate contributions.}
 
 \item{type_col}{Column name of column with type data.}
+
+\item{scenario}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

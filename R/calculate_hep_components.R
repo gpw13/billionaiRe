@@ -268,7 +268,7 @@ calculate_hepi <- function(df,
       )],
       .data[[year]] >= earliest_year
     ) %>%
-    dplyr::group_by(dplyr::across(c(iso3, year, scenario))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
     dplyr::summarize(dplyr::across(
       !!transform_value,
       ~ mean(.x, na.rm = TRUE)

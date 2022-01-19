@@ -19,12 +19,47 @@ transform_uhc_data <- function(df,
                                ind = "ind",
                                value = "value",
                                transform_glue = "transform_{value}",
-                               ind_ids = billion_ind_codes("uhc")) {
+                               ind_ids = billion_ind_codes("uhc"),
+                               recycle = FALSE,
+                               ...) {
   assert_columns(df, ind, value)
   assert_ind_ids(ind_ids, billion = "uhc")
 
   # get transform column names
   transform_value <- glue::glue(transform_glue)
+
+  params <- list(...)
+  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_uhc)
+
+  if (!is.null(params_assert_data_calculations)) {
+    assert_data_calculation_uhc(df, value = value, params_assert_data_calculations)
+  } else {
+    assert_data_calculation_hpop(df, value = value)
+  }
+
+  if (recycle) {
+    params_recycle <- get_right_params(params, recycle_data)
+
+    if (!is.null(params_recycle)) {
+      df <- df %>%
+        recycle_data(
+          billion = "uhc",
+          ind = ind,
+          value = value,
+          ind_ids = ind_ids,
+          params_recycle
+        )
+    } else {
+      df <- df %>%
+        recycle_data(
+          billion = "uhc",
+          ind = ind,
+          value = value,
+          ind_ids = ind_ids
+        )
+    }
+  }
+
 
   # transform each
   for (i in 1:length(value)) {
