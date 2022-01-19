@@ -6,11 +6,11 @@ on:
   pull_request:
     branches: [main, master, main-gh-actions]
 
-name: Commands
+name: document-style
 
 jobs:
   document-style:
-    name: document
+    name: document-stlye
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.PAT_GITHUB }}
@@ -40,4 +40,5 @@ jobs:
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add man/\* NAMESPACE
+          git add \*.R
           git commit -m 'Document and style'
