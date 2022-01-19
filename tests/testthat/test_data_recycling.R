@@ -1,11 +1,8 @@
-test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
+test_data <- billionaiRe::load_misc_data("test_data/test_data.parquet")
 
-test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
+test_data_calculated <- billionaiRe::load_misc_data("test_data/test_data_calculated.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
-  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
-
-  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
   test_data_calculated_hep <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
@@ -26,9 +23,6 @@ testthat::test_that("HEP data recycling returns right number of rows", {
 })
 
 testthat::test_that("HPOP data recycling returns right number of rows", {
-  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
-
-  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
   test_data_calculated_hpop <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
@@ -45,9 +39,6 @@ testthat::test_that("HPOP data recycling returns right number of rows", {
 })
 
 testthat::test_that("UHC data recycling returns right number of rows", {
-  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
-
-  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
   test_data_calculated_uhc <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
@@ -70,9 +61,6 @@ testthat::test_that("UHC data recycling returns right number of rows", {
 
 
 testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results", {
-  test_data <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data"))
-
-  test_data_calculated <- suppressMessages(billionaiRe:::load_test_data("test_data/test_data_calculated"))
 
   hep_recycle <- test_data %>%
     recycle_data("hep") %>%

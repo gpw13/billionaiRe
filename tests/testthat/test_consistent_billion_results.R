@@ -46,9 +46,9 @@ testthat::test_that("basic billion calculations are consistent", {
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
   # Reference data frame:
 
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
     dplyr::filter(scenario == "default") %>%
@@ -80,9 +80,9 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
 
 
 testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
@@ -107,9 +107,9 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
 })
 
 testthat::test_that("UHC complexe billion calculations without scenarios are consistent", {
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%
@@ -141,9 +141,9 @@ testthat::test_that("UHC complexe billion calculations without scenarios are con
 })
 
 testthat::test_that("HEP complexe billion calculations with scenarios are consistent", {
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_calculated <- test_data_calculated %>%
     dplyr::mutate(transform_value = dplyr::case_when(
@@ -169,9 +169,9 @@ testthat::test_that("HEP complexe billion calculations with scenarios are consis
 })
 
 testthat::test_that("HPOP complexe billion calculations with scenarios are consistent", {
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
@@ -191,9 +191,9 @@ testthat::test_that("HPOP complexe billion calculations with scenarios are consi
 })
 
 testthat::test_that("UHC complexe billion calculations with scenarios are consistent", {
-  test_data <- billionaiRe:::load_test_data("test_data/test_data")
+  test_data <- billionaiRe:::load_misc_data("test_data/test_data.parquet")
 
-  test_data_calculated <- billionaiRe:::load_test_data("test_data/test_data_calculated")
+  test_data_calculated <- billionaiRe:::load_misc_data("test_data/test_data_calculated.parquet")
 
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%

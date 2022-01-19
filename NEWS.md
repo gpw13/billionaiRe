@@ -3,6 +3,31 @@
 vignette("scenarios", "billionaiRe") for an overview of the functionality and 
 logic behind data recycling.
 
+# billionaiRe 0.6.0
+Various updates to facilitate migration of the Triple Billion data pipeline into the WHDH
+* Updated `load_billion_data` to now pull data from the WHDH data lake by default
+  and optionally set xMart as the `data_source`. Using xMart currently redirects the user
+  to the legacy version of `load_billion_data`, while the xMart functionality is built.
+* Added `get_whdh_path` for easy generation of download/upload paths for the WHDH data lake
+* Updated `save_wrangled_output` to work with parquet format.
+* Added `save_gho_backup_to_whdh`, making it easier to backup snapshots of GHO data
+to the WHDH data lake.
+* Updated `billion_ind_codes` with a toggle for subindicators (like `water_rural`,
+  `water_urban` and the eSpar categories and sub-categories).
+* Added `get_ind_billion` for determining which billion a given indicato belongs to.
+* Updated `xmart_cols` to return different sets of columns based for different types of data.
+* Added new assertions: `assert_type`, `assert_fileext`, `assert_unique_vector`, 
+  `assert_length`, `assert_min_length`, `assert_same_length`, `assert_equals`, 
+  and `assert_x_in_y`.
+* Updated `assert_arg_exists` to have custom error messages.
+* Rearranged `utils_asserts.R` to categorise the different assertions.
+
+# billionaiRe 0.5.3
+* Export functions introduced in version 0.5.0 were moved the code to
+a new package: [rapporteur](https://github.com/gpw13/rapporteur). This reduces
+the size of the billionaiRe package and maintain a better logic in the package
+environment.
+* Introduce basic testing (input-output) of the package.
 
 # billionaiRe 0.5.2
 * Added further definitions to `indicator_df.xlsx`

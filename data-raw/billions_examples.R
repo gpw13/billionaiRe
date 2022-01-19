@@ -58,7 +58,6 @@ basic_test_calculated <- uhc_calculated %>%
 
 usethis::use_data(basic_test_calculated, overwrite = TRUE, internal = TRUE)
 
-
 # Creating complete test data set
 
 all_data <- load_billion_data("all", "raw_data")
