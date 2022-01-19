@@ -29,6 +29,9 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.PAT_GITHUB}}
       EXECUTION_MODE: "interactive"
+      APP_ID: ${{ secrets.WHDH_APP_ID }}
+      TENANT_ID: ${{ secrets.WHDH_TENANT_ID }}
+      CLIENT_SECRET: ${{ secrets.WHDH_CLIENT_SECRET }}
 
     steps:
       - uses: actions/checkout@v2
