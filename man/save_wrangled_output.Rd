@@ -4,12 +4,15 @@
 \alias{save_wrangled_output}
 \title{Save the output to disk after ensuring column specs}
 \usage{
-save_wrangled_output(df, path)
+save_wrangled_output(df, path, compression = "snappy")
 }
 \arguments{
 \item{df}{data frame the output}
 
 \item{path}{the path where the output should be saved}
+
+\item{compression}{Compression algorithm to use for parquet format. "snappy" by
+default}
 }
 \value{
 a data frame. This is the modified dataframe that's saved to disk if

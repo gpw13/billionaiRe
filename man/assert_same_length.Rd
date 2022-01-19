@@ -2,13 +2,19 @@
 % Please edit documentation in R/utils_asserts.R
 \name{assert_same_length}
 \alias{assert_same_length}
-\title{Assert that two vectors are the same length}
+\title{Assert that two or more vectors are the same length}
 \usage{
-assert_same_length(...)
+assert_same_length(..., recycle = FALSE, remove_null = FALSE)
 }
 \arguments{
-\item{...}{Arguments to pass two vectors that should be the same length.}
+\item{...}{Two or more vectors that should be the same length.}
+
+\item{recycle}{(logical) Whether vectors of length one can be recycled to match the length
+of the other vectors.}
+
+\item{remove_null}{(logical) whether NULL values should be removed from the inputs before
+comparison}
 }
 \description{
-Assert that two vectors are the same length
+Assert that two or more vectors are the same length
 }
