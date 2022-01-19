@@ -16,7 +16,9 @@ transform_hep_data(
   source_col = "source",
   source = "WUENIC/IVB/WHO Technical Programme",
   ind_ids = billion_ind_codes("hep", include_calculated = TRUE),
-  extrapolate_to = 2025
+  extrapolate_to = 2025,
+  recycle = FALSE,
+  ...
 )
 }
 \arguments{
@@ -51,6 +53,10 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
 \item{extrapolate_to}{Year to extrapolate Prevent data to, defaults to 2025}
+
+\item{recycle}{Boolean to indicate if data should be recycled}
+
+\item{...}{additional parameters to to pass to \code{recycle_data}}
 }
 \value{
 Data frame in long format.

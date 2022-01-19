@@ -1,3 +1,8 @@
+# billionaiRe 0.6.1
+* Add recycle_data functions to efficiently recycle data. See
+vignette("scenarios", "billionaiRe") for an overview of the functionality and 
+logic behind data recycling.
+
 # billionaiRe 0.6.0
 Various updates to facilitate migration of the Triple Billion data pipeline into the WHDH
 * Updated `load_billion_data` to now pull data from the WHDH data lake by default

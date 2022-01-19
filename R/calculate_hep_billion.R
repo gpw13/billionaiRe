@@ -55,7 +55,7 @@ calculate_hep_billion <- function(df,
 
   for (i in 1:length(contribution)) {
     bill_df <- bill_df %>%
-      dplyr::group_by(dplyr::across(c(iso3, ind, scenario))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind, scenario)))) %>%
       dplyr::mutate(
         !!sym(contribution_pct[i]) := calculate_hep_contribution_pct(
           .data[[ind]],
@@ -71,7 +71,7 @@ calculate_hep_billion <- function(df,
         )
       ) %>%
       dplyr::ungroup() %>%
-      dplyr::group_by(dplyr::across(c(iso3, year, scenario))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
       dplyr::mutate(
         !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
           sum(.data[[contribution[i]]], na.rm = T),
@@ -106,7 +106,11 @@ calculate_hep_contribution_pct <- function(ind, year, start_year, value, level, 
       level
     )
   } else if (all(ind %in% ind_ids[c("espar", "prevent")])) {
-    (value - value[year == start_year])
+    if (length(value[year == start_year]) == 0) {
+      NA_real_
+    } else {
+      value - value[year == start_year]
+    }
   } else {
     NA_real_
   }
