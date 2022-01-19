@@ -1,9 +1,9 @@
 pandoc: 2.7.3
-pkgdown: 2.0.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   hep: hep.html
   hpop: hpop.html
   uhc: uhc.html
-last_built: 2022-01-09T13:01Z
+last_built: 2022-01-19T12:05Z
 
