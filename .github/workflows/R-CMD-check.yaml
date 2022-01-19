@@ -31,6 +31,9 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.PAT_GITHUB}}
+      APP_ID: ${{ secret.WHDH_APP_ID }}
+      TENANT_ID: ${{ secret.WHDH_TENANT_ID }}
+      CLIENT_SECRET: ${{ secret.WHDH_CLIENT_SECRET }}
 
     steps:
       - uses: actions/checkout@v2
