@@ -13,3 +13,6 @@
 ^.*\.Rprofvis
 ^\.pre-commit-config\.yaml$
 ^.RDataTmp*$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

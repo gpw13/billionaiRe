@@ -377,7 +377,7 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
       args <- args[sapply(args, length) != 1]
     }
   }
-
+  
   cond <- purrr::map(args, length) %>%
     purrr::reduce(`==`)
 
