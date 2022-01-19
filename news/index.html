@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,10 @@
       <small>Source: <a href="https://github.com/gpw13/billionaiRe/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="billionaire-060">billionaiRe 0.6.0<a class="anchor" aria-label="anchor" href="#billionaire-060"></a></h2>
+<p>Various updates to facilitate migration of the Triple Billion data pipeline into the WHDH * Updated <code>load_billion_data</code> to now pull data from the WHDH data lake by default and optionally set xMart as the <code>data_source</code>. Using xMart currently redirects the user to the legacy version of <code>load_billion_data</code>, while the xMart functionality is built. * Added <code>get_whdh_path</code> for easy generation of download/upload paths for the WHDH data lake * Updated <code>save_wrangled_output</code> to work with parquet format. * Added <code>save_gho_backup_to_whdh</code>, making it easier to backup snapshots of GHO data to the WHDH data lake. * Updated <code>billion_ind_codes</code> with a toggle for subindicators (like <code>water_rural</code>, <code>water_urban</code> and the eSpar categories and sub-categories). * Added <code>get_ind_billion</code> for determining which billion a given indicato belongs to. * Updated <code>xmart_cols</code> to return different sets of columns based for different types of data. * Added new assertions: <code>assert_type</code>, <code>assert_fileext</code>, <code>assert_unique_vector</code>, <code>assert_length</code>, <code>assert_min_length</code>, <code>assert_same_length</code>, <code>assert_equals</code>, and <code>assert_x_in_y</code>. * Updated <code>assert_arg_exists</code> to have custom error messages. * Rearranged <code>utils_asserts.R</code> to categorise the different assertions.</p>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.3" id="billionaire-053">billionaiRe 0.5.3<a class="anchor" aria-label="anchor" href="#billionaire-053"></a></h2>
 <ul><li>Export functions introduced in version 0.5.0 were moved the code to a new package: <a href="https://github.com/gpw13/rapporteur" class="external-link">rapporteur</a>. This reduces the size of the billionaiRe package and maintain a better logic in the package environment.</li>

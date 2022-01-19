@@ -14,7 +14,7 @@ in any data frame passed to calculate Billions."><meta property="og:image" conte
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,21 +68,26 @@ in any data frame passed to calculate Billions.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">billion_ind_codes</span><span class="op">(</span>
   billion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hep"</span>, <span class="st">"hpop"</span>, <span class="st">"uhc"</span><span class="op">)</span>,
   include_covariates <span class="op">=</span> <span class="cn">FALSE</span>,
-  include_calculated <span class="op">=</span> <span class="cn">FALSE</span>
+  include_calculated <span class="op">=</span> <span class="cn">FALSE</span>,
+  include_subindicators <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>billion</dt>
-<dd><p>Billion indicator names to return, either "hep", "hpop", or "uhc".</p></dd>
+<dd><p>(string) Billion indicator names to return, either "hep", "hpop", or "uhc".</p></dd>
 <dt>include_covariates</dt>
-<dd><p>Logical, whether or not to include covariates when getting
+<dd><p>(logical) Whether or not to include covariates when getting
 the Billions indicator codes.</p></dd>
 <dt>include_calculated</dt>
-<dd><p>Logical, whether or not to include variables calculated
+<dd><p>(logical) Whether or not to include variables calculated
 from within the package when getting the Billion indicator codes. Useful
 for UHC average service coverage.</p></dd>
+<dt>include_subindicators</dt>
+<dd><p>(logical) Whether to return subindicators, such as
+those ending with _rural, _urban, _num, _denom, and the espar categories and
+sub-categories.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

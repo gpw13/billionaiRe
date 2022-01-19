@@ -43,6 +43,12 @@
     <loc>/reference/assert_df.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_equals.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_fileext.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_homogeneous_col.html</loc>
   </url>
   <url>
@@ -52,7 +58,13 @@
     <loc>/reference/assert_ind_ids.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_length.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_list.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_min_length.html</loc>
   </url>
   <url>
     <loc>/reference/assert_numeric.html</loc>
@@ -76,7 +88,13 @@
     <loc>/reference/assert_unique_rows.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_unique_vector.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_who_iso.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_x_in_y.html</loc>
   </url>
   <url>
     <loc>/reference/assert_years.html</loc>
@@ -145,10 +163,19 @@
     <loc>/reference/get_country_shares.html</loc>
   </url>
   <url>
+    <loc>/reference/get_data_lake_name.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_ind_metadata.html</loc>
   </url>
   <url>
     <loc>/reference/get_sdi_ratio.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_valid_inds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_whdh_path.html</loc>
   </url>
   <url>
     <loc>/reference/has_xmart_cols.html</loc>
@@ -167,6 +194,15 @@
   </url>
   <url>
     <loc>/reference/load_billion_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/load_billion_data_legacy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/load_billion_data_whdh.html</loc>
+  </url>
+  <url>
+    <loc>/reference/load_billion_data_xmart.html</loc>
   </url>
   <url>
     <loc>/reference/load_misc_data.html</loc>
@@ -188,6 +224,9 @@
   </url>
   <url>
     <loc>/reference/reverse_ind.html</loc>
+  </url>
+  <url>
+    <loc>/reference/save_gho_backup_to_whdh.html</loc>
   </url>
   <url>
     <loc>/reference/save_wrangled_output.html</loc>
