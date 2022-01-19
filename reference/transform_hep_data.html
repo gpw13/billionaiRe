@@ -16,7 +16,7 @@ Billions methods report."><meta property="og:image" content="/logo.svg"><!-- mat
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,7 @@ Billions methods report."><meta property="og:image" content="/logo.svg"><!-- mat
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
     <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
+    <a class="dropdown-item" href="../articles/scenarios.html">scenarios</a>
     <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
   </div>
 </li>
@@ -80,7 +81,9 @@ Billions methods report.</p>
   source_col <span class="op">=</span> <span class="st">"source"</span>,
   source <span class="op">=</span> <span class="st">"WUENIC/IVB/WHO Technical Programme"</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hep"</span>, include_calculated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-  extrapolate_to <span class="op">=</span> <span class="fl">2025</span>
+  extrapolate_to <span class="op">=</span> <span class="fl">2025</span>,
+  recycle <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -118,6 +121,10 @@ be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
 <dt>extrapolate_to</dt>
 <dd><p>Year to extrapolate Prevent data to, defaults to 2025</p></dd>
+<dt>recycle</dt>
+<dd><p>Boolean to indicate if data should be recycled</p></dd>
+<dt>...</dt>
+<dd><p>additional parameters to to pass to <code>recycle_data</code></p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

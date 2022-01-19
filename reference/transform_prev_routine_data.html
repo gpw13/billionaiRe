@@ -12,7 +12,7 @@ We want to transform this back into a numerator value for use within pathogen_ca
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ We want to transform this back into a numerator value for use within pathogen_ca
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
     <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
+    <a class="dropdown-item" href="../articles/scenarios.html">scenarios</a>
     <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
   </div>
 </li>
@@ -70,6 +71,7 @@ We want to transform this back into a numerator value for use within <code>patho
   <span class="va">value</span>,
   <span class="va">transform_value</span>,
   <span class="va">type_col</span>,
+  <span class="va">scenario</span>,
   <span class="va">ind_ids</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -92,6 +94,9 @@ country, year, and indicator.</p></dd>
 used to calculate contributions.</p></dd>
 <dt>type_col</dt>
 <dd><p>Column name of column with type data.</p></dd>
+<dt>scenario</dt>
+<dd><p>Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.</p></dd>
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

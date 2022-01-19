@@ -16,6 +16,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/scenarios.html</loc>
+  </url>
+  <url>
     <loc>/articles/uhc.html</loc>
   </url>
   <url>
@@ -40,6 +43,15 @@
     <loc>/reference/assert_columns.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_data_calculation_hep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_data_calculation_hpop.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_data_calculation_uhc.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_df.html</loc>
   </url>
   <url>
@@ -58,6 +70,12 @@
     <loc>/reference/assert_ind_ids.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_ind_start_end_year.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_iso3_not_empty.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_length.html</loc>
   </url>
   <url>
@@ -71,6 +89,9 @@
   </url>
   <url>
     <loc>/reference/assert_same_length.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_start_end_year.html</loc>
   </url>
   <url>
     <loc>/reference/assert_string.html</loc>
@@ -220,7 +241,16 @@
     <loc>/reference/prevent_calculations.html</loc>
   </url>
   <url>
+    <loc>/reference/recycle_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recycle_data_scenario_single.html</loc>
+  </url>
+  <url>
     <loc>/reference/reduce_type.html</loc>
+  </url>
+  <url>
+    <loc>/reference/remove_recycled_data.html</loc>
   </url>
   <url>
     <loc>/reference/reverse_ind.html</loc>

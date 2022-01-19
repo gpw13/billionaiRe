@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
     <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
+    <a class="dropdown-item" href="../articles/scenarios.html">scenarios</a>
     <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
   </div>
 </li>
@@ -84,6 +85,21 @@
         <dd>Assert that columns exist in a data frame</dd>
       </dl><dl><dt>
           
+          <code><a href="assert_data_calculation_hep.html">assert_data_calculation_hep()</a></code> 
+        </dt>
+        <dd>Assert presence of minimum HEP data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assert_data_calculation_hpop.html">assert_data_calculation_hpop()</a></code> 
+        </dt>
+        <dd>Assert presence of minimum HPOP data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assert_data_calculation_uhc.html">assert_data_calculation_uhc()</a></code> 
+        </dt>
+        <dd>Assert minimum data for UHC calculations</dd>
+      </dl><dl><dt>
+          
           <code><a href="assert_df.html">assert_df()</a></code> 
         </dt>
         <dd>Assert that <code>df</code> is a data frame</dd>
@@ -114,6 +130,16 @@
         <dd>Assert that ind_ids is the correct named vector</dd>
       </dl><dl><dt>
           
+          <code><a href="assert_ind_start_end_year.html">assert_ind_start_end_year()</a></code> 
+        </dt>
+        <dd>Asserts indicators have values at start and end year</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assert_iso3_not_empty.html">assert_iso3_not_empty()</a></code> 
+        </dt>
+        <dd>Asserts that iso3 (and scenario if provided) is not only NAs</dd>
+      </dl><dl><dt>
+          
           <code><a href="assert_length.html">assert_length()</a></code> 
         </dt>
         <dd>Assert that a vector is of length n</dd>
@@ -137,6 +163,11 @@
           <code><a href="assert_same_length.html">assert_same_length()</a></code> 
         </dt>
         <dd>Assert that two or more vectors are the same length</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assert_start_end_year.html">assert_start_end_year()</a></code> 
+        </dt>
+        <dd>Asserts start and end year are present</dd>
       </dl><dl><dt>
           
           <code><a href="assert_string.html">assert_string()</a></code> 
@@ -374,9 +405,24 @@
         <dd>Calculate prevent indicators</dd>
       </dl><dl><dt>
           
+          <code><a href="recycle_data.html">recycle_data()</a></code> 
+        </dt>
+        <dd>Recycle data between scenarios</dd>
+      </dl><dl><dt>
+          
+          <code><a href="recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> 
+        </dt>
+        <dd>Recycle data between scenarios for a single scenario</dd>
+      </dl><dl><dt>
+          
           <code><a href="reduce_type.html">reduce_type()</a></code> 
         </dt>
         <dd>Helper to reduce type to unique value</dd>
+      </dl><dl><dt>
+          
+          <code><a href="remove_recycled_data.html">remove_recycled_data()</a></code> 
+        </dt>
+        <dd>Remove recycled values from <code>df</code></dd>
       </dl><dl><dt>
           
           <code><a href="reverse_ind.html">reverse_ind()</a></code> 
