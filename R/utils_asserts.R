@@ -390,3 +390,72 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
     )
   }
 }
+
+# rapporteur --------------------------------------------------------------
+
+#' Asserts that provided ISO is valid
+#'
+#' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
+#' using [whoville::is_who_member()].
+#'
+#' @param iso Single ISO3 code
+assert_who_iso <- function(iso) {
+  assert_string(iso, 1)
+  if (!whoville::is_who_member(iso)) {
+    stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
+                 All valid codes are available through `whoville::who_member_states()`."),
+         call. = FALSE
+    )
+  }
+}
+
+
+#' Assert that `df` is a list
+#'
+#' @param df Supposed list
+assert_list <- function(df) {
+  if (!is.list(df)) {
+    stop(sprintf(
+      "`df` must be a list, not a %s.",
+      class(df)[1]
+    ),
+    call. = FALSE
+    )
+  }
+}
+
+#' Assert that `params` are valid formal argument to [openxlsx::createStyle()]
+#'
+#' @param ... character vector of parameters to [openxlsx::createStyle()]
+assert_style_param <- function(...) {
+  params <- list(...)
+  createStylesParams <- names(formals(openxlsx::createStyle))
+  bad_params <- params[!names(params) %in% createStylesParams]
+
+  if (length(bad_params) > 0) {
+    stop(sprintf(
+      "Params(s) %s are not valid formal argument to openxlsx::createStyle",
+      paste(bad_params, collapse = ", ")
+    ),
+    call. = FALSE
+    )
+  }
+}
+
+#' Assert that x is in list or is NULL
+#'
+#' @param x value to be checked
+#' @param list list of values to be checked against
+assert_in_list_or_null <- function(x, list) {
+  if (!is.null(x)) {
+    if (!x %in% list) {
+      stop(sprintf(
+        "%s must be present in %s or NULL",
+        x, paste(list, collapse = ", ")
+      ),
+      call. = FALSE
+      )
+    }
+  }
+}
+

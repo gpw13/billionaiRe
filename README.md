@@ -7,8 +7,6 @@
 
 [![R build
 status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
-[![pre-commit
-status](https://github.com/gpw13/billionaiRe/workflows/pre-commit/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
 
 <!-- badges: end -->
 
