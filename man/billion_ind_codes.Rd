@@ -7,18 +7,23 @@
 billion_ind_codes(
   billion = c("hep", "hpop", "uhc"),
   include_covariates = FALSE,
-  include_calculated = FALSE
+  include_calculated = FALSE,
+  include_subindicators = TRUE
 )
 }
 \arguments{
-\item{billion}{Billion indicator names to return, either "hep", "hpop", or "uhc".}
+\item{billion}{(string) Billion indicator names to return, either "hep", "hpop", or "uhc".}
 
-\item{include_covariates}{Logical, whether or not to include covariates when getting
+\item{include_covariates}{(logical) Whether or not to include covariates when getting
 the Billions indicator codes.}
 
-\item{include_calculated}{Logical, whether or not to include variables calculated
+\item{include_calculated}{(logical) Whether or not to include variables calculated
 from within the package when getting the Billion indicator codes. Useful
 for UHC average service coverage.}
+
+\item{include_subindicators}{(logical) Whether to return subindicators, such as
+those ending with _rural, _urban, _num, _denom, and the espar categories and
+sub-categories.}
 }
 \value{
 Character vector of indicator names.

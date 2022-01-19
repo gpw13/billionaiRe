@@ -4,7 +4,10 @@
 \alias{xmart_cols}
 \title{Get names of xMart4 columns}
 \usage{
-xmart_cols()
+xmart_cols(data_type = c("wrangled_data", "projected_data", "final_data"))
+}
+\arguments{
+\item{data_type}{(string): the type of data}
 }
 \value{
 character vector
