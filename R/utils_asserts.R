@@ -377,7 +377,7 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
       args <- args[sapply(args, length) != 1]
     }
   }
-  
+
   cond <- purrr::map(args, length) %>%
     purrr::reduce(`==`)
 
@@ -404,7 +404,7 @@ assert_who_iso <- function(iso) {
   if (!whoville::is_who_member(iso)) {
     stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
                  All valid codes are available through `whoville::who_member_states()`."),
-         call. = FALSE
+      call. = FALSE
     )
   }
 }
@@ -458,4 +458,3 @@ assert_in_list_or_null <- function(x, list) {
     }
   }
 }
-
