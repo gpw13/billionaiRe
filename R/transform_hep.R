@@ -60,21 +60,28 @@ transform_hep_data <- function(df,
   if (recycle) {
     params_recycle <- get_right_params(params, recycle_data)
 
-    df <- do.call(
-      recycle_data,
-      c(
-        list(
-          df = df,
+    if (!is.null(params_recycle)) {
+      df <- df %>%
+        recycle_data(
+          billion = "hep",
+          iso3 = iso3,
+          ind = ind,
+          scenario = scenario,
+          value = value,
+          ind_ids = ind_ids,
+          params_recycle
+        )
+    } else {
+      df <- df %>%
+        recycle_data(
           billion = "hep",
           iso3 = iso3,
           ind = ind,
           scenario = scenario,
           value = value,
           ind_ids = ind_ids
-        ),
-        params_recycle
-      )
-    )
+        )
+    }
   }
 
   transform_value <- glue::glue(transform_glue)

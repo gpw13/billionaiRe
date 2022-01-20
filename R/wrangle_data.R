@@ -1,13 +1,13 @@
 #' Put GHO data into billionaiRe format
 #'
-#' `wrangle_gho_data()` takes data returned from the GHO OData API, which should
-#' be obtained using [ghost::gho_data()], and transforms it into data that is
+#' `wrangle_gho_data` takes data returned from the GHO OData API, which should
+#' be obtained using \code{\link{[ghost]{gho_data}}, and transforms it into data that is
 #' ready to be put into the xMart database and used within the billionaiRe
 #' package. Currently, providing source and type inputs these values into the
 #' entire data frame, so does not work if multiple indicators have been loaded
 #' into the GHO data frame.
 #'
-#' @param df A data frame in GHO format, returned from [ghost::gho_data()].
+#' @param df A data frame in GHO format, returned from \code{\link{[ghost]{gho_data}}.
 #' @param source Character string of source to be provided to the data frame if
 #'     the source is not already available in the GHO. If `NULL`, the source
 #'     column is generated from the GHO's `DataSourceDim` column.
@@ -83,7 +83,7 @@ wrangle_gho_data <- function(df,
 #' options. For example, a time series with URB data from 2000 to 2015 and TOTL data
 #' from 2016 to 2020 will be cutoff at 2015, so that only the URB data is kept.
 #'
-#' @param df A data frame in GHO format, returned from [ghost::gho_data()].
+#' @param df A data frame in GHO format, returned from \code{\link{[ghost]{gho_data}}.
 #' @param source Character string of source to be provided to the data frame.
 #' If `NULL`, the source column is generated from the GHO's `DataSourceDim` column.
 #' If not `NULL`, it overrides the source provided by the GHO.
@@ -246,7 +246,7 @@ wrangle_gho_rural_urban_data <- function(df,
 #' Put UNSD data into billionaiRe format
 #'
 #' `wrangle_unsd_data()` takes data returned from the UNSD API, which should
-#' be obtained using [goalie::sdg_data()], and transforms it into data that is
+#' be obtained using \code{\link{[goalie]{sdg_data}}, and transforms it into data that is
 #' ready to be put into the xMart database and used within the billionaiRe
 #' package. Currently, providing source and type inputs these values into the
 #' entire data frame, so does not work if multiple indicators have been loaded
@@ -254,7 +254,7 @@ wrangle_gho_rural_urban_data <- function(df,
 #' frame until `indicators_df` contains UNSD codes and can convert between the
 #' two.
 #'
-#' @param df A data frame in UNSD format, returned from [goalie::sdg_data()].
+#' @param df A data frame in UNSD format, returned from \code{\link{[goalie]{sdg_data}}.
 #' @param source Character string of source to be provided to the data frame if
 #'     the source is not already available in the UNSD database. If `NULL`,
 #'     the source column is generated from the UNSD's `Source` column.
