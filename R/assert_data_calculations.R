@@ -101,8 +101,10 @@ assert_data_calculation_hep <- function(df,
   if (nrow(detect_respond_df) > 0) {
     warning(sprintf(
       "%s must be present in %s for at least the start_year and end_year, for each country (and scenario when provided)
-      Missing values in:\n",
-      detect_respond_ind[detect_respond_ind %in% detect_respond_df[[ind]]], paste("df", collapse = ", ")
+      Missing values in %s:\n",
+      detect_respond_ind[detect_respond_ind %in% detect_respond_df[[ind]]],
+      paste("df", collapse = ", "),
+      paste(unique(detect_respond_df[[iso3]]), collapse = ",")
     ), paste(utils::capture.output(print(detect_respond_df)), collapse = "\n"),
     call. = FALSE
     )

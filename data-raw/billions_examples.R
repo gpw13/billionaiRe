@@ -60,9 +60,9 @@ usethis::use_data(basic_test_calculated, overwrite = TRUE, internal = TRUE)
 
 # Creating complete test data set
 
-all_data <- load_billion_data("all", "raw_data")
+all_data <- load_billion_data_legacy("all", "raw_data", auth_type = "client")
 
-proj_data <- load_billion_data("all", "proj_data")
+proj_data <- load_billion_data_legacy("all", "proj_data", auth_type = "client")
 
 proj_data_those_isos <- proj_data %>%
   select(iso3, year, ind, value, type) %>%
