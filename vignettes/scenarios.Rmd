@@ -96,7 +96,17 @@ Data recycling is implemented in billionaiRe through the `recycle_data()` functi
 A `recycle` and `...`parameters were added to the `transform_` functions to ease recycling. If `recycle` is `TRUE`, data will be recycled, using the eventual parameters passed through the `...`. 
 
 ```{r recycling-example, include = TRUE, eval = TRUE}
-df <- load_misc_data("test_data/test_data.parquet")
+
+# Adding a detect_respond raw to avoid warning from recycle_data.
+detect_respond_afg_2018 <- data.frame(
+  iso3 = "AFG",
+  ind = "detect_respond",
+  value = 46.66667,
+  scenario = "none",
+  type = "estimated")
+
+df <- load_misc_data("test_data/test_data.parquet") %>% 
+  dplyr::bind_rows(detect_respond_afg_2018)
 
 test_data_hep <- df %>%
   recycle_data(billion = "hep", include_projection = FALSE) %>%

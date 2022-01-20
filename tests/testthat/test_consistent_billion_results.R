@@ -8,7 +8,7 @@ testthat::test_that("basic billion calculations are consistent", {
       year == 2023
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
-      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, November 2021",
+      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, January 2022",
       TRUE ~ source
     ))
 
@@ -31,7 +31,7 @@ testthat::test_that("basic billion calculations are consistent", {
       year == 2023
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
-      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
+      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, January 2022",
       TRUE ~ source
     ))
 
