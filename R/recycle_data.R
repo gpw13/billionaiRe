@@ -31,6 +31,7 @@
 #' @inherit transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams trim_years
 #'
 #' @return Data frame in long format.
 #' @export
@@ -49,7 +50,8 @@ recycle_data <- function(df,
                          scenario_tp = "tp",
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
-                         ind_ids = NULL) {
+                         ind_ids = NULL,
+                         trim_years = TRUE) {
   assert_columns(df, iso3, ind, value, year, scenario, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario, ind_ids)
   assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_tp), scenario)
@@ -80,7 +82,8 @@ recycle_data <- function(df,
       scenario_tp = scenario_tp,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
-      ind_ids = ind_ids
+      ind_ids = ind_ids,
+      trim_years = trim_years
     )
   )
 }
@@ -115,6 +118,7 @@ recycle_data <- function(df,
 #' @inherit transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams trim_years
 #'
 #' @return Data frame in long format.
 recycle_data_scenario_single <- function(df,
@@ -133,7 +137,8 @@ recycle_data_scenario_single <- function(df,
                                          scenario_tp = "tp",
                                          include_projection = TRUE,
                                          recycle_campaigns = TRUE,
-                                         ind_ids = NULL) {
+                                         ind_ids = NULL,
+                                         trim_years = FALSE) {
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
   assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
@@ -205,10 +210,10 @@ recycle_data_scenario_single <- function(df,
         by = c(iso3, ind, year)
       )
 
-    not_in_scenario <- not_in_scenario %>%
-      dplyr::filter(
-        .data[[year]] >= start_year
-      )
+    if (trim_years) {
+      not_in_scenario <- not_in_scenario %>%
+        trim_years(trim_years, year, start_year, end_year)
+    }
 
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
@@ -220,10 +225,12 @@ recycle_data_scenario_single <- function(df,
       dplyr::arrange(iso3, ind, year) %>%
       dplyr::filter(.data[[ind]] %in% ind_ids)
   } else {
-    not_in_scenario <- not_in_scenario %>%
-      dplyr::filter(
-        .data[[year]] >= start_year
-      )
+    if (trim_years) {
+      not_in_scenario <- not_in_scenario %>%
+        dplyr::filter(
+          .data[[year]] >= start_year
+        )
+    }
 
     scenario_df_final <- scenario_df %>%
       dplyr::mutate(recycled = FALSE) %>%
@@ -264,4 +271,81 @@ recycle_data_scenario_single <- function(df,
   }
 
   return(scenario_df_final)
+}
+
+#' Make a default scenario
+#'
+#' `make_default_scenario` wraps around `recycle_data_scenario_single` to create
+#'  a default scenario based on the parameters passed to the function.
+#'
+#' @inherit transform_hpop_data
+#' @inheritParams calculate_uhc_billion
+#' @inheritParams calculate_hpop_billion
+#' @inheritParams recycle_data_scenario_single
+#' @param scenario name of scenario to recycle for. Defaults to "default".
+#' @param billion name of billion to recycle data for. Can be any of "hep",
+#' "hpop", "uhc", or "all". Defaults to "all".
+#'
+#' @export
+make_default_scenario <- function(df,
+                                  scenario = "default",
+                                  billion = c("all", "hep", "hpop", "uhc"),
+                                  iso3 = "iso3",
+                                  ind = "ind",
+                                  value = "value",
+                                  year = "year",
+                                  type = "type",
+                                  start_year = 2018,
+                                  end_year = 2025,
+                                  scenario_col = "scenario",
+                                  default_scenario = "default",
+                                  scenario_reported_estimated = "none",
+                                  scenario_tp = "tp",
+                                  include_projection = TRUE,
+                                  recycle_campaigns = TRUE,
+                                  ind_ids = NULL,
+                                  trim_years = FALSE) {
+  assert_columns(df, iso3, ind, value, year, scenario_col, type)
+  assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
+  assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
+
+  if (is.null(billion)) {
+    billion <- "all"
+  }
+
+  billion <- rlang::arg_match(billion)
+
+  if (billion == "all") {
+    billion <- c("hep", "hpop", "uhc")
+  }
+
+  if (is.null(ind_ids)) {
+    ind_ids <- purrr::map(billion, billion_ind_codes) %>%
+      stats::setNames(billion)
+  }
+
+  purrr::map_dfr(
+    billion,
+    ~ recycle_data_scenario_single(
+      df = df,
+      scenario = scenario,
+      billion = .x,
+      iso3 = iso3,
+      ind = ind,
+      value = value,
+      year = year,
+      type = type,
+      start_year = start_year,
+      end_year = end_year,
+      scenario_col = scenario_col,
+      default_scenario = default_scenario,
+      scenario_reported_estimated = scenario_reported_estimated,
+      scenario_tp = scenario_tp,
+      include_projection = include_projection,
+      recycle_campaigns = recycle_campaigns,
+      ind_ids = ind_ids[[.x]],
+      trim_years = trim_years
+    )
+  ) %>%
+    dplyr::distinct()
 }

@@ -23,6 +23,7 @@
 #'   \item{transformed_name}{Name of indicator after transformation}
 #'   \item{order}{Order of the indicators}
 #'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
+#'   \item{small_is_best}{Logical, is a lower value is a better public health outcome.}
 #' }
 "indicator_df"
 

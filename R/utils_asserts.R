@@ -584,17 +584,30 @@ Missing values in:\n",
   }
 }
 
+assert_vector_in_column <- function(df, vector, column) {
+  unique_col_value <- unique(df[[column]])
 
-assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
-  scenarios_in_col <- unique(df[[scenario_col]])
-
-  if (any(!scenario %in% scenarios_in_col)) {
+  if (any(!vector %in% unique_col_value)) {
     stop(sprintf(
-      "%s not in `df` %s column",
-      paste(scenario[!scenario %in% scenarios_in_col], collapse = ", "),
-      scenario_col
+      "%s not in %s column",
+      paste(vector[!vector %in% unique_col_value], collapse = ", "),
+      column
     ),
     call. = FALSE
     )
+  }
+}
+
+assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
+  assert_vector_in_column(df, scenario, scenario_col)
+}
+
+assert_ind_ids_in_df <- function(df, ind_ids, ind_col = "ind", by_iso3 = TRUE, iso3_col = "iso3") {
+  if (by_iso3) {
+    df %>%
+      dplyr::group_by(.data[[iso3_col]]) %>%
+      dplyr::group_walk(~ assert_vector_in_column(df = .x, vector = ind_ids, column = ind_col))
+  } else {
+    assert_vector_in_column(df, ind_ids, ind_col)
   }
 }

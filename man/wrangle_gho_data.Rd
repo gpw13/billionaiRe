@@ -7,7 +7,7 @@
 wrangle_gho_data(df, source = NULL, type = NULL, ind = NULL)
 }
 \arguments{
-\item{df}{A data frame in GHO format, returned from \code{\link[ghost:gho_data]{ghost::gho_data()}}.}
+\item{df}{A data frame in GHO format, returned from [ghost:gho_data()]{https://gpw13.github.io/ghost/reference/gho_data.html}.}
 
 \item{source}{Character string of source to be provided to the data frame if
 the source is not already available in the GHO. If \code{NULL}, the source
@@ -24,8 +24,8 @@ on the \code{IndicatorCode} field of the GHO data.}
 A data frame.
 }
 \description{
-\code{wrangle_gho_data()} takes data returned from the GHO OData API, which should
-be obtained using \code{\link[ghost:gho_data]{ghost::gho_data()}}, and transforms it into data that is
+\code{wrangle_gho_data} takes data returned from the GHO OData API, which should
+be obtained using  [ghost:gho_data()]{https://gpw13.github.io/ghost/reference/gho_data.html}, and transforms it into data that is
 ready to be put into the xMart database and used within the billionaiRe
 package. Currently, providing source and type inputs these values into the
 entire data frame, so does not work if multiple indicators have been loaded

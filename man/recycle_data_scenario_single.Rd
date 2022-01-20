@@ -21,7 +21,8 @@ recycle_data_scenario_single(
   scenario_tp = "tp",
   include_projection = TRUE,
   recycle_campaigns = TRUE,
-  ind_ids = NULL
+  ind_ids = NULL,
+  trim_years = FALSE
 )
 }
 \arguments{
@@ -62,6 +63,9 @@ country, year, and indicator.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{trim_years}{logical to indicate if years before \code{start_year} and after
+\code{end_year} should be removed}
 }
 \value{
 Data frame in long format.
