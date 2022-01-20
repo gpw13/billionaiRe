@@ -1,3 +1,5 @@
+
+
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
@@ -8,7 +10,7 @@ testthat::test_that("basic billion calculations are consistent", {
       year == 2023
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
-      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, January 2022",
+      stringr::str_detect(source, "WHO DDI calculation") ~ "WHO DDI calculation, November 2021",
       TRUE ~ source
     ))
 
@@ -31,7 +33,7 @@ testthat::test_that("basic billion calculations are consistent", {
       year == 2023
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
-      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, January 2022",
+      stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
       TRUE ~ source
     ))
 
@@ -42,9 +44,9 @@ testthat::test_that("basic billion calculations are consistent", {
   testthat::expect_equal(all_basic_calculated, billionaiRe:::basic_test_calculated)
 })
 
-test_data <- load_misc_data("test_data/test_data.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated.parquet")
 
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {

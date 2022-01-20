@@ -98,7 +98,7 @@ basic_hep_test <- function(ind) {
 purrr::walk(c("respond", "notify", "detect", "detect_respond"), basic_hep_test)
 
 testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
-  hep_test_df <- load_misc_data("test_data/test_data.parquet") %>%
+  hep_test_df <- load_misc_data("test_data/test_data/test_data.parquet") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "cholera_campaign")])
 
@@ -158,7 +158,7 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
 })
 
 testthat::test_that("accelerate_meningitis_campaign returns accurate results:", {
-  hep_test_df <- load_misc_data("test_data/test_data.parquet") %>%
+  hep_test_df <- load_misc_data("test_data/test_data/test_data.parquet") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "meningitis_campaign")])
 
@@ -197,7 +197,7 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
 
   testthat::expect_equal(df_add_scenario_2025, fixed_target_2025)
 
-  test_data <- load_misc_data("test_data/test_data.parquet") %>%
+  test_data <- load_misc_data("test_data/test_data/test_data.parquet") %>%
     make_default_scenario(billion = "hep")
 
   df_add_scenario_indicator <- add_scenario_indicator(test_data, "accelerate", "meningitis_routine")
@@ -308,7 +308,7 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
 })
 
 testthat::test_that("accelerate can be run on all hep indicators:", {
-  hep_test_df <- load_misc_data("test_data/test_data.parquet") %>%
+  hep_test_df <- load_misc_data("test_data/test_data/test_data.parquet") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep") &
       !.data[["ind"]] %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "espar")])
