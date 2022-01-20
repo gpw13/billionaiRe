@@ -17,7 +17,7 @@
 #' @return Character vector of indicator names.
 #'
 #' @export
-billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
+billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
                               include_covariates = FALSE,
                               include_calculated = FALSE,
                               include_subindicators = TRUE) {
@@ -35,7 +35,12 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
     df <- dplyr::filter(df, !stringr::str_detect(.data[["ind"]], "rural|urban|denom|num|espar.+"))
   }
 
-  codes <- df[["ind"]][df[[billion]]]
+  if (billion == "all") {
+    codes <- df[["ind"]]
+  } else {
+    codes <- df[["ind"]][df[[billion]]]
+  }
+
   names(codes) <- codes
   return(codes)
 }
@@ -52,6 +57,7 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
 #' @return A character vector.
 #'
 #' @export
+#'
 convert_ind_codes <- function(ind_codes,
                               from = c("dashboard_id", "ind", "gho_code"),
                               to = c("dashboard_id", "ind", "gho_code")) {

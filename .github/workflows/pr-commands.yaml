@@ -7,7 +7,7 @@ on:
 name: PR-commands
 
 jobs:
-  document-style-pr-commands:
+  document-style-pr-commands  :
     if: startsWith(github.event.comment.body, '/document-style')
     name: document-style-pr-commands
     runs-on: ubuntu-latest

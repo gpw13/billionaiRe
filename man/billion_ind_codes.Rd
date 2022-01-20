@@ -5,7 +5,7 @@
 \title{Indicator codes for the Billions}
 \usage{
 billion_ind_codes(
-  billion = c("hep", "hpop", "uhc"),
+  billion = c("hep", "hpop", "uhc", "all"),
   include_covariates = FALSE,
   include_calculated = FALSE,
   include_subindicators = TRUE

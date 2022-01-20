@@ -54,26 +54,20 @@ transform_hpop_data <- function(df,
   if (recycle) {
     params_recycle <- get_right_params(params, recycle_data)
 
-    if (!is.null(params_recycle)) {
-      df <- df %>%
-        recycle_data(
-          billion = "hpop",
-          iso3 = iso3,
-          ind = ind,
-          value = value,
-          ind_ids = ind_ids,
-          params_recycle
-        )
-    } else {
-      df <- df %>%
-        recycle_data(
+    df <- do.call(
+      recycle_data,
+      c(
+        list(
+          df = df,
           billion = "hpop",
           iso3 = iso3,
           ind = ind,
           value = value,
           ind_ids = ind_ids
-        )
-    }
+        ),
+        params_recycle
+      )
+    )
   }
 
   # get transform column names and add to df

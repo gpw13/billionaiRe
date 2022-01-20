@@ -12,6 +12,8 @@
 ^outputs$
 ^.*\.Rprofvis
 ^.RDataTmp*$
+^doc$
+^Meta$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
