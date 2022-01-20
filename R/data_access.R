@@ -35,7 +35,12 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
     df <- dplyr::filter(df, !stringr::str_detect(.data[["ind"]], "rural|urban|denom|num|espar.+"))
   }
 
-  codes <- df[["ind"]][df[[billion]]]
+  if (billion == "all") {
+    codes <- df[["ind"]]
+  } else {
+    codes <- df[["ind"]][df[[billion]]]
+  }
+
   names(codes) <- codes
   return(codes)
 }

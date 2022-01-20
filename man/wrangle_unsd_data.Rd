@@ -7,6 +7,8 @@
 wrangle_unsd_data(df, source = NULL, type = NULL)
 }
 \arguments{
+\item{df}{A data frame in UNSD format, returned from [goalie::sdg_data()]{https://gpw13.github.io/goalie/reference/sdg_data.html}.}
+
 \item{source}{Character string of source to be provided to the data frame if
 the source is not already available in the UNSD database. If \code{NULL},
 the source column is generated from the UNSD's \code{Source} column.}
@@ -19,5 +21,12 @@ the source column is generated from the UNSD's \code{Source} column.}
 A data frame.
 }
 \description{
-
+\code{wrangle_unsd_data()} takes data returned from the UNSD API, which should
+be obtained using [goalie::sdg_data()]{https://gpw13.github.io/goalie/reference/sdg_data.html}, and transforms it into data that is
+ready to be put into the xMart database and used within the billionaiRe
+package. Currently, providing source and type inputs these values into the
+entire data frame, so does not work if multiple indicators have been loaded
+into the SDG data frame. As well, the UNSD series code is kept in the data
+frame until \code{indicators_df} contains UNSD codes and can convert between the
+two.
 }

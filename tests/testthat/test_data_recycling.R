@@ -1,17 +1,8 @@
-<<<<<<< HEAD
 test_data <- load_misc_data("test_data/test_data.parquet")
 
 test_data_calculated <- load_misc_data("test_data/test_data_calculated.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
-=======
-test_data <- billionaiRe::load_misc_data("test_data/test_data.parquet")
-
-test_data_calculated <- billionaiRe::load_misc_data("test_data/test_data_calculated.parquet")
-
-testthat::test_that("HEP data recycling returns right number of rows", {
-
->>>>>>> main
   test_data_calculated_hep <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
     dplyr::filter(!stringr::str_detect(ind, "routine_num$|campaign|surviving_infants")) %>%
@@ -31,10 +22,6 @@ testthat::test_that("HEP data recycling returns right number of rows", {
 })
 
 testthat::test_that("HPOP data recycling returns right number of rows", {
-<<<<<<< HEAD
-=======
-
->>>>>>> main
   test_data_calculated_hpop <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
     dplyr::group_by(scenario) %>%
@@ -50,10 +37,6 @@ testthat::test_that("HPOP data recycling returns right number of rows", {
 })
 
 testthat::test_that("UHC data recycling returns right number of rows", {
-<<<<<<< HEAD
-=======
-
->>>>>>> main
   test_data_calculated_uhc <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
     dplyr::filter(!(ind == "espar" & recycled == TRUE & year < 2018)) %>%
@@ -74,12 +57,7 @@ testthat::test_that("UHC data recycling returns right number of rows", {
 })
 
 
-<<<<<<< HEAD
 testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results:", {
-=======
-testthat::test_that("recycle_data and transform_(recycle = TRUE) get same results", {
-
->>>>>>> main
   hep_recycle <- test_data %>%
     recycle_data("hep") %>%
     transform_hep_data(scenario = "scenario")
@@ -107,7 +85,6 @@ testthat::test_that("recycle_data and transform_(recycle = TRUE) get same result
 
   testthat::expect_equal(uhc_transform, uhc_recycle)
 })
-<<<<<<< HEAD
 
 testthat::test_that("make_default_scenario adds a default scenario to data frame:", {
   make_default <- make_default_scenario(test_data, billion = "all") %>%
@@ -153,5 +130,3 @@ testthat::test_that("make_default_scenario adds a default scenario to data frame
 
   testthat::expect_equal(make_default, all_default)
 })
-=======
->>>>>>> main

@@ -15,6 +15,8 @@ wrangle_gho_rural_urban_data(
 )
 }
 \arguments{
+\item{df}{A data frame in GHO format, returned from [ghost:gho_data()]{https://gpw13.github.io/ghost/reference/gho_data.html}.}
+
 \item{source}{Character string of source to be provided to the data frame.
 If \code{NULL}, the source column is generated from the GHO's \code{DataSourceDim} column.
 If not \code{NULL}, it overrides the source provided by the GHO.}
