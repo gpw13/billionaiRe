@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils_asserts.R
 \name{assert_numeric}
 \alias{assert_numeric}
-\title{Assert that columns are numeric in a data frame}
+\title{Assert that the given data frame columns are numeric}
 \usage{
 assert_numeric(df, ...)
 }
@@ -12,5 +12,5 @@ assert_numeric(df, ...)
 \item{...}{Column names}
 }
 \description{
-Assert that columns are numeric in a data frame
+Assert that the given data frame columns are numeric
 }

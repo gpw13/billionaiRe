@@ -4,19 +4,23 @@
 #' The named vector returned by the function is the default names assumed to be
 #' in any data frame passed to calculate Billions.
 #'
-#' @param billion Billion indicator names to return, either "hep", "hpop", or "uhc".
-#' @param include_covariates Logical, whether or not to include covariates when getting
-#'     the Billions indicator codes.
-#' @param include_calculated Logical, whether or not to include variables calculated
-#'     from within the package when getting the Billion indicator codes. Useful
-#'     for UHC average service coverage.
+#' @param billion (string) Billion indicator names to return, either "hep", "hpop", or "uhc".
+#' @param include_covariates (logical) Whether or not to include covariates when getting
+#'   the Billions indicator codes.
+#' @param include_calculated (logical) Whether or not to include variables calculated
+#'   from within the package when getting the Billion indicator codes. Useful
+#'   for UHC average service coverage.
+#' @param include_subindicators (logical) Whether to return subindicators, such as
+#'   those ending with _rural, _urban, _num, _denom, and the espar categories and
+#'   sub-categories.
 #'
 #' @return Character vector of indicator names.
 #'
 #' @export
 billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
                               include_covariates = FALSE,
-                              include_calculated = FALSE) {
+                              include_calculated = FALSE,
+                              include_subindicators = TRUE) {
   billion <- rlang::arg_match(billion)
   df <- billionaiRe::indicator_df
   if (!include_covariates) {
@@ -25,6 +29,10 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc"),
 
   if (!include_calculated) {
     df <- dplyr::filter(df, !.data[["calculated"]])
+  }
+
+  if (!include_subindicators) {
+    df <- dplyr::filter(df, !stringr::str_detect(.data[["ind"]], "rural|urban|denom|num|espar.+"))
   }
 
   codes <- df[["ind"]][df[[billion]]]
@@ -60,8 +68,6 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @param ind_codes A character vector with indicator (analysis) codes
 #' @param metadata_col The name of the indicator_df column with the desired metadata.
-#' Must be One of "dashboard_id", "ind", "gho_code", "ind_type", "uhc",
-#' "hpop", "hep","covariate", and "calculated"
 #'
 #' @return A character vector with the metadata. The positions correspond to the
 #' order of the ind_codes input.
@@ -79,9 +85,11 @@ get_ind_metadata <- function(ind_codes,
   metadata_col <- rlang::arg_match(metadata_col)
   assert_type(ind_codes, "character")
   testit::assert("The indicator codes are valid", {
-    valid_inds <- purrr::map(c("hep", "hpop", "uhc"), ~ {
-      billion_ind_codes(.x)
-    }) %>%
+    valid_inds <- purrr::map(c("hep", "hpop", "uhc"),
+      billion_ind_codes,
+      include_covariates = TRUE,
+      include_calculated = TRUE
+    ) %>%
       unlist()
     all(ind_codes %in% valid_inds)
   })
@@ -93,6 +101,21 @@ get_ind_metadata <- function(ind_codes,
   testit::assert("The output is not NULL", !is.null(output))
 
   return(output)
+}
+
+#' Denotes which indicator a given indicator belongs to. For example, `get_ind_billion("alcohol")`
+#' returns "hpop". Note that espar currently returns only "hep".
+#'
+#' @noRd
+get_ind_billion <- function(ind_code) {
+  assert_type(ind_code, "character")
+
+  # hep is the first condition so espar is always a hep indicator
+  dplyr::case_when(
+    get_ind_metadata(ind_code, "hep") == TRUE ~ "hep",
+    get_ind_metadata(ind_code, "uhc") == TRUE ~ "uhc",
+    get_ind_metadata(ind_code, "hpop") == TRUE ~ "hpop"
+  )
 }
 
 #' Get SDI ratio data

@@ -2,46 +2,54 @@
 % Please edit documentation in R/load_data.R
 \name{load_billion_data}
 \alias{load_billion_data}
-\title{Load Raw Billions Indicator Data}
+\title{Load Billions indicator data}
 \usage{
 load_billion_data(
-  billion = c("hep", "hpop", "uhc", "all"),
-  mart_table = c("full_data", "raw_data", "projected_data", "unproj_data", "proj_data"),
+  data_type = c("wrangled_data", "projected_data", "final_data"),
+  billion = c("all", "hep", "hpop", "uhc"),
+  ind_codes = "all",
   date_filter = "latest",
   na_rm = TRUE,
-  format = c("csv", "streaming", "none"),
+  sandbox = FALSE,
+  silent = TRUE,
+  data_source = c("whdh", "xmart"),
   ...
 )
 }
 \arguments{
-\item{billion}{Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".}
-
-\item{mart_table}{Name of xMart4 table in the GPW13 mart to load data from.
+\item{data_type}{(string) The type of data to load.
 \itemize{
-\item \code{full_data}: Full Billions data with transformed values, contributions,
-and all calculations available. (default)
-\item \code{raw_data}: Raw input Billions data, that has yet to be transformed or
-calculated upon, but has been fully projected. Includes full history.
-\item \code{projected_data}: A copy of \code{raw_data} with only the latest data.
-\item \code{proj_data}: Raw input Billions data that has been projected by the
-technical programme(s).
-\item \code{unproj_data}: Raw input Billions that has has not been projected by the
-technical programme(s) and needs projection by DDI.
+\item \code{wrangled_data} (default): raw data that has been wrangled into a suitable
+form for analysis.
+\item \code{projected_data}:  data that has been fully projected to the target year but
+has not yet been transformed or calculated upon.
+\item \code{final_data}: the complete set of billions data with transformed values, contributions,
+and all calculations available.
 }}
 
-\item{date_filter}{One of \code{NULL}, "latest", or a single date string. The date
-string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
-If a date is provided, will only take values loaded on or prior to that
-date into the xMart4 database.}
+\item{billion}{(string) One of "all" (default), "hep", "hpop", or "uhc". If "all",
+downloads all indicators for all three billions.}
 
-\item{na_rm}{Logical value, specifying whether to filter the data to only rows
+\item{ind_codes}{(character vector) The name of the indicator (or indicators) to load data for.
+If \code{all}, downloads data for all indicators for a given billion. Ignored if
+billion = "all".}
+
+\item{date_filter}{(string) Either "latest", or a single date string. The date
+string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
+If a date is provided, the returned data frame is a snapshot of the data as
+stored on that date (if no updates were made on the given date, then the most
+recent update before that date is used).}
+
+\item{na_rm}{(logical) Specifies whether to filter the data to only rows
 where \code{value} is not missing. Defaults to \code{TRUE}.}
 
-\item{format}{Specification of the output format to be returned by the xMart API.
-Defaults to \code{"csv"} for faster download and processing times.
-Passed to \code{\link[xmart4:xmart4_table]{xmart4::xmart4_table()}}. See the
-\href{https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html}{xMart4 API documentation}
-for details on all three options ("csv", "streaming", and "none").}
+\item{sandbox}{(logical) Whether or not to use the sandbox folders in the data lake.}
+
+\item{silent}{(logical) Specifies whether to show authentication messages and
+a download progress bar. Defaults to \code{TRUE}.}
+
+\item{data_source}{(string) Ether "whdh" or "xmart". Indicates where to download
+the data from}
 
 \item{...}{Additional arguments passed to \code{xmart4::xmart4_table()}. Use if
 you need to provide additional token specifications for Azure authentication.}
@@ -51,13 +59,14 @@ A data frame.
 }
 \description{
 \code{load_billion_data()} provides access to the raw inputs to the Billions stored
-within the World Health Organization's xMart4 database. By default, it filters
-the loaded data to take the most recently uploaded data for each indicator,
-country, and year. The user can also specify to take the latest data before a
-certain time period, or to extract all data from the database.
+within the World Health Data Hub or the World Health Organization's xMart4 database.
+By default, it filters the loaded data to take the most recently uploaded data
+for each indicator, country, and year. The user can also specify to take the
+latest data before a certain time period, or to extract all data from the database.
 }
 \details{
-This function requires that the user have the \href{https://github.com/caldwellst/xmart4}{xmart4} package
-installed and setup to access the GPW13 mart. Details are available on the GitHub
-landing page linked above.
+This function requires that the user have the \href{https://github.com/gpw13/xmart4}{xmart4}
+and \href{https://github.com/WorldHealthOrganization/whdh}{whdh} packages installed
+and setup to access the data. For quetions about getting the relevant permissions,
+please contact \href{mailto:kanjim@who.int}{kanjim@who.int} or \href{mailto:messeillere@who.int}{messeillere@who.int}.
 }

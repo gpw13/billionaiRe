@@ -1,5 +1,6 @@
 ## code to prepare `uhc_df`, `hpop_df`, and `hep_df` datasets goes here
 library(tidyverse)
+library(billionaiRe)
 
 uhc_df <- read_csv("data-raw/uhc.csv") %>%
   dplyr::mutate(type = case_when(
@@ -66,7 +67,6 @@ basic_test_calculated <- uhc_calculated %>%
 
 usethis::use_data(basic_test_calculated, overwrite = TRUE, internal = TRUE)
 
-
 # Creating complete test data set
 
 all_data <- load_billion_data("all", "raw_data")
@@ -117,7 +117,7 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=AIYN4CT6FZGWOLGXTADROQLB22MOU")
+source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=AIYN4CR4CIME3K57TRZ3JE3BUD5ZW")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%

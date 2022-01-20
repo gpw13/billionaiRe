@@ -24,6 +24,8 @@
 #'     Although separate indicator codes can be used than the standard, they must
 #'     be supplied as a named vector where the names correspond to the output of
 #'     `billion_ind_codes()`.
+#' @param recycle Boolean to indicate if data should be recycled
+#' @param ... additional parameters to to pass to `recycle_data`
 #'
 #' @return Data frame in long format.
 #'
@@ -33,9 +35,46 @@ transform_hpop_data <- function(df,
                                 ind = "ind",
                                 value = "value",
                                 transform_glue = "transform_{value}",
-                                ind_ids = billion_ind_codes("hpop")) {
+                                ind_ids = billion_ind_codes("hpop"),
+                                recycle = FALSE,
+                                ...) {
   assert_columns(df, iso3, ind, value)
   assert_ind_ids(ind_ids, billion = "hpop")
+
+  params <- list(...)
+  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_hpop)
+
+  if (!is.null(params_assert_data_calculations)) {
+    assert_data_calculation_hpop(df, iso3 = iso3, value = value, params_assert_data_calculations)
+  } else {
+    assert_data_calculation_hpop(df, iso3 = iso3, value = value)
+  }
+
+
+  if (recycle) {
+    params_recycle <- get_right_params(params, recycle_data)
+
+    if (!is.null(params_recycle)) {
+      df <- df %>%
+        recycle_data(
+          billion = "hpop",
+          iso3 = iso3,
+          ind = ind,
+          value = value,
+          ind_ids = ind_ids,
+          params_recycle
+        )
+    } else {
+      df <- df %>%
+        recycle_data(
+          billion = "hpop",
+          iso3 = iso3,
+          ind = ind,
+          value = value,
+          ind_ids = ind_ids
+        )
+    }
+  }
 
   # get transform column names and add to df
   transform_value <- glue::glue(transform_glue)

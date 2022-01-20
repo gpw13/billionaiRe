@@ -3,13 +3,34 @@
 #' Returns a character vector with the names of all the columns expected by the
 #' Triple Billions xMart tables.
 #'
+#' @param data_type (string): the type of data
+#'
 #' @return character vector
 #' @export
-xmart_cols <- function() {
-  c(
-    "iso3", "year", "ind", "value", "lower", "upper", "use_dash", "use_calc",
-    "source", "type", "type_detail", "other_detail", "upload_detail"
+xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
+  data_type <- rlang::arg_match(data_type)
+
+  key_cols <- c("iso3", "year", "ind")
+  value_cols <- c("value", "lower", "upper")
+  other_cols <- c(
+    "use_dash", "use_calc", "source", "type", "type_detail",
+    "other_detail", "upload_detail"
   )
+
+  # TODO: to be added after scenarios are fully integrated into the data pipeline
+  # if (data_type != "wrangled_data") {
+  #   key_cols = c(key_cols, "scenario", "scenario_detail")
+  # }
+
+  if (data_type == "final_data") {
+    value_cols <- c(
+      value_cols, "transform_value", "transform_lower", "transform_upper",
+      "contribution", "contribution_percent", "contribution_percent_total_pop",
+      "population", "level"
+    )
+  }
+
+  return(c(key_cols, value_cols, other_cols))
 }
 
 #' Get the col_types for xMart columns
@@ -69,7 +90,7 @@ has_xmart_cols <- function(df) {
 add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
   proj <- ifelse(projected == TRUE, "proj_data", "unproj_data")
 
-  exist_df <- load_billion_data(billion, proj) %>%
+  exist_df <- load_billion_data_legacy(billion, proj) %>%
     dplyr::filter(.data[["ind"]] %in% ind_code) %>%
     dplyr::select(xmart_cols())
 
@@ -97,27 +118,41 @@ add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
 #'
 #' @param df data frame the output
 #' @param path the path where the output should be saved
+#' @param compression Compression algorithm to use for parquet format. "snappy" by
+#'   default
 #'
 #' @return a data frame. This is the modified dataframe that's saved to disk if
 #' the data frame has all the columns expected by xMart. Otherwise, it simply return
 #' the input data frame.
 #'
 #' @export
-save_wrangled_output <- function(df, path) {
+save_wrangled_output <- function(df, path, compression = "snappy") {
   assert_df(df)
   assert_string(path, 1)
 
+  ext <- stringr::str_split(path, "\\.")[[1]][[2]]
+
   if (has_xmart_cols(df)) {
     output_df <- df %>%
+      dplyr::ungroup() %>%
       dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
       dplyr::select(xmart_cols()) %>%
-      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]]) %>%
-      readr::write_csv(path, na = "")
+      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]])
 
-    message("Output saved to disk.")
-    return(output_df)
+    if (ext == "csv") {
+      readr::write_csv(output_df, path, na = "")
+      message("Output saved to disk.")
+    } else if (ext == "parquet") {
+      arrow::write_parquet(output_df, path, compression = compression)
+      message("Output saved to disk.")
+    } else {
+      warning("Unknown extension. The output was not saved to disk.")
+      output_df <- df
+    }
   } else {
     warning("The output data frame did not have the correct columns. The output was not saved to disk.")
-    return(df)
+    output_df <- df
   }
+
+  output_df
 }

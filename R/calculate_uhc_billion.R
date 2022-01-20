@@ -102,8 +102,8 @@ calculate_uhc_billion_single <- function(df,
     ) %>%
     dplyr::mutate(
       !!sym(type_col) := ifelse(.data[[year]] >= !!projected_year,
-        "projected",
-        "estimated"
+        "projected", # TODO: check if this is correct assumption, or if we should  keep the base type.
+        "estimated" # TODO: check if this is correct, if reported should be returned, or if we should keep the base type?
       ),
       !!sym(source_col) := !!source,
       !!sym(value) := .data[[transform_value]]
