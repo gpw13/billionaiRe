@@ -263,7 +263,7 @@ testthat::test_that(paste0("accelerate_uhc_tobacco returns accurate values:"), {
 })
 
 testthat::test_that("accelerate can be run on all UHC indicator:", {
-  uhc_test_df <- load_misc_data("test_data/test_data.parquet") %>%
+  uhc_test_df <- load_misc_data("test_data/test_data/test_data.parquet") %>%
     make_default_scenario(billion = "uhc") %>%
     dplyr::filter(
       ind %in% billion_ind_codes("uhc"),

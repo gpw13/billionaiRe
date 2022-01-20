@@ -1,3 +1,7 @@
+# billionaiRe 0.6.3
+* Corrected problems with `fh` where the indicator was not transformed correctly. See [issue #35]{https://github.com/gpw13/billionaiRe/issues/35} for more details.
+* Updated testing data frames accordingly.
+
 # billionaiRe 0.6.2
 * Add scenario functions to billionaiRe. Those allow to calculate different
 scenarios based either in the application of one scenario to all indicators or

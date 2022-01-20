@@ -117,7 +117,7 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=AIYN4CR4CIME3K57TRZ3JE3BUD5ZW")
+source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5D7VQI4H4T7LIJHIZWYPJLVBA")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -147,7 +147,7 @@ test_data <- all_data_those_isos %>%
   filter(ind != "surviving_infants") %>%
   dplyr::distinct()
 
-arrow::write_parquet(test_data, "data-raw/test_data.parquet")
+arrow::write_parquet(test_data, glue::glue("data-raw/test_data_{whdh::get_formatted_timestamp()}.parquet"))
 
 test_data_calculated_hep <- test_data %>%
   transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
@@ -167,4 +167,4 @@ test_data_calculated_uhc <- test_data %>%
 test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
   bind_rows(test_data_calculated_hpop)
 
-arrow::write_parquet(test_data_calculated, "data-raw/test_data_calculated.parquet")
+arrow::write_parquet(test_data_calculated, glue::glue("data-raw/test_data_calculated_{whdh::get_formatted_timestamp()}.parquet"))
