@@ -31,10 +31,163 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/accelerate_adult_obese.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_alcohol.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_anc4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_art.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_beds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_bp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_child_obese.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_child_viol.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_cholera_campaign.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_detect.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_detect_respond.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_devontrack.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_doctors.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_dtp3.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_espar.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_fh.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_fp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_fpg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_fuel.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_hpop_sanitation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_hpop_sanitation_rural.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_hpop_sanitation_urban.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_hpop_tobacco.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_hwf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_ipv.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_itn.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_measles_routine.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_meningitis_campaign.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_meningitis_routine.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_notify.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_nurses.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_overweight.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_pm25.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_pneumo.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_polio_routine.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_respond.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_road.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_stunting.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_suicide.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_tb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_transfats.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_uhc_sanitation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_uhc_tobacco.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_wasting.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_water.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_water_rural.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_water_urban.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_yellow_fever_campaign.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_yellow_fever_routine.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_hpop_populations.html</loc>
   </url>
   <url>
     <loc>/reference/add_missing_xmart_rows.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_scenario.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_scenario_indicator.html</loc>
   </url>
   <url>
     <loc>/reference/assert_arg_exists.html</loc>
@@ -130,7 +283,13 @@
     <loc>/reference/billionaiRe_add_columns.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_aarc.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_contribution_sums.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_fixed_target.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_hep_billion.html</loc>
@@ -157,6 +316,9 @@
     <loc>/reference/calculate_hpop_contributions.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_percent_change_baseline.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_uhc_billion.html</loc>
   </url>
   <url>
@@ -178,7 +340,13 @@
     <loc>/reference/extrapolate_campaign_vector.html</loc>
   </url>
   <url>
+    <loc>/reference/flat_extrapolation.html</loc>
+  </url>
+  <url>
     <loc>/reference/generate_hpop_populations.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_aarr.html</loc>
   </url>
   <url>
     <loc>/reference/get_country_shares.html</loc>
@@ -190,7 +358,16 @@
     <loc>/reference/get_ind_metadata.html</loc>
   </url>
   <url>
+    <loc>/reference/get_latest_aarc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_percent_change_aarc.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_sdi_ratio.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_target_aarc.html</loc>
   </url>
   <url>
     <loc>/reference/get_valid_inds.html</loc>
@@ -229,6 +406,9 @@
     <loc>/reference/load_misc_data.html</loc>
   </url>
   <url>
+    <loc>/reference/make_default_scenario.html</loc>
+  </url>
+  <url>
     <loc>/reference/pathogen_calc.html</loc>
   </url>
   <url>
@@ -260,6 +440,39 @@
   </url>
   <url>
     <loc>/reference/save_wrangled_output.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_aroc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_bau.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_best_in_region.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_best_of.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_fixed_target.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_fixed_target_col.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_halt_rise.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_linear_change.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_linear_change_col.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_percent_baseline.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_quantile.html</loc>
   </url>
   <url>
     <loc>/reference/sdi_ratio.html</loc>
@@ -317,6 +530,12 @@
   </url>
   <url>
     <loc>/reference/trim_transforms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/trim_values.html</loc>
+  </url>
+  <url>
+    <loc>/reference/trim_years.html</loc>
   </url>
   <url>
     <loc>/reference/uhc_df.html</loc>
