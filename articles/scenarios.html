@@ -353,12 +353,14 @@
 <div class="section level3">
 <h3 id="wrappers-functions">Wrappers functions:<a class="anchor" aria-label="anchor" href="#wrappers-functions"></a>
 </h3>
-<p>Currently there are two wrapper functions implemented:</p>
+<p>Currently there are three wrapper functions implemented:</p>
 <ul>
 <li>
 <code>add_scenario</code> that wraps around any of the scenarios in its <code>scenario_function</code> parameter</li>
 <li>
 <code>acceleration</code> that implements the acceleration scenarios defined in coordination with WHO technical programs.</li>
+<li>
+<code>sdg</code> that implements acceleration scenarios to reach sustainable development goals.</li>
 </ul>
 <p>Each of the base scenario is wrapped in <code>add_scenario</code>. This function calls a <code>add_</code> function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -410,6 +412,7 @@
 <li><p><code>none</code> is reserved for reported/estimated data</p></li>
 <li><p><code>default</code> is reserved for the main data present on the dashboard</p></li>
 <li><p><code>acceleration</code> is reserved for acceleration scenarios / trajectories</p></li>
+<li><p><code>sdg</code> is reserved for sustainable development goals</p></li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

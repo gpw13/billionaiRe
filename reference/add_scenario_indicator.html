@@ -67,7 +67,7 @@ indicator specified and adds the scenario.</p>
   <span class="va">df</span>,
   scenario_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aroc"</span>, <span class="st">"halt_rise"</span>, <span class="st">"percent_baseline"</span>, <span class="st">"linear_change"</span>,
     <span class="st">"linear_change_col"</span>, <span class="st">"quantile"</span>, <span class="st">"best_in_region"</span>, <span class="st">"fixed_target"</span>,
-    <span class="st">"fixed_target_col"</span>, <span class="st">"accelerate"</span><span class="op">)</span>,
+    <span class="st">"fixed_target_col"</span>, <span class="st">"accelerate"</span>, <span class="st">"sdg"</span><span class="op">)</span>,
   <span class="va">indicator</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span>,
   scenario <span class="op">=</span> <span class="st">"scenario"</span>,
@@ -92,6 +92,7 @@ of the following:</p><ul><li><p><code>aroc</code>: calls <code><a href="scenario
 <li><p><code>fixed_target</code>: calls <code><a href="scenario_fixed_target.html">scenario_fixed_target</a></code></p></li>
 <li><p><code>fixed_target_col</code>: calls <code><a href="scenario_fixed_target_col.html">scenario_fixed_target_col</a></code></p></li>
 <li><p><code>accelerate</code>: calls indicator accelerate function.</p></li>
+<li><p><code>sdg</code>: calls Sustainable Development Goals (SDG) acceleration function.</p></li>
 </ul></dd>
 <dt>indicator</dt>
 <dd><p>name of indicator to be passed to <code>scenario_function</code></p></dd>
