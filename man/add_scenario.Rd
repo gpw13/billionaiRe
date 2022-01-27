@@ -8,7 +8,7 @@ add_scenario(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "accelerate"),
+    "fixed_target_col", "accelerate", "sdg"),
   ind_ids = billion_ind_codes("all"),
   ind = "ind",
   start_year = 2018,
@@ -33,6 +33,7 @@ of the following:
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
 \item \code{accelerate}: calls indicator accelerate function.
+\item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
 }}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

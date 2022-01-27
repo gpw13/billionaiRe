@@ -469,3 +469,30 @@ testthat::test_that(paste0("sdg_water_rural returns accurate values:"), {
 
   testthat::expect_equal(df_add_indicator_2025, 83.75)
 })
+
+testthat::test_that("sdg can be run on all hpop indicators:", {
+  hpop_test_df <- tibble::tibble(
+    value = 60:80,
+    year = 2010:2030,
+    iso3 = "testalia",
+    scenario = "default",
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
+  ) %>%
+    tidyr::expand_grid(ind = billion_ind_codes("hpop"))
+
+  calculated_test_data <- add_scenario(hpop_test_df, "sdg")
+
+  testthat::expect_equal(nrow(calculated_test_data), 609)
+
+  testthat::expect_error(
+    load_misc_data("test_data/test_data/test_data.parquet") %>%
+      dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
+      make_default_scenario(billion = "uhc") %>%
+      add_scenario("sdg"),
+    NA
+  )
+})
+
