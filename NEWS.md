@@ -1,3 +1,6 @@
+# billionaiRe 0.6.4
+* Adding Sustainable Development Goals acceleration scenarios.
+
 # billionaiRe 0.6.3
 * Corrected problems with `fh` where the indicator was not transformed correctly. See [issue #35]{https://github.com/gpw13/billionaiRe/issues/35} for more details.
 * Updated testing data frames accordingly.

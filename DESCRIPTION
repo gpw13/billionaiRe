@@ -1,7 +1,7 @@
 Type: Package
 Package: billionaiRe
 Title: Calculate the WHO Triple Billions
-Version: 0.6.3
+Version: 0.6.4
 Authors@R: c(
     person("Seth", "Caldwell", , "caldwellst@gmail.com", role = c("aut", "cre")),
     person("Alice", "Robson", , "robsona@who.int", role = "aut"),
