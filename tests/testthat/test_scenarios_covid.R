@@ -1,11 +1,18 @@
-testthat::test_that("scenario_covid_dip_recover target produces accurate results", {
-  df <- tibble::tibble(
-    value = 60:80,
+testdf <- function(values = 60:80, ind = "water", type = "reported", iso3 = "testalia") {
+  tibble::tibble(
+    value = values,
     year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
+    ind = ind,
+    type = type,
+    iso3 = iso3,
     scenario = "default"
-  ) %>%
+  )
+}
+
+
+testthat::test_that("scenario_covid_rapid_return produces accurate results with one iso3", {
+  df <- testdf() %>%
+    dplyr::group_by(iso3) %>%
     dplyr::mutate(value = dplyr::case_when(
       year >= 2020 ~ as.numeric(60 + (year - 2020)),
       TRUE ~ as.numeric(value)
@@ -14,34 +21,76 @@ testthat::test_that("scenario_covid_dip_recover target produces accurate results
       TRUE ~ "reported"
     ))
 
-  df_covid_dip_recover <- scenario_covid_dip_recover(df)
+  df_covid_dip_recover <- scenario_covid_rapid_return(df)
 
-  df_covid_dip_recover_2025 <- df_covid_dip_recover %>%
-    dplyr::filter(scenario == "covid_dip_recover", year == 2025) %>%
+  df_dip_recover_2025_one_iso3 <- df_covid_dip_recover %>%
+    dplyr::filter(scenario == "covid_rapid_return", year == 2025, iso3 == "testalia") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_covid_dip_recover_2025, 64.411765)
+  testthat::expect_equal(df_dip_recover_2025_one_iso3, 64.411765)
+})
 
-  df_projected <- tibble::tibble(
-    value = 60:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  ) %>%
+testthat::test_that("scenario_covid_rapid_return produces accurate results with two iso3", {
+
+  df <- testdf() %>%
+    dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
+    dplyr::group_by(iso3) %>%
     dplyr::mutate(value = dplyr::case_when(
-      year == 2020 ~ 60L,
-      TRUE ~ value
+      year >= 2020 ~ as.numeric(60 + (year - 2020)),
+      TRUE ~ as.numeric(value)
     ), type = dplyr::case_when(
       year > 2020 ~ "projected",
-      TRUE ~ "projected"
+      TRUE ~ "reported"
     ))
 
-  df_covid_dip_recover_projected <- scenario_covid_dip_recover(df_projected)
+  df_dip_recover <- scenario_covid_rapid_return(df)
 
-  df_covid_dip_recover_projected_2025 <- df_covid_dip_recover_projected %>%
-    dplyr::filter(scenario == "covid_dip_recover", year == 2025) %>%
+  df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
+    dplyr::filter(scenario == "covid_rapid_return", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_covid_dip_recover_projected_2025, 75)
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(64.411765, 64.411765))
 })
+
+testthat::test_that("scenario_covid_never_return produces accurate results with one iso3", {
+  df <- testdf() %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year >= 2020 ~ as.numeric(60 + (year - 2020)),
+      TRUE ~ as.numeric(value)
+    ), type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
+
+  df_covid_dip_recover <- scenario_covid_never_return(df)
+
+  df_dip_recover_2025_one_iso3 <- df_covid_dip_recover %>%
+    dplyr::filter(scenario == "covid_never_return", year == 2025, iso3 == "testalia") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_2025_one_iso3, 60)
+})
+
+testthat::test_that("scenario_covid_never_return produces accurate results with two iso3", {
+
+  df <- testdf() %>%
+    dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year >= 2020 ~ as.numeric(60 + (year - 2020)),
+      TRUE ~ as.numeric(value)
+    ), type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
+
+  df_dip_recover <- scenario_covid_never_return(df)
+
+  df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
+    dplyr::filter(scenario == "covid_never_return", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(60, 60))
+})
+

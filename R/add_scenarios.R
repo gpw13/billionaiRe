@@ -18,7 +18,8 @@
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
 #' - `accelerate`: calls indicator accelerate function.
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
-#' - `covid_dip_recover` calls \code{\link{scenario_covid_dip_recover}}
+#' - `scenario_covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
+#' - `scenario_covid_never_return` calls \code{\link{scenario_covid_never_return}}
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
@@ -38,7 +39,8 @@ add_scenario <- function(df,
                            "fixed_target_col",
                            "accelerate",
                            "sdg",
-                           "covid_dip_recover"
+                           "covid_rapid_return",
+                           "covid_never_return"
                          ),
                          ind_ids = billion_ind_codes("all"),
                          ind = "ind",
@@ -102,7 +104,8 @@ add_scenario_indicator <- function(df,
                                      "fixed_target_col",
                                      "accelerate",
                                      "sdg",
-                                     "covid_dip_recover"
+                                     "covid_rapid_return",
+                                     "covid_never_return"
                                    ),
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),

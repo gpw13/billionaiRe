@@ -51,3 +51,13 @@ df_fixed_target_col <- df %>%
   dplyr::mutate(target = 70)
 
 test_scenario_function(df = df_fixed_target_col, "fixed_target_col", 70, target_col = "target", scenario_name = "target_2025")
+
+df_type_col <- df %>%
+  dplyr::mutate(type = dplyr::case_when(
+    year >= 2021 ~ "projected",
+    TRUE ~ "reported"
+  ))
+
+test_scenario_function(df_type_col, "covid_rapid_return", 95.113636, baseline_year = 2010, scenario_name = "covid_rapid_return")
+
+test_scenario_function(df_type_col, "covid_never_return", 90, baseline_year = 2010, scenario_name = "covid_never_return")
