@@ -1,3 +1,6 @@
+# billionaiRe 0.6.5
+* Adding COVID-19 scenarios.
+
 # billionaiRe 0.6.4
 * Adding Sustainable Development Goals acceleration scenarios.
 
