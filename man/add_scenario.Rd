@@ -8,7 +8,7 @@ add_scenario(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "accelerate", "sdg", "covid_rapid_return",
+    "fixed_target_col", "bau", "accelerate", "sdg", "covid_rapid_return",
     "covid_delayed_return", "covid_sustained_disruption", "covid_never_return"),
   ind_ids = billion_ind_codes("all"),
   ind = "ind",
