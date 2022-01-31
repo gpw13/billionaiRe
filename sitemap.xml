@@ -454,6 +454,24 @@
     <loc>/reference/scenario_best_of.html</loc>
   </url>
   <url>
+    <loc>/reference/scenario_covid_delayed_return.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_covid_never_return.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_covid_rapid_return.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_covid_sustained_disruption.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_dip_recover.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_dip_recover_iso3.html</loc>
+  </url>
+  <url>
     <loc>/reference/scenario_fixed_target.html</loc>
   </url>
   <url>
