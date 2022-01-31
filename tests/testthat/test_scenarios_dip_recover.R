@@ -87,16 +87,36 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
     dplyr::filter(scenario == "dip_recover") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_longer_just_scenario, c(NA, NA, 60.00000, 60.00000, 60.882353, 61.764706, 62.647059, 63.529412))
+  testthat::expect_equal(df_dip_recover_longer_just_scenario, c(68, 69, 60.00000, 60.00000, 60.882353, 61.764706, 62.647059, 63.529412))
 
 
-  df_dip_recover_very_long <- scenario_dip_recover(df_nas, recovery_year = Inf)
+  df_dip_recover_very_long <- scenario_dip_recover(df_nas, recovery_year = 2030)
 
   df_dip_recover_just_scenario <- df_dip_recover_very_long %>%
     dplyr::filter(scenario == "dip_recover") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_just_scenario, c(NA, NA, rep(60.0, 6)))
+  testthat::expect_equal(df_dip_recover_just_scenario, c(68, 69, rep(60.0, 6)))
 
 })
+
+testthat::test_that("scenario_dip_recover produces accurate results with progressive_recovery == TRUE:", {
+
+  df_reported <- testdf() %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year == 2020 ~ 60L,
+      TRUE ~ value
+    ))
+
+
+
+  df_dip_recover_progressive_recovery <- scenario_dip_recover(df_reported, progressive_recovery = TRUE)
+
+  df_dip_recover_progressive_recovery_2025 <- df_dip_recover_progressive_recovery %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_progressive_recovery_2025, 64.411765)
+})
+
 

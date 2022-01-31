@@ -30,6 +30,7 @@ scenario_dip_recover <- function(df,
                                  start_year = 2018,
                                  dip_year = 2020,
                                  recovery_year = 2021,
+                                 progressive_recovery = FALSE,
                                  end_year =  2025,
                                  value =  "value",
                                  scenario = "scenario",
@@ -56,7 +57,7 @@ scenario_dip_recover <- function(df,
 
   params <- get_right_params(list(...), scenario_dip_recover_iso3)
 
-  purrr::map_dfr(unique_iso3, ~  scenario_dip_recover_iso3(
+  purrr::map_dfr(unique_iso3, ~  rlang::exec(scenario_dip_recover_iso3,
     iso3 =  .x,
     df = scenario_df,
     year = year,
@@ -67,10 +68,12 @@ scenario_dip_recover <- function(df,
     end_year = end_year,
     dip_year =  dip_year,
     recovery_year = recovery_year,
+    progressive_recovery = progressive_recovery,
     scenario = scenario,
     ind_ids = ind_ids,
     default_scenario = default_scenario,
-    scenario_name = scenario_name))
+    scenario_name = scenario_name,
+    !!!params))
 
 }
 
@@ -94,6 +97,7 @@ scenario_dip_recover_iso3 <- function(df,
                                       start_year = 2018,
                                       dip_year = 2020,
                                       recovery_year = 2021,
+                                      progressive_recovery = FALSE,
                                       end_year = 2025,
                                       value =  "value",
                                       scenario = "scenario",
@@ -165,6 +169,20 @@ scenario_dip_recover_iso3 <- function(df,
                                iso3 = iso3_col,
                                ind = ind)
 
+    full_recovery_df <- tidyr::expand_grid(
+      "{year}" := recovery_year:max(scenario_df[[year]]),
+      "{iso3_col}" := unique(aroc_df[[iso3_col]]),
+      "{ind}" := unique(aroc_df[[ind]]),
+    )
+
+    aroc_df <- aroc_df %>%
+      dplyr::full_join(full_recovery_df, by = c(iso3_col, ind))
+
+    if(progressive_recovery){
+      aroc_df <- aroc_df %>%
+        dplyr::mutate(aroc = .data[["aroc"]] * ((.data[[year]]-recovery_year) /(end_year - recovery_year)))
+    }
+
     ind_timeseries <- scenario_df %>%
       dplyr::filter(.data[[year]] >= dip_year) %>%
       dplyr::group_by(.data[[iso3_col]], .data[[ind]]) %>%
@@ -184,10 +202,11 @@ scenario_dip_recover_iso3 <- function(df,
         valtemp = .data[[value]],
         baseline_value = .data[["valtemp"]][year == dip_year]) %>%
       dplyr::ungroup() %>%
-      dplyr::left_join(aroc_df, by = c(iso3_col, ind)) %>%
+      dplyr::left_join(aroc_df, by = c(iso3_col, ind, year)) %>%
       dplyr::mutate(
         scenario_value = dplyr::case_when(
           stringr::str_detect(ind, "campaign") ~ as.numeric(.data[[value]]),
+          .data[[year]] < dip_year ~ as.numeric(.data[[value]]),
           .data[[year]] >= recovery_year ~ .data[["baseline_value"]] * (1 + (.data[["aroc"]])*(.data[[year]] - (recovery_year-1))),
           .data[[year]] >= dip_year ~ as.numeric(last_value),
           TRUE ~ NA_real_),

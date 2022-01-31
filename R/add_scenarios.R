@@ -20,7 +20,7 @@
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
 #' - `covid_delayed_return` calls \code{\link{scenario_covid_delayed_return}}
-#' - `covid_sustained_disruption` calls \code{\link{covid_sustained_disruption}}
+#' - `covid_sustained_disruption` calls \code{\link{scenario_covid_sustained_disruption}}
 #' - `covid_never_return` calls \code{\link{scenario_covid_never_return}}
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data

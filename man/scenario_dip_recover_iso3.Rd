@@ -13,6 +13,7 @@ scenario_dip_recover_iso3(
   start_year = 2018,
   dip_year = 2020,
   recovery_year = 2021,
+  progressive_recovery = FALSE,
   end_year = 2025,
   value = "value",
   scenario = "scenario",
