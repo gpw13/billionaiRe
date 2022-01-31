@@ -38,6 +38,9 @@ country, year, and indicator.}
 
 \item{recovery_year}{integer year from which the AROC will be applied. Default to 2021.}
 
+\item{progressive_recovery}{(logical) TRUE if the recovery after COVID-19
+should be progressive.}
+
 \item{end_year}{End year for scenario, defaults to 2025}
 
 \item{value}{Column name of column with indicator values. This column will be
@@ -56,8 +59,6 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{...}{additional parameters to be passed to
 \code{scenario_dip_recover_iso3()}}
-
-\item{(logical)}{TRUE if the}
 }
 \value{
 a data frame with scenario values in \code{value} with a \code{scenario} column.
@@ -71,8 +72,8 @@ situation.
 In details, the AROC  between the \code{start_year}  and \code{covid_year} - 1 is
 applied to the last reported value to \code{recovery_year} onward in a progressive
 way: full AROC is only applied at \code{end_year}; otherwise the recovery is
-even spread between the years between \code{recovery_year} and \code{end_year}. For
-instance, if recovery_year is 2021 and end_year 2025, then 2021 will have 0\%
+spread between the years between \code{recovery_year} and \code{end_year}. For
+instance, if \code{recovery_year} is 2021 and \code{end_year} 2025, then 2021 will have 0\%
 of AROC, 2022 25\%, 2023 50\%, 2024 75\%, and 2025 100\%.
 If there are missing values between \code{covid_year} and \code{recovery_year}, the
 last value from \code{covid_year} is carried forward. This applies only to

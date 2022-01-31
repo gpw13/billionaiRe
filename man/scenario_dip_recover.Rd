@@ -38,6 +38,9 @@ country, year, and indicator.}
 
 \item{recovery_year}{(integer) year from which the AROC will be applied}
 
+\item{progressive_recovery}{(logical) TRUE if the recovery after dip
+should be progressive.}
+
 \item{end_year}{End year for scenario, defaults to 2025}
 
 \item{value}{Column name of column with indicator values. This column will be
@@ -72,4 +75,9 @@ missing values between \code{dip_year} and \code{recovery_year}, the last value 
 \code{dip_year} is carried forward. This applies only to countries where the
 indicator value for \code{dip_year} is \code{reported} or \code{estimated}. Otherwise,
 the value is carried with \code{scenario_bau}.
+
+If \code{progressive_recovery} is TRUE, then the recovery is
+spread between the years between \code{recovery_year} and \code{end_year}. For
+instance, if \code{recovery_year} is 2021 and \code{end_year} 2025, then 2021 will have 0\%
+of AROC, 2022 25\%, 2023 50\%, 2024 75\%, and 2025 100\%.
 }

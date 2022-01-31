@@ -191,8 +191,8 @@ scenario_covid_delayed_return <- function(df,
 #' In details, the AROC  between the `start_year`  and `covid_year` - 1 is
 #' applied to the last reported value to `recovery_year` onward in a progressive
 #' way: full AROC is only applied at `end_year`; otherwise the recovery is
-#' even spread between the years between `recovery_year` and `end_year`. For
-#' instance, if recovery_year is 2021 and end_year 2025, then 2021 will have 0%
+#' spread between the years between `recovery_year` and `end_year`. For
+#' instance, if `recovery_year` is 2021 and `end_year` 2025, then 2021 will have 0%
 #' of AROC, 2022 25%, 2023 50%, 2024 75%, and 2025 100%.
 #' If there are missing values between `covid_year` and `recovery_year`, the
 #' last value from `covid_year` is carried forward. This applies only to
@@ -203,7 +203,8 @@ scenario_covid_delayed_return <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inherit scenario_aroc
-#' @param (logical) TRUE if the
+#' @param progressive_recovery (logical) TRUE if the recovery after COVID-19
+#' should be progressive.
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2021.
 #' @param scenario name of scenario column to be created

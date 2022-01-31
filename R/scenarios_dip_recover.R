@@ -11,12 +11,19 @@
 #' indicator value for `dip_year` is `reported` or `estimated`. Otherwise,
 #' the value is carried with `scenario_bau`.
 #'
+#' If `progressive_recovery` is TRUE, then the recovery is
+#' spread between the years between `recovery_year` and `end_year`. For
+#' instance, if `recovery_year` is 2021 and `end_year` 2025, then 2021 will have 0%
+#' of AROC, 2022 25%, 2023 50%, 2024 75%, and 2025 100%.
+#'
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inherit scenario_aroc
 #' @param dip_year (integer) year where the dip appends
 #' @param recovery_year (integer) year from which the AROC will be applied
+#' @param progressive_recovery (logical) TRUE if the recovery after dip
+#' should be progressive.
 #' @param scenario name of scenario column to be created
 #' @param scenario_name name of scenario
 #' @param ... additional parameters to be passed to
