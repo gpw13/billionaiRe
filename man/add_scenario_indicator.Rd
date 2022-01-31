@@ -32,6 +32,7 @@ of the following:
 \item \code{best_in_region}: calls \code{\link{scenario_best_in_region}}
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
+\item \code{bau}: calls \code{\link{scenario_bau}}
 \item \code{accelerate}: calls indicator accelerate function.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}

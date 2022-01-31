@@ -16,6 +16,7 @@
 #' - `best_in_region`: calls \code{\link{scenario_best_in_region}}
 #' - `fixed_target`: calls \code{\link{scenario_fixed_target}}
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
+#' - `bau`: calls \code{\link{scenario_bau}}
 #' - `accelerate`: calls indicator accelerate function.
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
@@ -39,6 +40,7 @@ add_scenario <- function(df,
                            "best_in_region",
                            "fixed_target",
                            "fixed_target_col",
+                           "bau",
                            "accelerate",
                            "sdg",
                            "covid_rapid_return",
@@ -106,6 +108,7 @@ add_scenario_indicator <- function(df,
                                      "best_in_region",
                                      "fixed_target",
                                      "fixed_target_col",
+                                     "bau",
                                      "accelerate",
                                      "sdg",
                                      "covid_rapid_return",
