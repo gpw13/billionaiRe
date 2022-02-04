@@ -199,7 +199,7 @@ load_billion_data_legacy <- function(billion = c("hep", "hpop", "uhc", "all"),
   assert_date_filter(date_filter)
   format <- rlang::arg_match(format)
 
-  df <- load_billion_table(mart_table, format, ...)
+  df <- load_billion_table(mart_table, format, auth_type = "client", ...)
   df <- dplyr::rename_with(df, tolower)
   df <- filter_billion_inds(df, billion)
   df <- filter_billion_date(df, date_filter)
@@ -263,7 +263,9 @@ assert_date_filter <- function(fltr) {
 
 #' @noRd
 load_billion_table <- function(tbl, format, ...) {
-  xmart4::xmart4_table("GPW13", tbl,
+  xmart4::xmart4_table(
+    mart = "GPW13",
+    table = tbl,
     col_types = readr::cols(
       ISO3 = readr::col_character(),
       YEAR = readr::col_double(),
