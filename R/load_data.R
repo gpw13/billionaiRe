@@ -50,7 +50,7 @@
 load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                               billion = c("all", "hep", "hpop", "uhc"),
                               ind_codes = "all",
-                              date_filter = "latest",
+                              version = "latest",
                               na_rm = TRUE,
                               experiment = NULL,
                               silent = TRUE,
@@ -61,9 +61,10 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
   data_source <- rlang::arg_match(data_source)
 
   if (data_source == "whdh") {
-    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, experiment, silent, ...)
+    load_billion_data_whdh(data_type, billion, ind_codes, version, na_rm, experiment, silent, ...)
   } else {
-    load_billion_data_xmart(data_type, billion, ind_codes, date_filter, na_rm, ...)
+    message("`experiment` and `silent` arguments ignored when `data_source = \"xmart\"`.")
+    load_billion_data_xmart(data_type, billion, ind_codes, version, na_rm, ...)
   }
 }
 
@@ -76,7 +77,7 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
 load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                    billion = c("all", "hep", "hpop", "uhc"),
                                    ind_codes = "all",
-                                   date_filter = "latest",
+                                   version = "latest",
                                    na_rm = TRUE,
                                    experiment = NULL,
                                    silent = TRUE) {
@@ -95,7 +96,8 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   data_lake <- get_data_lake_name()
   root <- if (is.null(experiment)) "3B" else paste("3B", "Sandbox", experiment, sep = "/")
   data_layer <- get_data_layer(data_type)
-  dir_path <- sprintf("%s/%s/%s/", root, data_layer, data_type)
+  dir_path <- sprintf("%s/%s/%s/", root, data_layer, data_type) %>%
+    stringr::str_replace("//+", "/")
 
   valid_data_assets <- whdh::list_blobs_in_directory(data_lake,
     dir_path,
@@ -108,15 +110,27 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   assert_x_in_y(paths, valid_data_assets)
 
   df <- purrr::map_dfr(paths, ~ {
-    temp_file <- tempfile()
+    temp_dir <- tempdir()
+    file_name <- stringr::str_match(.x, "^.+/(\\w+)/?$")[, 2]
+    temp_file <- file.path(temp_dir, paste(file_name, "parquet", sep = "."))
 
-    whdh::download_from_data_lake(
+    whdh::download_data_asset(
       data_lake_name = data_lake,
-      source_path = .x,
-      destination_path = temp_file,
-      latest_version_only = TRUE,
+      data_asset_folder = .x,
+      version = version,
+      destination_dir = temp_dir,
+      strip_timestamp = TRUE,
+      overwrite_destination = TRUE,
       silent = silent
     )
+
+    # whdh::download_from_data_lake(
+    #   data_lake_name = data_lake,
+    #   source_path = .x,
+    #   destination_path = temp_file,
+    #   latest_version_only = TRUE,
+    #   silent = silent
+    # )
 
     arrow::read_parquet(temp_file)
   })
@@ -134,7 +148,7 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
 load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                     billion = c("all", "hep", "hpop", "uhc"),
                                     ind_codes = "all",
-                                    date_filter = "latest",
+                                    version = "latest",
                                     na_rm = TRUE,
                                     experiment = NULL,
                                     silent = TRUE) {
@@ -300,70 +314,31 @@ load_billion_table <- function(tbl, format, ...) {
 #' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
 #' and `readxl::read_excel()` based on the file extension.
 #'
-#' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
-#' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
-#'
-#' @return data frame
-#'
-#' @export
-#'
-load_misc_data <- function(file_name, ...) {
-  f <- tempfile()
-
-  whdh::download_from_data_lake(
-    data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_name, sep = "/"),
-    destination_path = f,
-    latest_version_only = FALSE,
-    silent = TRUE
-  )
-
-  ext <- stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
-
-  if (ext %in% c("xls", "xlsx")) {
-    output_df <- readxl::read_excel(f, ...)
-  } else if (ext == "parquet") {
-    output_df <- arrow::read_parquet(f, ...)
-  } else if (ext == "csv") {
-    output_df <- readr::read_csv(f, show_col_types = FALSE, ...)
-  }
-
-  output_df
-}
-
-#' Load miscellaneous data
-#'
-#' This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
-#' WHDH data lake.
-#'
-#' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
-#' and `readxl::read_excel()` based on the file extension.
-#'
-#' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
+#' @param file_path The path to the file inside the `3B/Bronze/misc` folder. File
+#' paths must end with an extension (e.g., .csv)
 #' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
 #'
 #' @return a data frame
 #' @export
-load_misc_data <- function(file_name, ...) {
+load_misc_data <- function(file_path, ...) {
   f <- tempfile()
 
   whdh::download_from_data_lake(
     data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_name, sep = "/"),
+    source_path = paste("3B/Bronze/misc", file_path, sep = "/"),
     destination_path = f,
-    latest_version_only = FALSE,
     silent = TRUE
   )
 
-  ext <- stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
+  ext <- stringr::str_match(file_path, "(.+)\\.(.+)")[, 3]
 
-  if (ext %in% c("xls", "xlsx")) {
-    output_df <- readxl::read_excel(f, ...)
-  } else if (ext == "parquet") {
-    output_df <- arrow::read_parquet(f, ...)
-  } else if (ext == "csv") {
-    output_df <- readr::read_csv(f, show_col_types = FALSE, ...)
-  }
+  output_df <- switch(
+    ext,
+    xls = readxl::read_xls(f, ...),
+    xlsx = readxl::read_xlsx(f, ...),
+    csv = readr::read_csv(f, show_col_types = FALSE, ...),
+    parquet = arrow::read_parquet(f, ...)
+  )
 
   output_df
 }
