@@ -185,7 +185,8 @@ get_whdh_path <- function(operation = c("download", "upload"),
   }
 
   path <- paste(root, data_layer, data_type, data_asset, file_names, sep = "/") %>%
-    stringr::str_replace("uhc_espar", "hep_espar")
+    stringr::str_replace("uhc_espar", "hep_espar") %>%
+    stringr::str_replace("//+", "/")
 
   return(path)
 }
