@@ -17,10 +17,9 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
     "other_detail", "upload_detail"
   )
 
-  # TODO: to be added after scenarios are fully integrated into the data pipeline
-  # if (data_type != "wrangled_data") {
-  #   key_cols = c(key_cols, "scenario", "scenario_detail")
-  # }
+  if (data_type != "wrangled_data") {
+    key_cols = c(key_cols, "scenario", "scenario_detail")
+  }
 
   if (data_type == "final_data") {
     value_cols <- c(
