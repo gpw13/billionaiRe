@@ -1,3 +1,8 @@
+# billionaiRe 0.6.5
+* Replace names of scenarios with more informative names:
+  - `none` becomes `routine`
+  - `tp` becomes `reference_infilling`
+
 # billionaiRe 0.6.4
 * Adding Sustainable Development Goals acceleration scenarios.
 

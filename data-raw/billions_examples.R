@@ -80,8 +80,8 @@ proj_data_those_isos <- proj_data %>%
     year >= 2000
   ) %>%
   mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "none",
-    TRUE ~ "tp"
+    type %in% c("estimated", "reported") ~ "routine",
+    TRUE ~ "reference_infilling"
   ))
 
 all_data_those_isos <- all_data %>%
@@ -93,15 +93,16 @@ all_data_those_isos <- all_data %>%
   anti_join(proj_data_those_isos, by = c("iso3", "ind", "year")) %>%
   bind_rows(proj_data_those_isos) %>%
   mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "none",
-    !is.na(scenario_detail) & scenario_detail != "precovid_bau" ~ scenario_detail,
+    type %in% c("estimated", "reported") ~ "routine",
+    !is.na(scenario_detail) & scenario_detail == "none" ~ "routine",
+    !is.na(scenario_detail) & scenario_detail == "tp" ~ "reference_infilling",
     is.na(scenario) | scenario == "un_regional_median" | scenario_detail == "precovid_bau" ~ "pre_covid_bau",
     TRUE ~ scenario
   )) %>%
   select(-scenario_detail)
 
 reported_2020_values <- all_data_those_isos %>%
-  filter(scenario == "none" & year == 2020)
+  filter(scenario == "routine" & year == 2020)
 
 all_billions_transformed <- all_data_those_isos %>%
   anti_join(reported_2020_values, by = c("iso3", "year", "ind")) %>%
@@ -117,7 +118,7 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5D7VQI4H4T7LIJHIZWYPJLVBA")
+source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5DFITQOWX64YKGC2LMYQE4BUA")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -147,8 +148,6 @@ test_data <- all_data_those_isos %>%
   filter(ind != "surviving_infants") %>%
   dplyr::distinct()
 
-arrow::write_parquet(test_data, glue::glue("data-raw/test_data_{whdh::get_formatted_timestamp()}.parquet"))
-
 test_data_calculated_hep <- test_data %>%
   transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
   calculate_hep_components(scenario = "scenario") %>%
@@ -167,4 +166,33 @@ test_data_calculated_uhc <- test_data %>%
 test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
   bind_rows(test_data_calculated_hpop)
 
-arrow::write_parquet(test_data_calculated, glue::glue("data-raw/test_data_calculated_{whdh::get_formatted_timestamp()}.parquet"))
+time_stamp <- whdh::get_formatted_timestamp()
+
+test_data_file_name <- glue::glue("test_data_{time_stamp}.parquet")
+
+test_data_output_path <- glue::glue("data-raw/{test_data_file_name}")
+
+test_data_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data/{test_data_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data/test_data.parquet")
+
+arrow::write_parquet(test_data, test_data_output_path)
+
+whdh::upload_to_data_lake(data_lake_name = get_data_lake_name(),
+                          container = "dropzone",
+                          source_path = test_data_output_path,
+                          destination_path = test_data_destination_path_notimestamp)
+
+test_data_calculated_file_name <- glue::glue("test_data_calculated_{time_stamp}.parquet")
+
+test_data_calculated_output_path <- glue::glue("data-raw/{test_data_calculated_file_name}")
+
+test_data_calculated_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/{test_data_calculated_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/test_data_calculated.parquet")
+
+
+arrow::write_parquet(test_data_calculated, test_data_calculated_output_path)
+
+whdh::upload_to_data_lake(data_lake_name = get_data_lake_name(),
+                    container = "dropzone",
+                    source_path = test_data_calculated_output_path,
+                    destination_path = test_data_calculated_destination_path)

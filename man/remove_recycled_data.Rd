@@ -9,8 +9,8 @@ remove_recycled_data(
   ind = "ind",
   recycled = "recycled",
   scenario = "scenario",
-  scenario_reported_estimated = "none",
-  scenario_tp = "tp"
+  scenario_reported_estimated = "routine",
+  scenario_reference_infilling = "reference_infilling"
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
 
-\item{scenario_tp}{name of the WHO technical programs projections/imputations scenario.}
+\item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 }
 \value{
 Data frame in long format without recycled values

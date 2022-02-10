@@ -98,11 +98,7 @@ basic_hep_test <- function(ind) {
 purrr::walk(c("respond", "notify", "detect", "detect_respond"), basic_hep_test)
 
 testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
-<<<<<<< HEAD
-  hep_test_df <- load_misc_data("test_data/test_data.parquet") %>%
-=======
   hep_test_df <- load_misc_data("test_data/test_data/test_data.parquet") %>%
->>>>>>> main
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "cholera_campaign")])
 
