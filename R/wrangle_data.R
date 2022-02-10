@@ -23,7 +23,8 @@
 wrangle_gho_data <- function(df,
                              source = NULL,
                              type = NULL,
-                             ind = NULL) {
+                             ind = NULL,
+                             scenario = NULL,) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)
@@ -54,7 +55,12 @@ wrangle_gho_data <- function(df,
       ),
       "type_detail" := NA,
       "other_detail" := .data[["Comments"]],
-      "upload_detail" := NA
+      "upload_detail" := NA,
+      "scenario" := ifelse(is.null(scenario),
+                           NA_character_,
+                           scenario
+      ),
+      "scenario_detail" := NA_character_
     ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
@@ -267,7 +273,8 @@ wrangle_gho_rural_urban_data <- function(df,
 #' @export
 wrangle_unsd_data <- function(df,
                               source = NULL,
-                              type = NULL) {
+                              type = NULL,
+                              scenario = NULL) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)
@@ -289,7 +296,12 @@ wrangle_unsd_data <- function(df,
         .data[["Nature"]] %in% c("C", "CA") ~ "reported",
         .data[["Nature"]] %in% c("E", "M") ~ "estimated"
       ),
-      "other_detail" := .data[["FootNote"]]
+      "other_detail" := .data[["FootNote"]],
+      "scenario" := ifelse(is.null(scenario),
+                           NA_character_,
+                           scenario
+      ),
+      "scenario_detail" := NA_character_
     ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
