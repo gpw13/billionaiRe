@@ -14,12 +14,9 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
   value_cols <- c("value", "lower", "upper")
   other_cols <- c(
     "use_dash", "use_calc", "source", "type", "type_detail",
-    "other_detail", "upload_detail"
+    "other_detail", "upload_detail",
+    "scenario", "scenario_detail"
   )
-
-  if (data_type != "wrangled_data") {
-    key_cols = c(key_cols, "scenario", "scenario_detail")
-  }
 
   if (data_type == "final_data") {
     value_cols <- c(
