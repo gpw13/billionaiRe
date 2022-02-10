@@ -30,7 +30,12 @@
 #'   recent update before that date is used).
 #' @param na_rm (logical) Specifies whether to filter the data to only rows
 #'   where `value` is not missing. Defaults to `TRUE`.
-#' @param sandbox (logical) Whether or not to use the sandbox folders in the data lake.
+#' @param experiment (string) Either NULL (default) or a string.
+#' * If NULL, the path returned is in the "official" data layers in the 3B data lake
+#'   (e.g., 3B/Silver).
+#' * If a string, the path returned is in a sub-folder within the Sandbox layer of the
+#'   3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
+#'   (e.g., 3B/Sandbox/my_exp/Silver)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a download progress bar. Defaults to `TRUE`.
 #' @param data_source (string) Ether "whdh" or "xmart". Indicates where to download
@@ -47,7 +52,7 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
                               ind_codes = "all",
                               date_filter = "latest",
                               na_rm = TRUE,
-                              sandbox = FALSE,
+                              experiment = NULL,
                               silent = TRUE,
                               data_source = c("whdh", "xmart"),
                               ...) {
@@ -56,7 +61,7 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
   data_source <- rlang::arg_match(data_source)
 
   if (data_source == "whdh") {
-    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, sandbox, silent, ...)
+    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, experiment, silent, ...)
   } else {
     load_billion_data_xmart(data_type, billion, ind_codes, date_filter, na_rm, ...)
   }
@@ -73,7 +78,7 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
                                    ind_codes = "all",
                                    date_filter = "latest",
                                    na_rm = TRUE,
-                                   sandbox = FALSE,
+                                   experiment = NULL,
                                    silent = TRUE) {
 
   # Assertions and checks
@@ -83,14 +88,14 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
 
   # Paths of items to download
-  paths <- get_whdh_path("download", data_type, billion, ind_codes, sandbox = sandbox)
+  paths <- get_whdh_path("download", data_type, billion, ind_codes, experiment = experiment)
   assert_unique_vector(paths)
 
   # Ensure that each path has a corresponding data asset in the data lake
   data_lake <- get_data_lake_name()
-  team <- if (sandbox) "3B/Sandbox" else "3B"
+  root <- if (is.null(experiment)) "3B" else paste("3B", "Sandbox", experiment, sep = "/")
   data_layer <- get_data_layer(data_type)
-  dir_path <- sprintf("%s/%s/%s/", team, data_layer, data_type)
+  dir_path <- sprintf("%s/%s/%s/", root, data_layer, data_type)
 
   valid_data_assets <- whdh::list_blobs_in_directory(data_lake,
     dir_path,
@@ -131,7 +136,7 @@ load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_da
                                     ind_codes = "all",
                                     date_filter = "latest",
                                     na_rm = TRUE,
-                                    sandbox = FALSE,
+                                    experiment = NULL,
                                     silent = TRUE) {
   # Temporary error
   stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")

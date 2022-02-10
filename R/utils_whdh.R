@@ -76,7 +76,12 @@ save_gho_backup_to_whdh <- function(df,
 #'   are returned.
 #' @param file_names (character vector) The name(s) of the file(s) to download.
 #'   NULL by default. Ignored if either `billion = "all"` or `ind_codes = "all"`.
-#' @param sandbox (logical) Whether or not to use the sandbox folders in the data lake.
+#' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
+#' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
+#' the "official" data is stored (e.g., `3B//...`).
+#' * If a string, the root folder for the data layers is a sub-folder within the
+#' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
+#' paths would be of the form `3B/Sandbox/my_exp/Silver/...`)
 #'
 #' @return A character vector.
 #' @export
@@ -86,7 +91,7 @@ get_whdh_path <- function(operation = c("download", "upload"),
                           billion = c("all", "hep", "hpop", "uhc"),
                           ind_codes = "all",
                           file_names = NULL,
-                          sandbox = TRUE) {
+                          experiment = "unofficial") {
 
   # Argument checks and assertions
   operation <- rlang::arg_match(operation)
@@ -94,13 +99,14 @@ get_whdh_path <- function(operation = c("download", "upload"),
   billion <- rlang::arg_match(billion)
   assert_type(billion, "character")
   assert_type(ind_codes, "character")
+  assert_type(experiment, c("NULL", "character"))
 
   # For billion = "all", recursively call the function with each billion
   if (billion == "all" && data_type != "final_data") {
     message("`ind_codes` and `file_names` arguments ignored when billion = \"all\"")
     paths <- c("hep", "hpop", "uhc") %>%
       # rlang::set_names() %>%
-      purrr::map(~ get_whdh_path(operation, data_type, .x, "all", NULL, sandbox)) %>%
+      purrr::map(~ get_whdh_path(operation, data_type, .x, "all", NULL, experiment)) %>%
       unlist() %>%
       unique() %>%
       suppressMessages()
@@ -123,7 +129,14 @@ get_whdh_path <- function(operation = c("download", "upload"),
     assert_arg_exists(file_names, "The %s argument is required when data_type = \"ingestion_data\".")
   }
 
-  team <- if (sandbox) "3B/Sandbox" else "3B"
+  # Amend root folder based on experiment argument
+  if (is.null(experiment)) {
+    root <- "3B"
+  } else {
+    assert_length(experiment, 1)
+    root <- paste("3B", "Sandbox", experiment, sep = "/")
+  }
+
   data_layer <- get_data_layer(data_type)
 
   # If final_data, data_asset is just final_data
@@ -171,7 +184,7 @@ get_whdh_path <- function(operation = c("download", "upload"),
     stop("Invalid value passed to `file_names`.")
   }
 
-  path <- paste(team, data_layer, data_type, data_asset, file_names, sep = "/") %>%
+  path <- paste(root, data_layer, data_type, data_asset, file_names, sep = "/") %>%
     stringr::str_replace("uhc_espar", "hep_espar")
 
   return(path)
