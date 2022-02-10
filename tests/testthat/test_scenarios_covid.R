@@ -44,11 +44,25 @@ testthat::test_that("scenario_covid_rapid_return produces accurate results with 
 
   df_dip_recover <- scenario_covid_rapid_return(df)
 
+
   df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
     dplyr::filter(scenario == "covid_rapid_return", year == 2025) %>%
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(64.411765, 64.411765))
+
+  df_neg <- testdf(values = 80:60) %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year >= 2020 ~ as.numeric(60 + (year - 2020)),
+      TRUE ~ as.numeric(value)
+    ), type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
+
+  df_dip_recover_neg <- scenario_covid_rapid_return(df_neg)
+
+
 })
 
 testthat::test_that("scenario_covid_never_return produces accurate results with one iso3", {
