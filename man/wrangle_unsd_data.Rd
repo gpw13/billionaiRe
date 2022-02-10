@@ -4,7 +4,7 @@
 \alias{wrangle_unsd_data}
 \title{Put UNSD data into billionaiRe format}
 \usage{
-wrangle_unsd_data(df, source = NULL, type = NULL)
+wrangle_unsd_data(df, source = NULL, type = NULL, scenario = NULL)
 }
 \arguments{
 \item{df}{A data frame in UNSD format, returned from [goalie::sdg_data()]{https://gpw13.github.io/goalie/reference/sdg_data.html}.}
@@ -16,6 +16,9 @@ the source column is generated from the UNSD's \code{Source} column.}
 \item{type}{Character string of type to be provided to the data frame. If
 \code{NULL}, the type column is generated from the UNSD's \code{Nature} column.
 "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".}
+
+\item{scenario}{(Character) string of scenario to be provided to the data frame.
+If \code{NULL}, the scenario is set to \code{NA_character}.}
 }
 \value{
 A data frame.
