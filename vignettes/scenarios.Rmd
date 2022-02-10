@@ -49,7 +49,7 @@ Data recycling works by adding to all scenarios present in the `scenario` column
 ```{r, include = TRUE, eval = TRUE}
 library(billionaiRe)
 
-df <- load_misc_data("test_data/test_data.parquet")
+df <- load_misc_data("test_data/test_data/test_data.parquet")
 
 scenario_df <- df %>%
   dplyr::filter(scenario == "covid_dip_lag")
@@ -105,7 +105,7 @@ detect_respond_afg_2018 <- data.frame(
   scenario = "none",
   type = "estimated")
 
-df <- load_misc_data("test_data/test_data.parquet") %>% 
+df <- load_misc_data("test_data/test_data/test_data.parquet") %>% 
   dplyr::bind_rows(detect_respond_afg_2018)
 
 test_data_hep <- df %>%
@@ -222,10 +222,11 @@ In order to have clean scenarios, a series of parameters are passed to the funct
 
 ### Wrappers functions:
 
-Currently there are two wrapper functions implemented:
+Currently there are three wrapper functions implemented:
 
 -   `add_scenario` that wraps around any of the scenarios in its `scenario_function` parameter
 -   `acceleration` that implements the acceleration scenarios defined in coordination with WHO technical programs.
+-   `sdg` that implements acceleration scenarios to reach sustainable development goals.
 
 Each of the base scenario is wrapped in `add_scenario`. This function calls a `add_` function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:
 
@@ -270,3 +271,5 @@ Acceleration scenarios are a special case scenario that wraps different base sce
 -   `default` is reserved for the main data present on the dashboard
 
 -   `acceleration` is reserved for acceleration scenarios / trajectories
+
+-   `sdg` is reserved for sustainable development goals

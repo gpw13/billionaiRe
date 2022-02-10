@@ -211,7 +211,7 @@ accelerate_devontrack <- function(df,
 
 #' Accelerate fuel
 #'
-#' Accelerate devontrack by keeping business as usual for high income countries
+#' Accelerate fuel by keeping business as usual for high income countries
 #' (HIC) (according to the World Bank), and by aiming at the best rate of change
 #' between 2013 and 2015 in the region for Lower-middle income countries (LMC),
 #' Low-income countries (LIC), High-income countries(HIC), and for unclassified

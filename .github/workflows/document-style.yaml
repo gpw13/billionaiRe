@@ -10,7 +10,7 @@ name: document-style
 
 jobs:
   document-style:
-    name: document-stlye
+    name: document-style
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.PAT_GITHUB }}

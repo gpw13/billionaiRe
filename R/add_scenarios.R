@@ -16,7 +16,9 @@
 #' - `best_in_region`: calls \code{\link{scenario_best_in_region}}
 #' - `fixed_target`: calls \code{\link{scenario_fixed_target}}
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
+#' - `bau`: calls \code{\link{scenario_bau}}
 #' - `accelerate`: calls indicator accelerate function.
+#' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
@@ -34,7 +36,9 @@ add_scenario <- function(df,
                            "best_in_region",
                            "fixed_target",
                            "fixed_target_col",
-                           "accelerate"
+                           "bau",
+                           "accelerate",
+                           "sdg"
                          ),
                          ind_ids = billion_ind_codes("all"),
                          ind = "ind",
@@ -96,7 +100,9 @@ add_scenario_indicator <- function(df,
                                      "best_in_region",
                                      "fixed_target",
                                      "fixed_target_col",
-                                     "accelerate"
+                                     "bau",
+                                     "accelerate",
+                                     "sdg"
                                    ),
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
@@ -120,7 +126,20 @@ add_scenario_indicator <- function(df,
       accelerate_fn, c(list(df = df), params)
     ) %>%
       dplyr::distinct()
-  } else {
+  }else if(scenario_function == "sdg"){
+    if(this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]){
+      sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
+      params["scenario_name"] <- "sdg"
+    }else{
+      sdg_fn <- get(as.character(paste0("sdg_", this_ind)), mode = "function")
+    }
+
+    do.call(
+      sdg_fn, c(list(df = df), params)
+    ) %>%
+      dplyr::distinct()
+
+  }else {
     scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
 
     do.call(
