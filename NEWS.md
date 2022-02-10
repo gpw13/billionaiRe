@@ -2,6 +2,7 @@
 * Replace names of scenarios with more informative names:
   - `none` becomes `routine`
   - `tp` becomes `reference_infilling`
+* Adding COVID-19 scenarios.
 
 # billionaiRe 0.6.4
 * Adding Sustainable Development Goals acceleration scenarios.

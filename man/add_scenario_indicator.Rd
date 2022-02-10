@@ -8,7 +8,8 @@ add_scenario_indicator(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "accelerate", "sdg"),
+    "fixed_target_col", "bau", "accelerate", "sdg", "covid_rapid_return",
+    "covid_delayed_return", "covid_sustained_disruption", "covid_never_return"),
   indicator,
   ind_ids = billion_ind_codes("all"),
   scenario = "scenario",
@@ -34,6 +35,10 @@ of the following:
 \item \code{bau}: calls \code{\link{scenario_bau}}
 \item \code{accelerate}: calls indicator accelerate function.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
+\item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
+\item \code{covid_delayed_return} calls \code{\link{scenario_covid_delayed_return}}
+\item \code{covid_sustained_disruption} calls \code{\link{scenario_covid_sustained_disruption}}
+\item \code{covid_never_return} calls \code{\link{scenario_covid_never_return}}
 }}
 
 \item{indicator}{name of indicator to be passed to \code{scenario_function}}
