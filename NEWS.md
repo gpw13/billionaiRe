@@ -1,3 +1,7 @@
+# billionaiRe 0.6.6
+* Updates to `load_billion_data` functions incorporating the `whdh::download_data_asset`
+function and the use of a `version` argument to replace the `date_filter` placeholder.
+
 # billionaiRe 0.6.5
 * Adding COVID-19 scenarios.
 
