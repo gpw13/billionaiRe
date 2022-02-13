@@ -2,6 +2,8 @@
 * Replace names of scenarios with more informative names:
   - `none` becomes `routine`
   - `tp` becomes `reference_infilling`
+* add scenario and scenario_details to the wrangled columns in wrangling functions
+and xmart_cols as they will be expected to be present from now on.
 * Adding COVID-19 scenarios.
 
 # billionaiRe 0.6.4
