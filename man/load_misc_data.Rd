@@ -4,31 +4,22 @@
 \alias{load_misc_data}
 \title{Load miscellaneous data}
 \usage{
-load_misc_data(file_name, ...)
-
-load_misc_data(file_name, ...)
+load_misc_data(file_path, ...)
 }
 \arguments{
-\item{file_name}{The name of the file. File names must end with an extension (e.g., .csv)}
+\item{file_path}{The path to the file inside the \verb{3B/Bronze/misc} folder. File
+paths must end with an extension (e.g., .csv)}
 
 \item{...}{Any additionally arguments to pass on to the appropriate \code{read_} function.}
 }
 \value{
-data frame
-
 a data frame
 }
 \description{
 This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
 WHDH data lake.
-
-This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
-WHDH data lake.
 }
 \details{
-It automatically selects between \code{readr::read_csv()}, \code{arrow::read_parquet()},
-and \code{readxl::read_excel()} based on the file extension.
-
 It automatically selects between \code{readr::read_csv()}, \code{arrow::read_parquet()},
 and \code{readxl::read_excel()} based on the file extension.
 }

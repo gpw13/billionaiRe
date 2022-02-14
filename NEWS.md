@@ -1,4 +1,14 @@
+# billionaiRe 0.6.6
+* Updates to `load_billion_data` functions incorporating the `whdh::download_data_asset`
+function and the use of a `version` argument to replace the `date_filter` placeholder.
+
 # billionaiRe 0.6.5
+* Replace names of scenarios with more informative names:
+  - `none` becomes `routine`
+  - `tp` becomes `reference_infilling`
+* add scenario and scenario_details to the wrangled columns in wrangling functions
+and xmart_cols as they will be expected to be present from now on.
+>>>>>>> scenarios
 * Adding COVID-19 scenarios.
 
 # billionaiRe 0.6.4

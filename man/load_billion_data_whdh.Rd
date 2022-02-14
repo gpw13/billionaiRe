@@ -8,9 +8,9 @@ load_billion_data_whdh(
   data_type = c("wrangled_data", "projected_data", "final_data"),
   billion = c("all", "hep", "hpop", "uhc"),
   ind_codes = "all",
-  date_filter = "latest",
+  version = "latest",
   na_rm = TRUE,
-  sandbox = FALSE,
+  experiment = NULL,
   silent = TRUE
 )
 }
@@ -32,7 +32,7 @@ downloads all indicators for all three billions.}
 If \code{all}, downloads data for all indicators for a given billion. Ignored if
 billion = "all".}
 
-\item{date_filter}{(string) Either "latest", or a single date string. The date
+\item{version}{(string) Either "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 If a date is provided, the returned data frame is a snapshot of the data as
 stored on that date (if no updates were made on the given date, then the most
@@ -41,7 +41,14 @@ recent update before that date is used).}
 \item{na_rm}{(logical) Specifies whether to filter the data to only rows
 where \code{value} is not missing. Defaults to \code{TRUE}.}
 
-\item{sandbox}{(logical) Whether or not to use the sandbox folders in the data lake.}
+\item{experiment}{(string) Either NULL (default) or a string.
+\itemize{
+\item If NULL, the path returned is in the "official" data layers in the 3B data lake
+(e.g., 3B/Silver).
+\item If a string, the path returned is in a sub-folder within the Sandbox layer of the
+3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
+(e.g., 3B/Sandbox/my_exp/Silver)
+}}
 
 \item{silent}{(logical) Specifies whether to show authentication messages and
 a download progress bar. Defaults to \code{TRUE}.}

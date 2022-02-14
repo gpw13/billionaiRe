@@ -1,5 +1,3 @@
-
-
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
     transform_uhc_data() %>%
@@ -47,7 +45,6 @@ testthat::test_that("basic billion calculations are consistent", {
 test_data <- load_misc_data("test_data/test_data/test_data.parquet")
 
 test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated.parquet")
-
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
 

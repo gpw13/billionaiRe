@@ -6,15 +6,15 @@
 #' This function wraps around `recycle_data_scenario_single` for all the
 #' scenarios present in the `scenario` column. `recycle_data_scenario_single `
 #' reuses values present in the specified  scenarios in `default_scenario`,
-#' `scenario_reported_estimated`, and `scenario_tp` for the specified scenarios.
+#' `scenario_reported_estimated`, and `scenario_reference_infilling` for the specified scenarios.
 #'
 #' To do so, it looks at:
 #'
 #' 1. values in `default_scenario` but not in the scenario specified
 #' 2. values in `scenario_reported_estimated` but not in the scenario specified
-#' or `scenario_tp`
-#' 3. values in `scenario_tp` but not in the scenario specified,
-#' `scenario_reported_estimated` or `scenario_tp`
+#' or `scenario_reference_infilling`
+#' 3. values in `scenario_reference_infilling` but not in the scenario specified,
+#' `scenario_reported_estimated` or `scenario_reference_infilling`
 #'
 #' For more information see:
 #'
@@ -24,7 +24,7 @@
 #' @param type Column name of column with types
 #' @param default_scenario name of the default scenario.
 #' @param scenario_reported_estimated name of the reported/estimated scenario.
-#' @param scenario_tp name of the WHO technical programs projections/imputations scenario.
+#' @param scenario_reference_infilling name of the WHO technical programs projections/imputations scenario.
 #' @param include_projection Boolean to include or not projections in recycling
 #' @param recycle_campaigns Boolean to include or not campaigns in recycling
 #'
@@ -46,15 +46,15 @@ recycle_data <- function(df,
                          end_year = 2025,
                          scenario = "scenario",
                          default_scenario = "default",
-                         scenario_reported_estimated = "none",
-                         scenario_tp = "tp",
+                         scenario_reported_estimated = "routine",
+                         scenario_reference_infilling = "reference_infilling",
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
                          ind_ids = NULL,
                          trim_years = TRUE) {
   assert_columns(df, iso3, ind, value, year, scenario, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario, ind_ids)
-  assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_tp), scenario)
+  assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_reference_infilling), scenario)
 
   billion <- rlang::arg_match(billion)
   if (is.null(ind_ids)) {
@@ -79,7 +79,7 @@ recycle_data <- function(df,
       scenario_col = scenario,
       default_scenario = default_scenario,
       scenario_reported_estimated = scenario_reported_estimated,
-      scenario_tp = scenario_tp,
+      scenario_reference_infilling = scenario_reference_infilling,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids,
@@ -91,15 +91,15 @@ recycle_data <- function(df,
 #'
 #' `recycle_data_scenario_single ` reuses values present in the specified
 #' scenarios in `default_scenario`, `scenario_reported_estimated`, and
-#' `scenario_tp` for the specified scenarios.
+#' `scenario_reference_infilling` for the specified scenarios.
 #'
 #' To do so, it looks at:
 #'
 #' 1. values in `default_scenario` but not in the scenario specified
 #' 2. values in `scenario_reported_estimated` but not in the scenario specified
-#' or `scenario_tp`
-#' 3. values in `scenario_tp` but not in the scenario specified,
-#' `scenario_reported_estimated` or `scenario_tp`
+#' or `scenario_reference_infilling`
+#' 3. values in `scenario_reference_infilling` but not in the scenario specified,
+#' `scenario_reported_estimated` or `scenario_reference_infilling`
 #'
 #' For more information see:
 #'
@@ -111,7 +111,7 @@ recycle_data <- function(df,
 #' @param type Column name of column with types
 #' @param default_scenario name of the default scenario.
 #' @param scenario_reported_estimated name of the reported/estimated scenario.
-#' @param scenario_tp name of the WHO technical programs projections/imputations scenario.
+#' @param scenario_reference_infilling name of the WHO technical programs projections/imputations scenario.
 #' @param include_projection Boolean to include or not projections in recycling
 #' @param recycle_campaigns Boolean to include or not campaigns in recycling
 #'
@@ -133,15 +133,15 @@ recycle_data_scenario_single <- function(df,
                                          end_year = 2025,
                                          scenario_col = "scenario",
                                          default_scenario = "default",
-                                         scenario_reported_estimated = "none",
-                                         scenario_tp = "tp",
+                                         scenario_reported_estimated = "routine",
+                                         scenario_reference_infilling = "reference_infilling",
                                          include_projection = TRUE,
                                          recycle_campaigns = TRUE,
                                          ind_ids = NULL,
                                          trim_years = FALSE) {
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
-  assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
+  assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_reference_infilling), scenario_col)
 
   billion <- rlang::arg_match(billion)
   if (is.null(ind_ids)) {
@@ -156,8 +156,8 @@ recycle_data_scenario_single <- function(df,
   reported_estimated_df <- df %>%
     dplyr::filter(.data[[scenario_col]] == !!scenario_reported_estimated)
 
-  tp_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!scenario_tp)
+  reference_infilling_df <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!scenario_reference_infilling)
 
   scenario_df <- df %>%
     dplyr::filter(.data[[scenario_col]] == !!scenario)
@@ -174,16 +174,16 @@ recycle_data_scenario_single <- function(df,
     by = c(iso3, ind, year)
   )
 
-  tp_not_in_scenario <- dplyr::anti_join(tp_df, scenario_df,
+  reference_infilling_not_in_scenario <- dplyr::anti_join(reference_infilling_df, scenario_df,
     by = c(iso3, ind, year)
   )
 
-  tp_not_in_default <- dplyr::anti_join(tp_not_in_scenario, default_not_in_scenario,
+  reference_infilling_not_in_default <- dplyr::anti_join(reference_infilling_not_in_scenario, default_not_in_scenario,
     by = c(iso3, ind, year)
   )
 
   not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
-    dplyr::bind_rows(tp_not_in_default) %>%
+    dplyr::bind_rows(reference_infilling_not_in_default) %>%
     dplyr::mutate(recycled = TRUE)
 
   if (!include_projection) {
@@ -191,7 +191,7 @@ recycle_data_scenario_single <- function(df,
       dplyr::filter(!.data[[type]] %in% c("imputed", "projected"))
 
     not_in_scenario <- dplyr::bind_rows(not_in_scenario_projs, reported_not_in_default) %>%
-      dplyr::bind_rows(tp_not_in_default) %>%
+      dplyr::bind_rows(reference_infilling_not_in_default) %>%
       dplyr::mutate(
         recycled = TRUE,
         !!sym(scenario_col) := scenario
@@ -299,15 +299,15 @@ make_default_scenario <- function(df,
                                   end_year = 2025,
                                   scenario_col = "scenario",
                                   default_scenario = "default",
-                                  scenario_reported_estimated = "none",
-                                  scenario_tp = "tp",
+                                  scenario_reported_estimated = "routine",
+                                  scenario_reference_infilling = "reference_infilling",
                                   include_projection = TRUE,
                                   recycle_campaigns = TRUE,
                                   ind_ids = NULL,
                                   trim_years = FALSE) {
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
-  assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_tp), scenario_col)
+  assert_scenario_in_df(df, c(scenario, scenario_reported_estimated, scenario_reference_infilling), scenario_col)
 
   if (is.null(billion)) {
     billion <- "all"
@@ -340,7 +340,7 @@ make_default_scenario <- function(df,
       scenario_col = scenario_col,
       default_scenario = default_scenario,
       scenario_reported_estimated = scenario_reported_estimated,
-      scenario_tp = scenario_tp,
+      scenario_reference_infilling = scenario_reference_infilling,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids[[.x]],

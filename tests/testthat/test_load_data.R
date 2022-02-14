@@ -111,3 +111,10 @@ testthat::test_that("WHDH: load_billion_data correctly handles na_rm", {
   # testthat::expect_true(nrow(df_na) > 0)
   # testthat::expect_true(nrow(df_no_na) == 0)
 })
+
+# load_misc_data ---------------------------------
+
+testthat::test_that("load_misc_data works as expected", {
+  testthat::expect_equal(105, nrow(load_misc_data("pulse/pulse.csv")))
+  testthat::expect_equal(106, nrow(load_misc_data("pulse/pulse.csv", col_names = FALSE)))
+})
