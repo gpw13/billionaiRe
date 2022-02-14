@@ -27,7 +27,7 @@ calculate_uhc_billion <- function(df,
                                   type_col = "type",
                                   source_col = "source",
                                   source = sprintf("WHO DDI calculation, %s", format(Sys.Date(), "%B %Y")),
-                                  projected_year = 2020,
+                                  projected_year = lubridate::year(lubridate::now()),
                                   ind_ids = billion_ind_codes("uhc")) {
   assert_columns(df, year, iso3, ind, scenario, transform_value)
   assert_ind_ids(ind_ids, "uhc")
