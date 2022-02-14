@@ -152,7 +152,7 @@ testthat::test_that("scenario_covid_delayed_return produces accurate results wit
     dplyr::filter(scenario == "covid_delayed_return", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_delayed_return_2025_one_iso3, c(63.529412,63.529412))
+  testthat::expect_equal(df_delayed_return_2025_one_iso3, c(62.647059, 62.647059))
 
   df_delayed_return_2021_two_iso3 <- df_delayed_return %>%
     dplyr::filter(scenario == "covid_delayed_return", year == 2021) %>%
