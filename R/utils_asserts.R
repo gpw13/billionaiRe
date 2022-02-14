@@ -183,20 +183,24 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 
 # Object type checks -----------------------------------------------------------
 
-#' Assert that an object is (or is not) of a given type
+#' Assert that an object is (or is not) of a given (range of) type(s)
 #'
 #' @param x The input object
-#' @param expected_type (string) The expected type of x
+#' @param expected (character) The expected type(s) of x
 #' @param reverse Invert the test (i.e., the type of x is not)
-assert_type <- function(x, expected_type, reverse = FALSE) {
-  assert_string(expected_type, 1)
+assert_type <- function(x, expected, reverse = FALSE) {
+  stopifnot(typeof(expected) == "character", typeof(reverse) == "logical")
 
-  cond <- if (reverse) typeof(x) == expected_type else typeof(x) != expected_type
-  msg <- if (reverse) "must not be" else "must be"
-  msg <- paste("%s", msg, "of type %s")
+  cond <- typeof(x) == expected
+  cond <- if (reverse) !any(cond) else any(cond)
 
-  if (!is.null(x) & cond) {
-    stop(sprintf(msg, deparse(substitute(x)), expected_type), call. = FALSE)
+  if (!cond) {
+    msg <- if (reverse) "must **not** be any of" else "must be one of"
+    msg <- sprintf("The type of %s %s {%s}.",
+                   deparse(substitute(x)),
+                   msg,
+                   paste0(expected, collapse = ", "))
+    stop(msg, call. = FALSE)
   }
 }
 

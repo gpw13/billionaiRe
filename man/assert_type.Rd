@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils_asserts.R
 \name{assert_type}
 \alias{assert_type}
-\title{Assert that an object is (or is not) of a given type}
+\title{Assert that an object is (or is not) of a given (range of) type(s)}
 \usage{
-assert_type(x, expected_type, reverse = FALSE)
+assert_type(x, expected, reverse = FALSE)
 }
 \arguments{
 \item{x}{The input object}
 
-\item{expected_type}{(string) The expected type of x}
+\item{expected}{(character) The expected type(s) of x}
 
 \item{reverse}{Invert the test (i.e., the type of x is not)}
 }
 \description{
-Assert that an object is (or is not) of a given type
+Assert that an object is (or is not) of a given (range of) type(s)
 }

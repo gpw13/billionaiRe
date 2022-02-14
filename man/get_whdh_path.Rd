@@ -10,7 +10,7 @@ get_whdh_path(
   billion = c("all", "hep", "hpop", "uhc"),
   ind_codes = "all",
   file_names = NULL,
-  sandbox = TRUE
+  experiment = "unofficial"
 )
 }
 \arguments{
@@ -40,7 +40,14 @@ are returned.}
 \item{file_names}{(character vector) The name(s) of the file(s) to download.
 NULL by default. Ignored if either \code{billion = "all"} or \code{ind_codes = "all"}.}
 
-\item{sandbox}{(logical) Whether or not to use the sandbox folders in the data lake.}
+\item{experiment}{(string) Either \code{NULL} or a string ("unofficial" by default).
+\itemize{
+\item If \code{NULL}, the root folder for the data layers is the 3B folder (i.e., where
+the "official" data is stored (e.g., \verb{3B//...}).
+\item If a string, the root folder for the data layers is a sub-folder within the
+Sandbox layer of the 3B data lake (e.g., if \code{experiment = "my_exp"}, then
+paths would be of the form \verb{3B/Sandbox/my_exp/Silver/...})
+}}
 }
 \value{
 A character vector.

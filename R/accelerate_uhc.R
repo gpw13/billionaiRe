@@ -628,7 +628,7 @@ accelerate_dtp3 <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   df_target_values <- load_misc_data(
-    file_name = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
+    file_path = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
   ) %>%
     dplyr::select(!!sym(iso3) := .data[["ISO"]], target = "DTP 3 Target") %>%
@@ -1087,7 +1087,7 @@ accelerate_uhc_tobacco <- function(df,
 
   if (nrow(df_with_data) > 0) {
     trajectory_df <- load_misc_data(
-      file_name = "scenarios/uhc_tobacco/Tobacco_UHC Billion_Trajectory conversion.xlsx",
+      file_path = "scenarios/uhc_tobacco/Tobacco_UHC Billion_Trajectory conversion.xlsx",
       sheet = "Tobacco Data",
       range = cellranger::cell_cols(2:7)
     ) %>%
