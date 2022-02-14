@@ -26,7 +26,7 @@ testthat::test_that("scenario_covid_rapid_return produces accurate results with 
     dplyr::filter(scenario == "covid_rapid_return", year == 2025, iso3 == "testalia") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_2025_one_iso3, 64.411765)
+  testthat::expect_equal(df_dip_recover_2025_one_iso3, 63.529412)
 })
 
 testthat::test_that("scenario_covid_rapid_return produces accurate results with two iso3", {
@@ -44,16 +44,11 @@ testthat::test_that("scenario_covid_rapid_return produces accurate results with 
 
   df_dip_recover <- scenario_covid_rapid_return(df)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> scenarios
   df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
     dplyr::filter(scenario == "covid_rapid_return", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(64.411765, 64.411765))
-<<<<<<< HEAD
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(63.529412, 63.529412))
 
   df_neg <- testdf(values = 80:60) %>%
     dplyr::mutate(value = dplyr::case_when(
@@ -66,9 +61,7 @@ testthat::test_that("scenario_covid_rapid_return produces accurate results with 
 
   df_dip_recover_neg <- scenario_covid_rapid_return(df_neg)
 
-
-=======
->>>>>>> scenarios
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(63.529412, 63.529412))
 })
 
 testthat::test_that("scenario_covid_never_return produces accurate results with one iso3", {
@@ -185,7 +178,7 @@ testthat::test_that("scenario_covid_sustained_disruption produces accurate resul
     dplyr::filter(scenario == "covid_sustained_disruption", year == 2025, iso3 == "testalia") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_sustained_disruption_2025_one_iso3, 64.411765)
+  testthat::expect_equal(df_sustained_disruption_2025_one_iso3, 63.529412)
 
   df_sustained_disruption_one_iso3 <- df_sustained_disruption %>%
     dplyr::filter(scenario == "covid_sustained_disruption", year == 2021, iso3 == "testalia") %>%
@@ -214,7 +207,7 @@ testthat::test_that("scenario_covid_sustained_disruption produces accurate resul
     dplyr::filter(scenario == "covid_sustained_disruption", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_sustained_disruption_2025_one_iso3, c(64.411765,64.411765))
+  testthat::expect_equal(df_sustained_disruption_2025_one_iso3, c(63.529412,63.529412))
 
   df_sustained_disruption_2021_two_iso3 <- df_sustained_disruption %>%
     dplyr::filter(scenario == "covid_sustained_disruption", year == 2021) %>%
