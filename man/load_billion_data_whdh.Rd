@@ -8,7 +8,7 @@ load_billion_data_whdh(
   data_type = c("wrangled_data", "projected_data", "final_data"),
   billion = c("all", "hep", "hpop", "uhc"),
   ind_codes = "all",
-  date_filter = "latest",
+  version = "latest",
   na_rm = TRUE,
   experiment = NULL,
   silent = TRUE
@@ -32,7 +32,7 @@ downloads all indicators for all three billions.}
 If \code{all}, downloads data for all indicators for a given billion. Ignored if
 billion = "all".}
 
-\item{date_filter}{(string) Either "latest", or a single date string. The date
+\item{version}{(string) Either "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 If a date is provided, the returned data frame is a snapshot of the data as
 stored on that date (if no updates were made on the given date, then the most

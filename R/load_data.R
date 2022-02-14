@@ -23,7 +23,7 @@
 #' @param ind_codes (character vector) The name of the indicator (or indicators) to load data for.
 #'   If `all`, downloads data for all indicators for a given billion. Ignored if
 #'   billion = "all".
-#' @param date_filter (string) Either "latest", or a single date string. The date
+#' @param version (string) Either "latest", or a single date string. The date
 #'   string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 #'   If a date is provided, the returned data frame is a snapshot of the data as
 #'   stored on that date (if no updates were made on the given date, then the most
