@@ -23,14 +23,25 @@
 #' @param ind_codes (character vector) The name of the indicator (or indicators) to load data for.
 #'   If `all`, downloads data for all indicators for a given billion. Ignored if
 #'   billion = "all".
-#' @param date_filter (string) Either "latest", or a single date string. The date
-#'   string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
-#'   If a date is provided, the returned data frame is a snapshot of the data as
-#'   stored on that date (if no updates were made on the given date, then the most
-#'   recent update before that date is used).
+#' @param version (string) Either `latest`  or a `yyyy-MM-dd` or `yyyy-mm-ddTHH-MM-SS`
+#' formatted string.
+#' * If `latest`, the latest version of the data will be downloaded.
+#' * If a `yyyy-MM-dd` formatted string, the latest version of the data on or
+#' before the provided date will be downloaded.
+#' * If a `yyyy-mm-ddTHH-MM-SS` formatted string, an exact match for the given
+#' time stamp is sought, if it exists; otherwise, raises an error.
 #' @param na_rm (logical) Specifies whether to filter the data to only rows
 #'   where `value` is not missing. Defaults to `TRUE`.
-#' @param sandbox (logical) Whether or not to use the sandbox folders in the data lake.
+#' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
+#' Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
+#' are located.
+#' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
+#' the "official" data is stored). For example, `3B/Silver/...`.
+#' * If a string, the root folder for the data layers is a sub-folder within the
+#' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
+#' data is download from `3B/Sandbox/my_exp/{data_layer}/...`)
+#' * If an empty string, the root folder for the data layers is the Sandbox itself
+#'   (i.e., if `experiment = ""`, then data is download from `3B/Sandbox/{data_layer}/...`)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a download progress bar. Defaults to `TRUE`.
 #' @param data_source (string) Ether "whdh" or "xmart". Indicates where to download
@@ -45,20 +56,22 @@
 load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                               billion = c("all", "hep", "hpop", "uhc"),
                               ind_codes = "all",
-                              date_filter = "latest",
+                              version = "latest",
                               na_rm = TRUE,
-                              sandbox = FALSE,
+                              experiment = NULL,
                               silent = TRUE,
                               data_source = c("whdh", "xmart"),
                               ...) {
   data_type <- rlang::arg_match(data_type)
   billion <- rlang::arg_match(billion)
   data_source <- rlang::arg_match(data_source)
+  assert_equals(version, "all", reverse = TRUE)
 
   if (data_source == "whdh") {
-    load_billion_data_whdh(data_type, billion, ind_codes, date_filter, na_rm, sandbox, silent, ...)
+    load_billion_data_whdh(data_type, billion, ind_codes, version, na_rm, experiment, silent, ...)
   } else {
-    load_billion_data_xmart(data_type, billion, ind_codes, date_filter, na_rm, ...)
+    message("`experiment` and `silent` arguments ignored when `data_source = \"xmart\"`.")
+    load_billion_data_xmart(data_type, billion, ind_codes, version, na_rm, ...)
   }
 }
 
@@ -71,9 +84,9 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
 load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                    billion = c("all", "hep", "hpop", "uhc"),
                                    ind_codes = "all",
-                                   date_filter = "latest",
+                                   version = "latest",
                                    na_rm = TRUE,
-                                   sandbox = FALSE,
+                                   experiment = NULL,
                                    silent = TRUE) {
 
   # Assertions and checks
@@ -83,14 +96,15 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
 
   # Paths of items to download
-  paths <- get_whdh_path("download", data_type, billion, ind_codes, sandbox = sandbox)
+  paths <- get_whdh_path("download", data_type, billion, ind_codes, experiment = experiment)
   assert_unique_vector(paths)
 
   # Ensure that each path has a corresponding data asset in the data lake
   data_lake <- get_data_lake_name()
-  team <- if (sandbox) "3B/Sandbox" else "3B"
+  root <- if (is.null(experiment)) "3B" else paste("3B", "Sandbox", experiment, sep = "/")
   data_layer <- get_data_layer(data_type)
-  dir_path <- sprintf("%s/%s/%s/", team, data_layer, data_type)
+  dir_path <- sprintf("%s/%s/%s/", root, data_layer, data_type) %>%
+    stringr::str_replace("//+", "/")
 
   valid_data_assets <- whdh::list_blobs_in_directory(data_lake,
     dir_path,
@@ -103,15 +117,27 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   assert_x_in_y(paths, valid_data_assets)
 
   df <- purrr::map_dfr(paths, ~ {
-    temp_file <- tempfile()
+    temp_dir <- tempdir()
+    file_name <- stringr::str_match(.x, "^.+/(\\w+)/?$")[, 2]
+    temp_file <- file.path(temp_dir, paste(file_name, "parquet", sep = "."))
 
-    whdh::download_from_data_lake(
+    whdh::download_data_asset(
       data_lake_name = data_lake,
-      source_path = .x,
-      destination_path = temp_file,
-      latest_version_only = TRUE,
+      data_asset_folder = .x,
+      version = version,
+      destination_dir = temp_dir,
+      strip_timestamp = TRUE,
+      overwrite_destination = TRUE,
       silent = silent
     )
+
+    # whdh::download_from_data_lake(
+    #   data_lake_name = data_lake,
+    #   source_path = .x,
+    #   destination_path = temp_file,
+    #   latest_version_only = TRUE,
+    #   silent = silent
+    # )
 
     arrow::read_parquet(temp_file)
   })
@@ -129,9 +155,9 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
 load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                     billion = c("all", "hep", "hpop", "uhc"),
                                     ind_codes = "all",
-                                    date_filter = "latest",
+                                    version = "latest",
                                     na_rm = TRUE,
-                                    sandbox = FALSE,
+                                    experiment = NULL,
                                     silent = TRUE) {
   # Temporary error
   stop("For loading data from xMart, please use the legacy version of this function: load_billion_data_legacy()")
@@ -295,70 +321,31 @@ load_billion_table <- function(tbl, format, ...) {
 #' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
 #' and `readxl::read_excel()` based on the file extension.
 #'
-#' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
-#' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
-#'
-#' @return data frame
-#'
-#' @export
-#'
-load_misc_data <- function(file_name, ...) {
-  f <- tempfile()
-
-  whdh::download_from_data_lake(
-    data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_name, sep = "/"),
-    destination_path = f,
-    latest_version_only = FALSE,
-    silent = TRUE
-  )
-
-  ext <- stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
-
-  if (ext %in% c("xls", "xlsx")) {
-    output_df <- readxl::read_excel(f, ...)
-  } else if (ext == "parquet") {
-    output_df <- arrow::read_parquet(f, ...)
-  } else if (ext == "csv") {
-    output_df <- readr::read_csv(f, show_col_types = FALSE, ...)
-  }
-
-  output_df
-}
-
-#' Load miscellaneous data
-#'
-#' This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
-#' WHDH data lake.
-#'
-#' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
-#' and `readxl::read_excel()` based on the file extension.
-#'
-#' @param file_name The name of the file. File names must end with an extension (e.g., .csv)
+#' @param file_path The path to the file inside the `3B/Bronze/misc` folder. File
+#' paths must end with an extension (e.g., .csv)
 #' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
 #'
 #' @return a data frame
 #' @export
-load_misc_data <- function(file_name, ...) {
+load_misc_data <- function(file_path, ...) {
   f <- tempfile()
 
   whdh::download_from_data_lake(
     data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_name, sep = "/"),
+    source_path = paste("3B/Bronze/misc", file_path, sep = "/"),
     destination_path = f,
-    latest_version_only = FALSE,
     silent = TRUE
   )
 
-  ext <- stringr::str_match(file_name, "(.+)\\.(.+)")[, 3]
+  ext <- stringr::str_match(file_path, "(.+)\\.(.+)")[, 3]
 
-  if (ext %in% c("xls", "xlsx")) {
-    output_df <- readxl::read_excel(f, ...)
-  } else if (ext == "parquet") {
-    output_df <- arrow::read_parquet(f, ...)
-  } else if (ext == "csv") {
-    output_df <- readr::read_csv(f, show_col_types = FALSE, ...)
-  }
+  output_df <- switch(
+    ext,
+    xls = readxl::read_xls(f, ...),
+    xlsx = readxl::read_xlsx(f, ...),
+    csv = readr::read_csv(f, show_col_types = FALSE, ...),
+    parquet = arrow::read_parquet(f, ...)
+  )
 
   output_df
 }

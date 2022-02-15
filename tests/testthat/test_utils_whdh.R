@@ -4,14 +4,14 @@
 test_that("WHDH download path with no file_names is a directory", {
   expect_equal(
     get_whdh_path("download", "wrangled_data", "hpop", "alcohol"),
-    "3B/Sandbox/Silver/wrangled_data/hpop_alcohol/"
+    "3B/Sandbox/unofficial/Silver/wrangled_data/hpop_alcohol/"
   )
 })
 
 test_that("WHDH download path with file_names is a file", {
   expect_equal(
     get_whdh_path("download", "ingestion_data", "hpop", "alcohol", "AC Data 2020.xlsx"),
-    "3B/Sandbox/Bronze/ingestion_data/hpop_alcohol/AC Data 2020.xlsx"
+    "3B/Sandbox/unofficial/Bronze/ingestion_data/hpop_alcohol/AC Data 2020.xlsx"
   )
 })
 
@@ -36,27 +36,27 @@ test_that("WHDH: File names with no extensions raise error", {
 test_that("final_data download paths are generated correctly", {
   expect_equal(
     suppressMessages(get_whdh_path("download", "final_data", "hpop", "alcohol", "hats.xlsx")),
-    "3B/Sandbox/Gold/final_data/final_data/hats.xlsx"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/hats.xlsx"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("download", "final_data", "hpop", "alcohol")),
-    "3B/Sandbox/Gold/final_data/final_data/"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("download", "final_data", "all", "all")),
-    "3B/Sandbox/Gold/final_data/final_data/"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("download", "final_data")),
-    "3B/Sandbox/Gold/final_data/final_data/"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("download", "final_data", file_names = "cars.csv")),
-    "3B/Sandbox/Gold/final_data/final_data/cars.csv"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/cars.csv"
   )
 })
 
@@ -98,24 +98,24 @@ test_that("Upload paths require file_names", {
 test_that("Correct upload path is returned", {
   expect_equal(
     get_whdh_path("upload", "wrangled_data", "uhc", "uhc_tobacco", "uhc_uhc_tobacco_2021-10-12T18-32-44.parquet"),
-    "3B/Sandbox/Silver/wrangled_data/uhc_uhc_tobacco/uhc_uhc_tobacco_2021-10-12T18-32-44.parquet"
+    "3B/Sandbox/unofficial/Silver/wrangled_data/uhc_uhc_tobacco/uhc_uhc_tobacco_2021-10-12T18-32-44.parquet"
   )
 })
 
 test_that("final_data upload paths are generated correctly", {
   expect_equal(
     suppressMessages(get_whdh_path("upload", "final_data", "hpop", "alcohol", "cars.csv")),
-    "3B/Sandbox/Gold/final_data/final_data/cars.csv"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/cars.csv"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("upload", "final_data", "all", "all", "cars.csv")),
-    "3B/Sandbox/Gold/final_data/final_data/cars.csv"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/cars.csv"
   )
 
   expect_equal(
     suppressMessages(get_whdh_path("upload", "final_data", file_names = "cars.csv")),
-    "3B/Sandbox/Gold/final_data/final_data/cars.csv"
+    "3B/Sandbox/unofficial/Gold/final_data/final_data/cars.csv"
   )
 })
 
@@ -126,14 +126,14 @@ test_that("final_data upload paths raise billion and ind_code arguments ignored 
   )
 })
 
-test_that("get_whdh_path: sandbox argument is respected", {
+test_that("get_whdh_path: experiment argument is respected", {
   expect_equal(
-    get_whdh_path("download", "wrangled_data", "hpop", "alcohol", sandbox = TRUE),
-    "3B/Sandbox/Silver/wrangled_data/hpop_alcohol/"
+    get_whdh_path("download", "wrangled_data", "hpop", "alcohol", experiment = "dnr_exp"),
+    "3B/Sandbox/dnr_exp/Silver/wrangled_data/hpop_alcohol/"
   )
 
   expect_equal(
-    get_whdh_path("download", "wrangled_data", "hpop", "alcohol", sandbox = FALSE),
+    get_whdh_path("download", "wrangled_data", "hpop", "alcohol", experiment = NULL),
     "3B/Silver/wrangled_data/hpop_alcohol/"
   )
 })
@@ -142,19 +142,19 @@ test_that("get_whdh_path: vector arguments are handled correctly", {
   # Vectorised ind_codes
   expect_equal(
     get_whdh_path("download", "wrangled_data", "hpop", c("alcohol", "hpop_sanitation")),
-    c("3B/Sandbox/Silver/wrangled_data/hpop_alcohol/", "3B/Sandbox/Silver/wrangled_data/hpop_hpop_sanitation/")
+    c("3B/Sandbox/unofficial/Silver/wrangled_data/hpop_alcohol/", "3B/Sandbox/unofficial/Silver/wrangled_data/hpop_hpop_sanitation/")
   )
 
   # Vectorised files_names
   expect_equal(
     get_whdh_path("download", "wrangled_data", "hpop", "alcohol", c("cars.csv", "stars.parquet")),
-    c("3B/Sandbox/Silver/wrangled_data/hpop_alcohol/cars.csv", "3B/Sandbox/Silver/wrangled_data/hpop_alcohol/stars.parquet")
+    c("3B/Sandbox/unofficial/Silver/wrangled_data/hpop_alcohol/cars.csv", "3B/Sandbox/unofficial/Silver/wrangled_data/hpop_alcohol/stars.parquet")
   )
 
   # Vectorised ind_codes and file_names with 1-to-1 matching
   expect_equal(
     get_whdh_path("download", "wrangled_data", "hpop", c("alcohol", "pm25"), c("cars.csv", "stars.parquet")),
-    c("3B/Sandbox/Silver/wrangled_data/hpop_alcohol/cars.csv", "3B/Sandbox/Silver/wrangled_data/hpop_pm25/stars.parquet")
+    c("3B/Sandbox/unofficial/Silver/wrangled_data/hpop_alcohol/cars.csv", "3B/Sandbox/unofficial/Silver/wrangled_data/hpop_pm25/stars.parquet")
   )
 
   # Vectorised ind_codes and files_names without 1-to-1 matching returns an error
