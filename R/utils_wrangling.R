@@ -9,18 +9,12 @@
 #' @export
 xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
   data_type <- rlang::arg_match(data_type)
-
-  key_cols <- c("iso3", "year", "ind")
+  key_cols <- c("iso3", "year", "ind", "scenario")
   value_cols <- c("value", "lower", "upper")
   other_cols <- c(
     "use_dash", "use_calc", "source", "type", "type_detail",
-    "other_detail", "upload_detail"
+    "other_detail", "upload_detail", "scenario_detail"
   )
-
-  # TODO: to be added after scenarios are fully integrated into the data pipeline
-  # if (data_type != "wrangled_data") {
-  #   key_cols = c(key_cols, "scenario", "scenario_detail")
-  # }
 
   if (data_type == "final_data") {
     value_cols <- c(
@@ -29,7 +23,6 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
       "population", "level"
     )
   }
-
   return(c(key_cols, value_cols, other_cols))
 }
 
