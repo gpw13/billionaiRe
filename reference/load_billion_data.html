@@ -103,20 +103,26 @@ downloads all indicators for all three billions.</p></dd>
 If <code>all</code>, downloads data for all indicators for a given billion. Ignored if
 billion = "all".</p></dd>
 <dt>version</dt>
-<dd><p>(string) Either "latest", or a single date string. The date
-string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
-If a date is provided, the returned data frame is a snapshot of the data as
-stored on that date (if no updates were made on the given date, then the most
-recent update before that date is used).</p></dd>
+<dd><p>(string) Either <code>latest</code>  or a <code>yyyy-MM-dd</code> or <code>yyyy-mm-ddTHH-MM-SS</code>
+formatted string.</p><ul><li><p>If <code>latest</code>, the latest version of the data will be downloaded.</p></li>
+<li><p>If a <code>yyyy-MM-dd</code> formatted string, the latest version of the data on or
+before the provided date will be downloaded.</p></li>
+<li><p>If a <code>yyyy-mm-ddTHH-MM-SS</code> formatted string, an exact match for the given
+time stamp is sought, if it exists; otherwise, raises an error.</p></li>
+</ul></dd>
 <dt>na_rm</dt>
 <dd><p>(logical) Specifies whether to filter the data to only rows
 where <code>value</code> is not missing. Defaults to <code>TRUE</code>.</p></dd>
 <dt>experiment</dt>
-<dd><p>(string) Either NULL (default) or a string.</p><ul><li><p>If NULL, the path returned is in the "official" data layers in the 3B data lake
-(e.g., 3B/Silver).</p></li>
-<li><p>If a string, the path returned is in a sub-folder within the Sandbox layer of the
-3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
-(e.g., 3B/Sandbox/my_exp/Silver)</p></li>
+<dd><p>(string) Either <code>NULL</code> or a string ("unofficial" by default).
+Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
+are located.</p><ul><li><p>If <code>NULL</code>, the root folder for the data layers is the 3B folder (i.e., where
+the "official" data is stored). For example, <code>3B/Silver/...</code>.</p></li>
+<li><p>If a string, the root folder for the data layers is a sub-folder within the
+Sandbox layer of the 3B data lake (e.g., if <code>experiment = "my_exp"</code>, then
+data is download from <code>3B/Sandbox/my_exp/{data_layer}/...</code>)</p></li>
+<li><p>If an empty string, the root folder for the data layers is the Sandbox itself
+(i.e., if <code>experiment = ""</code>, then data is download from <code>3B/Sandbox/{data_layer}/...</code>)</p></li>
 </ul></dd>
 <dt>silent</dt>
 <dd><p>(logical) Specifies whether to show authentication messages and

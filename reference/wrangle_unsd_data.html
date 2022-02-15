@@ -81,7 +81,7 @@ two.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wrangle_unsd_data</span><span class="op">(</span><span class="va">df</span>, source <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wrangle_unsd_data</span><span class="op">(</span><span class="va">df</span>, source <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="cn">NULL</span>, scenario <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -96,6 +96,9 @@ the source column is generated from the UNSD's <code>Source</code> column.</p></
 <dd><p>Character string of type to be provided to the data frame. If
 <code>NULL</code>, the type column is generated from the UNSD's <code>Nature</code> column.
 "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".</p></dd>
+<dt>scenario</dt>
+<dd><p>(Character) string of scenario to be provided to the data frame.
+If <code>NULL</code>, the scenario is set to <code>NA_character</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
