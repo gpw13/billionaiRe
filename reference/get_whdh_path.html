@@ -12,7 +12,7 @@ downloading/uploading files from the Triple Billions WHDH data lake."><meta prop
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@ downloading/uploading files from the Triple Billions WHDH data lake.</p>
   billion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"hep"</span>, <span class="st">"hpop"</span>, <span class="st">"uhc"</span><span class="op">)</span>,
   ind_codes <span class="op">=</span> <span class="st">"all"</span>,
   file_names <span class="op">=</span> <span class="cn">NULL</span>,
-  sandbox <span class="op">=</span> <span class="cn">TRUE</span>
+  experiment <span class="op">=</span> <span class="st">"unofficial"</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -99,8 +99,13 @@ are returned.</p></dd>
 <dt>file_names</dt>
 <dd><p>(character vector) The name(s) of the file(s) to download.
 NULL by default. Ignored if either <code>billion = "all"</code> or <code>ind_codes = "all"</code>.</p></dd>
-<dt>sandbox</dt>
-<dd><p>(logical) Whether or not to use the sandbox folders in the data lake.</p></dd>
+<dt>experiment</dt>
+<dd><p>(string) Either <code>NULL</code> or a string ("unofficial" by default).</p><ul><li><p>If <code>NULL</code>, the root folder for the data layers is the 3B folder (i.e., where
+the "official" data is stored (e.g., <code>3B//...</code>).</p></li>
+<li><p>If a string, the root folder for the data layers is a sub-folder within the
+Sandbox layer of the 3B data lake (e.g., if <code>experiment = "my_exp"</code>, then
+paths would be of the form <code>3B/Sandbox/my_exp/Silver/...</code>)</p></li>
+</ul></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

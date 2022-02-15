@@ -18,7 +18,7 @@ latest data before a certain time period, or to extract all data from the databa
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,9 +76,9 @@ latest data before a certain time period, or to extract all data from the databa
   data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wrangled_data"</span>, <span class="st">"projected_data"</span>, <span class="st">"final_data"</span><span class="op">)</span>,
   billion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"hep"</span>, <span class="st">"hpop"</span>, <span class="st">"uhc"</span><span class="op">)</span>,
   ind_codes <span class="op">=</span> <span class="st">"all"</span>,
-  date_filter <span class="op">=</span> <span class="st">"latest"</span>,
+  version <span class="op">=</span> <span class="st">"latest"</span>,
   na_rm <span class="op">=</span> <span class="cn">TRUE</span>,
-  sandbox <span class="op">=</span> <span class="cn">FALSE</span>,
+  experiment <span class="op">=</span> <span class="cn">NULL</span>,
   silent <span class="op">=</span> <span class="cn">TRUE</span>,
   data_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"whdh"</span>, <span class="st">"xmart"</span><span class="op">)</span>,
   <span class="va">...</span>
@@ -102,7 +102,7 @@ downloads all indicators for all three billions.</p></dd>
 <dd><p>(character vector) The name of the indicator (or indicators) to load data for.
 If <code>all</code>, downloads data for all indicators for a given billion. Ignored if
 billion = "all".</p></dd>
-<dt>date_filter</dt>
+<dt>version</dt>
 <dd><p>(string) Either "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 If a date is provided, the returned data frame is a snapshot of the data as
@@ -111,8 +111,13 @@ recent update before that date is used).</p></dd>
 <dt>na_rm</dt>
 <dd><p>(logical) Specifies whether to filter the data to only rows
 where <code>value</code> is not missing. Defaults to <code>TRUE</code>.</p></dd>
-<dt>sandbox</dt>
-<dd><p>(logical) Whether or not to use the sandbox folders in the data lake.</p></dd>
+<dt>experiment</dt>
+<dd><p>(string) Either NULL (default) or a string.</p><ul><li><p>If NULL, the path returned is in the "official" data layers in the 3B data lake
+(e.g., 3B/Silver).</p></li>
+<li><p>If a string, the path returned is in a sub-folder within the Sandbox layer of the
+3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
+(e.g., 3B/Sandbox/my_exp/Silver)</p></li>
+</ul></dd>
 <dt>silent</dt>
 <dd><p>(logical) Specifies whether to show authentication messages and
 a download progress bar. Defaults to <code>TRUE</code>.</p></dd>
