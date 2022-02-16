@@ -216,9 +216,9 @@ wrangle_gho_rural_urban_data <- function(df,
       ),
 
       # If a total comment doesn't exist, use the rural/urban comment
-      "other_detail" := dplyr::case_when(
+      "other_detail" := as.character(dplyr::case_when(
         !!!make_conds(prefixes = c("Comments"), suffixes = c("TOTL", "RUR", "URB"))
-      ),
+      )),
 
       # If a type argument is provided, use that; otherwise NA
       "type" := ifelse(
