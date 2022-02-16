@@ -21,7 +21,7 @@ column is generated from the GHO's \code{DataSourceDim} column.}
 on the \code{IndicatorCode} field of the GHO data.}
 
 \item{scenario}{(Character) string of scenario to be provided to the data frame.
-If \code{NULL}, the scenario is set to \code{NA_character}.}
+If \code{NULL}, the scenario is set to \code{NA_character_}.}
 }
 \value{
 A data frame.

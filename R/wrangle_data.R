@@ -17,7 +17,7 @@
 #'     `NULL`, the indicator is determined by applying the `convert_ind_codes` function
 #'     on the `IndicatorCode` field of the GHO data.
 #' @param scenario (Character) string of scenario to be provided to the data frame.
-#'     If `NULL`, the scenario is set to `NA_character`.
+#'     If `NULL`, the scenario is set to `NA_character_`.
 #'
 #' @return A data frame.
 #'
@@ -43,8 +43,8 @@ wrangle_gho_data <- function(df,
         ind
       ),
       "value" := .data[["NumericValue"]],
-      "lower" := .data[["Low"]],
-      "upper" := .data[["High"]],
+      "lower" := as.double(.data[["Low"]]),
+      "upper" := as.double(.data[["High"]]),
       "use_dash" := TRUE,
       "use_calc" := TRUE,
       "source" := ifelse(is.null(source),
@@ -55,9 +55,9 @@ wrangle_gho_data <- function(df,
         NA_character_,
         type
       ),
-      "type_detail" := NA,
-      "other_detail" := .data[["Comments"]],
-      "upload_detail" := NA,
+      "type_detail" := NA_character_,
+      "other_detail" := as.character(.data[["Comments"]]),
+      "upload_detail" := NA_character_,
       "scenario" := ifelse(is.null(scenario),
         NA_character_,
         scenario
@@ -106,7 +106,7 @@ wrangle_gho_data <- function(df,
 #' @param names_from,values_from A pair of character vectors used as the arguments
 #' of the same name in `pivot_wider`.
 #' @param scenario (Character) string of scenario to be provided to the data frame.
-#'     If `NULL`, the scenario is set to `NA_character`.
+#'     If `NULL`, the scenario is set to `NA_character_`.
 #'
 #' @return A data frame
 #'
@@ -184,30 +184,30 @@ wrangle_gho_rural_urban_data <- function(df,
 
       # If a total value doesn't exist, use the rural/urban indicator name
       "ind" := dplyr::case_when(
-        !is.na(.data[["NumericValue_TOTL"]]) ~ glue::glue("{ind}"),
-        !is.na(.data[["NumericValue_RUR"]]) ~ glue::glue("{ind}_rural"),
-        !is.na(.data[["NumericValue_URB"]]) ~ glue::glue("{ind}_urban")
+        !is.na(.data[["NumericValue_TOTL"]]) ~ .env$ind,
+        !is.na(.data[["NumericValue_RUR"]]) ~ sprintf("%s_rural", .env$ind),
+        !is.na(.data[["NumericValue_URB"]]) ~ sprintf("%s_urban", .env$ind)
       ),
 
       # If a total value doesn't exist, use the rural/urban value
-      "value" := dplyr::case_when(
+      "value" := as.double(dplyr::case_when(
         !!!make_conds(prefixes = c("NumericValue"), suffixes = c("TOTL", "RUR", "URB"))
-      ),
+      )),
 
       # If a total low doesn't exist, use the rural/urban low
-      "lower" := dplyr::case_when(
+      "lower" := as.double(dplyr::case_when(
         !!!make_conds(prefixes = c("Low"), suffixes = c("TOTL", "RUR", "URB"))
-      ),
+      )),
 
       # If a total high doesn't exist, use the rural/urban high
-      "upper" := dplyr::case_when(
+      "upper" := as.double(dplyr::case_when(
         !!!make_conds(prefixes = c("High"), suffixes = c("TOTL", "RUR", "URB"))
-      ),
+      )),
 
       # If a total source doesn't exist, use the rural/urban source
-      "DataSourceDim" := dplyr::case_when(
+      "DataSourceDim" := as.character(dplyr::case_when(
         !!!make_conds(prefixes = c("DataSourceDim"), suffixes = c("TOTL", "RUR", "URB"))
-      ),
+      )),
 
       # If a data source is explicitly provided, override the sources from the DataSourceDim column
       # Follows the same logic as `wrangle_gho_data` by giving priority to explicit source over GHO source
@@ -226,8 +226,8 @@ wrangle_gho_rural_urban_data <- function(df,
       ),
       use_dash = TRUE,
       use_calc = TRUE,
-      type_detail = NA,
-      upload_detail = NA,
+      type_detail = NA_character_,
+      upload_detail = NA_character_,
       "scenario" := ifelse(is.null(scenario),
         NA_character_,
         scenario
@@ -278,7 +278,7 @@ wrangle_gho_rural_urban_data <- function(df,
 #'     `NULL`, the type column is generated from the UNSD's `Nature` column.
 #'     "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".
 #' @param scenario (Character) string of scenario to be provided to the data frame.
-#'     If `NULL`, the scenario is set to `NA_character`.
+#'     If `NULL`, the scenario is set to `NA_character_`.
 #'
 #' @return A data frame.
 #'
@@ -296,11 +296,11 @@ wrangle_unsd_data <- function(df,
       "iso3" := whoville::codes_to_iso3(.data[["GeoAreaCode"]], type = "m49"),
       "year" := .data[["TimePeriod"]],
       "ind" := .data[["SeriesCode"]],
-      "value" := .data[["Value"]],
-      "lower" := .data[["LowerBound"]],
-      "upper" := .data[["UpperBound"]],
+      "value" := as.double(.data[["Value"]]),
+      "lower" := as.double(.data[["LowerBound"]]),
+      "upper" := as.double(.data[["UpperBound"]]),
       "source" := ifelse(is.null(source),
-        .data[["Source"]],
+        as.character(.data[["Source"]]),
         source
       ),
       "type" := dplyr::case_when(
@@ -308,7 +308,7 @@ wrangle_unsd_data <- function(df,
         .data[["Nature"]] %in% c("C", "CA") ~ "reported",
         .data[["Nature"]] %in% c("E", "M") ~ "estimated"
       ),
-      "other_detail" := .data[["FootNote"]],
+      "other_detail" := as.character(.data[["FootNote"]]),
       "scenario" := ifelse(is.null(scenario),
         NA_character_,
         scenario

@@ -31,7 +31,7 @@ If only a RUR or URB values is available, the indicator name has \verb{_rural} o
 appended to it in the output data frame.}
 
 \item{scenario}{(Character) string of scenario to be provided to the data frame.
-If \code{NULL}, the scenario is set to \code{NA_character}.}
+If \code{NULL}, the scenario is set to \code{NA_character_}.}
 
 \item{id_cols}{Character vector of the columns that are the same regardless of
 the TOTL/RUR/URB dimension. Used as the argument of the same name in \code{pivot_wider}.}

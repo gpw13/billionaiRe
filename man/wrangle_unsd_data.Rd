@@ -18,7 +18,7 @@ the source column is generated from the UNSD's \code{Source} column.}
 "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".}
 
 \item{scenario}{(Character) string of scenario to be provided to the data frame.
-If \code{NULL}, the scenario is set to \code{NA_character}.}
+If \code{NULL}, the scenario is set to \code{NA_character_}.}
 }
 \value{
 A data frame.
