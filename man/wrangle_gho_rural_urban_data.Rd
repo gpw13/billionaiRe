@@ -9,7 +9,6 @@ wrangle_gho_rural_urban_data(
   source = NULL,
   type = NULL,
   ind = NULL,
-  scenario = NULL,
   id_cols = c("SpatialDim", "TimeDim"),
   names_from = "Dim1",
   values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments")
@@ -29,9 +28,6 @@ If not \code{NULL}, it overrides the source provided by the GHO.}
 This is a required argument and will raise an error if not provided.
 If only a RUR or URB values is available, the indicator name has \verb{_rural} or \verb{_urban}
 appended to it in the output data frame.}
-
-\item{scenario}{(Character) string of scenario to be provided to the data frame.
-If \code{NULL}, the scenario is set to \code{NA_character_}.}
 
 \item{id_cols}{Character vector of the columns that are the same regardless of
 the TOTL/RUR/URB dimension. Used as the argument of the same name in \code{pivot_wider}.}
