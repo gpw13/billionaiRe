@@ -63,6 +63,15 @@ assert_unique_vector <- function(x) {
   }
 }
 
+#' Assert that x is a valid timestamp string
+#'
+#' @param x (string)
+assert_timestamp <- function(x) {
+  if (!stringr::str_detect(x, "^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}$")) {
+    stop(sprintf("%s is not a valid `yyyy-mm-ddTHH-MM-SS` formatted string", x))
+  }
+}
+
 # Data frame checks ------------------------------------------------------
 
 #' Assert that columns exist in a data frame
@@ -191,14 +200,49 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 assert_type <- function(x, expected, reverse = FALSE) {
   stopifnot(typeof(expected) == "character", typeof(reverse) == "logical")
 
-  cond <- typeof(x) == expected
-  cond <- if (reverse) !any(cond) else any(cond)
+  cond <- any(typeof(x) == expected)
+  cond <- if (reverse) !cond else cond
 
   if (!cond) {
-    msg <- if (reverse) "must **not** be any of" else "must be one of"
+    msg <- if (reverse) "must **not** be one of" else "must be one of"
     msg <- sprintf("The type of %s %s {%s}.",
                    deparse(substitute(x)),
                    msg,
+                   paste0(expected, collapse = ", "))
+    stop(msg, call. = FALSE)
+  }
+}
+
+#' Assert that an object is (or is not) of a given (range of) class(es)
+#'
+#' @param x The input object
+#' @param expected (character) The expected class(es) of x
+#' @param reverse Invert the test (i.e., the class of x is not)
+#' @param how One of "any" and "all". When `expected` is a vector, and
+#'   * `how = "any"`, the test is passed if `x` inherits from any of the elements
+#'     of `expected`
+#'   * `how = "all"`, the test is passed only is `x` inherits from all the elements
+#'     of `expected`.
+assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
+  how <- rlang::arg_match(how)
+  assert_type(expected, "character")
+  assert_type(reverse, "logical")
+
+  if (how == "any") {
+    cond <- any(expected %in% class(x))
+  } else {
+    cond <- identical(sort(expected), sort(class(x)))
+  }
+
+  cond <- if (reverse) !cond else cond
+
+  if (!cond) {
+    reverse_toggle <- if (reverse) "must **not**" else "must"
+    how_toggle <- paste(how, "of")
+    msg <- sprintf("`%s` %s inherit from %s {%s}.",
+                   deparse(substitute(x)),
+                   reverse_toggle,
+                   how_toggle,
                    paste0(expected, collapse = ", "))
     stop(msg, call. = FALSE)
   }
@@ -208,14 +252,7 @@ assert_type <- function(x, expected, reverse = FALSE) {
 #'
 #' @param df Supposed data frame
 assert_df <- function(df) {
-  if (!is.data.frame(df)) {
-    stop(sprintf(
-      "`df` must be a data frame, not a %s.",
-      class(df)[1]
-    ),
-    call. = FALSE
-    )
-  }
+  assert_class(df, "data.frame")
 }
 
 #' Assert that `x` is a character vector of length n

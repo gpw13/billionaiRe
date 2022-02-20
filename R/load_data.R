@@ -23,19 +23,25 @@
 #' @param ind_codes (character vector) The name of the indicator (or indicators) to load data for.
 #'   If `all`, downloads data for all indicators for a given billion. Ignored if
 #'   billion = "all".
-#' @param version (string) Either "latest", or a single date string. The date
-#'   string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
-#'   If a date is provided, the returned data frame is a snapshot of the data as
-#'   stored on that date (if no updates were made on the given date, then the most
-#'   recent update before that date is used).
+#' @param version (string) Either `latest`  or a `yyyy-MM-dd` or `yyyy-mm-ddTHH-MM-SS`
+#' formatted string.
+#' * If `latest`, the latest version of the data will be downloaded.
+#' * If a `yyyy-MM-dd` formatted string, the latest version of the data on or
+#' before the provided date will be downloaded.
+#' * If a `yyyy-mm-ddTHH-MM-SS` formatted string, an exact match for the given
+#' time stamp is sought, if it exists; otherwise, raises an error.
 #' @param na_rm (logical) Specifies whether to filter the data to only rows
 #'   where `value` is not missing. Defaults to `TRUE`.
-#' @param experiment (string) Either NULL (default) or a string.
-#' * If NULL, the path returned is in the "official" data layers in the 3B data lake
-#'   (e.g., 3B/Silver).
-#' * If a string, the path returned is in a sub-folder within the Sandbox layer of the
-#'   3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
-#'   (e.g., 3B/Sandbox/my_exp/Silver)
+#' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
+#' Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
+#' are located.
+#' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
+#' the "official" data is stored). For example, `3B/Silver/...`.
+#' * If a string, the root folder for the data layers is a sub-folder within the
+#' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
+#' data is download from `3B/Sandbox/my_exp/{data_layer}/...`)
+#' * If an empty string, the root folder for the data layers is the Sandbox itself
+#'   (i.e., if `experiment = ""`, then data is download from `3B/Sandbox/{data_layer}/...`)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a download progress bar. Defaults to `TRUE`.
 #' @param data_source (string) Ether "whdh" or "xmart". Indicates where to download
@@ -59,6 +65,7 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
   data_type <- rlang::arg_match(data_type)
   billion <- rlang::arg_match(billion)
   data_source <- rlang::arg_match(data_source)
+  assert_equals(version, "all", reverse = TRUE)
 
   if (data_source == "whdh") {
     load_billion_data_whdh(data_type, billion, ind_codes, version, na_rm, experiment, silent, ...)
@@ -87,6 +94,7 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   billion <- rlang::arg_match(billion)
   data_type <- rlang::arg_match(data_type)
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
+  assert_equals(version, "all", reverse = TRUE)
 
   # Paths of items to download
   paths <- get_whdh_path("download", data_type, billion, ind_codes, experiment = experiment)
