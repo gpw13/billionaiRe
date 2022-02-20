@@ -69,20 +69,16 @@ usethis::use_data(basic_test_calculated, overwrite = TRUE, internal = TRUE)
 
 # Creating complete test data set
 
-all_data <- load_billion_data_legacy("all", "raw_data", auth_type = "client")
+all_data <- load_billion_data_legacy("all", "raw_data")
 
-proj_data <- load_billion_data_legacy("all", "proj_data", auth_type = "client")
+proj_data <- load_billion_data_legacy("all", "proj_data")
 
 proj_data_those_isos <- proj_data %>%
   select(iso3, year, ind, value, type) %>%
   filter(
     iso3 %in% c("AFG", "AGO", "BOL", "BGD", "BDI", "UGA"),
     year >= 2000
-  ) %>%
-  mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "routine",
-    TRUE ~ "reference_infilling"
-  ))
+  )
 
 all_data_those_isos <- all_data %>%
   select(iso3, year, ind, scenario, scenario_detail, value, type) %>%
@@ -93,16 +89,17 @@ all_data_those_isos <- all_data %>%
   anti_join(proj_data_those_isos, by = c("iso3", "ind", "year")) %>%
   bind_rows(proj_data_those_isos) %>%
   mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "routine",
-    !is.na(scenario_detail) & scenario_detail == "none" ~ "routine",
-    !is.na(scenario_detail) & scenario_detail == "tp" ~ "reference_infilling",
-    is.na(scenario) | scenario == "un_regional_median" | scenario_detail == "precovid_bau" ~ "pre_covid_bau",
+    type %in% c("reported", "estimated")  & year < 2020 ~ "routine",
+    type %in% c("reported", "estimated")  & year %in% 2020:2021 ~ "covid_shock",
+    type %in% c("projected", "imputed") & year <= 2020 ~ "reference_infilling",
+    type %in% c("projected", "imputed") & year > 2020 ~ "pre_covid_trajectory",
     TRUE ~ scenario
   )) %>%
-  select(-scenario_detail)
+  select(-scenario_detail) %>%
+  distinct()
 
-reported_2020_values <- all_data_those_isos %>%
-  filter(scenario == "routine" & year == 2020)
+reported_covid_shock <- all_data_those_isos %>%
+  filter(scenario %in% c("covid_shock", "pre_covid_trajectory"))
 
 all_billions_transformed <- all_data_those_isos %>%
   anti_join(reported_2020_values, by = c("iso3", "year", "ind")) %>%
