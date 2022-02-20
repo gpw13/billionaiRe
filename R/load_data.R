@@ -94,6 +94,7 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
   billion <- rlang::arg_match(billion)
   data_type <- rlang::arg_match(data_type)
   assert_arg_exists(ind_codes, "The %s argument is required and cannot be NA or NULL")
+  assert_equals(version, "all", reverse = TRUE)
 
   # Paths of items to download
   paths <- get_whdh_path("download", data_type, billion, ind_codes, experiment = experiment)

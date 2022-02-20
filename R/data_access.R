@@ -90,21 +90,21 @@ get_ind_metadata <- function(ind_codes,
   # Assertions and checks
   metadata_col <- rlang::arg_match(metadata_col)
   assert_type(ind_codes, "character")
-  testit::assert("The indicator codes are valid", {
-    valid_inds <- purrr::map(c("hep", "hpop", "uhc"),
-      billion_ind_codes,
-      include_covariates = TRUE,
-      include_calculated = TRUE
-    ) %>%
-      unlist()
-    all(ind_codes %in% valid_inds)
-  })
+
+  valid_inds <- purrr::map(c("hep", "hpop", "uhc"),
+                           billion_ind_codes,
+                           include_covariates = TRUE,
+                           include_calculated = TRUE
+  ) %>%
+    unlist()
+
+  assert_x_in_y(ind_codes, valid_inds)
 
   # Get the indicator metadata
   output <- billionaiRe::indicator_df[[metadata_col]][match(ind_codes, billionaiRe::indicator_df[["ind"]])]
 
   # Ensure the function returns a non-null object
-  testit::assert("The output is not NULL", !is.null(output))
+  assert_type(output, "NULL", reverse = TRUE)
 
   return(output)
 }

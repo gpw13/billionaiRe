@@ -1,3 +1,9 @@
+# billionaiRe 0.6.7
+* Adds `upload_billion_data` function for easy uploads to the 3B data lake in the
+  World Health Data Hub (WHDH).
+* Adds `assert_timestamp` and `assert_class` utilities for checks.
+* Removed `testit` dependencies.
+
 # billionaiRe 0.6.6
 * Updates to `load_billion_data` functions incorporating the `whdh::download_data_asset`
 function and the use of a `version` argument to replace the `date_filter` placeholder.
