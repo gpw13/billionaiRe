@@ -193,6 +193,9 @@
     <loc>/reference/assert_arg_exists.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_class.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_columns.html</loc>
   </url>
   <url>
@@ -254,6 +257,9 @@
   </url>
   <url>
     <loc>/reference/assert_style_param.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_timestamp.html</loc>
   </url>
   <url>
     <loc>/reference/assert_type.html</loc>
@@ -704,6 +710,9 @@
   </url>
   <url>
     <loc>/reference/untransform_uhc_single.html</loc>
+  </url>
+  <url>
+    <loc>/reference/upload_billion_data.html</loc>
   </url>
   <url>
     <loc>/reference/warning_col_missing_values.html</loc>
