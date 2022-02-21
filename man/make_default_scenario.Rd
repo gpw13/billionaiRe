@@ -18,6 +18,7 @@ make_default_scenario(
   scenario_col = "scenario",
   default_scenario = "default",
   scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling",
   include_projection = TRUE,
   recycle_campaigns = TRUE,
@@ -53,6 +54,8 @@ country, year, and indicator.}
 \item{default_scenario}{name of the default scenario.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
+
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
 
 \item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 

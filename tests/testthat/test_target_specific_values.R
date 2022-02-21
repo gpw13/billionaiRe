@@ -1,4 +1,4 @@
-test_data <- load_misc_data("test_data/test_data/test_data_2022-01-20T14-13-10.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-02-20T17-34-45.parquet")
 
 testthat::test_that("scenarios_quantile produces accurate results:", {
   test_data_quantile <- test_data %>%

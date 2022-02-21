@@ -112,8 +112,8 @@ add_scenario_indicator <- function(df,
                                      "accelerate",
                                      "sdg",
                                      "covid_rapid_return",
-                                     "covid_delayed_return",
                                      "covid_sustained_disruption",
+                                     "covid_delayed_return",
                                      "covid_never_return"
                                    ),
                                    indicator,
@@ -138,11 +138,11 @@ add_scenario_indicator <- function(df,
       accelerate_fn, c(list(df = df), params)
     ) %>%
       dplyr::distinct()
-  }else if(scenario_function == "sdg"){
-    if(this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]){
+  } else if (scenario_function == "sdg") {
+    if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
       sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
       params["scenario_name"] <- "sdg"
-    }else{
+    } else {
       sdg_fn <- get(as.character(paste0("sdg_", this_ind)), mode = "function")
     }
 
@@ -150,8 +150,7 @@ add_scenario_indicator <- function(df,
       sdg_fn, c(list(df = df), params)
     ) %>%
       dplyr::distinct()
-
-  }else {
+  } else {
     scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
 
     do.call(

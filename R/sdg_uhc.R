@@ -19,14 +19,12 @@
 #' set to `acceleration`
 #'
 sdg_anc4 <- function(df,
-                            ...) {
-
+                     ...) {
   df %>%
     sdg_hpop_sanitation(
       ind_ids = c("hpop_sanitation" = "anc4"),
       ...
     )
-
 }
 
 #' Accelerate art to SDG target
@@ -43,12 +41,14 @@ sdg_anc4 <- function(df,
 sdg_art <- function(df,
                     scenario = "scenario",
                     ind_ids = billion_ind_codes("uhc"),
-                           ...) {
+                    ...) {
   this_ind <- ind_ids["art"]
 
-  accelerate_art(df = df,
-                          ind_ids = this_ind,
-                          ...) %>%
+  accelerate_art(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -69,19 +69,21 @@ sdg_art <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_beds <- function(df,
-                            ind_ids = billion_ind_codes("uhc"),
-                            scenario = "scenario",
-                            ind = "ind",
-                            year = "year",
-                            value = "value",
-                            iso3 = "iso3",
-                            start_year = 2018,
-                            ...) {
+                     ind_ids = billion_ind_codes("uhc"),
+                     scenario = "scenario",
+                     ind = "ind",
+                     year = "year",
+                     value = "value",
+                     iso3 = "iso3",
+                     start_year = 2018,
+                     ...) {
   this_ind <- ind_ids["beds"]
 
-  accelerate_beds(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_beds(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -99,26 +101,27 @@ sdg_beds <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_bp <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          scenario = "scenario",
-                          ind = "ind",
-                          year = "year",
-                          value = "value",
-                          iso3 = "iso3",
-                          type_col = "type",
-                          start_year = 2018,
-                          end_year = 2025,
-                          ...) {
+                   ind_ids = billion_ind_codes("uhc"),
+                   scenario = "scenario",
+                   ind = "ind",
+                   year = "year",
+                   value = "value",
+                   iso3 = "iso3",
+                   type_col = "type",
+                   start_year = 2018,
+                   end_year = 2025,
+                   ...) {
   this_ind <- ind_ids["bp"]
 
-  accelerate_bp(df = df,
-                  ind_ids = this_ind,
-                  ...) %>%
+  accelerate_bp(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
     ))
-
 }
 
 #' Accelerate doctors to SDG target
@@ -128,15 +131,17 @@ sdg_bp <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_doctors <- function(df,
-                               ind_ids = billion_ind_codes("uhc"),
-                               scenario = "scenario",
-                               ind = "ind",
-                               ...) {
+                        ind_ids = billion_ind_codes("uhc"),
+                        scenario = "scenario",
+                        ind = "ind",
+                        ...) {
   this_ind <- ind_ids["doctors"]
 
-  accelerate_doctors(df = df,
-                ind_ids = this_ind,
-                ...) %>%
+  accelerate_doctors(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -151,15 +156,17 @@ sdg_doctors <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_nurses <- function(df,
-                              ind_ids = billion_ind_codes("uhc"),
-                              scenario = "scenario",
-                              ind = "ind",
-                              ...) {
+                       ind_ids = billion_ind_codes("uhc"),
+                       scenario = "scenario",
+                       ind = "ind",
+                       ...) {
   this_ind <- ind_ids["nurses"]
 
-  accelerate_nurses(df = df,
-                     ind_ids = this_ind,
-                     ...) %>%
+  accelerate_nurses(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -179,19 +186,21 @@ sdg_nurses <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_hwf <- function(df,
-                           ind_ids = billion_ind_codes("uhc"),
-                           scenario = "scenario",
-                           ind = "ind",
-                           iso3 = "iso3",
-                           value = "value",
-                           year = "year",
-                           start_year = 2018,
-                           ...) {
+                    ind_ids = billion_ind_codes("uhc"),
+                    scenario = "scenario",
+                    ind = "ind",
+                    iso3 = "iso3",
+                    value = "value",
+                    year = "year",
+                    start_year = 2018,
+                    ...) {
   this_ind <- ind_ids["hwf"]
 
-  accelerate_hwf(df = df,
-                     ind_ids = this_ind,
-                     ...) %>%
+  accelerate_hwf(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -213,21 +222,22 @@ sdg_hwf <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_dtp3 <- function(df,
-                            ind_ids = billion_ind_codes("uhc"),
-                            scenario = "scenario",
-                            ind = "ind",
-                            iso3 = "iso3",
-                            year = "year",
-                            value = "value",
-                            start_year = 2018,
-                            end_year = 2025,
-                            ...) {
-
+                     ind_ids = billion_ind_codes("uhc"),
+                     scenario = "scenario",
+                     ind = "ind",
+                     iso3 = "iso3",
+                     year = "year",
+                     value = "value",
+                     start_year = 2018,
+                     end_year = 2025,
+                     ...) {
   this_ind <- ind_ids["dtp3"]
 
-  accelerate_dtp3(df = df,
-                     ind_ids = this_ind,
-                     ...) %>%
+  accelerate_dtp3(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -243,15 +253,17 @@ sdg_dtp3 <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_fh <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                   ind_ids = billion_ind_codes("uhc"),
+                   scenario = "scenario",
+                   ind = "ind",
+                   ...) {
   this_ind <- ind_ids["fh"]
 
-  accelerate_fh(df = df,
-                     ind_ids = this_ind,
-                     ...) %>%
+  accelerate_fh(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -271,19 +283,21 @@ sdg_fh <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_fp <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          scenario = "scenario",
-                          ind = "ind",
-                          iso3 = "iso3",
-                          year = "year",
-                          value = "value",
-                          type_col = "type",
-                          ...) {
+                   ind_ids = billion_ind_codes("uhc"),
+                   scenario = "scenario",
+                   ind = "ind",
+                   iso3 = "iso3",
+                   year = "year",
+                   value = "value",
+                   type_col = "type",
+                   ...) {
   this_ind <- ind_ids["fp"]
 
-  accelerate_fp(df = df,
-                ind_ids = this_ind,
-                ...) %>%
+  accelerate_fp(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -297,20 +311,21 @@ sdg_fp <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_fpg <- function(df,
-                           ind_ids = billion_ind_codes("uhc"),
-                           scenario = "scenario",
-                           ind = "ind",
-                           ...) {
+                    ind_ids = billion_ind_codes("uhc"),
+                    scenario = "scenario",
+                    ind = "ind",
+                    ...) {
   this_ind <- ind_ids["fpg"]
 
-  accelerate_fpg(df = df,
-                          ind_ids = this_ind,
-                          ...) %>%
+  accelerate_fpg(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
     ))
-
 }
 
 #' Accelerate itn to SDG target
@@ -321,15 +336,17 @@ sdg_fpg <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_itn <- function(df,
-                           ind_ids = billion_ind_codes("uhc"),
-                           scenario = "scenario",
-                           ind = "ind",
-                           ...) {
+                    ind_ids = billion_ind_codes("uhc"),
+                    scenario = "scenario",
+                    ind = "ind",
+                    ...) {
   this_ind <- ind_ids["itn"]
 
-  accelerate_itn(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_itn(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -345,15 +362,17 @@ sdg_itn <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_pneumo <- function(df,
-                              ind_ids = billion_ind_codes("uhc"),
-                              scenario = "scenario",
-                              ind = "ind",
-                              ...) {
+                       ind_ids = billion_ind_codes("uhc"),
+                       scenario = "scenario",
+                       ind = "ind",
+                       ...) {
   this_ind <- ind_ids["pneumo"]
 
-  accelerate_pneumo(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_pneumo(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -367,15 +386,17 @@ sdg_pneumo <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_tb <- function(df,
-                          ind_ids = billion_ind_codes("uhc"),
-                          scenario = "scenario",
-                          ind = "ind",
-                          ...) {
+                   ind_ids = billion_ind_codes("uhc"),
+                   scenario = "scenario",
+                   ind = "ind",
+                   ...) {
   this_ind <- ind_ids["tb"]
 
-  accelerate_tb(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_tb(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -391,15 +412,17 @@ sdg_tb <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_uhc_sanitation <- function(df,
-                                      ind_ids = billion_ind_codes("uhc"),
-                                      scenario = "scenario",
-                                      ind = "ind",
-                                      ...) {
+                               ind_ids = billion_ind_codes("uhc"),
+                               scenario = "scenario",
+                               ind = "ind",
+                               ...) {
   this_ind <- ind_ids["uhc_sanitation"]
 
-  accelerate_uhc_sanitation(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_uhc_sanitation(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])
@@ -426,15 +449,17 @@ sdg_uhc_sanitation <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 sdg_uhc_tobacco <- function(df,
-                                   ind_ids = billion_ind_codes("uhc"),
-                                   scenario = "scenario",
-                                   ind = "ind",
-                                   ...) {
+                            ind_ids = billion_ind_codes("uhc"),
+                            scenario = "scenario",
+                            ind = "ind",
+                            ...) {
   this_ind <- ind_ids["uhc_tobacco"]
 
-  accelerate_uhc_tobacco(df = df,
-                 ind_ids = this_ind,
-                 ...) %>%
+  accelerate_uhc_tobacco(
+    df = df,
+    ind_ids = this_ind,
+    ...
+  ) %>%
     dplyr::mutate("{scenario}" := dplyr::case_when(
       .data[[scenario]] == "acceleration" ~ "sdg",
       TRUE ~ as.character(.data[[scenario]])

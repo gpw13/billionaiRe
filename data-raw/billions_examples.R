@@ -89,8 +89,8 @@ all_data_those_isos <- all_data %>%
   anti_join(proj_data_those_isos, by = c("iso3", "ind", "year")) %>%
   bind_rows(proj_data_those_isos) %>%
   mutate(scenario = case_when(
-    type %in% c("reported", "estimated")  & year < 2020 ~ "routine",
-    type %in% c("reported", "estimated")  & year %in% 2020:2021 ~ "covid_shock",
+    type %in% c("reported", "estimated") & year < 2020 ~ "routine",
+    type %in% c("reported", "estimated") & year %in% 2020:2021 ~ "covid_shock",
     type %in% c("projected", "imputed") & year <= 2020 ~ "reference_infilling",
     type %in% c("projected", "imputed") & year > 2020 ~ "pre_covid_trajectory",
     TRUE ~ scenario
@@ -102,8 +102,8 @@ reported_covid_shock <- all_data_those_isos %>%
   filter(scenario %in% c("covid_shock", "pre_covid_trajectory"))
 
 all_billions_transformed <- all_data_those_isos %>%
-  anti_join(reported_2020_values, by = c("iso3", "year", "ind")) %>%
-  bind_rows(reported_2020_values) %>%
+  anti_join(reported_covid_shock, by = c("iso3", "year", "ind")) %>%
+  bind_rows(reported_covid_shock) %>%
   mutate(scenario = NA) %>%
   distinct() %>%
   transform_hep_data() %>%
@@ -115,7 +115,7 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5DFITQOWX64YKGC2LMYQE4BUA")
+source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5CMBV5LWT3T7HD3RCKYQSMYQA")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -137,7 +137,7 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
   mutate(scenario = case_when(
-    scenario == "pre_covid_bau" ~ "default",
+    scenario == "pre_covid_trajectory" ~ "default",
     TRUE ~ scenario
   )) %>%
   select(-transform_value) %>%
@@ -174,10 +174,19 @@ test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/t
 
 arrow::write_parquet(test_data, test_data_output_path)
 
-whdh::upload_to_data_lake(data_lake_name = get_data_lake_name(),
-                          container = "dropzone",
-                          source_path = test_data_output_path,
-                          destination_path = test_data_destination_path_notimestamp)
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_output_path,
+  destination_path = test_data_destination_path_notimestamp
+)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_output_path,
+  destination_path = test_data_destination_path
+)
 
 test_data_calculated_file_name <- glue::glue("test_data_calculated_{time_stamp}.parquet")
 
@@ -189,7 +198,16 @@ test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/t
 
 arrow::write_parquet(test_data_calculated, test_data_calculated_output_path)
 
-whdh::upload_to_data_lake(data_lake_name = get_data_lake_name(),
-                    container = "dropzone",
-                    source_path = test_data_calculated_output_path,
-                    destination_path = test_data_calculated_destination_path)
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_calculated_output_path,
+  destination_path = test_data_calculated_destination_path
+)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_calculated_output_path,
+  destination_path = test_data_destination_path_notimestamp
+)

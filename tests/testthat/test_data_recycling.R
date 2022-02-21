@@ -1,6 +1,6 @@
-test_data <- load_misc_data("test_data/test_data/test_data_2022-01-20T14-13-10.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-02-20T17-34-45.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-01-20T14-12-38.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-20T17-34-45.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
   test_data_calculated_hep <- test_data_calculated %>%
@@ -129,4 +129,30 @@ testthat::test_that("make_default_scenario adds a default scenario to data frame
     dplyr::arrange(iso3, year, ind)
 
   testthat::expect_equal(make_default, all_default)
+})
+
+testthat::test_that("recycling functions manages properly covid_shock", {
+  test_df <- tibble::tibble(
+    value = 20:27,
+    year = 2018:2025,
+    iso3 = "AFG",
+    ind = "water",
+    scenario = c(rep("routine", 2), rep("reference_infilling", 6)),
+    type = c(rep("reported", 2), rep("projected", 6))
+  ) %>%
+    dplyr::add_row(
+      value = 18:19,
+      scenario = "covid_shock",
+      iso3 = "AFG",
+      year = 2020:2021,
+      type = rep("reported", 2),
+      ind = "water"
+    )
+
+  recycled_df <- test_df %>%
+    recycle_data("hpop")
+
+  testthat::expect_equal(dplyr::pull(dplyr::filter(recycled_df, scenario == "routine", year == 2020), value), 18)
+  testthat::expect_equal(dplyr::pull(dplyr::filter(recycled_df, scenario == "routine", year == 2019), value), 21)
+  testthat::expect_equal(dplyr::pull(dplyr::filter(recycled_df, scenario == "reference_infilling", year == 2019), value), 21)
 })

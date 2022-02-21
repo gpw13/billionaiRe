@@ -15,6 +15,7 @@ remove_recycled_data <- function(df,
                                  recycled = "recycled",
                                  scenario = "scenario",
                                  scenario_reported_estimated = "routine",
+                                 scenario_covid_shock = "covid_shock",
                                  scenario_reference_infilling = "reference_infilling") {
   calculated_inds <- billionaiRe::indicator_df %>%
     dplyr::filter(.data[["calculated"]] | .data[["ind"]] == "surviving_infants") %>%

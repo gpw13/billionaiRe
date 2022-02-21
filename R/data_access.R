@@ -92,9 +92,9 @@ get_ind_metadata <- function(ind_codes,
   assert_type(ind_codes, "character")
 
   valid_inds <- purrr::map(c("hep", "hpop", "uhc"),
-                           billion_ind_codes,
-                           include_covariates = TRUE,
-                           include_calculated = TRUE
+    billion_ind_codes,
+    include_covariates = TRUE,
+    include_calculated = TRUE
   ) %>%
     unlist()
 
