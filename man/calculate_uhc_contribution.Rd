@@ -9,6 +9,7 @@ calculate_uhc_contribution(
   year = "year",
   iso3 = "iso3",
   ind = "ind",
+  value = "value",
   start_year = 2018,
   end_year = 2019:2025,
   pop_year = 2025,
@@ -17,6 +18,9 @@ calculate_uhc_contribution(
     "contribution"),
   contribution_pct = paste0(contribution, "_percent"),
   scenario = NULL,
+  scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
+  scenario_reference_infilling = "reference_infilling",
   ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)
 )
 }
@@ -29,6 +33,8 @@ country, year, and indicator.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{value}{Column name of column with indicator values.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
@@ -47,6 +53,12 @@ values. Must be the same length as \code{transform_value}.}
 
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
+
+\item{scenario_reported_estimated}{name of the reported/estimated scenario.}
+
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
+
+\item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

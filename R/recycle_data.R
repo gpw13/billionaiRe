@@ -156,6 +156,12 @@ recycle_data_scenario_single <- function(df,
     ind_ids <- billion_ind_codes(billion)
   }
 
+  if (scenario %in% c(scenario_reported_estimated, scenario_covid_shock, scenario_reference_infilling)) {
+    df_no_recycling <- df %>%
+      dplyr::filter(.data[[scenario_col]] == !!scenario)
+    return(df_no_recycling)
+  }
+
   assert_ind_ids(ind_ids, billion)
 
   default_df <- df %>%

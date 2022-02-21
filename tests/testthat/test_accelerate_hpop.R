@@ -497,7 +497,7 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
   testthat::expect_equal(nrow(calculated_test_data), 609)
 
   testthat::expect_error(
-    load_misc_data("test_data/test_data/test_data_2022-02-20T17-34-45.parquet") %>%
+    load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet") %>%
       dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
       make_default_scenario(billion = "uhc") %>%
       add_scenario("accelerate"),

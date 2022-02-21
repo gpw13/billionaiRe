@@ -115,7 +115,6 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5CMBV5LWT3T7HD3RCKYQSMYQA")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -146,22 +145,26 @@ test_data <- all_data_those_isos %>%
   dplyr::distinct()
 
 test_data_calculated_hep <- test_data %>%
+  filter(ind %in% billion_ind_codes("hep", include_calculated = TRUE)) %>%
   transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
   calculate_hep_components(scenario = "scenario") %>%
   calculate_hep_billion(scenario = "scenario")
 
 test_data_calculated_hpop <- test_data %>%
+  filter(ind %in% billion_ind_codes("hpop", include_calculated = TRUE)) %>%
   transform_hpop_data(recycle = TRUE) %>%
   add_hpop_populations() %>%
   calculate_hpop_billion(scenario = "scenario")
 
 test_data_calculated_uhc <- test_data %>%
+  filter(ind %in% billion_ind_codes("uhc", include_calculated = TRUE)) %>%
   transform_uhc_data(recycle = TRUE) %>%
   calculate_uhc_billion(scenario = "scenario") %>%
   calculate_uhc_contribution(scenario = "scenario")
 
 test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
-  bind_rows(test_data_calculated_hpop)
+  bind_rows(test_data_calculated_hpop) %>%
+  distinct()
 
 time_stamp <- whdh::get_formatted_timestamp()
 

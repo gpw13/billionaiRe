@@ -42,9 +42,9 @@ testthat::test_that("basic billion calculations are consistent", {
   testthat::expect_equal(all_basic_calculated, billionaiRe:::basic_test_calculated)
 })
 
-test_data <- load_misc_data("test_data/test_data/test_data_2022-02-20T17-34-45.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-20T17-34-45.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-21T14-36-20.parquet")
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
   test_data_calculated_one_scenario <- test_data_calculated %>%
@@ -74,7 +74,6 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
 
   testthat::expect_equal(test_data_one_scenario_hep, test_data_calculated_one_scenario_hep)
 })
-
 
 testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
   test_data_one_scenario_hpop <- test_data %>%
@@ -125,7 +124,6 @@ testthat::test_that("UHC complexe billion calculations without scenarios are con
     dplyr::select(iso3, ind, year, transform_value) %>%
     dplyr::arrange(iso3, ind, year)
 
-
   testthat::expect_equal(test_data_one_scenario_uhc, test_data_calculated_one_scenario_uhc)
 })
 
@@ -154,7 +152,7 @@ testthat::test_that("HEP complexe billion calculations with scenarios are consis
 })
 
 testthat::test_that("HPOP complexe billion calculations with scenarios are consistent", {
-  test_data_one_scenario_hpop <- test_data %>%
+  test_data_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
     transform_hpop_data() %>%
     add_hpop_populations() %>%
@@ -163,12 +161,12 @@ testthat::test_that("HPOP complexe billion calculations with scenarios are consi
     dplyr::select(iso3, ind, year, scenario, transform_value, population) %>%
     dplyr::arrange(iso3, scenario, ind, year)
 
-  test_data_calculated_one_scenario_hpop <- test_data_calculated %>%
+  test_data_calculated_hpop <- test_data_calculated %>%
     dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
     dplyr::select(iso3, ind, year, scenario, transform_value, population) %>%
     dplyr::arrange(iso3, scenario, ind, year)
 
-  testthat::expect_equal(test_data_one_scenario_hpop, test_data_calculated_one_scenario_hpop)
+  testthat::expect_equal(test_data_hpop, test_data_calculated_hpop)
 })
 
 testthat::test_that("UHC complexe billion calculations with scenarios are consistent", {
