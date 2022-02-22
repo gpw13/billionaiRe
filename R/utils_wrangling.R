@@ -4,6 +4,12 @@
 #' Triple Billions xMart tables.
 #'
 #' @param data_type (string): the type of data
+#' * `wrangled_data` (default): raw data that has been wrangled into a suitable
+#'   form for analysis.
+#' * `projected_data`:  data that has been fully projected to the target year but
+#'   has not yet been transformed or calculated upon.
+#' * `final_data`: the complete set of billions data with transformed values,
+#' contributions, and all calculations available.
 #'
 #' @return character vector
 #' @export
@@ -111,40 +117,46 @@ add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
 #'
 #' @param df data frame the output
 #' @param path the path where the output should be saved
-#' @param compression Compression algorithm to use for parquet format. "snappy" by
+#' @inheritParams xmart_cols
+#' @param na_rm (logical) Specifies whether to remove rows where `value` is missing.
+#'   Defaults to `FALSE`.
+#' @param compression Compression algorithm to use for parquet format. `"gzip"` by
 #'   default
 #'
-#' @return a data frame. This is the modified dataframe that's saved to disk if
-#' the data frame has all the columns expected by xMart. Otherwise, it simply return
-#' the input data frame.
+#' @return A data frame. Note that this is the modified version of in the input
+#    data frame that is saved to disk. As such, any modifications required by
+#'   the function (such as from removing empty rows when `na_rm = TRUE`) are carried
+#'   over to the output.
 #'
 #' @export
-save_wrangled_output <- function(df, path, compression = "snappy") {
+save_wrangled_output <- function(df,
+                                 path,
+                                 data_type = c("wrangled_data", "projected_data", "final_data"),
+                                 na_rm = FALSE,
+                                 compression = "gzip") {
+  data_type <- rlang::arg_match(data_type)
   assert_df(df)
-  assert_string(path, 1)
+  assert_strings(path, compression)
+  assert_type(na_rm, "logical")
+  assert_columns(df, xmart_cols(data_type))
 
   ext <- stringr::str_split(path, "\\.")[[1]][[2]]
+  assert_x_in_y(ext, c("csv", "parquet"))
 
-  if (has_xmart_cols(df)) {
-    output_df <- df %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
-      dplyr::select(xmart_cols()) %>%
-      dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]])
+  output_df <- df %>%
+    # Defensive ungroup in case the input is grouped
+    dplyr::ungroup() %>%
+    filter_billion_na(na_rm) %>%
+    dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
+    dplyr::select(xmart_cols(data_type)) %>%
+    dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]])
 
-    if (ext == "csv") {
-      readr::write_csv(output_df, path, na = "")
-      message("Output saved to disk.")
-    } else if (ext == "parquet") {
-      arrow::write_parquet(output_df, path, compression = compression)
-      message("Output saved to disk.")
-    } else {
-      warning("Unknown extension. The output was not saved to disk.")
-      output_df <- df
-    }
-  } else {
-    warning("The output data frame did not have the correct columns. The output was not saved to disk.")
-    output_df <- df
+  if (ext == "csv") {
+    readr::write_csv(output_df, path, na = "")
+    message("Output saved to disk.\n")
+  } else if (ext == "parquet") {
+    arrow::write_parquet(output_df, path, compression = compression)
+    cat("Output saved to disk.\n")
   }
 
   output_df

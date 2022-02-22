@@ -7,7 +7,15 @@
 xmart_cols(data_type = c("wrangled_data", "projected_data", "final_data"))
 }
 \arguments{
-\item{data_type}{(string): the type of data}
+\item{data_type}{(string): the type of data
+\itemize{
+\item \code{wrangled_data} (default): raw data that has been wrangled into a suitable
+form for analysis.
+\item \code{projected_data}:  data that has been fully projected to the target year but
+has not yet been transformed or calculated upon.
+\item \code{final_data}: the complete set of billions data with transformed values,
+contributions, and all calculations available.
+}}
 }
 \value{
 character vector

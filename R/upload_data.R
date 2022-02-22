@@ -39,11 +39,10 @@
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a progress bar. Defaults to `TRUE`.
 #'
-#' @return The input data frame without any modifications. Note that a copy of the
-#'   input data frame is created for the upload and any modifications required by
-#'   the function all (such as setting `na_rm = TRUE`) are applied to only to this
-#'   copy. This means that the output data frame is identical to the input, even
-#'   if the uploaded data is modified in some way.
+#' @return A data frame. Note that this is the modified version of in the input
+#    data frame that is uploaded to WHDH. As such, any modifications required by
+#'   the function (such as from removing empty rows when `na_rm = TRUE` or from
+#'   the call to [save_wrangled_output()]) are carried over to the output.
 #'
 #' @export
 #'
@@ -63,8 +62,7 @@ upload_billion_data <- function(df,
   output_file <- tempfile(fileext = ".parquet")
 
   output_df <- df %>%
-    filter_billion_na(na_rm) %>%
-    save_wrangled_output(output_file, compression = "gzip")
+    save_wrangled_output(output_file, data_type, na_rm, "gzip")
 
   upload_path <- get_whdh_path(
     operation = "upload",
@@ -82,4 +80,6 @@ upload_billion_data <- function(df,
     destination_path = upload_path,
     silent = TRUE
   )
+
+  return(output_df)
 }

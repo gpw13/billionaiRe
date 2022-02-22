@@ -24,7 +24,8 @@ testthat::test_that("upload_billion_data works as expected", {
 
   whdh_files <- whdh::list_blobs_in_directory(
     get_data_lake_name(),
-    "3B/Sandbox/unit_tests/Silver/wrangled_data/uhc_hwf/"
+    "3B/Sandbox/unit_tests/Silver/wrangled_data/uhc_hwf/",
+    silent = TRUE
   ) %>%
     dplyr::pull(name)
 
@@ -36,7 +37,8 @@ testthat::test_that("upload_billion_data works as expected", {
     ind_code = "hwf",
     version = tstamp, na_rm = TRUE,
     experiment = "unit_tests",
-    data_source = "whdh"
+    data_source = "whdh",
+    silent = TRUE
   )
 
   expect_identical(df, downloaded_df)
