@@ -133,6 +133,18 @@ testthat::test_that("make_default_scenario adds a default scenario to data frame
   testthat::expect_equal(make_default, all_default)
 })
 
+testthat::test_that("make_default_scenario adds a default scenario to data frame, even when `default` is not present in the dateframe:", {
+  make_default <- test_data %>%
+    dplyr::mutate(scenario = dplyr::case_when(
+      scenario == "default" ~ "reference_infilling",
+      TRUE ~ scenario
+    )) %>%
+    make_default_scenario(billion = "all") %>%
+    dplyr::filter(scenario == "default")
+
+  testthat::expect_true(nrow(make_default) >0)
+})
+
 test_df <- tibble::tibble(
   value = 20:27,
   year = 2018:2025,
