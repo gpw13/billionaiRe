@@ -205,10 +205,12 @@ assert_type <- function(x, expected, reverse = FALSE) {
 
   if (!cond) {
     msg <- if (reverse) "must **not** be one of" else "must be one of"
-    msg <- sprintf("The type of %s %s {%s}.",
-                   deparse(substitute(x)),
-                   msg,
-                   paste0(expected, collapse = ", "))
+    msg <- sprintf(
+      "The type of %s %s {%s}.",
+      deparse(substitute(x)),
+      msg,
+      paste0(expected, collapse = ", ")
+    )
     stop(msg, call. = FALSE)
   }
 }
@@ -239,11 +241,13 @@ assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
   if (!cond) {
     reverse_toggle <- if (reverse) "must **not**" else "must"
     how_toggle <- paste(how, "of")
-    msg <- sprintf("`%s` %s inherit from %s {%s}.",
-                   deparse(substitute(x)),
-                   reverse_toggle,
-                   how_toggle,
-                   paste0(expected, collapse = ", "))
+    msg <- sprintf(
+      "`%s` %s inherit from %s {%s}.",
+      deparse(substitute(x)),
+      reverse_toggle,
+      how_toggle,
+      paste0(expected, collapse = ", ")
+    )
     stop(msg, call. = FALSE)
   }
 }

@@ -69,20 +69,16 @@ usethis::use_data(basic_test_calculated, overwrite = TRUE, internal = TRUE)
 
 # Creating complete test data set
 
-all_data <- load_billion_data_legacy("all", "raw_data", auth_type = "client")
+all_data <- load_billion_data_legacy("all", "raw_data")
 
-proj_data <- load_billion_data_legacy("all", "proj_data", auth_type = "client")
+proj_data <- load_billion_data_legacy("all", "proj_data")
 
 proj_data_those_isos <- proj_data %>%
   select(iso3, year, ind, value, type) %>%
   filter(
     iso3 %in% c("AFG", "AGO", "BOL", "BGD", "BDI", "UGA"),
     year >= 2000
-  ) %>%
-  mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "none",
-    TRUE ~ "tp"
-  ))
+  )
 
 all_data_those_isos <- all_data %>%
   select(iso3, year, ind, scenario, scenario_detail, value, type) %>%
@@ -93,19 +89,21 @@ all_data_those_isos <- all_data %>%
   anti_join(proj_data_those_isos, by = c("iso3", "ind", "year")) %>%
   bind_rows(proj_data_those_isos) %>%
   mutate(scenario = case_when(
-    type %in% c("estimated", "reported") ~ "none",
-    !is.na(scenario_detail) & scenario_detail != "precovid_bau" ~ scenario_detail,
-    is.na(scenario) | scenario == "un_regional_median" | scenario_detail == "precovid_bau" ~ "pre_covid_bau",
+    type %in% c("reported", "estimated") & year < 2020 ~ "routine",
+    type %in% c("reported", "estimated") & year %in% 2020:2021 ~ "covid_shock",
+    type %in% c("projected", "imputed") & year <= 2020 ~ "reference_infilling",
+    type %in% c("projected", "imputed") & year > 2020 ~ "pre_covid_trajectory",
     TRUE ~ scenario
   )) %>%
-  select(-scenario_detail)
+  select(-scenario_detail) %>%
+  distinct()
 
-reported_2020_values <- all_data_those_isos %>%
-  filter(scenario == "none" & year == 2020)
+reported_covid_shock <- all_data_those_isos %>%
+  filter(scenario %in% c("covid_shock", "pre_covid_trajectory"))
 
 all_billions_transformed <- all_data_those_isos %>%
-  anti_join(reported_2020_values, by = c("iso3", "year", "ind")) %>%
-  bind_rows(reported_2020_values) %>%
+  anti_join(reported_covid_shock, by = c("iso3", "year", "ind")) %>%
+  bind_rows(reported_covid_shock) %>%
   mutate(scenario = NA) %>%
   distinct() %>%
   transform_hep_data() %>%
@@ -117,7 +115,6 @@ all_billions_transformed_types <- all_billions_transformed %>%
 
 # needs to import covid_scenario functions from:
 # https://github.com/alicerobson/scenarios/blob/covid_proj/covid_scenario_functions.R
-source("https://raw.githubusercontent.com/alicerobson/scenarios/covid_proj/covid_scenario_functions.R?token=GHSAT0AAAAAABPOGD5D7VQI4H4T7LIJHIZWYPJLVBA")
 
 scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_same_aroc_only_2020values(all_billions_transformed, value = "transform_value") %>%
   select(-type) %>%
@@ -139,7 +136,7 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
   mutate(scenario = case_when(
-    scenario == "pre_covid_bau" ~ "default",
+    scenario == "pre_covid_trajectory" ~ "default",
     TRUE ~ scenario
   )) %>%
   select(-transform_value) %>%
@@ -147,24 +144,73 @@ test_data <- all_data_those_isos %>%
   filter(ind != "surviving_infants") %>%
   dplyr::distinct()
 
-arrow::write_parquet(test_data, glue::glue("data-raw/test_data_{whdh::get_formatted_timestamp()}.parquet"))
-
 test_data_calculated_hep <- test_data %>%
+  filter(ind %in% billion_ind_codes("hep", include_calculated = TRUE)) %>%
   transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
   calculate_hep_components(scenario = "scenario") %>%
   calculate_hep_billion(scenario = "scenario")
 
 test_data_calculated_hpop <- test_data %>%
+  filter(ind %in% billion_ind_codes("hpop", include_calculated = TRUE)) %>%
   transform_hpop_data(recycle = TRUE) %>%
   add_hpop_populations() %>%
   calculate_hpop_billion(scenario = "scenario")
 
 test_data_calculated_uhc <- test_data %>%
+  filter(ind %in% billion_ind_codes("uhc", include_calculated = TRUE)) %>%
   transform_uhc_data(recycle = TRUE) %>%
   calculate_uhc_billion(scenario = "scenario") %>%
   calculate_uhc_contribution(scenario = "scenario")
 
 test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
-  bind_rows(test_data_calculated_hpop)
+  bind_rows(test_data_calculated_hpop) %>%
+  distinct()
 
-arrow::write_parquet(test_data_calculated, glue::glue("data-raw/test_data_calculated_{whdh::get_formatted_timestamp()}.parquet"))
+time_stamp <- whdh::get_formatted_timestamp()
+
+test_data_file_name <- glue::glue("test_data_{time_stamp}.parquet")
+
+test_data_output_path <- glue::glue("data-raw/{test_data_file_name}")
+
+test_data_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data/{test_data_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data/test_data.parquet")
+
+arrow::write_parquet(test_data, test_data_output_path)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_output_path,
+  destination_path = test_data_destination_path_notimestamp
+)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_output_path,
+  destination_path = test_data_destination_path
+)
+
+test_data_calculated_file_name <- glue::glue("test_data_calculated_{time_stamp}.parquet")
+
+test_data_calculated_output_path <- glue::glue("data-raw/{test_data_calculated_file_name}")
+
+test_data_calculated_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/{test_data_calculated_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/test_data_calculated.parquet")
+
+
+arrow::write_parquet(test_data_calculated, test_data_calculated_output_path)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_calculated_output_path,
+  destination_path = test_data_calculated_destination_path
+)
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  container = "dropzone",
+  source_path = test_data_calculated_output_path,
+  destination_path = test_data_destination_path_notimestamp
+)

@@ -1,3 +1,7 @@
+# billionaiRe 0.6.8
+* Adds support of `covid_shock`
+* `make_default_scenario()` now doesn't require to have `default_scenario` in `scenario` column.
+
 # billionaiRe 0.6.7
 * Adds `upload_billion_data` function for easy uploads to the 3B data lake in the
   World Health Data Hub (WHDH).
@@ -16,6 +20,11 @@ function and the use of a `version` argument to replace the `date_filter` placeh
 * `load_billion_data` now has an `experiment` argument, which replaces `sandbox`.
 
 # billionaiRe 0.6.5
+* Replace names of scenarios with more informative names:
+  - `none` becomes `routine`
+  - `tp` becomes `reference_infilling`
+* add scenario and scenario_details to the wrangled columns in wrangling functions
+and xmart_cols as they will be expected to be present from now on.
 * Adding COVID-19 scenarios.
 
 # billionaiRe 0.6.4

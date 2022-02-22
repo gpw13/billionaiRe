@@ -17,8 +17,9 @@ make_default_scenario(
   end_year = 2025,
   scenario_col = "scenario",
   default_scenario = "default",
-  scenario_reported_estimated = "none",
-  scenario_tp = "tp",
+  scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
+  scenario_reference_infilling = "reference_infilling",
   include_projection = TRUE,
   recycle_campaigns = TRUE,
   ind_ids = NULL,
@@ -54,7 +55,9 @@ country, year, and indicator.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
 
-\item{scenario_tp}{name of the WHO technical programs projections/imputations scenario.}
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
+
+\item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 
 \item{include_projection}{Boolean to include or not projections in recycling}
 

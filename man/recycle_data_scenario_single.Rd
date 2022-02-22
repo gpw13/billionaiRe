@@ -17,8 +17,9 @@ recycle_data_scenario_single(
   end_year = 2025,
   scenario_col = "scenario",
   default_scenario = "default",
-  scenario_reported_estimated = "none",
-  scenario_tp = "tp",
+  scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
+  scenario_reference_infilling = "reference_infilling",
   include_projection = TRUE,
   recycle_campaigns = TRUE,
   ind_ids = NULL,
@@ -53,7 +54,9 @@ country, year, and indicator.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
 
-\item{scenario_tp}{name of the WHO technical programs projections/imputations scenario.}
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
+
+\item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 
 \item{include_projection}{Boolean to include or not projections in recycling}
 
@@ -72,17 +75,19 @@ Data frame in long format.
 }
 \description{
 \code{recycle_data_scenario_single } reuses values present in the specified
-scenarios in \code{default_scenario}, \code{scenario_reported_estimated}, and
-\code{scenario_tp} for the specified scenarios.
+scenarios in \code{default_scenario}, \code{scenario_reported_estimated},
+\code{scenario_covid_shock} and \code{scenario_reference_infilling} for the specified
+scenarios.
 }
 \details{
 To do so, it looks at:
 \enumerate{
 \item values in \code{default_scenario} but not in the scenario specified
-\item values in \code{scenario_reported_estimated} but not in the scenario specified
-or \code{scenario_tp}
-\item values in \code{scenario_tp} but not in the scenario specified,
-\code{scenario_reported_estimated} or \code{scenario_tp}
+\item values in \code{scenario_reported_estimated} or \code{scenario_covid_shock} but not
+in the scenario specified or \code{default_scenario}.
+\item values in \code{scenario_reference_infilling} but not in the scenario specified,
+\code{scenario_reported_estimated}, \code{scenario_covid_shock}, or
+\code{scenario_reference_infilling}
 }
 
 For more information see:

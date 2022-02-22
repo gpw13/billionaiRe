@@ -16,6 +16,8 @@
 #' @param ind Character string of the indicator to be provided to the data frame. If
 #'     `NULL`, the indicator is determined by applying the `convert_ind_codes` function
 #'     on the `IndicatorCode` field of the GHO data.
+#' @param scenario (Character) string of scenario to be provided to the data frame.
+#'     If `NULL`, the scenario is set to `NA_character`.
 #'
 #' @return A data frame.
 #'
@@ -23,7 +25,8 @@
 wrangle_gho_data <- function(df,
                              source = NULL,
                              type = NULL,
-                             ind = NULL) {
+                             ind = NULL,
+                             scenario = NULL) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)
@@ -97,6 +100,8 @@ wrangle_gho_data <- function(df,
 #' the TOTL/RUR/URB dimension. Used as the argument of the same name in `pivot_wider`.
 #' @param names_from,values_from A pair of character vectors used as the arguments
 #' of the same name in `pivot_wider`.
+#' @param scenario (Character) string of scenario to be provided to the data frame.
+#'     If `NULL`, the scenario is set to `NA_character`.
 #'
 #' @return A data frame
 #'
@@ -111,6 +116,7 @@ wrangle_gho_rural_urban_data <- function(df,
                                          source = NULL,
                                          type = NULL,
                                          ind = NULL,
+                                         scenario = NULL,
                                          id_cols = c("SpatialDim", "TimeDim"),
                                          names_from = "Dim1",
                                          values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments")) {
@@ -261,13 +267,16 @@ wrangle_gho_rural_urban_data <- function(df,
 #' @param type Character string of type to be provided to the data frame. If
 #'     `NULL`, the type column is generated from the UNSD's `Nature` column.
 #'     "C" and "CA" are turned to "reported", while "E" and "M" are "estimated".
+#' @param scenario (Character) string of scenario to be provided to the data frame.
+#'     If `NULL`, the scenario is set to `NA_character`.
 #'
 #' @return A data frame.
 #'
 #' @export
 wrangle_unsd_data <- function(df,
                               source = NULL,
-                              type = NULL) {
+                              type = NULL,
+                              scenario = NULL) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)

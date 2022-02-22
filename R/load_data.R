@@ -340,8 +340,7 @@ load_misc_data <- function(file_path, ...) {
 
   ext <- stringr::str_match(file_path, "(.+)\\.(.+)")[, 3]
 
-  output_df <- switch(
-    ext,
+  output_df <- switch(ext,
     xls = readxl::read_xls(f, ...),
     xlsx = readxl::read_xlsx(f, ...),
     csv = readr::read_csv(f, show_col_types = FALSE, ...),

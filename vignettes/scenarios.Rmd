@@ -32,8 +32,8 @@ Scenarios must:
 
 There are three special case scenario:
 
--   `none`: stores the `reported` and `estimated` data
--   `tp`: stores WHO technical programs projected data (either `projected` or `imputed`).
+-   `routine`: stores the `reported` and `estimated` data
+-   `reference_infilling`: stores WHO technical programs projected data (either `projected` or `imputed`).
 -   `default`: stores the main scenario presented on the dashboard. It can include projections and imputations. It is also the scenario to be used for data recycling (see [Data recycling])
 
 ## Data recycling
@@ -42,14 +42,14 @@ billionaiRe `transform_` and `calculate_` functions (as well as rapporteur expor
 
 For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: minimal storage before computation.
 
-Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call `default` by default, but as this is a parameter (`default_scenario`) of `recycle_data()`, it can be modified as required. `default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`none` by default) and `scenario_tp` for values imputed/projected by technical programs (`tp` by default).
+Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call `default` by default, but as this is a parameter (`default_scenario`) of `recycle_data()`, it can be modified as required. `default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`routine` by default) and `scenario_reference_infilling` for values imputed/projected by technical programs (`reference_infilling` by default).
 
 Data recycling works by adding to all scenarios present in the `scenario` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated` and `scenario_reported_estimated` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
 
 ```{r, include = TRUE, eval = TRUE}
 library(billionaiRe)
 
-df <- load_misc_data("test_data/test_data/test_data_2022-01-20T14-13-10.parquet")
+df <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
 
 scenario_df <- df %>%
   dplyr::filter(scenario == "covid_dip_lag")
@@ -59,23 +59,23 @@ default_not_in_scenario <- df %>%
   dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
 reported_not_in_scenario <- df %>%
-  dplyr::filter(scenario == "none") %>%
+  dplyr::filter(scenario == "routine") %>%
   dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
 reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
   by = c("iso3", "ind", "year")
 )
 
-tp_not_in_scenario <- df %>%
-  dplyr::filter(scenario == "tp") %>%
+reference_infilling_not_in_scenario <- df %>%
+  dplyr::filter(scenario == "reference_infilling") %>%
   dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
 
-tp_not_in_default <- dplyr::anti_join(tp_not_in_scenario, default_not_in_scenario,
+reference_infilling_not_in_default <- dplyr::anti_join(reference_infilling_not_in_scenario, default_not_in_scenario,
   by = c("iso3", "ind", "year")
 )
 
 not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
-  dplyr::bind_rows(tp_not_in_default) %>%
+  dplyr::bind_rows(reference_infilling_not_in_default) %>%
   dplyr::mutate(recycled = TRUE)
 ```
 
@@ -88,8 +88,8 @@ Data recycling is implemented in billionaiRe through the `recycle_data()` functi
 `recycle_data` uses similar parameters than other exported billionaiRe functions. However it introduces specific parameters:
 
 -   `default_scenario`: sets the default parameter (see above). `default` by default
--   `scenario_reported_estimated`: sets the reported/estimated scenario (see above). `none` by default
--   `scenario_tp`: sets the projected/imputed scenarios. `tp` by default.
+-   `scenario_reported_estimated`: sets the reported/estimated scenario (see above). `routine` by default
+-   `scenario_reference_infilling`: sets the projected/imputed scenarios. `reference_infilling` by default.
 -   `include_projection`: Boolean to set if projections should be included in the recycling. `TRUE` by default.
 -   `recycle_campaigns`: Boolean to set if campaign data should be included in the recycling. `TRUE` by default.
 
@@ -102,10 +102,10 @@ detect_respond_afg_2018 <- data.frame(
   iso3 = "AFG",
   ind = "detect_respond",
   value = 46.66667,
-  scenario = "none",
+  scenario = "routine",
   type = "estimated")
 
-df <- load_misc_data("test_data/test_data/test_data_2022-01-20T14-13-10.parquet") %>% 
+df <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet") %>% 
   dplyr::bind_rows(detect_respond_afg_2018)
 
 test_data_hep <- df %>%
@@ -131,7 +131,7 @@ In order to facilitate the cleaning of data, a `recycled` column is added by the
 
 To avoid adding ellipses to all billionaiRe functions which could have opened a number of unforeseeable issues, not all formally recycled data can be identified and thus removed with `remove_recycled_data()`, especially for the HEP billion. This includes mostly carried over campaign data.
 
-A `make_default_scenario()` function is provided to combine the `default_scenario`, `scenario_reported_estimated`, and `scenario_tp` efficiently.
+A `make_default_scenario()` function is provided to combine the `default_scenario`, `scenario_reported_estimated`, and `scenario_reference_infilling` efficiently.
 
 ## Scenarios integration into data pipeline
 
@@ -162,19 +162,19 @@ test_hep <- df %>%
     scenario_function = "halt_rise", # picks from a pre-determined list of scenarios
     scenario = "scenario",
     default_scenario = "covid_dip_lag"
-  ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant).
+  ) %>% # indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant).
   add_scenario(
     scenario_function = "percent_baseline", # picks from a pre-determined list of scenarios
     percent_change = 10,
     scenario = "scenario",
     default_scenario = "covid_dip_lag"
-  ) %>% # indicates the scenario used as the default (in addition to `none` and `tp`, where relevant)
+  ) %>% # indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant)
   recycle_data(
     billion = "hep", # One function for each billions, so need to specify which one this is applied to.
     scenario = "scenario",
     default_scenario = "covid_dip_lag",
-    scenario_reported_estimated = "none",
-    scenario_tp = "tp",
+    scenario_reported_estimated = "routine",
+    scenario_reference_infilling = "reference_infilling",
     include_projection = TRUE,
     recycle_campaigns = TRUE
   ) %>% # Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.
@@ -266,7 +266,9 @@ Acceleration scenarios are a special case scenario that wraps different base sce
 
     -   Sub-event scenarios should have a descriptive word rather than numbering or other undefined markers. **DO**: covid_never_return. **DON'T**: COVID_1
 
--   `none` is reserved for reported/estimated data
+-   `routine` is reserved for reported/estimated data
+
+-   `reference_infilling` is reserved for imputed/projected data
 
 -   `default` is reserved for the main data present on the dashboard
 

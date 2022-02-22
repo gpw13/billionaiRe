@@ -31,7 +31,6 @@ testthat::test_that("scenario_dip_recover produces accurate results with one iso
 })
 
 testthat::test_that("scenario_dip_recover produces accurate results with two iso3", {
-
   df <- testdf() %>%
     dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
     dplyr::group_by(iso3) %>%
@@ -53,7 +52,6 @@ testthat::test_that("scenario_dip_recover produces accurate results with two iso
 })
 
 testthat::test_that("scenario_dip_recover produces accurate results without reported values:", {
-
   df_projected <- testdf() %>%
     dplyr::mutate(value = dplyr::case_when(
       year == 2020 ~ 60L,
@@ -72,8 +70,7 @@ testthat::test_that("scenario_dip_recover produces accurate results without repo
   testthat::expect_equal(df_dip_recover_projected_2025, 75)
 })
 
-testthat::test_that("scenario_dip_recover produces accurate results when the gap between covid_year and is greater than one recovery_year:",{
-
+testthat::test_that("scenario_dip_recover produces accurate results when the gap between covid_year and is greater than one recovery_year:", {
   df_nas <- testdf() %>%
     dplyr::mutate(value = dplyr::case_when(
       year == 2020 ~ 60L,
@@ -97,11 +94,9 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recover_just_scenario, c(68, 69, rep(60.0, 6)))
-
 })
 
 testthat::test_that("scenario_dip_recover produces accurate results with progressive_recovery == TRUE:", {
-
   df_reported <- testdf() %>%
     dplyr::mutate(value = dplyr::case_when(
       year == 2020 ~ 60L,
@@ -118,5 +113,3 @@ testthat::test_that("scenario_dip_recover produces accurate results with progres
 
   testthat::expect_equal(df_dip_recover_progressive_recovery_2025, 64.411765)
 })
-
-

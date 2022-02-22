@@ -28,7 +28,6 @@ testthat::test_that(paste0("sdg_anc4 returns accurate values:"), {
     get_2025_value(60:80, ind, "reported"),
     get_fixed_target(95, 68, 2018, 2030)
   )
-
 })
 
 testthat::test_that(paste0("sdg_art returns accurate values:"), {
@@ -255,7 +254,7 @@ testthat::test_that(paste0("sdg_uhc_tobacco returns accurate values:"), {
 })
 
 testthat::test_that("sdg can be run on all UHC indicator:", {
-  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-01-20T14-13-10.parquet") %>%
+  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-02-21T13-44-35.parquet") %>%
     make_default_scenario(billion = "uhc") %>%
     dplyr::filter(
       ind %in% billion_ind_codes("uhc"),
@@ -264,4 +263,3 @@ testthat::test_that("sdg can be run on all UHC indicator:", {
 
   testthat::expect_error(add_scenario(uhc_test_df, "sdg"), NA)
 })
-
