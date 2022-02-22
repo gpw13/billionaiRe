@@ -25,7 +25,6 @@ function and the use of a `version` argument to replace the `date_filter` placeh
   - `tp` becomes `reference_infilling`
 * add scenario and scenario_details to the wrangled columns in wrangling functions
 and xmart_cols as they will be expected to be present from now on.
->>>>>>> scenarios
 * Adding COVID-19 scenarios.
 
 # billionaiRe 0.6.4
