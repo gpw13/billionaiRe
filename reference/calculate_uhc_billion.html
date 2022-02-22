@@ -83,7 +83,7 @@ insecticide treated nets, which need not be present.</p>
   type_col <span class="op">=</span> <span class="st">"type"</span>,
   source_col <span class="op">=</span> <span class="st">"source"</span>,
   source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI calculation, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>,
-  projected_year <span class="op">=</span> <span class="fl">2020</span>,
+  projected_year <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/now.html" class="external-link">now</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"uhc"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
