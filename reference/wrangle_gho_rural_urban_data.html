@@ -18,7 +18,7 @@ the data frame and then selecting only the total, rural, and urban values for a 
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,7 @@ the data frame and then selecting only the total, rural, and urban values for a 
   source <span class="op">=</span> <span class="cn">NULL</span>,
   type <span class="op">=</span> <span class="cn">NULL</span>,
   ind <span class="op">=</span> <span class="cn">NULL</span>,
+  scenario <span class="op">=</span> <span class="cn">NULL</span>,
   id_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SpatialDim"</span>, <span class="st">"TimeDim"</span><span class="op">)</span>,
   names_from <span class="op">=</span> <span class="st">"Dim1"</span>,
   values_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NumericValue"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"DataSourceDim"</span>, <span class="st">"Comments"</span><span class="op">)</span>
@@ -99,6 +100,9 @@ If not <code>NULL</code>, it overrides the source provided by the GHO.</p></dd>
 This is a required argument and will raise an error if not provided.
 If only a RUR or URB values is available, the indicator name has <code>_rural</code> or <code>_urban</code>
 appended to it in the output data frame.</p></dd>
+<dt>scenario</dt>
+<dd><p>(Character) string of scenario to be provided to the data frame.
+If <code>NULL</code>, the scenario is set to <code>NA_character</code>.</p></dd>
 <dt>id_cols</dt>
 <dd><p>Character vector of the columns that are the same regardless of
 the TOTL/RUR/URB dimension. Used as the argument of the same name in <code>pivot_wider</code>.</p></dd>

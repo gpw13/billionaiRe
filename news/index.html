@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,13 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.8" id="billionaire-068">billionaiRe 0.6.8<a class="anchor" aria-label="anchor" href="#billionaire-068"></a></h2>
+<ul><li>Adds support of <code>covid_shock</code>
+</li>
+<li>
+<code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> now doesn’t require to have <code>default_scenario</code> in <code>scenario</code> column.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.7" id="billionaire-067">billionaiRe 0.6.7<a class="anchor" aria-label="anchor" href="#billionaire-067"></a></h2>
 <ul><li>Adds <code>upload_billion_data</code> function for easy uploads to the 3B data lake in the World Health Data Hub (WHDH).</li>
 <li>Adds <code>assert_timestamp</code> and <code>assert_class</code> utilities for checks.</li>
@@ -75,7 +82,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.5" id="billionaire-065">billionaiRe 0.6.5<a class="anchor" aria-label="anchor" href="#billionaire-065"></a></h2>
-<ul><li>Adding COVID-19 scenarios.</li>
+<ul><li>Replace names of scenarios with more informative names:
+<ul><li>
+<code>none</code> becomes <code>routine</code>
+</li>
+<li>
+<code>tp</code> becomes <code>reference_infilling</code>
+</li>
+</ul></li>
+<li>add scenario and scenario_details to the wrangled columns in wrangling functions and xmart_cols as they will be expected to be present from now on.</li>
+<li>Adding COVID-19 scenarios.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.4" id="billionaire-064">billionaiRe 0.6.4<a class="anchor" aria-label="anchor" href="#billionaire-064"></a></h2>

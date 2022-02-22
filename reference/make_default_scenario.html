@@ -12,7 +12,7 @@ a default scenario based on the parameters passed to the function."><meta proper
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,8 +76,9 @@ a default scenario based on the parameters passed to the function.</p>
   end_year <span class="op">=</span> <span class="fl">2025</span>,
   scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
   default_scenario <span class="op">=</span> <span class="st">"default"</span>,
-  scenario_reported_estimated <span class="op">=</span> <span class="st">"none"</span>,
-  scenario_tp <span class="op">=</span> <span class="st">"tp"</span>,
+  scenario_reported_estimated <span class="op">=</span> <span class="st">"routine"</span>,
+  scenario_covid_shock <span class="op">=</span> <span class="st">"covid_shock"</span>,
+  scenario_reference_infilling <span class="op">=</span> <span class="st">"reference_infilling"</span>,
   include_projection <span class="op">=</span> <span class="cn">TRUE</span>,
   recycle_campaigns <span class="op">=</span> <span class="cn">TRUE</span>,
   ind_ids <span class="op">=</span> <span class="cn">NULL</span>,
@@ -115,7 +116,9 @@ country, year, and indicator.</p></dd>
 <dd><p>name of the default scenario.</p></dd>
 <dt>scenario_reported_estimated</dt>
 <dd><p>name of the reported/estimated scenario.</p></dd>
-<dt>scenario_tp</dt>
+<dt>scenario_covid_shock</dt>
+<dd><p>name of the scenario with the COVID-19 shock years.</p></dd>
+<dt>scenario_reference_infilling</dt>
 <dd><p>name of the WHO technical programs projections/imputations scenario.</p></dd>
 <dt>include_projection</dt>
 <dd><p>Boolean to include or not projections in recycling</p></dd>
