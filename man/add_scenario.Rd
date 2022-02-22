@@ -9,7 +9,7 @@ add_scenario(
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
     "fixed_target_col", "bau", "accelerate", "sdg", "covid_rapid_return",
-    "covid_delayed_return", "covid_sustained_disruption", "covid_never_return"),
+    "covid_delayed_return", "covid_sustained_disruption"),
   ind_ids = billion_ind_codes("all"),
   ind = "ind",
   start_year = 2018,
@@ -39,7 +39,6 @@ of the following:
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
 \item \code{covid_delayed_return} calls \code{\link{scenario_covid_delayed_return}}
 \item \code{covid_sustained_disruption} calls \code{\link{scenario_covid_sustained_disruption}}
-\item \code{covid_never_return} calls \code{\link{scenario_covid_never_return}}
 }}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

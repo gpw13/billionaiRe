@@ -38,7 +38,6 @@ of the following:
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
 \item \code{covid_delayed_return} calls \code{\link{scenario_covid_delayed_return}}
 \item \code{covid_sustained_disruption} calls \code{\link{scenario_covid_sustained_disruption}}
-\item \code{covid_never_return} calls \code{\link{scenario_covid_never_return}}
 }}
 
 \item{indicator}{name of indicator to be passed to \code{scenario_function}}

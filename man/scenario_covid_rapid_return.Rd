@@ -11,7 +11,7 @@ scenario_covid_rapid_return(
   iso3 = "iso3",
   start_year = 2018,
   covid_year = 2020,
-  recovery_year = 2021,
+  recovery_year = 2022,
   end_year = 2025,
   value = "value",
   scenario = "scenario",
@@ -35,7 +35,7 @@ country, year, and indicator.}
 
 \item{covid_year}{(integer) year where the values are impacted by COVID.}
 
-\item{recovery_year}{integer year from which the AROC will be applied. Default to 2021.}
+\item{recovery_year}{integer year from which the AROC will be applied. Default to 2022.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 

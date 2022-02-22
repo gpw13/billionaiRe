@@ -11,7 +11,7 @@ scenario_covid_sustained_disruption(
   iso3 = "iso3",
   start_year = 2018,
   covid_year = 2020,
-  recovery_year = 2021,
+  recovery_year = 2022,
   progressive_recovery = TRUE,
   end_year = 2025,
   value = "value",
@@ -36,7 +36,7 @@ country, year, and indicator.}
 
 \item{covid_year}{(integer) year where the values are impacted by COVID.}
 
-\item{recovery_year}{integer year from which the AROC will be applied. Default to 2021.}
+\item{recovery_year}{integer year from which the AROC will be applied. Default to 2022.}
 
 \item{progressive_recovery}{(logical) TRUE if the recovery after COVID-19
 should be progressive.}
