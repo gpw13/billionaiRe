@@ -58,6 +58,14 @@
 <ul><li>Adds <code>upload_billion_data</code> function for easy uploads to the 3B data lake in the World Health Data Hub (WHDH).</li>
 <li>Adds <code>assert_timestamp</code> and <code>assert_class</code> utilities for checks.</li>
 <li>Removed <code>testit</code> dependencies.</li>
+<li>Aligned <code>save_wrangled_output</code> and <code>upload_billion_data</code>: both functions now return the modified data frame after writing to disk/upload.</li>
+<li>Updated docs for <code>xmart_cols</code> and <code>save_wrangled_output</code>
+</li>
+<li>
+<code>save_wrangled_output</code> now accepts <code>data_type</code> and <code>na_rm</code> arguments</li>
+<li>Default compression for <code>save_wrangled_output</code> changed to “gzip”</li>
+<li>Added more assertions to <code>save_wrangled_output</code> and the function now raises an error if the expected columns aren’t available (previously raised a warning and returned the input data frame instead).</li>
+<li>Bug fix: <code>upload_billion_data</code> now returns a data frame (was previously returning NULL)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.6" id="billionaire-066">billionaiRe 0.6.6<a class="anchor" aria-label="anchor" href="#billionaire-066"></a></h2>

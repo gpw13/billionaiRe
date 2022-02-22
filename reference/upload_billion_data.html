@@ -122,11 +122,9 @@ a progress bar. Defaults to <code>TRUE</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The input data frame without any modifications. Note that a copy of the
-input data frame is created for the upload and any modifications required by
-the function all (such as setting <code>na_rm = TRUE</code>) are applied to only to this
-copy. This means that the output data frame is identical to the input, even
-if the uploaded data is modified in some way.</p>
+    <p>A data frame. Note that this is the modified version of in the input
+the function (such as from removing empty rows when <code>na_rm = TRUE</code> or from
+the call to <code><a href="save_wrangled_output.html">save_wrangled_output()</a></code>) are carried over to the output.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
