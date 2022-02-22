@@ -1,3 +1,7 @@
+# billionaiRe 0.6.8
+* Adds support of `covid_shock`
+* `make_default_scenario()` now doesn't require to have `default_scenario` in `scenario` column.
+
 # billionaiRe 0.6.7
 * Adds `upload_billion_data` function for easy uploads to the 3B data lake in the
   World Health Data Hub (WHDH).
