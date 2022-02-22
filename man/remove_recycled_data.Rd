@@ -10,6 +10,7 @@ remove_recycled_data(
   recycled = "recycled",
   scenario = "scenario",
   scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling"
 )
 }
@@ -25,6 +26,8 @@ recycled or not. Default to "recycle".}
 calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
+
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
 
 \item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 }

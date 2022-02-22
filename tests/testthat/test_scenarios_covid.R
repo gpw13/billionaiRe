@@ -30,7 +30,6 @@ testthat::test_that("scenario_covid_rapid_return produces accurate results with 
 })
 
 testthat::test_that("scenario_covid_rapid_return produces accurate results with two iso3", {
-
   df <- testdf() %>%
     dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
     dplyr::group_by(iso3) %>%
@@ -85,7 +84,6 @@ testthat::test_that("scenario_covid_never_return produces accurate results with 
 })
 
 testthat::test_that("scenario_covid_never_return produces accurate results with two iso3", {
-
   df <- testdf() %>%
     dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
     dplyr::group_by(iso3) %>%
@@ -130,11 +128,9 @@ testthat::test_that("scenario_covid_delayed_return produces accurate results wit
     dplyr::pull(value)
 
   testthat::expect_equal(df_delayed_return_one_iso3, 60)
-
 })
 
 testthat::test_that("scenario_covid_delayed_return produces accurate results with two iso3", {
-
   df <- testdf() %>%
     dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
     dplyr::group_by(iso3) %>%
@@ -185,11 +181,9 @@ testthat::test_that("scenario_covid_sustained_disruption produces accurate resul
     dplyr::pull(value)
 
   testthat::expect_equal(df_sustained_disruption_one_iso3, 60)
-
 })
 
 testthat::test_that("scenario_covid_sustained_disruption produces accurate results with two iso3", {
-
   df <- testdf() %>%
     dplyr::bind_rows(testdf(iso3 = "testistan")) %>%
     dplyr::group_by(iso3) %>%
@@ -215,4 +209,3 @@ testthat::test_that("scenario_covid_sustained_disruption produces accurate resul
 
   testthat::expect_equal(df_sustained_disruption_2021_two_iso3, c(60, 60))
 })
-

@@ -32,22 +32,30 @@ downloads all indicators for all three billions.}
 If \code{all}, downloads data for all indicators for a given billion. Ignored if
 billion = "all".}
 
-\item{version}{(string) Either "latest", or a single date string. The date
-string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
-If a date is provided, the returned data frame is a snapshot of the data as
-stored on that date (if no updates were made on the given date, then the most
-recent update before that date is used).}
+\item{version}{(string) Either \code{latest}  or a \code{yyyy-MM-dd} or \code{yyyy-mm-ddTHH-MM-SS}
+formatted string.
+\itemize{
+\item If \code{latest}, the latest version of the data will be downloaded.
+\item If a \code{yyyy-MM-dd} formatted string, the latest version of the data on or
+before the provided date will be downloaded.
+\item If a \code{yyyy-mm-ddTHH-MM-SS} formatted string, an exact match for the given
+time stamp is sought, if it exists; otherwise, raises an error.
+}}
 
 \item{na_rm}{(logical) Specifies whether to filter the data to only rows
 where \code{value} is not missing. Defaults to \code{TRUE}.}
 
-\item{experiment}{(string) Either NULL (default) or a string.
+\item{experiment}{(string) Either \code{NULL} or a string ("unofficial" by default).
+Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
+are located.
 \itemize{
-\item If NULL, the path returned is in the "official" data layers in the 3B data lake
-(e.g., 3B/Silver).
-\item If a string, the path returned is in a sub-folder within the Sandbox layer of the
-3B data lake. The Bronze/Silver/Gold structure is replicated within this sub-folder
-(e.g., 3B/Sandbox/my_exp/Silver)
+\item If \code{NULL}, the root folder for the data layers is the 3B folder (i.e., where
+the "official" data is stored). For example, \verb{3B/Silver/...}.
+\item If a string, the root folder for the data layers is a sub-folder within the
+Sandbox layer of the 3B data lake (e.g., if \code{experiment = "my_exp"}, then
+data is download from \verb{3B/Sandbox/my_exp/\{data_layer\}/...})
+\item If an empty string, the root folder for the data layers is the Sandbox itself
+(i.e., if \code{experiment = ""}, then data is download from \verb{3B/Sandbox/\{data_layer\}/...})
 }}
 
 \item{silent}{(logical) Specifies whether to show authentication messages and

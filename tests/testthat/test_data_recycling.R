@@ -1,6 +1,6 @@
-test_data <- load_misc_data("test_data/test_data/test_data.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-21T14-36-20.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
   test_data_calculated_hep <- test_data_calculated %>%
@@ -15,6 +15,7 @@ testthat::test_that("HEP data recycling returns right number of rows", {
     recycle_data("hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")) %>%
     dplyr::filter(!stringr::str_detect(ind, "routine_num$|campaign")) %>%
+    dplyr::select(iso3, year, ind, scenario, value) %>%
     dplyr::group_by(scenario) %>%
     dplyr::tally()
 
@@ -48,6 +49,7 @@ testthat::test_that("UHC data recycling returns right number of rows", {
   test_data_uhc <- test_data %>%
     recycle_data("uhc") %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
+    dplyr::filter(!(ind == "espar" & year < 2018)) %>%
     dplyr::select(iso3, ind, year, scenario, value) %>%
     dplyr::distinct() %>%
     dplyr::group_by(scenario) %>%
@@ -130,3 +132,98 @@ testthat::test_that("make_default_scenario adds a default scenario to data frame
 
   testthat::expect_equal(make_default, all_default)
 })
+
+testthat::test_that("make_default_scenario adds a default scenario to data frame, even when `default` is not present in the dateframe:", {
+  make_default <- test_data %>%
+    dplyr::mutate(scenario = dplyr::case_when(
+      scenario == "default" ~ "reference_infilling",
+      TRUE ~ scenario
+    )) %>%
+    make_default_scenario(billion = "all") %>%
+    dplyr::filter(scenario == "default")
+
+  testthat::expect_true(nrow(make_default) >0)
+})
+
+test_df <- tibble::tibble(
+  value = 20:27,
+  year = 2018:2025,
+  iso3 = "AFG",
+  ind = "water",
+  scenario = c(rep("routine", 2), rep("reference_infilling", 6)),
+  type = c(rep("reported", 2), rep("projected", 6))
+) %>%
+  dplyr::add_row(
+    value = 18:19,
+    scenario = "covid_shock",
+    iso3 = "AFG",
+    year = 2020:2021,
+    type = rep("reported", 2),
+    ind = "water"
+  ) %>%
+  dplyr::add_row(
+    value = 32:35,
+    scenario = "default",
+    iso3 = "AFG",
+    year = 2022:2025,
+    type = rep("projected", 4),
+    ind = "water"
+  )
+
+testthat::test_that("recycling functions manages properly covid_shock", {
+  recycled_df <- test_df %>%
+    recycle_data("hpop")
+
+  testthat::expect_equal(dplyr::pull(dplyr::filter(recycled_df, scenario == "default", year == 2018), value), 20)
+  testthat::expect_equal(dplyr::pull(dplyr::filter(recycled_df, scenario == "default", year == 2020), value), 18)
+})
+
+testthat::test_that("recycling functions don't recycle base scenarios", {
+  recycled_df <- test_df %>%
+    recycle_data("hpop") %>%
+    dplyr::filter(scenario %in% c(
+      "routine", "covid_shock", "reference_infilling"
+    ))
+
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "routine"))), 2)
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "covid_shock"))), 2)
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "reference_infilling"))), 6)
+})
+
+test_df_no_reference_infilling <- tibble::tibble(
+  value = 20:27,
+  year = 2018:2025,
+  iso3 = "AFG",
+  ind = "water",
+  scenario = c(rep("routine", 8)),
+  type = c(rep("reported", 2), rep("projected", 6))
+) %>%
+  dplyr::add_row(
+    value = 18:19,
+    scenario = "covid_shock",
+    iso3 = "AFG",
+    year = 2020:2021,
+    type = rep("reported", 2),
+    ind = "water"
+  ) %>%
+  dplyr::add_row(
+    value = 32:35,
+    scenario = "default",
+    iso3 = "AFG",
+    year = 2022:2025,
+    type = rep("projected", 4),
+    ind = "water"
+  )
+
+testthat::test_that("recycling functions recycle with missing base scenarios", {
+  recycled_df <- test_df_no_reference_infilling %>%
+    recycle_data("hpop") %>%
+    dplyr::filter(scenario %in% c(
+      "routine", "covid_shock"
+    ))
+
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "routine"))), 8)
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "covid_shock"))), 2)
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "reference_infilling"))), 0)
+})
+

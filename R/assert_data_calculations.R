@@ -171,10 +171,12 @@ assert_data_calculation_uhc <- function(df,
                                         ind_ids = billion_ind_codes("uhc")) {
   assert_iso3_not_empty(df, iso3, scenario, value)
 
-  necessary_ind <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
+  necessary_inds <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
+
+  those_necessary_inds <- necessary_inds[necessary_inds %in% unique(df[[ind]])]
 
   only_full <- df %>%
-    dplyr::filter(.data[[ind]] %in% necessary_ind) %>%
+    dplyr::filter(.data[[ind]] %in% those_necessary_inds) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
     dplyr::filter(is.na(.data[[value]]))
 
@@ -191,8 +193,40 @@ Missing values in:\n",
   }
 
   assert_ind_start_end_year(df, iso3, year, value, start_year, end_year, ind,
-    ind_ids = necessary_ind, scenario
+    ind_ids = those_necessary_inds, scenario
   )
 
   return(df)
+}
+
+assert_data_contributions <- function(df,
+                                      ind = "ind",
+                                      year = "year",
+                                      iso3 = "iso3",
+                                      value = "value",
+                                      scenario = NULL,
+                                      start_year = 2018,
+                                      end_year = 2025,
+                                      billion = c("hep", "hpop", "uhc"),
+                                      ind_ids = billion_ind_codes(billion, include_calculated = TRUE)) {
+  billion <- rlang::arg_match(billion)
+
+  df_ind <- df %>%
+    dplyr::filter(.data[[ind]] %in% ind_ids)
+
+  df_ind_start_end_years <- df_ind %>%
+    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+    dplyr::tally() %>%
+    dplyr::filter(.data[["n"]] < 2)
+
+  if (nrow(df_ind_start_end_years) > 1) {
+    stop(sprintf(
+      "%s have missing values at `start_year` or `end_year` in at least one `iso3` and `ind` (and `scenario`, if provided).
+                    Contributions cannot be calculated",
+      paste(unique(df_ind_start_end_years[[iso3]]), collapse = ",")
+    ),
+    call. = FALSE
+    )
+  }
 }

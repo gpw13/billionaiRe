@@ -320,3 +320,19 @@ simple_extrap <- function(x) {
   whr <- max(which(!missing_x))
   x[whr:length(x)] <- x[whr]
 }
+
+
+remove_unwanted_scenarios <- function(df,
+                                      scenario = "scenario",
+                                      unwanted_scenarios) {
+  scenario_present <- unique(df[[scenario]])
+
+  unwanted_scenarios_present <- scenario_present %in% unwanted_scenarios
+
+  if (sum(unwanted_scenarios_present) <= length(scenario_present)) {
+    df %>%
+      dplyr::filter(!scenario %in% unwanted_scenarios)
+  } else {
+    df
+  }
+}

@@ -17,6 +17,7 @@ recycle_data(
   scenario = "scenario",
   default_scenario = "default",
   scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling",
   include_projection = TRUE,
   recycle_campaigns = TRUE,
@@ -50,6 +51,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{default_scenario}{name of the default scenario.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
+
+\item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
 
 \item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
 

@@ -1,12 +1,13 @@
 Type: Package
 Package: billionaiRe
 Title: Calculate the WHO Triple Billions
-Version: 0.6.6
+Version: 0.6.8
 Authors@R: c(
-    person("Seth", "Caldwell", , "caldwellst@gmail.com", role = c("aut", "cre")),
+    person("Seth", "Caldwell", , "caldwellst@gmail.com", role = "aut"),
     person("Alice", "Robson", , "robsona@who.int", role = "aut"),
     person("Nelly", "Biondi", , "biondin@who.int", role = "aut"),
-    person("Elliott", "Messeiller", , "elliott.messeiller@gmail.com", role = "aut")
+    person("Elliott", "Messeiller", , "elliott.messeiller@gmail.com", role = c("aut", "cre")),
+    person("Muhammad Jarir", "Kanji", , "mjkanji@outlook.com", role = "aut")
   )
 Description: Apply methods to calculate Universal Health Coverage,
     Healthier Populations, and Health Emergencies Protection Billions.
@@ -30,7 +31,6 @@ Imports:
     rlang,
     scales,
     stringr,
-    testit,
     tibble,
     tidyr,
     tidyselect,
@@ -44,7 +44,7 @@ Suggests:
     testthat (>= 3.0.0),
     wppdistro (>= 0.1.0),
     xmart4 (>= 0.2.2),
-    whdh
+    whdh (>= 0.1.0.0000)
 VignetteBuilder: 
     knitr
 Remotes: 

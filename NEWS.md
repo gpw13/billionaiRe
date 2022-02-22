@@ -1,6 +1,23 @@
+# billionaiRe 0.6.8
+* Adds support of `covid_shock`
+* `make_default_scenario()` now doesn't require to have `default_scenario` in `scenario` column.
+
+# billionaiRe 0.6.7
+* Adds `upload_billion_data` function for easy uploads to the 3B data lake in the
+  World Health Data Hub (WHDH).
+* Adds `assert_timestamp` and `assert_class` utilities for checks.
+* Removed `testit` dependencies.
+* Aligned `save_wrangled_output` and `upload_billion_data`: both functions now return the modified data frame after writing to disk/upload.
+* Updated docs for `xmart_cols` and `save_wrangled_output`
+* `save_wrangled_output` now accepts `data_type` and `na_rm` arguments
+* Default compression for `save_wrangled_output` changed to "gzip" 
+* Added more assertions to `save_wrangled_output` and the function now raises an error if the expected columns aren't available (previously raised a warning and returned the input data frame instead).
+* Bug fix: `upload_billion_data` now returns a data frame (was previously returning NULL)
+
 # billionaiRe 0.6.6
 * Updates to `load_billion_data` functions incorporating the `whdh::download_data_asset`
 function and the use of a `version` argument to replace the `date_filter` placeholder.
+* `load_billion_data` now has an `experiment` argument, which replaces `sandbox`.
 
 # billionaiRe 0.6.5
 * Replace names of scenarios with more informative names:
