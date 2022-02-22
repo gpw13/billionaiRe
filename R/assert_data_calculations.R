@@ -171,10 +171,12 @@ assert_data_calculation_uhc <- function(df,
                                         ind_ids = billion_ind_codes("uhc")) {
   assert_iso3_not_empty(df, iso3, scenario, value)
 
-  necessary_ind <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
+  necessary_inds <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
+
+  those_necessary_inds <- necessary_inds[necessary_inds %in% unique(df[[ind]])]
 
   only_full <- df %>%
-    dplyr::filter(.data[[ind]] %in% necessary_ind) %>%
+    dplyr::filter(.data[[ind]] %in% those_necessary_inds) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
     dplyr::filter(is.na(.data[[value]]))
 
@@ -191,7 +193,7 @@ Missing values in:\n",
   }
 
   assert_ind_start_end_year(df, iso3, year, value, start_year, end_year, ind,
-    ind_ids = necessary_ind, scenario
+    ind_ids = those_necessary_inds, scenario
   )
 
   return(df)
