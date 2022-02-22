@@ -57,11 +57,9 @@ data is download from \verb{3B/Sandbox/my_exp/\{data_layer\}/...})
 a progress bar. Defaults to \code{TRUE}.}
 }
 \value{
-The input data frame without any modifications. Note that a copy of the
-input data frame is created for the upload and any modifications required by
-the function all (such as setting \code{na_rm = TRUE}) are applied to only to this
-copy. This means that the output data frame is identical to the input, even
-if the uploaded data is modified in some way.
+A data frame. Note that this is the modified version of in the input
+the function (such as from removing empty rows when \code{na_rm = TRUE} or from
+the call to \code{\link[=save_wrangled_output]{save_wrangled_output()}}) are carried over to the output.
 }
 \description{
 \code{upload_billion_data()} allows you to easily upload a data frame to the correct

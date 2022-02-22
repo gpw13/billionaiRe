@@ -4,20 +4,39 @@
 \alias{save_wrangled_output}
 \title{Save the output to disk after ensuring column specs}
 \usage{
-save_wrangled_output(df, path, compression = "snappy")
+save_wrangled_output(
+  df,
+  path,
+  data_type = c("wrangled_data", "projected_data", "final_data"),
+  na_rm = FALSE,
+  compression = "gzip"
+)
 }
 \arguments{
 \item{df}{data frame the output}
 
 \item{path}{the path where the output should be saved}
 
-\item{compression}{Compression algorithm to use for parquet format. "snappy" by
+\item{data_type}{(string): the type of data
+\itemize{
+\item \code{wrangled_data} (default): raw data that has been wrangled into a suitable
+form for analysis.
+\item \code{projected_data}:  data that has been fully projected to the target year but
+has not yet been transformed or calculated upon.
+\item \code{final_data}: the complete set of billions data with transformed values,
+contributions, and all calculations available.
+}}
+
+\item{na_rm}{(logical) Specifies whether to remove rows where \code{value} is missing.
+Defaults to \code{FALSE}.}
+
+\item{compression}{Compression algorithm to use for parquet format. \code{"gzip"} by
 default}
 }
 \value{
-a data frame. This is the modified dataframe that's saved to disk if
-the data frame has all the columns expected by xMart. Otherwise, it simply return
-the input data frame.
+A data frame. Note that this is the modified version of in the input
+the function (such as from removing empty rows when \code{na_rm = TRUE}) are carried
+over to the output.
 }
 \description{
 Helper functions that saves a wrangled output data frame to the disk if it has
