@@ -56,7 +56,6 @@ recycle_data <- function(df,
                          trim_years = TRUE) {
   assert_columns(df, iso3, ind, value, year, scenario, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario, ind_ids)
-  # assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_reference_infilling), scenario)
 
   billion <- rlang::arg_match(billion)
   if (is.null(ind_ids)) {
@@ -340,7 +339,6 @@ make_default_scenario <- function(df,
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
 
   base_scenarios <- c(scenario_reported_estimated, scenario_reference_infilling)
-  assert_scenario_in_df(df, base_scenarios, scenario_col)
 
   if (is.null(billion)) {
     billion <- "all"
