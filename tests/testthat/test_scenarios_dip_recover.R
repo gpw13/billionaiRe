@@ -113,3 +113,24 @@ testthat::test_that("scenario_dip_recover produces accurate results with progres
 
   testthat::expect_equal(df_dip_recover_progressive_recovery_2025, 64.411765)
 })
+
+testthat::test_that("scenario_dip_recover produces accurate results with two ind", {
+  df <- testdf() %>%
+    dplyr::bind_rows(testdf(ind = "adult_obese")) %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year >= 2020 ~ as.numeric(60 + (year - 2020)),
+      TRUE ~ as.numeric(value)
+    ), type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
+
+  df_dip_recover <- scenario_dip_recover(df)
+
+  df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(64.411765, 64.411765))
+})

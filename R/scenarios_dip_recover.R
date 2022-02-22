@@ -165,19 +165,20 @@ scenario_dip_recover_iso3 <- function(df,
       ) %>%
       dplyr::filter(.data[[scenario]] == !!scenario_name)
   } else {
-    target_value <- scenario_df %>%
+    target_value_iso3_ind <- scenario_df %>%
       dplyr::filter(.data[[year]] == (dip_year - 1)) %>%
-      dplyr::pull(.data[[value]])
+      dplyr::pull(.data[[value]], .data[[ind]])
 
-    aroc_df <- get_target_aarc(scenario_df,
-      target_value = target_value,
-      target_year = dip_year - 1,
-      baseline_year = start_year,
-      value = value,
-      year = year,
-      iso3 = iso3_col,
-      ind = ind
-    )
+    aroc_df <- purrr::map2_dfr(target_value_iso3_ind, names(target_value_iso3_ind),
+                               ~get_target_aarc(scenario_df %>% dplyr::filter(.data[[ind]] == .y),
+                                                target_value = .x,
+                                                target_year = dip_year - 1,
+                                                baseline_year = start_year,
+                                                value = value,
+                                                year = year,
+                                                iso3 = iso3_col,
+                                                ind = ind
+                               ))
 
     full_recovery_df <- tidyr::expand_grid(
       "{year}" := recovery_year:max(scenario_df[[year]]),
