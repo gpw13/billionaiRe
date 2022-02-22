@@ -56,7 +56,7 @@ recycle_data <- function(df,
                          trim_years = TRUE) {
   assert_columns(df, iso3, ind, value, year, scenario, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario, ind_ids)
-  assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_reference_infilling), scenario)
+  # assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_reference_infilling), scenario)
 
   billion <- rlang::arg_match(billion)
   if (is.null(ind_ids)) {
@@ -149,7 +149,6 @@ recycle_data_scenario_single <- function(df,
                                          trim_years = FALSE) {
   assert_columns(df, iso3, ind, value, year, scenario_col, type)
   assert_unique_rows(df, ind, iso3, year, scenario = scenario_col, ind_ids)
-  assert_scenario_in_df(df, c(scenario_reported_estimated, scenario_reference_infilling), scenario_col)
 
   billion <- rlang::arg_match(billion)
   if (is.null(ind_ids)) {
@@ -357,21 +356,6 @@ make_default_scenario <- function(df,
     ind_ids <- purrr::map(billion, billion_ind_codes) %>%
       stats::setNames(billion)
   }
-
-  # if(!default_scenario %in% unique(df[[scenario_col]])){
-  #
-  #   df_base_scenarios <- df %>%
-  #     dplyr::filter(scenario %in% base_scenarios)
-  #
-  #   default_df <- df_base_scenarios %>%
-  #     dplyr::filter(scenario %in% base_scenarios) %>%
-  #     dplyr::select(dplyr::all_of(c(iso3, year, ind))) %>%
-  #     dplyr::distinct() %>%
-  #     dplyr::mutate("{scenario_col}" := default_scenario,
-  #                   "{value}" := NA,
-  #                   "{type}" := NA) %>%
-  #     dplyr::bind_rows(df_base_scenarios)
-  # }
 
   purrr::map_dfr(
     billion,
