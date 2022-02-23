@@ -196,6 +196,9 @@
     <loc>/reference/assert_class.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_col_types.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_columns.html</loc>
   </url>
   <url>
@@ -211,10 +214,16 @@
     <loc>/reference/assert_df.html</loc>
   </url>
   <url>
+    <loc>/reference/assert_distinct_rows.html</loc>
+  </url>
+  <url>
     <loc>/reference/assert_equals.html</loc>
   </url>
   <url>
     <loc>/reference/assert_fileext.html</loc>
+  </url>
+  <url>
+    <loc>/reference/assert_has_names.html</loc>
   </url>
   <url>
     <loc>/reference/assert_homogeneous_col.html</loc>
