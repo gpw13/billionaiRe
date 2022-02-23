@@ -18,8 +18,8 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
   key_cols <- c("iso3", "year", "ind", "scenario")
   value_cols <- c("value", "lower", "upper")
   other_cols <- c(
-    "use_dash", "use_calc", "source", "type", "type_detail",
-    "other_detail", "upload_detail", "scenario_detail"
+    "use_dash", "use_calc", "source", "type", "scenario_detail", "type_detail",
+    "other_detail", "upload_detail"
   )
 
   if (data_type == "final_data") {
@@ -32,29 +32,53 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
   return(c(key_cols, value_cols, other_cols))
 }
 
-#' Get the col_types for xMart columns
+#' Get the column types for xMart columns
 #'
-#' A helper function for specifying the column types when reading/writing Triple
-#' Billions csv files.
+#' A helper function for specifying the expected column types for the Triple
+#' Billions data.
 #'
-#' @return a list with column specifications
+#' @inheritParams xmart_cols
+#'
+#' @return a named vector with column specifications
 #' @export
-xmart_col_types <- function() {
-  list(
-    iso3 = readr::col_character(),
-    year = readr::col_integer(),
-    ind = readr::col_character(),
-    value = readr::col_double(),
-    lower = readr::col_double(),
-    upper = readr::col_double(),
-    use_dash = readr::col_logical(),
-    use_calc = readr::col_logical(),
-    source = readr::col_character(),
-    type = readr::col_character(),
-    type_detail = readr::col_character(),
-    other_detail = readr::col_character(),
-    upload_detail = readr::col_character()
+xmart_col_types <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
+  data_type <- rlang::arg_match(data_type)
+
+  key_cols <- c(
+    iso3 = "character",
+    year = "integer",
+    ind = "character",
+    scenario = "character"
   )
+
+  value_cols <- c(value = "double", lower = "double", upper = "double")
+
+  other_cols <- c(
+    use_dash = "logical",
+    use_calc = "logical",
+    source = "character",
+    type = "character",
+    scenario_detail = "character",
+    type_detail = "character",
+    other_detail = "character",
+    upload_detail = "character"
+  )
+
+  if (data_type == "final_data") {
+    value_cols <- c(
+      value_cols,
+      transform_value = "double",
+      transform_lower = "double",
+      transform_upper = "double",
+      contribution = "double",
+      contribution_percent = "double",
+      contribution_percent_total_pop = "double",
+      population = "double",
+      level = "integer"
+    )
+  }
+
+  return(c(key_cols, value_cols, other_cols))
 }
 
 #' Check data frame for xMart4 columns
@@ -139,6 +163,11 @@ save_wrangled_output <- function(df,
   assert_strings(path, compression)
   assert_type(na_rm, "logical")
   assert_columns(df, xmart_cols(data_type))
+  assert_col_types(df, xmart_col_types(data_type))
+  assert_distinct_rows(df, c("ind", "iso3", "year", "scenario"))
+
+  # Check that each non-missing value also has a scenario assigned to it
+  stopifnot(!any(!is.na(df$value) & is.na(df$scenario)))
 
   ext <- stringr::str_split(path, "\\.")[[1]][[2]]
   assert_x_in_y(ext, c("csv", "parquet"))

@@ -37,7 +37,7 @@ wrangle_gho_data <- function(df,
   output <- df %>%
     dplyr::transmute(
       "iso3" := .data[["SpatialDim"]],
-      "year" := .data[["TimeDim"]],
+      "year" := as.integer(.data[["TimeDim"]]),
       "ind" := ifelse(is.null(ind),
         convert_ind_codes(.data[["IndicatorCode"]], from = "gho_code", to = "ind"),
         ind
@@ -175,7 +175,7 @@ wrangle_gho_rural_urban_data <- function(df,
     # Final transmutations for output data frame
     dplyr::transmute(
       "iso3" := .data[["SpatialDim"]],
-      "year" := .data[["TimeDim"]],
+      "year" := as.integer(.data[["TimeDim"]]),
 
       # If a total value doesn't exist, use the rural/urban indicator name
       "ind" := dplyr::case_when(
@@ -207,7 +207,7 @@ wrangle_gho_rural_urban_data <- function(df,
       # If a data source is explicitly provided, override the sources from the DataSourceDim column
       # Follows the same logic as `wrangle_gho_data` by giving priority to explicit source over GHO source
       "source" := ifelse(
-        !is.null(source), source, .data[["DataSourceDim"]]
+        !is.null(.env$source), .env$source, .data[["DataSourceDim"]]
       ),
 
       # If a total comment doesn't exist, use the rural/urban comment
@@ -284,7 +284,7 @@ wrangle_unsd_data <- function(df,
   df %>%
     dplyr::transmute(
       "iso3" := whoville::codes_to_iso3(.data[["GeoAreaCode"]], type = "m49"),
-      "year" := .data[["TimePeriod"]],
+      "year" := as.integer(.data[["TimePeriod"]]),
       "ind" := .data[["SeriesCode"]],
       "value" := as.double(.data[["Value"]]),
       "lower" := as.double(.data[["LowerBound"]]),

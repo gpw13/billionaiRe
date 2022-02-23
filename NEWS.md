@@ -1,6 +1,9 @@
 # billionaiRe 0.6.8
 * Adds support of `covid_shock`
 * `make_default_scenario()` now doesn't require to have `default_scenario` in `scenario` column.
+* Updated save_wrangled_output to explicitly enforce expectations about data frames before writing to disk.
+* Added assert_col_types and assert_has_names and assert_distinct_rows.
+* Updated wrangle_data.R functions to explicitly cast columns to expected types.
 
 # billionaiRe 0.6.7
 * Adds `upload_billion_data` function for easy uploads to the 3B data lake in the

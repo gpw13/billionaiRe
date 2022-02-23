@@ -19,6 +19,7 @@ Depends:
     R (>= 2.10)
 Imports: 
     arrow,
+    cli,
     dplyr,
     glue,
     lubridate,
@@ -35,6 +36,7 @@ Imports:
     tidyr,
     tidyselect,
     usethis,
+    waldo,
     whoville,
     zoo
 Suggests: 

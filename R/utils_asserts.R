@@ -91,6 +91,39 @@ assert_columns <- function(df, ...) {
   }
 }
 
+#' Assert that the column types of a data frame are as expected
+#'
+#' @param df a data frame
+#' @param expected a **named vector**, whose names are the names of the columns (i.e.,
+#' `names(df) == names(expected)`) and whose elements are the expected class/type
+#' of the column.
+assert_col_types <- function(df, expected) {
+  assert_type(expected, "character")
+  assert_has_names(expected)
+  assert_df(df)
+
+  # Create an empty data frame with the given column names and types
+  expected_df <- readr::read_csv(I("\n"), col_names = names(expected), col_types = expected)
+
+  # Compare using waldo
+  compare_obj <- waldo::compare(
+    head(df, 0), # Remove all rows so the comparison is only on the df columns
+    expected_df,
+    x_arg = "df",
+    y_arg = "expected",
+    list_as_map = TRUE # Ensures column order is not considered
+  )
+
+  if (length(compare_obj) != 0) {
+    lab <- deparse(substitute(df))
+
+    rlang::abort(
+      sprintf("The columns of `%s` do not have the expected types.\n", lab),
+      body = compare_obj
+    )
+  }
+}
+
 #' Assert that the given data frame columns are numeric
 #'
 #' @param df Data frame
@@ -156,6 +189,26 @@ assert_unique_rows <- function(df,
     stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
       call. = FALSE
     )
+  }
+}
+
+#' Assert unique rows by key columns
+#'
+#' Ensures that all the rows of a given data frame are unique for each combination
+#' of a set of key columns.
+#'
+#' @param df a data frame
+#' @param key_cols (character vector) the names of the key columns
+assert_distinct_rows <- function(df, key_cols) {
+  assert_type(key_cols, "character")
+
+  distinct_df <- dplyr::distinct(df, dplyr::across(dplyr::all_of(key_cols)))
+  if (nrow(df) != nrow(distinct_df)) {
+    stop(sprintf(
+      "`%s` does not have distinct rows for each combination of (%s)",
+      deparse(substitute(df)),
+      paste("`", key_cols, "`", sep = "", collapse = ", ")
+    ))
   }
 }
 
@@ -249,6 +302,16 @@ assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
       paste0(expected, collapse = ", ")
     )
     stop(msg, call. = FALSE)
+  }
+}
+
+#' Assert that an object has names
+#'
+#' @param x an object
+assert_has_names <- function(x) {
+  if (is.null(names(x))) {
+    lab <- deparse(substitute(x))
+    cli::cli_abort("{.var {lab}} must be a named object.")
   }
 }
 
