@@ -889,14 +889,18 @@ accelerate_itn <- function(df,
 #' Accelerate pneumo
 #'
 #' Accelerate pneumo by taking the best of business as usual and a **fixed target
-#' of 90 by 2025**.
+#' of 90 by 2025** for countries with two or more data points since 2000. Otherwise,
+#' the business as usual scenario is used.
 #'
 #' @inherit accelerate_anc4
 #'
 accelerate_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
                               scenario = "scenario",
+                              iso3 = "iso3",
                               ind = "ind",
+                              year = "year",
+                              type = "type",
                               ...) {
   this_ind <- ind_ids["pneumo"]
 
@@ -914,6 +918,15 @@ accelerate_pneumo <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
+  iso3_more_2_values_since_2020 <- df_this_ind %>%
+    dplyr::filter(.data[[type]] %in% c("reported", "estimated"),
+                  .data[[year]] >= 2000) %>%
+    dplyr::group_by(dplyr::across(c(iso3, ind))) %>%
+    dplyr::summarise(n = dplyr::n()) %>%
+    dplyr::filter(.data[["n"]] >= 2) %>%
+    dplyr::pull(.data[[iso3]])
+
+
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
@@ -922,15 +935,25 @@ accelerate_pneumo <- function(df,
   df_fixed_target <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
   ) %>%
-    dplyr::filter(scenario == "fixed_target")
+    dplyr::filter(scenario == "fixed_target",
+                  .data[[iso3]] %in% iso3_more_2_values_since_2020)
+
+  df_bau_more_2_values_since_2020 <- df_bau %>%
+    dplyr::filter(.data[[iso3]] %in% iso3_more_2_values_since_2020)
 
   params_best_of <- get_right_params(params, scenario_best_of)
   params_best_of[["scenario_names"]] <- c("business_as_usual", "fixed_target")
   params_best_of[["scenario_name"]] <- "acceleration"
 
-  df_accelerated <- do.call(
-    scenario_best_of, c(list(df = dplyr::bind_rows(df_fixed_target, df_bau)), params_best_of)
-  ) %>%
+  df_best_of_fixed_target_bau <- do.call(
+    scenario_best_of, c(list(df = dplyr::bind_rows(df_fixed_target, df_bau_more_2_values_since_2020)), params_best_of)
+  )
+
+  df_bau_no_more_2_values_since_2020 <- df_bau %>%
+    dplyr::filter(!.data[[iso3]] %in% iso3_more_2_values_since_2020) %>%
+    dplyr::mutate(scenario = "acceleration")
+
+  df_accelerated <- dplyr::bind_rows(df_bau_no_more_2_values_since_2020, df_best_of_fixed_target_bau)%>%
     dplyr::filter(scenario == "acceleration")
 
   df %>%
