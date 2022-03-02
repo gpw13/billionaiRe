@@ -157,21 +157,25 @@ scenario_bau <- function(df,
   )
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years, by = c(year, iso3, ind, scenario)) %>%
-    dplyr::filter(.data[[scenario]] == default_scenario) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind)))) %>%
-    dplyr::mutate(
-      last_value = max(.data[[value]], na.rm = TRUE),
-      last_year = max(.data[[year]][!is.na(.data[[value]])], na.rm = TRUE),
-      "{value}" := dplyr::case_when(
-        is.na(.data[[value]]) & .data[[year]] > last_year ~ last_value,
-        TRUE ~ .data[[value]]
-      )
-    ) %>%
-    dplyr::select(-c("last_value", "last_year"))
+    dplyr::filter(.data[[scenario]] == default_scenario,
+                  !is.na(.data[[value]]))
 
+  if(nrow(scenario_df) > 0){
+    scenario_df <- scenario_df %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind)))) %>%
+      dplyr::mutate(
+        last_year = max(.data[[year]][!is.na(.data[[value]])], na.rm = TRUE),
+        last_value = .data[[value]][.data[[year]] == last_year],
+        "{value}" := dplyr::case_when(
+          is.na(.data[[value]]) & .data[[year]] > last_year ~ last_value,
+          TRUE ~ .data[[value]]
+        )
+      ) %>%
+      dplyr::select(-c("last_value", "last_year"))
+  }
 
   bau <- scenario_df %>%
+    dplyr::full_join(full_years, by = c(year, iso3, ind, scenario)) %>%
     dplyr::filter(
       .data[[year]] %in% start_year:end_year,
       .data[[scenario]] == default_scenario
