@@ -80,7 +80,9 @@ scenario_dip_recover <- function(df,
     default_scenario = default_scenario,
     scenario_name = scenario_name,
     !!!params
-  ))
+  )) %>%
+    dplyr::bind_rows(df) %>%
+    dplyr::distinct()
 }
 
 #' Scenario dip and recover to specific iso3
@@ -142,7 +144,19 @@ scenario_dip_recover_iso3 <- function(df,
     dplyr::pull(last_value, .data[[value]])
   )
 
-  if (nrow(reported_estimated) == 0) {
+  baseline_year <- scenario_df %>%
+    dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
+                  .data[[year]] >= start_year, .data[[year]] < dip_year)
+
+  if(nrow(baseline_year) > 0){
+    baseline_year <- baseline_year %>%
+      dplyr::filter(.data[[year]] == min(.data[[year]], na.rm = TRUE)) %>%
+      dplyr::pull(.data[[year]])
+  }else{
+    baseline_year <- NULL
+  }
+
+  if (nrow(reported_estimated) == 0 | rlang::is_empty(baseline_year)) {
     recover_df <- scenario_df %>%
       dplyr::filter(.data[[year]] >= dip_year) %>%
       scenario_bau(
@@ -150,7 +164,7 @@ scenario_dip_recover_iso3 <- function(df,
         ind = ind,
         iso3 = iso3_col,
         year = year,
-        start_year = start_year,
+        start_year = dip_year,
         end_year = end_year,
         scenario_name = scenario_name,
         scenario = scenario,
@@ -169,11 +183,11 @@ scenario_dip_recover_iso3 <- function(df,
       dplyr::filter(.data[[year]] == (dip_year - 1)) %>%
       dplyr::pull(.data[[value]], .data[[ind]])
 
-    aroc_df <- purrr::map2_dfr(target_value_iso3_ind, names(target_value_iso3_ind),
+    aroc_df <- purrr::pmap_dfr(list(.x = target_value_iso3_ind, .y = names(target_value_iso3_ind), ..1 = baseline_year),
                                ~get_target_aarc(scenario_df %>% dplyr::filter(.data[[ind]] == .y),
                                                 target_value = .x,
                                                 target_year = dip_year - 1,
-                                                baseline_year = start_year,
+                                                baseline_year = ..1,
                                                 value = value,
                                                 year = year,
                                                 iso3 = iso3_col,

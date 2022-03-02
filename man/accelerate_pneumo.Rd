@@ -8,7 +8,10 @@ accelerate_pneumo(
   df,
   ind_ids = billion_ind_codes("uhc"),
   scenario = "scenario",
+  iso3 = "iso3",
   ind = "ind",
+  year = "year",
+  type_col = "type",
   ...
 )
 }
@@ -24,7 +27,13 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{iso3}{Column name of column with country ISO3 codes.}
+
 \item{ind}{Column name of column with indicator names.}
+
+\item{year}{Column name of column with years.}
+
+\item{type_col}{Column name of column to store type.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -34,5 +43,6 @@ set to \code{acceleration}
 }
 \description{
 Accelerate pneumo by taking the best of business as usual and a \strong{fixed target
-of 90 by 2025}.
+of 90 by 2025} for countries with two or more data points since 2000. Otherwise,
+the business as usual scenario is used.
 }

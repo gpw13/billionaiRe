@@ -893,6 +893,8 @@ accelerate_itn <- function(df,
 #' the business as usual scenario is used.
 #'
 #' @inherit accelerate_anc4
+#' @inheritParams accelerate_fp
+#'
 #'
 accelerate_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
@@ -900,7 +902,7 @@ accelerate_pneumo <- function(df,
                               iso3 = "iso3",
                               ind = "ind",
                               year = "year",
-                              type = "type",
+                              type_col = "type",
                               ...) {
   this_ind <- ind_ids["pneumo"]
 
@@ -919,7 +921,7 @@ accelerate_pneumo <- function(df,
     dplyr::filter(.data[[ind]] == this_ind)
 
   iso3_more_2_values_since_2020 <- df_this_ind %>%
-    dplyr::filter(.data[[type]] %in% c("reported", "estimated"),
+    dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
                   .data[[year]] >= 2000) %>%
     dplyr::group_by(dplyr::across(c(iso3, ind))) %>%
     dplyr::summarise(n = dplyr::n()) %>%
@@ -933,7 +935,7 @@ accelerate_pneumo <- function(df,
     dplyr::filter(scenario == "business_as_usual")
 
   iso3_more_2_values_since_2020 <- df_this_ind %>%
-    dplyr::filter(.data[[type]] %in% c("reported", "estimated"),
+    dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
                   .data[[year]] >= 2000) %>%
     dplyr::group_by(dplyr::across(c(iso3, ind))) %>%
     dplyr::summarise(n = dplyr::n()) %>%
