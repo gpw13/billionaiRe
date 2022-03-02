@@ -80,7 +80,9 @@ scenario_dip_recover <- function(df,
     default_scenario = default_scenario,
     scenario_name = scenario_name,
     !!!params
-  ))
+  )) %>%
+    dplyr::bind_rows(df) %>%
+    dplyr::distinct()
 }
 
 #' Scenario dip and recover to specific iso3
@@ -144,9 +146,15 @@ scenario_dip_recover_iso3 <- function(df,
 
   baseline_year <- scenario_df %>%
     dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
-                  .data[[year]] >= start_year, .data[[year]] < dip_year) %>%
-    dplyr::filter(.data[[year]] == min(.data[[year]], na.rm = TRUE)) %>%
-    dplyr::pull(.data[[year]])
+                  .data[[year]] >= start_year, .data[[year]] < dip_year)
+
+  if(nrow(baseline_year) > 0){
+    baseline_year <- baseline_year %>%
+      dplyr::filter(.data[[year]] == min(.data[[year]], na.rm = TRUE)) %>%
+      dplyr::pull(.data[[year]])
+  }else{
+    baseline_year <- NULL
+  }
 
   if (nrow(reported_estimated) == 0 | rlang::is_empty(baseline_year)) {
     recover_df <- scenario_df %>%
@@ -156,7 +164,7 @@ scenario_dip_recover_iso3 <- function(df,
         ind = ind,
         iso3 = iso3_col,
         year = year,
-        start_year = start_year,
+        start_year = dip_year,
         end_year = end_year,
         scenario_name = scenario_name,
         scenario = scenario,
