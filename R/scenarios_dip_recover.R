@@ -142,7 +142,13 @@ scenario_dip_recover_iso3 <- function(df,
     dplyr::pull(last_value, .data[[value]])
   )
 
-  if (nrow(reported_estimated) == 0) {
+  baseline_year <- scenario_df %>%
+    dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
+                  .data[[year]] >= start_year, .data[[year]] < dip_year) %>%
+    dplyr::filter(.data[[year]] == min(.data[[year]])) %>%
+    dplyr::pull(.data[[year]])
+
+  if (nrow(reported_estimated) == 0 | rlang::is_empty(baseline_year)) {
     recover_df <- scenario_df %>%
       dplyr::filter(.data[[year]] >= dip_year) %>%
       scenario_bau(
@@ -173,7 +179,7 @@ scenario_dip_recover_iso3 <- function(df,
                                ~get_target_aarc(scenario_df %>% dplyr::filter(.data[[ind]] == .y),
                                                 target_value = .x,
                                                 target_year = dip_year - 1,
-                                                baseline_year = start_year,
+                                                baseline_year = baseline_year,
                                                 value = value,
                                                 year = year,
                                                 iso3 = iso3_col,
