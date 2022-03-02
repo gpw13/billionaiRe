@@ -145,7 +145,7 @@ scenario_dip_recover_iso3 <- function(df,
   baseline_year <- scenario_df %>%
     dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
                   .data[[year]] >= start_year, .data[[year]] < dip_year) %>%
-    dplyr::filter(.data[[year]] == min(.data[[year]])) %>%
+    dplyr::filter(.data[[year]] == min(.data[[year]], na.rm = TRUE)) %>%
     dplyr::pull(.data[[year]])
 
   if (nrow(reported_estimated) == 0 | rlang::is_empty(baseline_year)) {
@@ -175,11 +175,11 @@ scenario_dip_recover_iso3 <- function(df,
       dplyr::filter(.data[[year]] == (dip_year - 1)) %>%
       dplyr::pull(.data[[value]], .data[[ind]])
 
-    aroc_df <- purrr::map2_dfr(target_value_iso3_ind, names(target_value_iso3_ind),
+    aroc_df <- purrr::pmap_dfr(list(.x = target_value_iso3_ind, .y = names(target_value_iso3_ind), ..1 = baseline_year),
                                ~get_target_aarc(scenario_df %>% dplyr::filter(.data[[ind]] == .y),
                                                 target_value = .x,
                                                 target_year = dip_year - 1,
-                                                baseline_year = baseline_year,
+                                                baseline_year = ..1,
                                                 value = value,
                                                 year = year,
                                                 iso3 = iso3_col,
