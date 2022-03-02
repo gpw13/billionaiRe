@@ -11,7 +11,7 @@ accelerate_pneumo(
   iso3 = "iso3",
   ind = "ind",
   year = "year",
-  type = "type",
+  type_col = "type",
   ...
 )
 }
@@ -30,6 +30,10 @@ calculating contributions on data in long format rather than wide format.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{ind}{Column name of column with indicator names.}
+
+\item{year}{Column name of column with years.}
+
+\item{type_col}{Column name of column to store type.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
