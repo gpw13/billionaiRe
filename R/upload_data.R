@@ -73,7 +73,7 @@ upload_billion_data <- function(df,
     experiment = experiment
   )
 
-  if (file.size(output_file) > 0) {
+  if (file.size(output_file) == 0) {
     cli::cli_abort("The file being uploaded is empty.")
   }
 
