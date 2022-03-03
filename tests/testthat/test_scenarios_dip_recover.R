@@ -84,7 +84,7 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
     dplyr::filter(scenario == "dip_recover") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_longer_just_scenario, c(68, 69, 60.00000, 60.00000, 60.882353, 61.764706, 62.647059, 63.529412))
+  testthat::expect_equal(df_dip_recover_longer_just_scenario, c(60, 60.882353, 61.764706, 62.647059, 63.529412))
 
 
   df_dip_recover_very_long <- scenario_dip_recover(df_nas, recovery_year = 2030)
@@ -93,7 +93,7 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
     dplyr::filter(scenario == "dip_recover") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_just_scenario, c(68, 69, rep(60.0, 6)))
+  testthat::expect_equal(df_dip_recover_just_scenario, c(rep(60.0, 5)))
 })
 
 testthat::test_that("scenario_dip_recover produces accurate results with progressive_recovery == TRUE:", {
@@ -102,8 +102,6 @@ testthat::test_that("scenario_dip_recover produces accurate results with progres
       year == 2020 ~ 60L,
       TRUE ~ value
     ))
-
-
 
   df_dip_recover_progressive_recovery <- scenario_dip_recover(df_reported, progressive_recovery = TRUE)
 
@@ -133,4 +131,54 @@ testthat::test_that("scenario_dip_recover produces accurate results with two ind
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(64.411765, 64.411765))
+
+  df_diff_values <- df %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year >= 2020 & ind == "adult_obese" ~ as.numeric(61 + (year - 2020)),
+      TRUE ~ as.numeric(value)
+    ))
+
+  df_dip_recover <- scenario_dip_recover(df_diff_values)
+
+  df_dip_recoverr_2025_two_iso3 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_two_iso3, c(65.4852941, 64.411765))
+
+})
+
+testthat::test_that("scenario_dip_recover carries last reported value when start_year value is missing", {
+  df <- testdf() %>%
+    dplyr::filter(year >= 2019)
+
+  df_dip_recover <- scenario_dip_recover(df)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 70)
+})
+
+testthat::test_that("scenario_dip_recover carries last reported value when start_year value is NA", {
+  df <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year == 2018, NA_integer_, value))
+
+  df_dip_recover <- scenario_dip_recover(df)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 70)
+
+  df_dip_recover_2022_recovery <- scenario_dip_recover(df, recovery_year = 2022)
+
+  df_dip_recoverr_2025_2022_recovery <- df_dip_recover_2022_recovery %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_2022_recovery, 71)
+
 })
