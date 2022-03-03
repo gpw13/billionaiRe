@@ -131,12 +131,13 @@ be supplied as a named vector where the names correspond to the output of
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>In details, the AROC  between the <code>start_year</code>  and <code>dip_year</code> - 1 is
-applied to the last reported value to <code>recovery_year</code> onward. If there are
-missing values between <code>dip_year</code> and <code>recovery_year</code>, the last value from
-<code>dip_year</code> is carried forward. This applies only to countries where the
-indicator value for <code>dip_year</code> is <code>reported</code> or <code>estimated</code>. Otherwise,
-the value is carried with <code>scenario_bau</code>.</p>
+    <p>In details, the AROC  between the <code>start_year</code>  and the last <code>reported</code> or
+<code>estimated</code> value before <code>dip_year</code> is applied to the last reported value to
+<code>recovery_year</code> onward. If there are missing values between <code>dip_year</code> and
+<code>recovery_year</code>, the last value from <code>dip_year</code> is carried forward. This
+applies only to countries where the indicator value for <code>dip_year</code> is
+<code>reported</code> or <code>estimated</code>. Otherwise, the value is carried with
+<code>scenario_bau</code>.</p>
 <p>If <code>progressive_recovery</code> is TRUE, then the recovery is
 spread between the years between <code>recovery_year</code> and <code>end_year</code>. For
 instance, if <code>recovery_year</code> is 2021 and <code>end_year</code> 2025, then 2021 will have 0%
