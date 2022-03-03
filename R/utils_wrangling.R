@@ -166,8 +166,15 @@ save_wrangled_output <- function(df,
   assert_col_types(df, xmart_col_types(data_type))
   assert_distinct_rows(df, c("ind", "iso3", "year", "scenario"))
 
-  # Check that each non-missing value also has a scenario assigned to it
-  stopifnot(!any(!is.na(df$value) & is.na(df$scenario)))
+  # If the value is not NA, check that the expected columns are also not NA
+  assert_col_paired_with(
+    df,
+    "value",
+    c("iso3", "year", "ind", "scenario", "type", "source", "use_dash", "use_calc")
+  )
+
+  # Ensure that the number of rows is greater than 0
+  stopifnot(nrow(df) > 0)
 
   ext <- stringr::str_split(path, "\\.")[[1]][[2]]
   assert_x_in_y(ext, c("csv", "parquet"))

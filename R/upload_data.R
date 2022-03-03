@@ -73,6 +73,10 @@ upload_billion_data <- function(df,
     experiment = experiment
   )
 
+  if (file.size(output_file) > 0) {
+    cli::cli_abort("The file being uploaded is empty.")
+  }
+
   whdh::upload_to_data_lake(
     data_lake_name = get_data_lake_name(),
     container = "dropzone",

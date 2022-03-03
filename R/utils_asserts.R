@@ -107,7 +107,7 @@ assert_col_types <- function(df, expected) {
 
   # Compare using waldo
   compare_obj <- waldo::compare(
-    head(df, 0), # Remove all rows so the comparison is only on the df columns
+    utils::head(df, 0), # Remove all rows so the comparison is only on the df columns
     expected_df,
     x_arg = "df",
     y_arg = "expected",
@@ -224,6 +224,35 @@ assert_homogeneous_col <- function(df, col_name) {
     )
   }
 }
+
+#' Assert that paired columns have values
+#'
+#' Ensures that if rows of a given column has a value (i.e., is not NA), then
+#' other columns in those rows also have a value (i.e., are not NA). Useful for
+#' enforcing dependencies between columns.
+#'
+#' @param df a data frame
+#' @param col_name (string) the name of a column in the data frame
+#' @param pair_cols (character vectors) the names of the columns which are paired
+#'   with the `col_name` column
+assert_col_paired_with <- function(df, col_name, pair_cols) {
+  assert_string(col_name, 1)
+  assert_type(pair_cols, "character")
+  assert_columns(df, c(col_name, pair_cols))
+
+  df <- dplyr::filter(df, !is.na(.data[[col_name]]))
+
+  invalid_rows <- df %>%
+    dplyr::filter(dplyr::if_any(tidyselect::all_of(pair_cols), is.na))
+
+  if (nrow(invalid_rows) != 0) {
+    lab <- deparse(substitute(df))
+    cli::cli_abort(
+      "All rows with non-NA values for {.field {col_name}} must have a
+      corresponding non-NA value for {cli::qty(pair_cols)} column{?s} {.field {pair_cols}}")
+  }
+}
+
 
 # Argument checks ---------------------------------------------------------
 #' Assert that argument exists
