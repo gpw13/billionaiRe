@@ -116,3 +116,13 @@ testthat::test_that("assert_col_types works as expected", {
     c(x = "integer", y = "logical", z = "character")
   ))
 })
+
+# assert_col_paired_with --------------------------------------------------
+
+testthat::test_that("assert_col_paired_with works as expected", {
+  test_df <- tibble::tibble(x = c(1, 2, 3), y = c(4, NA, 5), z = 7)
+
+  testthat::expect_silent(assert_col_paired_with(test_df, "x", "z"))
+  testthat::expect_error(assert_col_paired_with(test_df, "x", "y"))
+  testthat::expect_error(assert_col_paired_with(test_df, "x", c("y", "z")))
+})
