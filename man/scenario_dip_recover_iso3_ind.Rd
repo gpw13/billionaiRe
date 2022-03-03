@@ -15,6 +15,8 @@ scenario_dip_recover_iso3_ind(
   recovery_year = 2021,
   progressive_recovery = FALSE,
   baseline_year = 2018,
+  last_year = NULL,
+  start_year = 2018,
   end_year = 2025,
   value = "value",
   scenario = "scenario",
@@ -28,11 +30,17 @@ scenario_dip_recover_iso3_ind(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
+\item{iso3}{(character) name of the ISO3 country code on which to calculate
+the scenario}
 
-\item{ind}{Column name of column with indicator names.}
+\item{ind}{(character) name of the indicator on which to calculate the
+scenario}
 
 \item{year}{Column name of column with years.}
+
+\item{ind_col}{Column name of column with indicator names.}
+
+\item{iso3_col}{(character) name of column with the ISO3 country codes}
 
 \item{dip_year}{(integer) year where the dip appends}
 
@@ -41,8 +49,13 @@ country, year, and indicator.}
 \item{progressive_recovery}{(logical) TRUE if the recovery after dip
 should be progressive.}
 
-\item{baseline_year}{Year from which the scenario is measured.
-Defaults to \code{start_year}}
+\item{baseline_year}{(integer) identify baseline year on which the AROC
+should be calculated.}
+
+\item{last_year}{(integer) identify last year where values where \code{reported}
+or \code{estimated} between \code{start_year} and \code{end_year}.}
+
+\item{start_year}{Start year for scenario, defaults to 2018.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
