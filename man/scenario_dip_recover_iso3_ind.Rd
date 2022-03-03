@@ -15,24 +15,38 @@ scenario_dip_recover_iso3_ind(
   recovery_year = 2021,
   progressive_recovery = FALSE,
   baseline_year = 2018,
+  last_year = NULL,
+  start_year = 2018,
   end_year = 2025,
   value = "value",
   scenario = "scenario",
   scenario_name = "dip_recover",
   type_col = "type",
   ind_ids = billion_ind_codes("all"),
-  default_scenario = "default"
+  default_scenario = "default",
+  trim = TRUE,
+  small_is_best = FALSE,
+  keep_better_values = FALSE,
+  upper_limit = 100,
+  lower_limit = 0,
+  trim_years = TRUE
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
+\item{iso3}{(character) name of the ISO3 country code on which to calculate
+the scenario}
 
-\item{ind}{Column name of column with indicator names.}
+\item{ind}{(character) name of the indicator on which to calculate the
+scenario}
 
 \item{year}{Column name of column with years.}
+
+\item{ind_col}{Column name of column with indicator names.}
+
+\item{iso3_col}{(character) name of column with the ISO3 country codes}
 
 \item{dip_year}{(integer) year where the dip appends}
 
@@ -41,8 +55,13 @@ country, year, and indicator.}
 \item{progressive_recovery}{(logical) TRUE if the recovery after dip
 should be progressive.}
 
-\item{baseline_year}{Year from which the scenario is measured.
-Defaults to \code{start_year}}
+\item{baseline_year}{(integer) identify baseline year on which the AROC
+should be calculated.}
+
+\item{last_year}{(integer) identify last year where values where \code{reported}
+or \code{estimated} between \code{start_year} and \code{end_year}.}
+
+\item{start_year}{Start year for scenario, defaults to 2018.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
@@ -61,6 +80,25 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{trim}{logical to indicate if the data should be trimmed between
+\code{upper_limit} and \code{lower_limit}.}
+
+\item{small_is_best}{Logical to identify if a lower value is better than a higher
+one (e.g. lower obesity in a positive public health outcome, so obesity rate
+should have small_is_best = TRUE).}
+
+\item{keep_better_values}{logical to indicate if "better" values should be
+kept from \code{value} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+than \code{col} will be kept.}
+
+\item{upper_limit}{upper limit at which the indicator should be caped.}
+
+\item{lower_limit}{lower_limit limit at which the indicator should be caped.}
+
+\item{trim_years}{logical to indicate if years before \code{start_year} and after
+\code{end_year} should be removed}
 }
 \value{
 a data frame with scenario values in \code{value} with a \code{scenario} column.
