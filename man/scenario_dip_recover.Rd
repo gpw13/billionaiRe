@@ -69,12 +69,13 @@ return to the previous situation after a dip. The same annual rate of change (AR
 before dip is applied from the \code{recovery_year}.
 }
 \details{
-In details, the AROC  between the \code{start_year}  and \code{dip_year} - 1 is
-applied to the last reported value to \code{recovery_year} onward. If there are
-missing values between \code{dip_year} and \code{recovery_year}, the last value from
-\code{dip_year} is carried forward. This applies only to countries where the
-indicator value for \code{dip_year} is \code{reported} or \code{estimated}. Otherwise,
-the value is carried with \code{scenario_bau}.
+In details, the AROC  between the \code{start_year}  and the last \code{reported} or
+\code{estimated} value before \code{dip_year} is applied to the last reported value to
+\code{recovery_year} onward. If there are missing values between \code{dip_year} and
+\code{recovery_year}, the last value from \code{dip_year} is carried forward. This
+applies only to countries where the indicator value for \code{dip_year} is
+\code{reported} or \code{estimated}. Otherwise, the value is carried with
+\code{scenario_bau}.
 
 If \code{progressive_recovery} is TRUE, then the recovery is
 spread between the years between \code{recovery_year} and \code{end_year}. For
