@@ -69,22 +69,22 @@ scenario_dip_recover <- function(df,
   params <- get_right_params(list(...), scenario_dip_recover_iso3)
 
   purrr::map_dfr(unique_iso3, ~ rlang::exec(scenario_dip_recover_iso3,
-    iso3 =  .x,
-    df = scenario_df,
-    year = year,
-    ind = ind,
-    value = value,
-    iso3_col = iso3,
-    start_year = start_year,
-    end_year = end_year,
-    dip_year =  dip_year,
-    recovery_year = recovery_year,
-    progressive_recovery = progressive_recovery,
-    scenario = scenario,
-    ind_ids = ind_ids,
-    default_scenario = default_scenario,
-    scenario_name = scenario_name,
-    !!!params
+                                            iso3 =  .x,
+                                            df = scenario_df,
+                                            year = year,
+                                            ind = ind,
+                                            value = value,
+                                            iso3_col = iso3,
+                                            start_year = start_year,
+                                            end_year = end_year,
+                                            dip_year =  dip_year,
+                                            recovery_year = recovery_year,
+                                            progressive_recovery = progressive_recovery,
+                                            scenario = scenario,
+                                            ind_ids = ind_ids,
+                                            default_scenario = default_scenario,
+                                            scenario_name = scenario_name,
+                                            !!!params
   )) %>%
     dplyr::bind_rows(df) %>%
     dplyr::distinct()
@@ -124,17 +124,12 @@ scenario_dip_recover_iso3 <- function(df,
                                       trim_years = TRUE,
                                       ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
-  assert_columns(df, year, iso3_col, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3_col, year, scenario, ind_ids = ind_ids)
 
   scenario_df <- df %>%
     dplyr::filter(.data[[iso3_col]] == !!iso3)
 
-  reported_estimated <- scenario_df %>%
-    dplyr::filter(
-      .data[[type_col]] %in% c("reported", "estimated"),
-      .data[[year]] == dip_year
-    )
+  assert_columns(scenario_df, year, iso3_col, ind, value, scenario)
+  assert_unique_rows(scenario_df, ind, iso3_col, year, scenario, ind_ids = ind_ids)
 
   baseline_year <- scenario_df %>%
     dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
@@ -144,58 +139,59 @@ scenario_dip_recover_iso3 <- function(df,
     baseline_year <- baseline_year %>%
       dplyr::filter(.data[[year]] == min(.data[[year]], na.rm = TRUE)) %>%
       dplyr::pull(.data[[year]], .data[[ind]])
-  }else{
-    baseline_year <- NULL
-  }
-
-  if (nrow(reported_estimated) == 0 | rlang::is_empty(baseline_year)) {
-    recover_df <- scenario_df %>%
-      dplyr::filter(.data[[year]] >= dip_year) %>%
-      scenario_bau(
-        value = value,
-        ind = ind,
-        iso3 = iso3_col,
-        year = year,
-        start_year = dip_year,
-        end_year = end_year,
-        scenario_name = scenario_name,
-        scenario = scenario,
-        trim = FALSE,
-        keep_better_values = keep_better_values,
-        upper_limit = upper_limit,
-        lower_limit = lower_limit,
-        trim_years = trim_years,
-        small_is_best = small_is_best,
-        ind_ids = ind_ids,
-        default_scenario = default_scenario
-      ) %>%
-      dplyr::filter(.data[[scenario]] == !!scenario_name)
-  } else {
-    unique_inds <- sort(unique(scenario_df[[ind]]))
 
     baseline_year <- baseline_year[order(names(baseline_year))]
-
-    recover_df <- purrr::map2_dfr(unique_inds, baseline_year,
-                                 ~ scenario_dip_recover_iso3_ind(
-                                   df = scenario_df,
-                                   iso3 = iso3,
-                                   ind = .x,
-                                   year = year,
-                                   ind_col = ind,
-                                   iso3_col = iso3_col,
-                                   dip_year = dip_year,
-                                   recovery_year = recovery_year,
-                                   progressive_recovery = progressive_recovery,
-                                   baseline_year = .y,
-                                   end_year = end_year,
-                                   value = value,
-                                   scenario = scenario,
-                                   scenario_name = scenario_name,
-                                   type_col = type_col,
-                                   ind_ids = ind_ids,
-                                   default_scenario = default_scenario
-                                 ))
+  }else{
+    baseline_year <- NA
   }
+
+  last_year <- scenario_df %>%
+    dplyr::filter(
+      .data[[type_col]] %in% c("reported", "estimated"),
+      !is.na(.data[[value]]),
+      .data[[year]] >= start_year & .data[[year]] < recovery_year
+    )
+
+  if(nrow(last_year) > 0){
+    last_year <- last_year %>%
+      dplyr::filter(.data[[year]] == max(.data[[year]], na.rm = TRUE)) %>%
+      dplyr::pull(.data[[year]], .data[[ind]])
+
+    last_year <- last_year[order(names(last_year))]
+  }else{
+    last_year <- NA
+  }
+
+  unique_inds <- sort(unique(scenario_df[[ind]]))
+
+  recover_df <- purrr::pmap_dfr(list(unique_inds, baseline_year,
+                                     last_year),
+                                ~ scenario_dip_recover_iso3_ind(
+                                  df = scenario_df,
+                                  iso3 = iso3,
+                                  ind = ..1,
+                                  year = year,
+                                  ind_col = ind,
+                                  iso3_col = iso3_col,
+                                  dip_year = dip_year,
+                                  recovery_year = recovery_year,
+                                  progressive_recovery = progressive_recovery,
+                                  baseline_year = ..2,
+                                  last_year = ..3,
+                                  end_year = end_year,
+                                  value = value,
+                                  scenario = scenario,
+                                  scenario_name = scenario_name,
+                                  type_col = type_col,
+                                  ind_ids = ind_ids,
+                                  default_scenario = default_scenario,
+                                  trim = trim,
+                                  small_is_best = small_is_best,
+                                  keep_better_values = keep_better_values,
+                                  upper_limit = upper_limit,
+                                  lower_limit = lower_limit,
+                                  trim_years = trim_years
+                                ))
 
   recover_df <- recover_df %>%
     dplyr::filter(.data[[year]] >= dip_year & !.data[[type_col]] %in% c("reported", "estimated")) %>%
@@ -216,13 +212,22 @@ scenario_dip_recover_iso3 <- function(df,
 #' Applies `scenario_dip_recover()` to a specific `ind` and `iso3` combination.
 #'
 #' @inherit scenario_dip_recover
-#' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams trim_values
 #' @inherit scenario_aroc
 #' @inheritParams scenario_dip_recover_iso3
 #' @param ind_col Column name of column with indicator names.
+#' @param iso3_col (character) name of column with the ISO3 country codes
+#' @param ind (character) name of the indicator on which to calculate the
+#'    scenario
+#' @param iso3 (character) name of the ISO3 country code on which to calculate
+#'    the scenario
+#' @param baseline_year (integer) identify baseline year on which the AROC
+#'    should be calculated.
+#' @param last_year (integer) identify last year where values where `reported`
+#'    or `estimated` between `start_year` and `end_year`.
 #'
 scenario_dip_recover_iso3_ind <- function(df,
                                           iso3,
@@ -234,13 +239,21 @@ scenario_dip_recover_iso3_ind <- function(df,
                                           recovery_year = 2021,
                                           progressive_recovery = FALSE,
                                           baseline_year = 2018,
+                                          last_year = NULL,
+                                          start_year = 2018,
                                           end_year = 2025,
                                           value = "value",
                                           scenario = "scenario",
                                           scenario_name = "dip_recover",
                                           type_col = "type",
                                           ind_ids = billion_ind_codes("all"),
-                                          default_scenario = "default"){
+                                          default_scenario = "default",
+                                          trim = TRUE,
+                                          small_is_best = FALSE,
+                                          keep_better_values = FALSE,
+                                          upper_limit = 100,
+                                          lower_limit = 0,
+                                          trim_years = TRUE){
   ind_df <- df %>%
     dplyr::filter(.data[[ind_col]] == !! ind,
                   .data[[iso3_col]] == !! iso3)
@@ -248,97 +261,106 @@ scenario_dip_recover_iso3_ind <- function(df,
   assert_columns(ind_df, year, iso3_col, ind_col, value, scenario)
   assert_unique_rows(ind_df, ind_col, iso3_col, year, scenario, ind_ids = ind_ids)
 
-  target_value_iso3_ind <- ind_df %>%
-    dplyr::filter(.data[[year]] == (dip_year - 1)) %>%
-    dplyr::pull(.data[[value]])
+  if (is.na(baseline_year) | is.na(last_year)) {
+    recover_df <- ind_df %>%
+      scenario_bau(
+        value = value,
+        ind = ind_col,
+        iso3 = iso3_col,
+        year = year,
+        start_year = dip_year,
+        end_year = end_year,
+        scenario_name = scenario_name,
+        scenario = scenario,
+        trim = FALSE,
+        keep_better_values = keep_better_values,
+        upper_limit = upper_limit,
+        lower_limit = lower_limit,
+        trim_years = trim_years,
+        small_is_best = small_is_best,
+        ind_ids = ind_ids,
+        default_scenario = default_scenario
+      ) %>%
+      dplyr::filter(.data[[scenario]] == !!scenario_name)
+  } else {
 
-  last_value <- ind_df %>%
-    dplyr::filter(
-      .data[[type_col]] %in% c("reported", "estimated"),
-      !is.na(.data[[value]]),
-      .data[[year]] >= dip_year & .data[[year]] < recovery_year
+    target_value_iso3_ind <- ind_df %>%
+      dplyr::filter(.data[[year]] == (dip_year - 1)) %>%
+      dplyr::pull(.data[[value]])
+
+    last_value <- ind_df %>%
+      dplyr::filter(
+        .data[[year]] == last_year
+      ) %>%
+      dplyr::pull(.data[[value]])
+
+    aroc <- get_target_aarc(ind_df,
+                               target_value = target_value_iso3_ind,
+                               target_year = dip_year - 1,
+                               baseline_year = baseline_year,
+                               value = value,
+                               year = year,
+                               iso3 = iso3_col,
+                               ind = ind_col
+    ) %>%
+      dplyr::pull(.data[["aroc"]])
+
+    aroc_df <- tidyr::expand_grid(
+      "{year}" := recovery_year:max(ind_df[[year]]),
+      "{iso3_col}" := unique(iso3),
+      "{ind_col}" := unique(ind),
+      "aroc" := aroc
     )
 
-  last_year <- ifelse(nrow(last_value) == 0,
-                      NA_real_,
-                      last_value %>%
-                        dplyr::filter(.data[[year]] == max(.data[[year]], na.rm = TRUE)) %>%
-                        dplyr::pull(.data[[year]])
-  )
+    if (progressive_recovery) {
+      aroc_df <- aroc_df %>%
+        dplyr::mutate(aroc = .data[["aroc"]] * ((.data[[year]] - recovery_year) / (end_year - recovery_year)))
+    }
 
-  last_value <- ifelse(nrow(last_value) == 0,
-                       NA_real_,
-                       last_value %>%
-                         dplyr::filter(.data[[year]] == max(.data[[year]], na.rm = TRUE)) %>%
-                         dplyr::pull(.data[[value]])
-  )
+    ind_timeseries <- ind_df %>%
+      dplyr::filter(.data[[year]] >= dip_year) %>%
+      dplyr::group_by(.data[[iso3_col]], .data[[ind_col]]) %>%
+      dplyr::tally() %>%
+      dplyr::filter(.data[["n"]] >= (end_year - dip_year - 1)) %>%
+      dplyr::select(-"n")
 
-  aroc_df <- get_target_aarc(ind_df,
-                                              target_value = target_value_iso3_ind,
-                                              target_year = dip_year - 1,
-                                              baseline_year = baseline_year,
-                                              value = value,
-                                              year = year,
-                                              iso3 = iso3_col,
-                                              ind = ind_col
-                             )
+    ind_no_timeseries <- ind_df %>%
+      dplyr::anti_join(ind_timeseries, by = c(iso3_col, ind_col)) %>%
+      dplyr::filter(
+        stringr::str_detect(ind_col, "campaign"),
+        !.data[[year]] %in% 2018:(dip_year - 1)
+      )
 
-  full_recovery_df <- tidyr::expand_grid(
-    "{year}" := recovery_year:max(ind_df[[year]]),
-    "{iso3_col}" := unique(aroc_df[[iso3_col]]),
-    "{ind_col}" := unique(aroc_df[[ind_col]]),
-  )
+    recover_df <- ind_df %>%
+      dplyr::group_by(.data[[ind_col]]) %>%
+      dplyr::semi_join(ind_timeseries, by = c(iso3_col, ind_col)) %>%
+      dplyr::mutate(
+        baseline_value = .data[[value]][year == dip_year]
+      ) %>%
+      dplyr::ungroup() %>%
+      dplyr::left_join(aroc_df, by = c(iso3_col, ind_col, year)) %>%
+      dplyr::mutate(
+        scenario_value = dplyr::case_when(
+          stringr::str_detect(ind, "campaign") ~ as.numeric(.data[[value]]),
+          .data[[year]] < dip_year ~ as.numeric(.data[[value]]),
+          .data[[year]] >= recovery_year ~ last_value * (1 + (.data[["aroc"]]) * (.data[[year]] - (recovery_year - 1))),
+          .data[[year]] >= dip_year & .data[[year]] < recovery_year & .data[[year]] > last_year ~ as.numeric(last_value),
+          .data[[year]] >= dip_year & .data[[year]] < recovery_year & !is.na(.data[[value]]) ~ as.numeric(.data[[value]]),
+          TRUE ~ NA_real_
+        ),
+        scenario_value = dplyr::case_when(
+          .data[["scenario_value"]] < 0 ~ 0.0,
+          TRUE ~ .data[["scenario_value"]]
+        ),
+        "{type_col}" := dplyr::case_when(
+          (.data[["scenario_value"]] != .data[[value]] | (is.na(.data[[value]] & !is.na(.data[["scenario_value"]])))) & .data[[year]] >= dip_year ~ "projected",
+          TRUE ~ .data[[type_col]]
+        ),
+        !!sym(scenario) := scenario_name
+      ) %>%
+      dplyr::select(-"baseline_value", -"aroc")
 
-  aroc_df <- aroc_df %>%
-    dplyr::full_join(full_recovery_df, by = c(iso3_col, ind_col))
-
-  if (progressive_recovery) {
-    aroc_df <- aroc_df %>%
-      dplyr::mutate(aroc = .data[["aroc"]] * ((.data[[year]] - recovery_year) / (end_year - recovery_year)))
   }
 
-  ind_timeseries <- ind_df %>%
-    dplyr::filter(.data[[year]] >= dip_year) %>%
-    dplyr::group_by(.data[[iso3_col]], .data[[ind_col]]) %>%
-    dplyr::tally() %>%
-    dplyr::filter(.data[["n"]] >= (end_year - dip_year - 1)) %>%
-    dplyr::select(-"n")
-
-  ind_no_timeseries <- ind_df %>%
-    dplyr::anti_join(ind_timeseries, by = c(iso3_col, ind_col)) %>%
-    dplyr::filter(
-      stringr::str_detect(ind_col, "campaign"),
-      !.data[[year]] %in% 2018:(dip_year - 1)
-    )
-
-  a <- ind_df %>%
-    dplyr::group_by(.data[[ind_col]]) %>%
-    dplyr::semi_join(ind_timeseries, by = c(iso3_col, ind_col)) %>%
-    dplyr::mutate(
-      baseline_value = .data[[value]][year == dip_year]
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::left_join(aroc_df, by = c(iso3_col, ind_col, year)) %>%
-    dplyr::mutate(
-      scenario_value = dplyr::case_when(
-        stringr::str_detect(ind, "campaign") ~ as.numeric(.data[[value]]),
-        .data[[year]] < dip_year ~ as.numeric(.data[[value]]),
-        .data[[year]] >= recovery_year ~ last_value * (1 + (.data[["aroc"]]) * (.data[[year]] - (recovery_year - 1))),
-        .data[[year]] >= dip_year & .data[[year]] < recovery_year & .data[[year]] > last_year ~ as.numeric(last_value),
-        .data[[year]] >= dip_year & .data[[year]] < recovery_year & !is.na(.data[[value]]) ~ as.numeric(.data[[value]]),
-        TRUE ~ NA_real_
-      ),
-      scenario_value = dplyr::case_when(
-        .data[["scenario_value"]] < 0 ~ 0.0,
-        TRUE ~ .data[["scenario_value"]]
-      ),
-      "{type_col}" := dplyr::case_when(
-        (.data[["scenario_value"]] != .data[[value]] | (is.na(.data[[value]] & !is.na(.data[["scenario_value"]])))) & .data[[year]] >= dip_year ~ "projected",
-        TRUE ~ .data[[type_col]]
-      ),
-      !!sym(scenario) := scenario_name
-    ) %>%
-    dplyr::select(-"baseline_value", -"aroc")
-
-
+  return(recover_df)
 }
