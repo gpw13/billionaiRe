@@ -70,6 +70,7 @@ indicator specified and adds the scenario.</p>
     <span class="st">"fixed_target_col"</span>, <span class="st">"bau"</span>, <span class="st">"accelerate"</span>, <span class="st">"sdg"</span>, <span class="st">"covid_rapid_return"</span>,
     <span class="st">"covid_sustained_disruption"</span>, <span class="st">"covid_delayed_return"</span>, <span class="st">"covid_never_return"</span><span class="op">)</span>,
   <span class="va">indicator</span>,
+  ind <span class="op">=</span> <span class="st">"ind"</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span>,
   scenario <span class="op">=</span> <span class="st">"scenario"</span>,
   <span class="va">...</span>
@@ -101,6 +102,8 @@ of the following:</p><ul><li><p><code>aroc</code>: calls <code><a href="scenario
 </ul></dd>
 <dt>indicator</dt>
 <dd><p>name of indicator to be passed to <code>scenario_function</code></p></dd>
+<dt>ind</dt>
+<dd><p>Column name of column with indicator names.</p></dd>
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
