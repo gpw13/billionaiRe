@@ -379,5 +379,6 @@ make_default_scenario <- function(df,
       trim_years = trim_years
     )
   ) %>%
-    dplyr::distinct()
+    dplyr::distinct() %>%
+    dplyr::bind_rows(df)
 }
