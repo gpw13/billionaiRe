@@ -390,6 +390,13 @@ accelerate_hpop_tobacco <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
+  full_df <- tidyr::expand_grid(
+    "{iso3}" := unique(df_this_ind[[iso3]]),
+    "{year}" := start_year:end_year,
+    "{ind}" := this_ind,
+    "{scenario}" := unique(df_this_ind[[scenario]])
+  )
+
   assert_ind_start_end_year(df_this_ind,
     start_year = 2010, end_year = 2018,
     ind = ind, ind_ids = ind_ids[this_ind], scenario = scenario
@@ -398,6 +405,7 @@ accelerate_hpop_tobacco <- function(df,
   params <- list(...)
 
   df_scenario_percent_baseline <- df_this_ind %>%
+    dplyr::full_join(full_df, by = (c(iso3, year, ind, scenario))) %>%
     dplyr::group_by(iso3) %>%
     dplyr::mutate(
       has_estimates = any(.data[[type_col]] == "estimated"),
@@ -412,7 +420,11 @@ accelerate_hpop_tobacco <- function(df,
         .data[[year]] >= start_year & .data[[year]] <= 2025 & .data[["has_estimates"]],
         .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[[year]] - 2018) / (end_year - start_year),
         NA_real_
-      )
+      ),
+      "{type_col}" := dplyr::if_else(
+        is.na(.data[[type_col]]) & .data[[year]] >= start_year,
+        "projected",
+        .data[[type_col]])
     ) %>%
     dplyr::select(-c("baseline_value", "goalend", "old_baseline_value", "has_estimates")) %>%
     trim_values(

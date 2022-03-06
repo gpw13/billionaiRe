@@ -480,9 +480,10 @@ testthat::test_that("sdg can be run on all hpop indicators:", {
   testthat::expect_equal(nrow(calculated_test_data), 609)
 
   testthat::expect_error(
-    load_misc_data("test_data/test_data/test_data_2022-02-21T13-44-35.parquet") %>%
+    load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
       dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
-      make_default_scenario(billion = "uhc") %>%
+      make_default_scenario(billion = "hpop") %>%
+      dplyr::filter(scenario == "default") %>%
       add_scenario("sdg"),
     NA
   )

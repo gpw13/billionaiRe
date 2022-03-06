@@ -263,11 +263,17 @@ testthat::test_that(paste0("accelerate_uhc_tobacco returns accurate values:"), {
 })
 
 testthat::test_that("accelerate can be run on all UHC indicator:", {
-  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet") %>%
-    make_default_scenario(billion = "uhc") %>%
+  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+    dplyr::mutate(scenario = dplyr::case_when(
+      .data[["scenario"]] == "default" ~ "pre_covid_trajectory",
+      TRUE ~ .data[["scenario"]]
+    )) %>%
+    dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
+    make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(
       ind %in% billion_ind_codes("uhc"),
-      !ind %in% billion_ind_codes("uhc")[stringr::str_detect(billion_ind_codes("uhc"), "espar")]
+      !ind %in% billion_ind_codes("uhc")[stringr::str_detect(billion_ind_codes("uhc"), "espar")],
+      scenario == "default"
     )
 
   testthat::expect_error(add_scenario(uhc_test_df, "accelerate"), NA)

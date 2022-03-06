@@ -1,6 +1,6 @@
-test_data <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-21T14-36-20.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-03-06T09-30-41.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
   test_data_calculated_hep <- test_data_calculated %>%
@@ -89,39 +89,54 @@ testthat::test_that("recycle_data and transform_(recycle = TRUE) get same result
 })
 
 testthat::test_that("make_default_scenario adds a default scenario to data frame:", {
-  make_default <- make_default_scenario(test_data, billion = "all") %>%
-    dplyr::arrange(iso3, year, ind)
+  make_default <- test_data %>%
+    make_default_scenario(billion = "all", default_scenario = "pre_covid_trajectory") %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
-  make_default_hep <- make_default_scenario(test_data, billion = "hep") %>%
-    dplyr::arrange(iso3, year, ind)
+  make_default_hep <- make_default_scenario(test_data, billion = "hep", default_scenario = "pre_covid_trajectory") %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   hep_recycle <- test_data %>%
     recycle_data("hep", trim_years = FALSE) %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::distinct() %>%
-    dplyr::arrange(iso3, year, ind)
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   testthat::expect_equal(make_default_hep, hep_recycle)
 
-  make_default_uhc <- make_default_scenario(test_data, billion = "uhc") %>%
-    dplyr::arrange(iso3, year, ind)
+  make_default_uhc <- make_default_scenario(test_data, billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   uhc_recycle <- test_data %>%
     recycle_data("uhc", trim_years = FALSE) %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::distinct() %>%
-    dplyr::arrange(iso3, year, ind)
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   testthat::expect_equal(make_default_uhc, uhc_recycle)
 
-  make_default_hpop <- make_default_scenario(test_data, billion = "hpop") %>%
-    dplyr::arrange(iso3, year, ind)
+  make_default_hpop <- make_default_scenario(test_data, billion = "hpop", default_scenario = "pre_covid_trajectory") %>%
+    dplyr::filter(scenario == "default") %>%
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   hpop_recycle <- test_data %>%
     recycle_data("hpop", trim_years = FALSE) %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::distinct() %>%
-    dplyr::arrange(iso3, year, ind)
+    dplyr::arrange(iso3, year, ind) %>%
+    dplyr::select(-"recycled")
 
   testthat::expect_equal(make_default_hpop, hpop_recycle)
 
@@ -134,15 +149,22 @@ testthat::test_that("make_default_scenario adds a default scenario to data frame
 })
 
 testthat::test_that("make_default_scenario adds a default scenario to data frame, even when `default` is not present in the dateframe:", {
-  make_default <- test_data %>%
-    dplyr::mutate(scenario = dplyr::case_when(
-      scenario == "default" ~ "reference_infilling",
-      TRUE ~ scenario
-    )) %>%
-    make_default_scenario(billion = "all") %>%
+  hpop_default <- test_data %>%
+    make_default_scenario(billion = "hpop") %>%
     dplyr::filter(scenario == "default")
 
-  testthat::expect_true(nrow(make_default) >0)
+  testthat::expect_true(nrow(hpop_default) >0)
+
+  hep_default <- test_data %>%
+    make_default_scenario(billion = "hep") %>%
+    dplyr::filter(scenario == "default")
+
+  testthat::expect_true(nrow(hep_default) >0)
+
+  # With UHC, not having a default in the case of test_data results into an error as we check for ability to run calculations.
+  testthat::expect_error(test_data %>%
+                           make_default_scenario(billion = "uhc") %>%
+                           dplyr::filter(scenario == "default"))
 })
 
 test_df <- tibble::tibble(
@@ -226,4 +248,3 @@ testthat::test_that("recycling functions recycle with missing base scenarios", {
   testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "covid_shock"))), 2)
   testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "reference_infilling"))), 0)
 })
-

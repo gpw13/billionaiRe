@@ -72,6 +72,7 @@ add_scenario <- function(df,
         df = df,
         scenario_function = scenario_function,
         indicator = x,
+        ind = ind,
         ind_ids = ind_ids,
         start_year = start_year,
         end_year = end_year,
@@ -115,6 +116,7 @@ add_scenario_indicator <- function(df,
                                      "covid_never_return"
                                    ),
                                    indicator,
+                                   ind = "ind",
                                    ind_ids = billion_ind_codes("all"),
                                    scenario = "scenario",
                                    ...) {
@@ -129,11 +131,21 @@ add_scenario_indicator <- function(df,
   params <- list(...)
   params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
 
+  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+    "espar[0-9].{0,3}",
+    this_ind
+  ),
+  collapse = "|"
+  ))]
+
+  this_ind_df <- df %>%
+    dplyr::filter(.data[[ind]] %in% this_ind_with_sub)
+
   if (scenario_function == "accelerate") {
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
 
     do.call(
-      accelerate_fn, c(list(df = df), params)
+      accelerate_fn, c(list(df = this_ind_df), params)
     ) %>%
       dplyr::distinct()
   } else if (scenario_function == "sdg") {
@@ -145,7 +157,7 @@ add_scenario_indicator <- function(df,
     }
 
     do.call(
-      sdg_fn, c(list(df = df), params)
+      sdg_fn, c(list(df = this_ind_df), params)
     ) %>%
       dplyr::distinct()
   } else {

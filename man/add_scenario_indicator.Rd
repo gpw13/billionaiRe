@@ -11,6 +11,7 @@ add_scenario_indicator(
     "fixed_target_col", "bau", "accelerate", "sdg", "covid_rapid_return",
     "covid_sustained_disruption", "covid_delayed_return", "covid_never_return"),
   indicator,
+  ind = "ind",
   ind_ids = billion_ind_codes("all"),
   scenario = "scenario",
   ...
@@ -41,6 +42,8 @@ of the following:
 }}
 
 \item{indicator}{name of indicator to be passed to \code{scenario_function}}
+
+\item{ind}{Column name of column with indicator names.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

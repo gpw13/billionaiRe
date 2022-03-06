@@ -42,13 +42,14 @@ testthat::test_that("basic billion calculations are consistent", {
   testthat::expect_equal(all_basic_calculated, billionaiRe:::basic_test_calculated)
 })
 
-test_data <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-02-21T14-36-20.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-03-06T09-30-41.parquet")
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_hep <- test_data_calculated_one_scenario %>%
@@ -64,7 +65,8 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
   # HEP
   test_data_one_scenario_hep <- test_data %>%
     recycle_data(billion = "hep") %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     transform_hep_data() %>%
     calculate_hep_components() %>%
     calculate_hep_billion() %>%
@@ -78,7 +80,8 @@ testthat::test_that("HEP complexe billion calculations without scenarios are con
 testthat::test_that("HPOP complexe billion calculations without scenarios are consistent", {
   test_data_one_scenario_hpop <- test_data %>%
     recycle_data(billion = "hpop") %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     transform_hpop_data() %>%
     add_hpop_populations() %>%
     calculate_hpop_billion() %>%
@@ -87,7 +90,8 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
     dplyr::arrange(iso3, ind, year)
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_hpop <- test_data_calculated_one_scenario %>%
@@ -101,7 +105,8 @@ testthat::test_that("HPOP complexe billion calculations without scenarios are co
 testthat::test_that("UHC complexe billion calculations without scenarios are consistent", {
   test_data_one_scenario_uhc <- test_data %>%
     recycle_data(billion = "uhc") %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     transform_uhc_data() %>%
     calculate_uhc_billion() %>%
     calculate_uhc_contribution() %>%
@@ -111,7 +116,8 @@ testthat::test_that("UHC complexe billion calculations without scenarios are con
     dplyr::arrange(iso3, ind, year)
 
   test_data_calculated_one_scenario <- test_data_calculated %>%
-    dplyr::filter(scenario == "default") %>%
+    dplyr::filter(scenario == "pre_covid_trajectory") %>%
+    dplyr::mutate(scenario = "default") %>%
     dplyr::arrange(scenario, iso3, ind, year)
 
   test_data_calculated_one_scenario_uhc <- test_data_calculated_one_scenario %>%

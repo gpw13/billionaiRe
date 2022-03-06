@@ -135,10 +135,6 @@ scenario_covid_dip_lag_same_aroc_only_2020values_df <- scenario_covid_dip_lag_sa
 
 test_data <- all_data_those_isos %>%
   bind_rows(scenario_covid_dip_lag_same_aroc_only_2020values_df) %>%
-  mutate(scenario = case_when(
-    scenario == "pre_covid_trajectory" ~ "default",
-    TRUE ~ scenario
-  )) %>%
   select(-transform_value) %>%
   distinct() %>%
   filter(ind != "surviving_infants") %>%

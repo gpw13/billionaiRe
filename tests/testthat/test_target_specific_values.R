@@ -1,9 +1,10 @@
-test_data <- load_misc_data("test_data/test_data/test_data_2022-02-21T14-36-20.parquet")
+test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
 
 testthat::test_that("scenarios_quantile produces accurate results:", {
   test_data_quantile <- test_data %>%
-    make_default_scenario() %>%
-    dplyr::filter(scenario == "default", ind == "water")
+    dplyr::filter(ind == "water") %>%
+    make_default_scenario(billion = "hpop") %>%
+    dplyr::filter(scenario == "default")
 
   df_scenario_quantile <- scenario_quantile(test_data_quantile, n = 5)
 
@@ -38,7 +39,7 @@ testthat::test_that("scenarios_quantile produces accurate results:", {
 
 testthat::test_that("scenario_best_in_region produces accurate results:", {
   test_data_best_in_region <- test_data %>%
-    make_default_scenario() %>%
+    make_default_scenario(billion = "hep") %>%
     dplyr::filter(scenario == "default", ind == "espar")
 
   df_scenario_best_in_region <- scenario_best_in_region(test_data_best_in_region, keep_better_values = FALSE)
