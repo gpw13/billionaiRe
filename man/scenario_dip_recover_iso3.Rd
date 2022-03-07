@@ -18,7 +18,6 @@ scenario_dip_recover_iso3(
   value = "value",
   scenario = "scenario",
   scenario_name = "dip_recover",
-  type_col = "type",
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = FALSE,
@@ -26,6 +25,9 @@ scenario_dip_recover_iso3(
   lower_limit = 0,
   trim_years = TRUE,
   ind_ids = billion_ind_codes("all"),
+  source_col = "source",
+  source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
+  type_col = "type",
   default_scenario = "default"
 )
 }
@@ -59,8 +61,6 @@ used to return the results.}
 
 \item{scenario_name}{name of scenario}
 
-\item{type_col}{Column name of column to store type.}
-
 \item{trim}{logical to indicate if the data should be trimmed between
 \code{upper_limit} and \code{lower_limit}.}
 
@@ -84,6 +84,12 @@ than \code{col} will be kept.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{source_col}{Column name of column to store source information.}
+
+\item{source}{Source to use if no unique source available for the calculation.}
+
+\item{type_col}{Column name of column to store type.}
 
 \item{default_scenario}{name of the default scenario.}
 }
