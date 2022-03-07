@@ -74,7 +74,6 @@
   value <span class="op">=</span> <span class="st">"value"</span>,
   scenario <span class="op">=</span> <span class="st">"scenario"</span>,
   scenario_name <span class="op">=</span> <span class="st">"dip_recover"</span>,
-  type_col <span class="op">=</span> <span class="st">"type"</span>,
   trim <span class="op">=</span> <span class="cn">TRUE</span>,
   small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,
   keep_better_values <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -82,6 +81,9 @@
   lower_limit <span class="op">=</span> <span class="fl">0</span>,
   trim_years <span class="op">=</span> <span class="cn">TRUE</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span>,
+  source_col <span class="op">=</span> <span class="st">"source"</span>,
+  source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>,
+  type_col <span class="op">=</span> <span class="st">"type"</span>,
   default_scenario <span class="op">=</span> <span class="st">"default"</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -117,8 +119,6 @@ used to return the results.</p></dd>
 <dd><p>name of scenario column to be created</p></dd>
 <dt>scenario_name</dt>
 <dd><p>name of scenario</p></dd>
-<dt>type_col</dt>
-<dd><p>Column name of column to store type.</p></dd>
 <dt>trim</dt>
 <dd><p>logical to indicate if the data should be trimmed between
 <code>upper_limit</code> and <code>lower_limit</code>.</p></dd>
@@ -143,6 +143,12 @@ than <code>col</code> will be kept.</p></dd>
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
+<dt>source_col</dt>
+<dd><p>Column name of column to store source information.</p></dd>
+<dt>source</dt>
+<dd><p>Source to use if no unique source available for the calculation.</p></dd>
+<dt>type_col</dt>
+<dd><p>Column name of column to store type.</p></dd>
 <dt>default_scenario</dt>
 <dd><p>name of the default scenario.</p></dd>
 </dl></div>
