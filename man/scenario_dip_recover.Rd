@@ -19,6 +19,8 @@ scenario_dip_recover(
   scenario_name = "dip_recover",
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default",
+  source_col = "source",
+  source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
   ...
 )
 }
@@ -56,6 +58,10 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{source_col}{Column name of column to store source information.}
+
+\item{source}{Source to use if no unique source available for the calculation.}
 
 \item{...}{additional parameters to be passed to
 \code{scenario_dip_recover_iso3()}}

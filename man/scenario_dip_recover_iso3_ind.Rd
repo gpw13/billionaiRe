@@ -29,7 +29,9 @@ scenario_dip_recover_iso3_ind(
   keep_better_values = FALSE,
   upper_limit = 100,
   lower_limit = 0,
-  trim_years = TRUE
+  trim_years = TRUE,
+  source_col = "source",
+  source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y"))
 )
 }
 \arguments{
@@ -99,6 +101,10 @@ than \code{col} will be kept.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{source_col}{Column name of column to store source information.}
+
+\item{source}{Source to use if no unique source available for the calculation.}
 }
 \value{
 a data frame with scenario values in \code{value} with a \code{scenario} column.

@@ -27,6 +27,7 @@
 #' should be progressive.
 #' @param scenario name of scenario column to be created
 #' @param scenario_name name of scenario
+#' @inheritParams calculate_hep_components
 #' @param ... additional parameters to be passed to
 #' `scenario_dip_recover_iso3()`
 #'
@@ -45,6 +46,8 @@ scenario_dip_recover <- function(df,
                                  scenario_name = "dip_recover",
                                  ind_ids = billion_ind_codes("all"),
                                  default_scenario = "default",
+                                 source_col = "source",
+                                 source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
                                  ...) {
   assert_columns(df, year, iso3, ind, value, scenario)
   assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
@@ -84,6 +87,8 @@ scenario_dip_recover <- function(df,
                                             ind_ids = ind_ids,
                                             default_scenario = default_scenario,
                                             scenario_name = scenario_name,
+                                            source_col = source_col,
+                                            source = source,
                                             !!!params
   )) %>%
     dplyr::bind_rows(df) %>%
@@ -99,6 +104,7 @@ scenario_dip_recover <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams calculate_hep_components
 #' @inherit scenario_aroc
 #' @param iso3_col (character) name of column with the ISO3 country codes
 #'
@@ -115,7 +121,6 @@ scenario_dip_recover_iso3 <- function(df,
                                       value = "value",
                                       scenario = "scenario",
                                       scenario_name = "dip_recover",
-                                      type_col = "type",
                                       trim = TRUE,
                                       small_is_best = FALSE,
                                       keep_better_values = FALSE,
@@ -123,6 +128,9 @@ scenario_dip_recover_iso3 <- function(df,
                                       lower_limit = 0,
                                       trim_years = TRUE,
                                       ind_ids = billion_ind_codes("all"),
+                                      source_col = "source",
+                                      source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
+                                      type_col = "type",
                                       default_scenario = "default") {
 
   scenario_df <- df %>%
@@ -190,7 +198,9 @@ scenario_dip_recover_iso3 <- function(df,
                                   keep_better_values = keep_better_values,
                                   upper_limit = upper_limit,
                                   lower_limit = lower_limit,
-                                  trim_years = trim_years
+                                  trim_years = trim_years,
+                                  source_col = source_col,
+                                  source = source
                                 ))
 
   recover_df <- recover_df %>%
@@ -253,7 +263,9 @@ scenario_dip_recover_iso3_ind <- function(df,
                                           keep_better_values = FALSE,
                                           upper_limit = 100,
                                           lower_limit = 0,
-                                          trim_years = TRUE){
+                                          trim_years = TRUE,
+                                          source_col = "source",
+                                          source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y"))){
   ind_df <- df %>%
     dplyr::filter(.data[[ind_col]] == !! ind,
                   .data[[iso3_col]] == !! iso3)
@@ -295,13 +307,13 @@ scenario_dip_recover_iso3_ind <- function(df,
       dplyr::pull(.data[[value]])
 
     aroc <- get_target_aarc(ind_df,
-                               target_value = target_value_iso3_ind,
-                               target_year = dip_year - 1,
-                               baseline_year = baseline_year,
-                               value = value,
-                               year = year,
-                               iso3 = iso3_col,
-                               ind = ind_col
+                            target_value = target_value_iso3_ind,
+                            target_year = dip_year - 1,
+                            baseline_year = baseline_year,
+                            value = value,
+                            year = year,
+                            iso3 = iso3_col,
+                            ind = ind_col
     ) %>%
       dplyr::pull(.data[["aroc"]])
 
@@ -331,6 +343,10 @@ scenario_dip_recover_iso3_ind <- function(df,
         !.data[[year]] %in% 2018:(dip_year - 1)
       )
 
+    if(!source_col %in% names(ind_df)){
+      ind_df <- billionaiRe_add_columns(ind_df, source_col, NA_character_)
+    }
+
     recover_df <- ind_df %>%
       dplyr::group_by(.data[[ind_col]]) %>%
       dplyr::semi_join(ind_timeseries, by = c(iso3_col, ind_col)) %>%
@@ -355,6 +371,10 @@ scenario_dip_recover_iso3_ind <- function(df,
         "{type_col}" := dplyr::case_when(
           (.data[["scenario_value"]] != .data[[value]] | (is.na(.data[[value]] & !is.na(.data[["scenario_value"]])))) & .data[[year]] >= dip_year ~ "projected",
           TRUE ~ .data[[type_col]]
+        ),
+        "{source_col}" := dplyr::case_when(
+          is.na(.data[[source_col]]) ~ !!source,
+          TRUE ~ .data[[source_col]]
         ),
         !!sym(scenario) := scenario_name
       ) %>%
