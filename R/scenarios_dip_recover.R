@@ -273,6 +273,10 @@ scenario_dip_recover_iso3_ind <- function(df,
   assert_columns(ind_df, year, iso3_col, ind_col, value, scenario)
   assert_unique_rows(ind_df, ind_col, iso3_col, year, scenario, ind_ids = ind_ids)
 
+  if(!source_col %in% names(ind_df)){
+    ind_df <- billionaiRe_add_columns(ind_df, source_col, NA_character_)
+  }
+
   if (is.na(baseline_year) | is.na(last_year)) {
     recover_df <- ind_df %>%
       scenario_bau(
@@ -293,7 +297,17 @@ scenario_dip_recover_iso3_ind <- function(df,
         ind_ids = ind_ids,
         default_scenario = default_scenario
       ) %>%
-      dplyr::filter(.data[[scenario]] == !!scenario_name)
+      dplyr::filter(.data[[scenario]] == !!scenario_name) %>%
+      dplyr::mutate(
+        "{type_col}" := dplyr::case_when(
+          (.data[["scenario_value"]] != .data[[value]] | (is.na(.data[[value]] & !is.na(.data[["scenario_value"]])))) & .data[[year]] >= dip_year ~ "projected",
+          TRUE ~ .data[[type_col]]
+        ),
+        "{source_col}" := dplyr::case_when(
+          is.na(.data[[source_col]]) ~ !!source,
+          TRUE ~ .data[[source_col]]
+        ))
+
   } else {
 
     target_value_iso3_ind <- ind_df %>%
@@ -342,10 +356,6 @@ scenario_dip_recover_iso3_ind <- function(df,
         stringr::str_detect(ind_col, "campaign"),
         !.data[[year]] %in% 2018:(dip_year - 1)
       )
-
-    if(!source_col %in% names(ind_df)){
-      ind_df <- billionaiRe_add_columns(ind_df, source_col, NA_character_)
-    }
 
     recover_df <- ind_df %>%
       dplyr::group_by(.data[[ind_col]]) %>%
