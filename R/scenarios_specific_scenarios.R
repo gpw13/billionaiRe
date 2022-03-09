@@ -125,15 +125,20 @@ get_best_equal_scenarios <- function(df,
 #' returns values in value. If values are missing for years between `start_year` and `end_year`,
 #' the last available value will be imputed.
 #'
+#' @param only_reported_estimated (logical) if TRUE only the last `reported` and `estimated`
+#'    values are imputed.
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#' @inheritParams transform_hep_data
 
 scenario_bau <- function(df,
+                         only_reported_estimated = FALSE,
                          value = "value",
                          ind = "ind",
                          iso3 = "iso3",
                          year = "year",
+                         type_col = "type",
                          start_year = 2018,
                          end_year = 2025,
                          scenario_name = glue::glue("business_as_usual"),
@@ -146,8 +151,13 @@ scenario_bau <- function(df,
                          trim_years = TRUE,
                          ind_ids = billion_ind_codes("all"),
                          default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, scenario, value)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+
+  scenario_df <- df %>%
+    dplyr::filter(.data[[scenario]] == default_scenario,
+                  !is.na(.data[[value]]))
+
+  assert_columns(scenario_df, year, iso3, ind, scenario, value)
+  assert_unique_rows(scenario_df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   full_years <- tidyr::expand_grid(
     "{year}" := start_year:end_year,
@@ -156,9 +166,11 @@ scenario_bau <- function(df,
     "{scenario}" := default_scenario
   )
 
-  scenario_df <- df %>%
-    dplyr::filter(.data[[scenario]] == default_scenario,
-                  !is.na(.data[[value]]))
+  if(only_reported_estimated){
+    scenario_df <- scenario_df %>%
+      dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"))
+  }
+
 
   if(nrow(scenario_df) > 0){
     scenario_df <- scenario_df %>%

@@ -280,10 +280,12 @@ scenario_dip_recover_iso3_ind <- function(df,
   if (is.na(baseline_year) | is.na(last_year)) {
     recover_df <- ind_df %>%
       scenario_bau(
+        only_reported_estimated = TRUE,
         value = value,
         ind = ind_col,
         iso3 = iso3_col,
         year = year,
+        type_col = type_col,
         start_year = dip_year,
         end_year = end_year,
         scenario_name = scenario_name,
@@ -300,7 +302,7 @@ scenario_dip_recover_iso3_ind <- function(df,
       dplyr::filter(.data[[scenario]] == !!scenario_name) %>%
       dplyr::mutate(
         "{type_col}" := dplyr::case_when(
-          (.data[["scenario_value"]] != .data[[value]] | (is.na(.data[[value]] & !is.na(.data[["scenario_value"]])))) & .data[[year]] >= dip_year ~ "projected",
+          is.na(.data[[type_col]]) & .data[[year]] >= dip_year ~ "projected",
           TRUE ~ .data[[type_col]]
         ),
         "{source_col}" := dplyr::case_when(

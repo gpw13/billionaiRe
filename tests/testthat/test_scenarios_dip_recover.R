@@ -67,7 +67,7 @@ testthat::test_that("scenario_dip_recover produces accurate results without repo
     dplyr::filter(scenario == "dip_recover", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recover_projected_2025, 75)
+  testthat::expect_equal(df_dip_recover_projected_2025, NA_integer_)
 })
 
 testthat::test_that("scenario_dip_recover produces accurate results when the gap between covid_year and is greater than one recovery_year:", {
@@ -95,6 +95,38 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
 
   testthat::expect_equal(df_dip_recover_just_scenario, c(rep(60.0, 5)))
 })
+
+testthat::test_that("scenario_dip_recover carries over the last reported value when values are not present:", {
+  df_no_covid_shock <- testdf() %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year > 2020 ~ NA_integer_,
+      TRUE ~ value
+    ))
+
+  df_dip_recover_no_covid_shock <- scenario_dip_recover(df_no_covid_shock, recovery_year = 2022)
+
+  df_dip_recover_with_no_covid_shock <- df_dip_recover_no_covid_shock %>%
+    dplyr::filter(scenario == "dip_recover") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_with_no_covid_shock, c(70, 71.029412, 72.058824, 73.088235, 74.117647))
+
+
+  df_no_covid_shock_no_reported <- testdf() %>%
+    dplyr::mutate(value = dplyr::case_when(
+      year > 2015 ~ NA_integer_,
+      TRUE ~ value
+    ), type = "projected")
+
+  df_dip_recover_no_covid_shock_no_reported <- scenario_dip_recover(df_no_covid_shock_no_reported, recovery_year = 2022)
+
+  df_dip_recover_with_no_covid_shock_no_reported_only <- df_dip_recover_no_covid_shock_no_reported %>%
+    dplyr::filter(scenario == "dip_recover") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_with_no_covid_shock_no_reported_only, rep(NA_real_, 6))
+})
+
 
 testthat::test_that("scenario_dip_recover produces accurate results with progressive_recovery == TRUE:", {
   df_reported <- testdf() %>%

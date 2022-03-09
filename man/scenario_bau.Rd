@@ -6,10 +6,12 @@
 \usage{
 scenario_bau(
   df,
+  only_reported_estimated = FALSE,
   value = "value",
   ind = "ind",
   iso3 = "iso3",
   year = "year",
+  type_col = "type",
   start_year = 2018,
   end_year = 2025,
   scenario_name = glue::glue("business_as_usual"),
@@ -28,6 +30,9 @@ scenario_bau(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
+\item{only_reported_estimated}{(logical) if TRUE only the last \code{reported} and \code{estimated}
+values are imputed.}
+
 \item{value}{Column name of column with indicator values.}
 
 \item{ind}{Column name of column with indicator names.}
@@ -35,6 +40,8 @@ country, year, and indicator.}
 \item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{year}{Column name of column with years.}
+
+\item{type_col}{Column name of column with type data.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 

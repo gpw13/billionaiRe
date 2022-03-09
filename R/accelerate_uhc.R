@@ -920,15 +920,6 @@ accelerate_pneumo <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[[ind]] == this_ind)
 
-  iso3_more_2_values_since_2020 <- df_this_ind %>%
-    dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
-                  .data[[year]] >= 2000) %>%
-    dplyr::group_by(dplyr::across(c(iso3, ind))) %>%
-    dplyr::summarise(n = dplyr::n()) %>%
-    dplyr::filter(.data[["n"]] >= 2) %>%
-    dplyr::pull(.data[[iso3]])
-
-
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
@@ -937,7 +928,7 @@ accelerate_pneumo <- function(df,
   iso3_more_2_values_since_2020 <- df_this_ind %>%
     dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
                   .data[[year]] >= 2000) %>%
-    dplyr::group_by(dplyr::across(c(iso3, ind))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind, scenario)))) %>%
     dplyr::summarise(n = dplyr::n()) %>%
     dplyr::filter(.data[["n"]] >= 2) %>%
     dplyr::pull(.data[[iso3]])
