@@ -68,10 +68,12 @@ the last available value will be imputed.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scenario_bau</span><span class="op">(</span>
   <span class="va">df</span>,
+  only_reported_estimated <span class="op">=</span> <span class="cn">FALSE</span>,
   value <span class="op">=</span> <span class="st">"value"</span>,
   ind <span class="op">=</span> <span class="st">"ind"</span>,
   iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
   year <span class="op">=</span> <span class="st">"year"</span>,
+  type_col <span class="op">=</span> <span class="st">"type"</span>,
   start_year <span class="op">=</span> <span class="fl">2018</span>,
   end_year <span class="op">=</span> <span class="fl">2025</span>,
   scenario_name <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"business_as_usual"</span><span class="op">)</span>,
@@ -92,6 +94,9 @@ the last available value will be imputed.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+<dt>only_reported_estimated</dt>
+<dd><p>(logical) if TRUE only the last <code>reported</code> and <code>estimated</code>
+values are imputed.</p></dd>
 <dt>value</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
 <dt>ind</dt>
@@ -100,6 +105,8 @@ country, year, and indicator.</p></dd>
 <dd><p>Column name of column with country ISO3 codes.</p></dd>
 <dt>year</dt>
 <dd><p>Column name of column with years.</p></dd>
+<dt>type_col</dt>
+<dd><p>Column name of column with type data.</p></dd>
 <dt>start_year</dt>
 <dd><p>Start year for scenario, defaults to 2018.</p></dd>
 <dt>end_year</dt>
