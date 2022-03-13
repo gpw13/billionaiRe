@@ -71,7 +71,7 @@ scenario_dip_recover <- function(df,
 
   params <- get_right_params(list(...), scenario_dip_recover_iso3)
 
-  purrr::map_dfr(unique_iso3, ~ rlang::exec(scenario_dip_recover_iso3,
+  furrr::future_map_dfr(unique_iso3, ~ rlang::exec(scenario_dip_recover_iso3,
                                             iso3 =  .x,
                                             df = scenario_df,
                                             year = year,
@@ -277,7 +277,7 @@ scenario_dip_recover_iso3_ind <- function(df,
     ind_df <- billionaiRe_add_columns(ind_df, source_col, NA_character_)
   }
 
-  if (is.na(baseline_year) | is.na(last_year)) {
+  if (is.na(baseline_year) | is.na(last_year) | sum(!is.na(ind_df[[value]])) <= 1) {
     recover_df <- ind_df %>%
       scenario_bau(
         only_reported_estimated = TRUE,

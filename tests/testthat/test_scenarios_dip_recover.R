@@ -214,3 +214,56 @@ testthat::test_that("scenario_dip_recover carries last reported value when start
   testthat::expect_equal(df_dip_recoverr_2025_2022_recovery, 71)
 
 })
+
+testthat::test_that("scenario_dip_recover carries last reported value when everything past start_year value is NA", {
+  df <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value))
+
+  df_dip_recover <- scenario_dip_recover(df)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 67)
+
+  df_types <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value),
+                  type =  "projected")
+
+  df_dip_recover_types <- scenario_dip_recover(df_types, recovery_year = 2022)
+
+  df_dip_recover_types_scenario <- df_dip_recover_types %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_types_scenario, NA_real_)
+
+})
+
+testthat::test_that("scenario_dip_recover returns accurate results when there is only the baseline value.", {
+  df <- testdf() %>%
+    dplyr::filter(year == 2018)
+
+  df_dip_recover <- scenario_dip_recover(df)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 68)
+
+  df_types <- df %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value),
+                  type =  "projected")
+
+  df_dip_recover_types <- scenario_dip_recover(df_types, recovery_year = 2022)
+
+  df_dip_recover_types_scenario <- df_dip_recover_types %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_types_scenario, NA_real_)
+
+})
+
