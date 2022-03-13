@@ -50,7 +50,7 @@ scenario_dip_recover <- function(df,
                                  source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
                                  ...) {
   assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   full_years_df <- tidyr::expand_grid(
     "{year}" := start_year:end_year,
@@ -137,7 +137,7 @@ scenario_dip_recover_iso3 <- function(df,
     dplyr::filter(.data[[iso3_col]] == !!iso3)
 
   assert_columns(scenario_df, year, iso3_col, ind, value, scenario)
-  assert_unique_rows(scenario_df, ind, iso3_col, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(scenario_df, ind, iso3_col, year, scenario, ind_ids = ind_ids)
 
   baseline_year <- scenario_df %>%
     dplyr::filter(.data[[type_col]] %in% c("reported", "estimated"),
@@ -172,7 +172,7 @@ scenario_dip_recover_iso3 <- function(df,
 
   unique_inds <- sort(unique(scenario_df[[ind]]))
 
-  recover_df <- purrr::pmap_dfr(list(unique_inds, baseline_year,
+  recover_df <- furrr::future_pmap_dfr(list(unique_inds, baseline_year,
                                      last_year),
                                 ~ scenario_dip_recover_iso3_ind(
                                   df = scenario_df,
@@ -271,7 +271,7 @@ scenario_dip_recover_iso3_ind <- function(df,
                   .data[[iso3_col]] == !! iso3)
 
   assert_columns(ind_df, year, iso3_col, ind_col, value, scenario)
-  assert_unique_rows(ind_df, ind_col, iso3_col, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(ind_df, ind_col, iso3_col, year, scenario, ind_ids = ind_ids)
 
   if(!source_col %in% names(ind_df)){
     ind_df <- billionaiRe_add_columns(ind_df, source_col, NA_character_)

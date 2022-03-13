@@ -157,7 +157,7 @@ scenario_bau <- function(df,
                   !is.na(.data[[value]]))
 
   assert_columns(scenario_df, year, iso3, ind, scenario, value)
-  assert_unique_rows(scenario_df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(scenario_df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   full_years <- tidyr::expand_grid(
     "{year}" := start_year:end_year,

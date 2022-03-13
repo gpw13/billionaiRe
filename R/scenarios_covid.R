@@ -38,7 +38,7 @@ scenario_covid_rapid_return <- function(df,
                                  default_scenario = "default",
                                  ...){
   assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   params <- rlang::list2(...)
 
@@ -97,7 +97,7 @@ scenario_covid_never_return <- function(df,
                                         default_scenario = "default",
                                         ...) {
   assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   params <- get_right_params(rlang::list2(...), scenario_dip_recover_iso3)
 
@@ -158,7 +158,7 @@ scenario_covid_delayed_return <- function(df,
                                         default_scenario = "default",
                                         ...){
   assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   params <- get_right_params(list(...), scenario_dip_recover_iso3)
 
@@ -226,7 +226,7 @@ scenario_covid_sustained_disruption <- function(df,
                                           default_scenario = "default",
                                           ...){
   assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  # assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
 
   params <- get_right_params(rlang::list2(...), scenario_dip_recover_iso3)
 
