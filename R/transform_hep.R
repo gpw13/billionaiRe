@@ -149,12 +149,16 @@ transform_prev_routine_data <- function(df,
     dplyr::group_by(dplyr::across(dplyr::any_of(!!scenario))) %>%
     dplyr::filter(.data[[ind]] %in% c(!!routine_match, !!routine_inds)) %>%
     dplyr::select(dplyr::all_of(c(!!iso3, !!year, !!scenario))) %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(
-      !!sym(ind) := inf_ind,
-      !!sym(value) := wppdistro::get_population(.data[[iso3]], .data[[year]], age_range = "under_1"),
-      !!sym(type_col) := dplyr::if_else(.data[[year]] <= 2019, "reported", "projected")
-    )
+    dplyr::distinct()
+
+  if(nrow(inf_ind_values) > 0){
+    inf_ind_values <- inf_ind_values %>%
+      dplyr::mutate(
+        !!sym(ind) := inf_ind,
+        !!sym(value) := wppdistro::get_population(.data[[iso3]], .data[[year]], age_range = "under_1"),
+        !!sym(type_col) := dplyr::if_else(.data[[year]] <= 2019, "reported", "projected")
+      )
+  }
 
   df <- df %>%
     dplyr::filter(!.data[[ind]] %in% inf_ind) %>%

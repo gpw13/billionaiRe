@@ -45,7 +45,7 @@ assert_data_calculation_hep <- function(df,
 
   # eSPAR
 
-  espar_ind <- ind_ids[stringr::str_detect(ind_ids, "espar$")]
+  espar_ind <- ind_ids["espar"]
 
   espar_df_2018 <- df %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
