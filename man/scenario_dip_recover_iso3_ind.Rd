@@ -14,6 +14,8 @@ scenario_dip_recover_iso3_ind(
   dip_year = 2020,
   recovery_year = 2021,
   progressive_recovery = FALSE,
+  aroc_type = c("lastest_year", "average_years_in_range"),
+  aroc_start_year = start_year,
   baseline_year = 2018,
   last_year = NULL,
   start_year = 2018,
@@ -57,10 +59,19 @@ scenario}
 \item{progressive_recovery}{(logical) TRUE if the recovery after dip
 should be progressive.}
 
+\item{aroc_type}{(character) name of the type of AROC to be used. Can be either:
+\itemize{
+\item \code{lastest_year}: only the latest \code{reported}/\code{estimated} year between \code{start_year}
+and \code{dip_year} is used to calculate
+\item \code{average_years_in_range}:
+}}
+
+\item{aroc_start_year}{(integer) year}
+
 \item{baseline_year}{(integer) identify baseline year on which the AROC
 should be calculated.}
 
-\item{last_year}{(integer) identify last year where values where \code{reported}
+\item{last_year}{(integer) identify last year where values were \code{reported}
 or \code{estimated} between \code{start_year} and \code{end_year}.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
@@ -113,9 +124,17 @@ a data frame with scenario values in \code{value} with a \code{scenario} column.
 Applies \code{scenario_dip_recover()} to a specific \code{ind} and \code{iso3} combination.
 }
 \details{
-In details, the AROC  between the \code{start_year}  and the last \code{reported} or
+Two types of AROC are supported:
+\itemize{
+\item \code{lastest_year}: the AROC is calculated the values between the \code{start_year} and the last \code{reported} or
 \code{estimated} value before \code{dip_year} is applied to the last reported value to
-\code{recovery_year} onward. If there are missing values between \code{dip_year} and
+\code{recovery_year} onward.
+\item \code{average_years_in_range}: all AROC between the \code{aroc_start_year} and the last \code{reported} or
+\code{estimated} value before \code{dip_year} are calculated. The average AROC for that period is then
+applied to the last reported value to \code{recovery_year} onward.
+}
+
+If there are missing values between \code{dip_year} and
 \code{recovery_year}, the last value from \code{dip_year} is carried forward. This
 applies only to countries where the indicator value for \code{dip_year} is
 \code{reported} or \code{estimated}. Otherwise, the value is carried with

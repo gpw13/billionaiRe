@@ -1,3 +1,11 @@
+# billionaiRe 0.6.9
+* Add `scenario_return_previous_trajectory` to return to `pre_covid_trajectory` after `covid_shock`
+* Add `impute_covid_shock` to impute a COVID-19 shock easily
+* Add `aroc_type` and related parameters to `scenario_dip_recover` to add alternatives
+  on how the AROC is calculated. This is chiefly to allow to use an average AROC
+  rather that just with latest value.
+* Corrects bugs
+
 # billionaiRe 0.6.8
 * Adds support of `covid_shock`
 * `make_default_scenario()` now doesn't require to have `default_scenario` in `scenario` column.

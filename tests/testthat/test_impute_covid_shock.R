@@ -49,7 +49,7 @@ testthat::test_that("impute_covid_shock produces accurate results one indicator,
 })
 
 testthat::test_that("impute_covid_shock runs on many indicator",{
-  df <- load_billion_data("wrangled_data", "hep", version = "2022-02-27", experiment = "")
+  df <- load_billion_data("wrangled_data", "hep", version = "2022-03-15", experiment = "")
 
   testthat::expect_error(impute_covid_shock(df), NA)
 })

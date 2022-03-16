@@ -13,6 +13,8 @@ scenario_dip_recover(
   dip_year = 2020,
   recovery_year = 2021,
   progressive_recovery = FALSE,
+  aroc_type = c("lastest_year", "average_years_in_range"),
+  aroc_start_year = start_year,
   end_year = 2025,
   value = "value",
   scenario = "scenario",
@@ -42,6 +44,15 @@ country, year, and indicator.}
 
 \item{progressive_recovery}{(logical) TRUE if the recovery after dip
 should be progressive.}
+
+\item{aroc_type}{(character) name of the type of AROC to be used. Can be either:
+\itemize{
+\item \code{lastest_year}: only the latest \code{reported}/\code{estimated} year between \code{start_year}
+and \code{dip_year} is used to calculate
+\item \code{average_years_in_range}:
+}}
+
+\item{aroc_start_year}{(integer) year}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
@@ -75,9 +86,17 @@ return to the previous situation after a dip. The same annual rate of change (AR
 before dip is applied from the \code{recovery_year}.
 }
 \details{
-In details, the AROC  between the \code{start_year}  and the last \code{reported} or
+Two types of AROC are supported:
+\itemize{
+\item \code{lastest_year}: the AROC is calculated the values between the \code{start_year} and the last \code{reported} or
 \code{estimated} value before \code{dip_year} is applied to the last reported value to
-\code{recovery_year} onward. If there are missing values between \code{dip_year} and
+\code{recovery_year} onward.
+\item \code{average_years_in_range}: all AROC between the \code{aroc_start_year} and the last \code{reported} or
+\code{estimated} value before \code{dip_year} are calculated. The average AROC for that period is then
+applied to the last reported value to \code{recovery_year} onward.
+}
+
+If there are missing values between \code{dip_year} and
 \code{recovery_year}, the last value from \code{dip_year} is carried forward. This
 applies only to countries where the indicator value for \code{dip_year} is
 \code{reported} or \code{estimated}. Otherwise, the value is carried with

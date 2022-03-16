@@ -123,6 +123,6 @@ impute_covid_shock <- function(df,
         TRUE ~ .data[[source_col]]
       )
     ) %>%
-    dplyr::select(-c(region, "mean_shock", "value_pre_covid", "value_covid_year", "value_covid_year_plus1"))
+    dplyr::select(-c(!!region, "mean_shock", "value_pre_covid", "value_covid_year", "value_covid_year_plus1"))
 
 }

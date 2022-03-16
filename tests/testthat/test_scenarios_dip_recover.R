@@ -267,3 +267,107 @@ testthat::test_that("scenario_dip_recover returns accurate results when there is
 
 })
 
+testthat::test_that("scenario_dip_recover produces accurate results with one iso3 with aroc_type = average_years_in_range", {
+  df <- testdf( values = c(70,69,70,69,70,69,70,69,70,69,70,76,80,78,66,75,73,63,62,77,69)) %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
+
+  df_covid_dip_recover <- scenario_dip_recover(df, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recover_2025_one_iso3 <- df_covid_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025, iso3 == "testalia") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_2025_one_iso3, 70.036232)
+})
+
+
+testthat::test_that("scenario_dip_recover carries last reported value when start_year value is missing with aroc_type = average_years_in_range", {
+  df <- testdf( values = c(70,69,70,69,70,69,70,69,70,69,70,76,80,78,66,75,73,63,62,77,69)) %>%
+    dplyr::filter(year >= 2019)
+
+  df_dip_recover <- scenario_dip_recover(df, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recovery_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recovery_2025_NA_2018, 70)
+})
+
+testthat::test_that("scenario_dip_recover carries last reported value when start_year value is NA with aroc_type = average_years_in_range", {
+  df <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year == 2018, NA_integer_, value))
+
+  df_dip_recover <- scenario_dip_recover(df, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 75.343823)
+
+  df_dip_recover_2022_recovery <- scenario_dip_recover(df, recovery_year = 2022)
+
+  df_dip_recoverr_2025_2022_recovery <- df_dip_recover_2022_recovery %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_2022_recovery, 71)
+
+})
+
+testthat::test_that("scenario_dip_recover carries last reported value when everything past start_year value is NA with aroc_type = average_years_in_range", {
+  df <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value))
+
+  df_dip_recover <- scenario_dip_recover(df, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 72.114802)
+
+  df_types <- testdf() %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value),
+                  type =  "projected")
+
+  df_dip_recover_types <- scenario_dip_recover(df_types, recovery_year = 2022, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recover_types_scenario <- df_dip_recover_types %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_types_scenario, NA_real_)
+
+})
+
+testthat::test_that("scenario_dip_recover returns accurate results when there is only the baseline value.", {
+  df <- testdf() %>%
+    dplyr::filter(year == 2018)
+
+  df_dip_recover <- scenario_dip_recover(df, aroc_type = "average_years_in_range", aroc_start_year = 2015)
+
+  df_dip_recoverr_2025_NA_2018 <- df_dip_recover %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 68)
+
+  df_types <- df %>%
+    dplyr::mutate(value = dplyr::if_else(year >= 2018, NA_integer_, value),
+                  type =  "projected")
+
+  df_dip_recover_types <- scenario_dip_recover(df_types, aroc_type = "average_years_in_range", aroc_start_year = 2015, recovery_year = 2022)
+
+  df_dip_recover_types_scenario <- df_dip_recover_types %>%
+    dplyr::filter(scenario == "dip_recover", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_dip_recover_types_scenario, NA_real_)
+
+})

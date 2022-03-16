@@ -22,6 +22,7 @@
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
 #' - `covid_delayed_return` calls \code{\link{scenario_covid_delayed_return}}
 #' - `covid_sustained_disruption` calls \code{\link{scenario_covid_sustained_disruption}}
+#' - `return_previous_trajectory` calls \code{\link{scenario_return_previous_trajectory}}
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
@@ -44,7 +45,8 @@ add_scenario <- function(df,
                            "sdg",
                            "covid_rapid_return",
                            "covid_delayed_return",
-                           "covid_sustained_disruption"
+                           "covid_sustained_disruption",
+                           "return_previous_trajectory"
                          ),
                          ind_ids = billion_ind_codes("all"),
                          ind = "ind",
@@ -65,7 +67,7 @@ add_scenario <- function(df,
 
   those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$"))
 
-  purrr::map_dfr(
+  furrr::future_map_dfr(
     those_inds,
     function(x) {
       rlang::exec("add_scenario_indicator",
@@ -113,7 +115,8 @@ add_scenario_indicator <- function(df,
                                      "covid_rapid_return",
                                      "covid_sustained_disruption",
                                      "covid_delayed_return",
-                                     "covid_never_return"
+                                     "covid_never_return",
+                                     "return_previous_trajectory"
                                    ),
                                    indicator,
                                    ind = "ind",
