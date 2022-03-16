@@ -14,7 +14,7 @@ before dip is applied from the recovery_year."><meta property="og:image" content
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,6 +75,8 @@ before dip is applied from the <code>recovery_year</code>.</p>
   dip_year <span class="op">=</span> <span class="fl">2020</span>,
   recovery_year <span class="op">=</span> <span class="fl">2021</span>,
   progressive_recovery <span class="op">=</span> <span class="cn">FALSE</span>,
+  aroc_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lastest_year"</span>, <span class="st">"average_years_in_range"</span><span class="op">)</span>,
+  aroc_start_year <span class="op">=</span> <span class="va">start_year</span>,
   end_year <span class="op">=</span> <span class="fl">2025</span>,
   value <span class="op">=</span> <span class="st">"value"</span>,
   scenario <span class="op">=</span> <span class="st">"scenario"</span>,
@@ -107,6 +109,13 @@ country, year, and indicator.</p></dd>
 <dt>progressive_recovery</dt>
 <dd><p>(logical) TRUE if the recovery after dip
 should be progressive.</p></dd>
+<dt>aroc_type</dt>
+<dd><p>(character) name of the type of AROC to be used. Can be either:</p><ul><li><p><code>lastest_year</code>: only the latest <code>reported</code>/<code>estimated</code> year between <code>start_year</code>
+and <code>dip_year</code> is used to calculate</p></li>
+<li><p><code>average_years_in_range</code>:</p></li>
+</ul></dd>
+<dt>aroc_start_year</dt>
+<dd><p>(integer) year</p></dd>
 <dt>end_year</dt>
 <dd><p>End year for scenario, defaults to 2025</p></dd>
 <dt>value</dt>
@@ -137,9 +146,13 @@ be supplied as a named vector where the names correspond to the output of
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>In details, the AROC  between the <code>start_year</code>  and the last <code>reported</code> or
+    <p>Two types of AROC are supported:</p><ul><li><p><code>lastest_year</code>: the AROC is calculated the values between the <code>start_year</code> and the last <code>reported</code> or
 <code>estimated</code> value before <code>dip_year</code> is applied to the last reported value to
-<code>recovery_year</code> onward. If there are missing values between <code>dip_year</code> and
+<code>recovery_year</code> onward.</p></li>
+<li><p><code>average_years_in_range</code>: all AROC between the <code>aroc_start_year</code> and the last <code>reported</code> or
+<code>estimated</code> value before <code>dip_year</code> are calculated. The average AROC for that period is then
+applied to the last reported value to <code>recovery_year</code> onward.</p></li>
+</ul><p>If there are missing values between <code>dip_year</code> and
 <code>recovery_year</code>, the last value from <code>dip_year</code> is carried forward. This
 applies only to countries where the indicator value for <code>dip_year</code> is
 <code>reported</code> or <code>estimated</code>. Otherwise, the value is carried with

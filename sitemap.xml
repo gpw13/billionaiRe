@@ -403,6 +403,9 @@
     <loc>/reference/hpop_df.html</loc>
   </url>
   <url>
+    <loc>/reference/impute_covid_shock.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -512,6 +515,9 @@
   </url>
   <url>
     <loc>/reference/scenario_quantile.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_return_previous_trajectory.html</loc>
   </url>
   <url>
     <loc>/reference/sdg_adult_obese.html</loc>
