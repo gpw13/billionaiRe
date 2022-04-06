@@ -58,7 +58,7 @@ HE_meningitis_Routine,meningitis_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,F
 NA,meningitis_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV6,Meningitis - Campaign,%,%,Meningitis - Campaign,Meningitis - Campaign,57,prevent,FALSE
 NA,cholera_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV7,Cholera - Campaign,%,%,Cholera - Campaign,Cholera - Campaign,58,prevent,FALSE
 NA,covid_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,COVID-19 - Campaign,%,%,COVID-19 - Campaign,COVID-19 - Campaign,59,prevent,FALSE
-NA,ebola_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,Ebola - Campaign,%,%,Ebola - Campaign,Ebola - Campaign,60,prevent,FALSE
+NA,ebola_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,TRUE,NA,Ebola - Campaign,%,%,Ebola - Campaign,Ebola - Campaign,60,prevent,FALSE
 HE_notify,notify,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP2,Time to notify,days,%,Time to notify,Time to notify,63,detect_respond,FALSE
 HE_vaccinecov,prevent,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,61,prevent,FALSE
 HE_detect,detect,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP1,Time to detect,days,%,Time to detect,Time to detect,62,detect_respond,FALSE
