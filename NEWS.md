@@ -1,3 +1,8 @@
+# billionaiRe 0.6.10
+* `save_wrangled_output` now saves files with all columns capitalised and
+  `load_billion_data_whdh` changes all column names to lower case after downloading data
+  from WHDH to simplify WHDH => xMart pipelines.
+
 # billionaiRe 0.6.9
 * Add `scenario_return_previous_trajectory` to return to `pre_covid_trajectory` after `covid_shock`
 * Add `impute_covid_shock` to impute a COVID-19 shock easily
