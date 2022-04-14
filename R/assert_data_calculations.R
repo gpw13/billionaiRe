@@ -20,12 +20,12 @@
 #'
 #' @return Data frame in long format.
 assert_data_calculation_hep <- function(df,
-                                        value = "value",
+                                        value_col = "value",
                                         scenario = NULL,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("hep")) {
-  assert_iso3_not_empty(df, "iso3", scenario, value)
+  assert_iso3_not_empty(df, "iso3", scenario, value_col)
 
   # Prevent
 
@@ -49,7 +49,7 @@ assert_data_calculation_hep <- function(df,
     dplyr::filter(
       .data[["ind"]] == espar_ind,
       .data[["year"]] %in% start_year,
-      is.na(.data[[value]])
+      is.na(.data[[value_col]])
     ) %>%
     dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
 
@@ -68,7 +68,7 @@ assert_data_calculation_hep <- function(df,
     dplyr::filter(
       .data[["ind"]] == espar_ind,
       .data[["year"]] %in% end_year,
-      is.na(.data[[value]])
+      is.na(.data[[value_col]])
     ) %>%
     dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
 
@@ -91,7 +91,7 @@ assert_data_calculation_hep <- function(df,
     dplyr::filter(
       .data[["ind"]] == detect_respond_ind,
       .data[["year"]] == end_year,
-      is.na(.data[[value]])
+      is.na(.data[[value_col]])
     ) %>%
     dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
 
@@ -130,9 +130,9 @@ assert_data_calculation_hep <- function(df,
 #' @return Data frame in long format.
 
 assert_data_calculation_hpop <- function(df,
-                                         value = "value",
-                                         scenario = NULL) {
-  assert_iso3_not_empty(df, "iso3", scenario, value)
+                                         value_col = "value",
+                                         scenario_col = NULL) {
+  assert_iso3_not_empty(df, scenario_col, value_col)
 
   return(df)
 }
@@ -157,12 +157,12 @@ assert_data_calculation_hpop <- function(df,
 #' @return Data frame in long format.
 
 assert_data_calculation_uhc <- function(df,
-                                        value = "value",
+                                        value_col = "value",
                                         scenario = NULL,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("uhc")) {
-  assert_iso3_not_empty(df, "iso3", scenario, value)
+  assert_iso3_not_empty(df, "iso3", scenario, value_col)
 
   necessary_inds <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
 
@@ -171,7 +171,7 @@ assert_data_calculation_uhc <- function(df,
   only_full <- df %>%
     dplyr::filter(.data[["ind"]] %in% those_necessary_inds) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario, "ind")))) %>%
-    dplyr::filter(is.na(.data[[value]]))
+    dplyr::filter(is.na(.data[[value_col]]))
 
   if (nrow(only_full) > 0) {
     stop(sprintf(
@@ -185,7 +185,7 @@ Missing values in:\n",
     )
   }
 
-  assert_ind_start_end_year(df, value, start_year, end_year, "ind",
+  assert_ind_start_end_year(df, value_col, start_year, end_year, "ind",
     ind_ids = those_necessary_inds, scenario
   )
 
@@ -196,7 +196,7 @@ assert_data_contributions <- function(df,
                                       ind = "ind",
                                       year = "year",
                                       iso3 = "iso3",
-                                      value = "value",
+                                      value_col = "value",
                                       scenario = NULL,
                                       start_year = 2018,
                                       end_year = 2025,

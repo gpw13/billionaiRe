@@ -61,10 +61,10 @@ trim_values <- function(df,
 #' @param trim_years logical to indicate if years before `start_year` and after
 #' `end_year` should be removed
 #'
-trim_years <- function(df, trim_years, year, start_year, end_year) {
+trim_years <- function(df, trim_years, start_year, end_year) {
   if (trim_years) {
     df %>%
-      dplyr::filter(.data[[year]] >= start_year, .data[[year]] <= end_year)
+      dplyr::filter(.data[["year"]] >= start_year, .data[["year"]] <= end_year)
   } else {
     return(df)
   }

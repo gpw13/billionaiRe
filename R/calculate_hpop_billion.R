@@ -12,16 +12,16 @@ calculate_hpop_billion <- function(df,
                                    start_year = 2018,
                                    end_year = 2019:2025,
                                    pop_year = 2025,
-                                   transform_value = "transform_value",
-                                   contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
+                                   transform_value_col = "transform_value",
+                                   contribution = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
                                    contribution_pct = paste0(contribution, "_percent"),
                                    contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-                                   scenario = NULL,
+                                   scenario_col = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, "iso3", "ind", "year", transform_value)
+  assert_columns(df, "iso3", "ind", "year", transform_value_col)
   assert_ind_ids(ind_ids, "hpop")
-  assert_unique_rows(df, scenario, ind_ids)
-  assert_same_length(transform_value, contribution)
+  assert_unique_rows(df, scenario_col, ind_ids)
+  assert_same_length(transform_value_col, contribution)
   assert_same_length(contribution, contribution_pct)
   assert_years(start_year, end_year)
 
@@ -30,11 +30,11 @@ calculate_hpop_billion <- function(df,
     df = df,
     start_year = start_year,
     end_year = end_year,
-    transform_value = transform_value,
+    transform_value_col = transform_value_col,
     contribution = contribution,
     contribution_pct = contribution_pct,
     contribution_pct_total_pop = contribution_pct_total_pop,
-    scenario = scenario,
+    scenario_col = scenario_col,
     ind_ids = ind_ids
   )
 
@@ -45,7 +45,7 @@ calculate_hpop_billion <- function(df,
     contribution = contribution,
     end_year = end_year,
     pop_year = pop_year,
-    scenario = scenario,
+    scenario_col = scenario_col,
     ind_ids = ind_ids
   )
 
@@ -72,9 +72,9 @@ calculate_hpop_billion_change <- function(df,
                                           population = "population",
                                           end_year = 2019:2025,
                                           pop_year = 2025,
-                                          scenario = NULL,
+                                          scenario_col = NULL,
                                           ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, change, "ind", "iso3", "year", scenario)
+  assert_columns(df, change, "ind", "iso3", "year", scenario_col)
   assert_ind_ids(ind_ids, "hpop")
 
   df <- billionaiRe_add_columns(df, c(contribution, population), NA_real_)
@@ -90,7 +90,7 @@ calculate_hpop_billion_change <- function(df,
       "child_nutrition",
       .data[["ind"]]
     )) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario, "ind", "year")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind", "year")))) %>%
     dplyr::summarize(dplyr::across(
       dplyr::all_of(change),
       ~ sum(.x, na.rm = TRUE)
@@ -112,13 +112,13 @@ calculate_hpop_billion_change <- function(df,
     calculate_hpop_billion_single,
     df = change_df,
     pop_year = pop_year,
-    scenario = scenario
+    scenario_col = scenario_col
   )
 
   # join back together
   bill_df <- purrr::reduce(bill_df_list,
     dplyr::left_join,
-    by = c("iso3", "ind", "year", scenario)
+    by = c("iso3", "ind", "year", scenario_col)
   )
 
   # add population column (adding here instead of in calc_single() to not generate multiple columns)
@@ -140,10 +140,8 @@ calculate_hpop_billion_change <- function(df,
 calculate_hpop_billion_single <- function(change,
                                           contribution,
                                           df,
-                                          ind,
-                                          year,
                                           pop_year,
-                                          scenario) {
+                                          scenario_col) {
 
   # calculate Billion contributions
 
@@ -153,13 +151,13 @@ calculate_hpop_billion_single <- function(change,
       "_od_temp" := 1 - abs(.data[["_delta_temp"]]),
       "_pos_temp" := .data[["_delta_temp"]] > 0
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario, "_pop_group_temp", "_pos_temp")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col, "_pop_group_temp", "_pos_temp")))) %>%
     dplyr::summarize("_product_temp" := 1 - prod(.data[["_od_temp"]]),
       "_pop_group_population_temp" := unique(.data[["_pop_group_population_temp"]]),
       "_sumi_temp" := sum(.data[["_delta_temp"]]),
       .groups = "drop"
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::summarize("hpop_healthier_plus" := sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * .data[["_pos_temp"]]),
       "hpop_healthier_minus" := -sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * !.data[["_pos_temp"]]),
       "hpop_healthier_plus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * .data[["_pos_temp"]]),
@@ -246,14 +244,14 @@ generate_hpop_populations <- function(pop_year) {
 
 #' Calculate the change for vectors, used in [calculate_hpop_billion()]
 #'
-#' @param transform_value Vector of transform values
+#' @param transform_value_col Vector of transform values
 #' @param year Vector of years
 #' @param start_year Start year
-calculate_hpop_change_vector <- function(transform_value,
+calculate_hpop_change_vector <- function(transform_value_col,
                                          year,
                                          start_year) {
   if (start_year %in% year) {
-    transform_value - transform_value[year == start_year]
+    transform_value_col - transform_value_col[year == start_year]
   } else {
     NA_real_
   }

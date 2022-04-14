@@ -178,12 +178,12 @@ warning_col_missing_values <- function(df, col_name, how) {
 #' @inheritParams calculate_hpop_contributions
 #'
 assert_unique_rows <- function(df,
-                               scenario = NULL,
+                               scenario_col = NULL,
                                ind_ids) {
   ind_df <- dplyr::filter(df, .data[["ind"]] %in% ind_ids)
-  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c("ind", "iso3", "year", scenario))))
+  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c("ind", "iso3", "year", scenario_col))))
   if (nrow(ind_df) != nrow(dist_df)) {
-    stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
+    stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario_col` if present), please make distinct.",
       call. = FALSE
     )
   }
@@ -597,11 +597,11 @@ assert_in_list_or_null <- function(x, list) {
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
-assert_iso3_not_empty <- function(df, iso3 = "iso3", scenario = NULL, value = "value") {
+assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") {
   empty_iso3 <- df %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col)))) %>%
     dplyr::summarise(all_NA = dplyr::case_when(
-      sum(is.na(.data[[value]])) / dplyr::n() == 1 ~ TRUE,
+      sum(is.na(.data[[value_col]])) / dplyr::n() == 1 ~ TRUE,
       TRUE ~ FALSE
     ), .groups = "drop") %>%
     dplyr::filter(.data[["all_NA"]])
@@ -609,7 +609,7 @@ assert_iso3_not_empty <- function(df, iso3 = "iso3", scenario = NULL, value = "v
   if (nrow(empty_iso3) > 0) {
     warning(sprintf(
       "%s have only missing values (in at least one scenario, if provided). \nMissing values in:\n",
-      paste(unique(empty_iso3[[iso3]]), collapse = ", ")
+      paste(unique(empty_iso3[["iso3"]]), collapse = ", ")
     ),
     paste(utils::capture.output(print(empty_iso3)), collapse = "\n"),
     call. = FALSE
@@ -627,31 +627,29 @@ assert_iso3_not_empty <- function(df, iso3 = "iso3", scenario = NULL, value = "v
 #' @inheritParams calculate_hpop_contributions
 
 assert_start_end_year <- function(df,
-                                  iso3 = "iso3",
-                                  year = "year",
-                                  value = "value",
+                                  value_col = "value",
                                   start_year = 2018,
                                   end_year = 2025,
-                                  scenario = "scenario") {
+                                  scenario_col = "scenario") {
   missing_years <- df %>%
-    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario)))) %>%
-    dplyr::select(dplyr::any_of(c(iso3, year, scenario))) %>%
+    dplyr::filter(.data[["year"]] %in% c(start_year, end_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col)))) %>%
+    dplyr::select(dplyr::any_of(c("iso3", "year", scenario_col))) %>%
     dplyr::distinct() %>%
     dplyr::filter(dplyr::n() < length(c(start_year, end_year))) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(!!sym(year) := dplyr::case_when(
-      .data[[year]] == start_year ~ end_year,
-      .data[[year]] == end_year ~ start_year,
-      TRUE ~ .data[[year]]
+    dplyr::mutate(!!sym("year") := dplyr::case_when(
+      .data[["year"]] == start_year ~ end_year,
+      .data[["year"]] == end_year ~ start_year,
+      TRUE ~ .data[["year"]]
     ))
 
   if (nrow(missing_years) > 0) {
     warning(sprintf(
       "%s have missing start_year or end_year (in at least one scenario, if provided).
-  Each iso3 and year (and scenario if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
+  Each iso3 and year (and scenario_col if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
   Missing values in:\n",
-      paste(unique(missing_years[[iso3]]), collapse = ", ")
+      paste(unique(missing_years[["iso3"]]), collapse = ", ")
     ),
     paste(utils::capture.output(print(missing_years)), collapse = "\n"),
     call. = FALSE
@@ -676,13 +674,13 @@ assert_ind_start_end_year <- function(df,
                                       start_year = 2018,
                                       end_year = 2020,
                                       ind_ids,
-                                      scenario = "scenario") {
-  if (!is.null(scenario)) {
+                                      scenario_col = "scenario") {
+  if (!is.null(scenario_col)) {
     full_df <- tidyr::expand_grid(
       iso3 = unique(df[["iso3"]]),
       ind = ind_ids,
       year = c(start_year, end_year),
-      !!sym(scenario) := unique(df[[scenario]])
+      !!sym(scenario_col) := unique(df[[scenario_col]])
     )
   } else {
     full_df <- tidyr::expand_grid(
@@ -693,19 +691,19 @@ assert_ind_start_end_year <- function(df,
   }
 
   missing_values <- df %>%
-    dplyr::full_join(full_df, by = c("iso3", "ind", "year", scenario)) %>%
+    dplyr::full_join(full_df, by = c("iso3", "ind", "year", scenario_col)) %>%
     dplyr::filter(
       .data[["year"]] %in% c(start_year, end_year),
       .data[["ind"]] %in% ind_ids
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario, "ind")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
     dplyr::filter(is.na(.data[[value]])) %>%
     dplyr::select(-.data[[value]])
 
   if (nrow(missing_values) > 0) {
     stop(sprintf(
       "%s have missing values in start_year or end_year (in at least one scenario, if provided).
-Each iso3 and year (and scenario if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
+Each iso3 and year (and scenario_col if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
 Missing values in:\n",
       paste(unique(missing_values[[iso3]]), collapse = ", ")
     ),
