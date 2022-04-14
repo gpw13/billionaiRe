@@ -178,13 +178,10 @@ warning_col_missing_values <- function(df, col_name, how) {
 #' @inheritParams calculate_hpop_contributions
 #'
 assert_unique_rows <- function(df,
-                               ind,
-                               iso3,
-                               year,
                                scenario = NULL,
                                ind_ids) {
-  ind_df <- dplyr::filter(df, .data[[ind]] %in% ind_ids)
-  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c(ind, iso3, year, scenario))))
+  ind_df <- dplyr::filter(df, .data[["ind"]] %in% ind_ids)
+  dist_df <- dplyr::distinct(ind_df, dplyr::across(dplyr::any_of(c("ind", "iso3", "year", scenario))))
   if (nrow(ind_df) != nrow(dist_df)) {
     stop("`df` does not have distinct rows for each combination of `ind`, `iso3`, and `year` (by `scenario` if present), please make distinct.",
       call. = FALSE
@@ -675,36 +672,33 @@ assert_start_end_year <- function(df,
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_hpop_contributions
 assert_ind_start_end_year <- function(df,
-                                      iso3 = "iso3",
-                                      year = "year",
-                                      value = "value",
+                                      value_col = "value",
                                       start_year = 2018,
                                       end_year = 2020,
-                                      ind = "ind",
                                       ind_ids,
                                       scenario = "scenario") {
   if (!is.null(scenario)) {
     full_df <- tidyr::expand_grid(
-      !!sym(iso3) := unique(df[[iso3]]),
-      !!sym(ind) := ind_ids,
-      !!sym(year) := c(start_year, end_year),
+      iso3 = unique(df[["iso3"]]),
+      ind = ind_ids,
+      year = c(start_year, end_year),
       !!sym(scenario) := unique(df[[scenario]])
     )
   } else {
     full_df <- tidyr::expand_grid(
-      !!sym(iso3) := unique(df[[iso3]]),
-      !!sym(ind) := ind_ids,
+      iso3 = unique(df[["iso3"]]),
+      ind = ind_ids,
       !!sym(year) := c(start_year, end_year)
     )
   }
 
   missing_values <- df %>%
-    dplyr::full_join(full_df, by = c(iso3, ind, year, scenario)) %>%
+    dplyr::full_join(full_df, by = c("iso3", "ind", "year", scenario)) %>%
     dplyr::filter(
-      .data[[year]] %in% c(start_year, end_year),
-      .data[[ind]] %in% ind_ids
+      .data[["year"]] %in% c(start_year, end_year),
+      .data[["ind"]] %in% ind_ids
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario, "ind")))) %>%
     dplyr::filter(is.na(.data[[value]])) %>%
     dplyr::select(-.data[[value]])
 
