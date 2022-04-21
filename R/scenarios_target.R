@@ -8,8 +8,8 @@
 #' `baseline_year` value to the `target_year`. Only values for years between
 #' `start_year` and `end_year` will be returned.
 #'
-#' If `value` has values that are higher or lower than the scenario values, then
-#' only `value` will be kept, depending on `small_is_best`. For instance,
+#' If `value_col` has values that are higher or lower than the scenario values, then
+#' only `value_col` will be kept, depending on `small_is_best`. For instance,
 #' if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
 #' 75 will be kept.
 #'
@@ -23,11 +23,8 @@
 
 scenario_fixed_target <- function(df,
                                   target_value,
-                                  value = "value",
-                                  ind = "ind",
-                                  iso3 = "iso3",
-                                  year = "year",
-                                  scenario = "scenario",
+                                  value_col = "value",
+                                  scenario_col = "scenario",
                                   start_year = 2018,
                                   end_year = 2025,
                                   baseline_year = start_year,
@@ -41,35 +38,34 @@ scenario_fixed_target <- function(df,
                                   trim_years = TRUE,
                                   ind_ids = billion_ind_codes("all"),
                                   default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
 
   full_years_df <- tidyr::expand_grid(
-    "{year}" := start_year:end_year,
-    "{iso3}" := unique(df[[iso3]]),
-    "{ind}" := unique(df[[ind]]),
-    "{scenario}" := default_scenario
+    "year" := start_year:end_year,
+    "iso3" := unique(df[["iso3"]]),
+    "ind" := unique(df[["ind"]]),
+    "{scenario_col}" := default_scenario
   )
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
-    dplyr::filter(.data[[scenario]] == default_scenario) %>%
-    dplyr::group_by(.data[[ind]], .data[[iso3]]) %>%
-    dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value]], .data[[year]], !!baseline_year)) %>%
+    dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
+    dplyr::group_by(.data[["ind"]], .data[["iso3"]]) %>%
+    dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value_col]], .data[["year"]], !!baseline_year)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       "baseline_value_" := dplyr::case_when(
         is.na(.data[["baseline_value_"]]) ~ as.numeric(0),
         TRUE ~ as.numeric(.data[["baseline_value_"]])
       ),
-      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[[year]], baseline_year, target_year, .data[["baseline_value_"]]),
-      !!sym(scenario) := scenario_name
+      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], baseline_year, target_year, .data[["baseline_value_"]]),
+      !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value_")) %>%
     trim_values(
       col = "scenario_value",
-      value = value,
-      year = year,
+      value_col = value_col,
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,
@@ -128,11 +124,8 @@ calculate_fixed_target <- function(target_value,
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 scenario_fixed_target_col <- function(df,
-                                      value = "value",
-                                      ind = "ind",
-                                      iso3 = "iso3",
-                                      year = "year",
-                                      scenario = "scenario",
+                                      value_col = "value",
+                                      scenario_col = "scenario",
                                       start_year = 2018,
                                       end_year = 2025,
                                       baseline_year = start_year,
@@ -148,28 +141,25 @@ scenario_fixed_target_col <- function(df,
                                       ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
   full_years_df <- tidyr::expand_grid(
-    "{year}" := start_year:end_year,
-    "{iso3}" := unique(df[[iso3]]),
-    "{ind}" := unique(df[[ind]]),
-    "{scenario}" := default_scenario
+    "year" := start_year:end_year,
+    "iso3" := unique(df[["iso3"]]),
+    "ind" := unique(df[["ind"]]),
+    "{scenario_col}" := default_scenario
   )
 
   target_df <- df %>%
-    dplyr::select(dplyr::all_of(c(iso3, ind, target_col))) %>%
+    dplyr::select(dplyr::all_of(c("iso3", "ind", target_col))) %>%
     dplyr::distinct()
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
+    dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
     dplyr::select(-.data[[target_col]]) %>%
-    dplyr::left_join(target_df, by = c(iso3, ind))
+    dplyr::left_join(target_df, by = c("iso3", "ind"))
 
   scenario_df <- scenario_fixed_target(
     df = scenario_df,
     target_value = scenario_df[[target_col]],
-    value = value,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
+    value_col = value_col,
     start_year = start_year,
     end_year = end_year,
     baseline_year = baseline_year,
@@ -184,7 +174,7 @@ scenario_fixed_target_col <- function(df,
     ind_ids = ind_ids,
     default_scenario = default_scenario
   ) %>%
-    dplyr::filter(!is.na(.data[[value]])) %>%
+    dplyr::filter(!is.na(.data[[value_col]])) %>%
     dplyr::distinct()
 
   df %>%

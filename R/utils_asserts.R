@@ -731,12 +731,12 @@ assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
   assert_vector_in_column(df, scenario, scenario_col)
 }
 
-assert_ind_ids_in_df <- function(df, ind_ids, ind_col = "ind", by_iso3 = TRUE, iso3_col = "iso3") {
+assert_ind_ids_in_df <- function(df, ind_ids, by_iso3 = TRUE) {
   if (by_iso3) {
     df %>%
-      dplyr::group_by(.data[[iso3_col]]) %>%
-      dplyr::group_walk(~ assert_vector_in_column(df = .x, vector = ind_ids, column = ind_col))
+      dplyr::group_by(.data[["iso3"]]) %>%
+      dplyr::group_walk(~ assert_vector_in_column(df = .x, vector = ind_ids, column = "ind"))
   } else {
-    assert_vector_in_column(df, ind_ids, ind_col)
+    assert_vector_in_column(df, ind_ids, "ind")
   }
 }

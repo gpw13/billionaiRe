@@ -4,13 +4,13 @@
 #' @inheritParams scenario_fixed_target
 #' @param col column to trim values from. Will be removed before returning the
 #' data frame.
-#' @param value Column name of column with indicator values. This column will be
+#' @param value_col Column name of column with indicator values. This column will be
 #' used to return the results.
 #' @param trim logical to indicate if the data should be trimmed between
 #' `upper_limit` and `lower_limit`.
 #' @param keep_better_values logical to indicate if "better" values should be
-#' kept from `value` if they are present. Follows the direction set in
-#' `small_is_best`.  For instance, if small_is_best is TRUE, then `value` lower
+#' kept from `value_col` if they are present. Follows the direction set in
+#' `small_is_best`.  For instance, if small_is_best is TRUE, then `value_col` lower
 #' than `col` will be kept.
 #' @param upper_limit upper limit at which the indicator should be caped.
 #' @param lower_limit lower_limit limit at which the indicator should be caped.
@@ -18,12 +18,11 @@
 #' `end_year` should be removed
 #'
 #' @return trimed data frame, removing the `col` column, and putting the trimmed
-#' values in `value`
+#' values in `value_col`
 #'
 trim_values <- function(df,
                         col,
-                        value = "value",
-                        year = "year",
+                        value_col = "value",
                         trim = TRUE,
                         small_is_best = FALSE,
                         keep_better_values = FALSE,
@@ -36,19 +35,19 @@ trim_values <- function(df,
     df %>%
       dplyr::mutate(
         better_value = dplyr::case_when(
-          is.na(.data[[col]]) & is.na(.data[[value]]) ~ NA_real_,
-          keep_better_values & small_is_best ~ as.numeric(pmin(.data[[col]], .data[[value]], na.rm = TRUE)),
-          keep_better_values & !small_is_best ~ as.numeric(pmax(.data[[col]], .data[[value]], na.rm = TRUE)),
+          is.na(.data[[col]]) & is.na(.data[[value_col]]) ~ NA_real_,
+          keep_better_values & small_is_best ~ as.numeric(pmin(.data[[col]], .data[[value_col]], na.rm = TRUE)),
+          keep_better_values & !small_is_best ~ as.numeric(pmax(.data[[col]], .data[[value_col]], na.rm = TRUE)),
           !keep_better_values ~ as.numeric(.data[[col]])
         ),
-        !!sym(value) := dplyr::case_when(
+        !!sym(value_col) := dplyr::case_when(
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),
           .data[["better_value"]] > upper_limit ~ as.numeric(upper_limit),
           TRUE ~ as.numeric(.data[["better_value"]])
         )
       ) %>%
       dplyr::select(-c("better_value", .data[[col]])) %>%
-      trim_years(trim_years, year, start_year, end_year)
+      trim_years(trim_years, start_year, end_year)
   } else {
     return(df)
   }
@@ -137,16 +136,13 @@ calculate_aarc <- function(baseline_year,
 #' `iso3` and `ind`
 get_latest_aarc <- function(df,
                             baseline_year,
-                            value = "value",
-                            year = "year",
-                            iso3 = "iso3",
-                            ind = "ind") {
+                            value_col = "value") {
   df %>%
-    dplyr::filter(year %in% c(baseline_year - 1, baseline_year)) %>%
-    dplyr::group_by(iso3, ind) %>%
+    dplyr::filter(.data[["year"]] %in% c(baseline_year - 1, baseline_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
     tidyr::pivot_wider(
-      names_from = year,
-      values_from = "value",
+      names_from = "year",
+      values_from = value_col,
     ) %>%
     dplyr::mutate(
       aroc = calculate_aarc(
@@ -156,7 +152,7 @@ get_latest_aarc <- function(df,
         end_value = .data[[glue::glue("{baseline_year}")]]
       )
     ) %>%
-    dplyr::select(iso3, ind, "aroc")
+    dplyr::select("iso3", "ind", "aroc")
 }
 
 #' Get AARC for data frame based on a target
@@ -172,22 +168,19 @@ get_target_aarc <- function(df,
                             target_value,
                             baseline_year,
                             target_year,
-                            value = "value",
-                            year = "year",
-                            iso3 = "iso3",
-                            ind = "ind") {
+                            value_col = "value") {
   df %>%
-    dplyr::group_by(iso3, ind) %>%
-    dplyr::filter(.data[[year]] == baseline_year) %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
+    dplyr::filter(.data[["year"]] == baseline_year) %>%
     dplyr::mutate(
       aroc = calculate_aarc(
-        baseline_year = .data[[year]],
-        baseline_value = .data[[value]],
+        baseline_year = .data[["year"]],
+        baseline_value = .data[[value_col]],
         end_year = target_year,
         end_value = target_value
       )
     ) %>%
-    dplyr::select(iso3, ind, "aroc")
+    dplyr::select("iso3", "ind", "aroc")
 }
 
 #' Get AARC for data frame based on a percent change to baseline
@@ -203,23 +196,20 @@ get_percent_change_aarc <- function(df,
                                     percent_change,
                                     baseline_year,
                                     target_year,
-                                    value = "value",
-                                    year = "year",
-                                    iso3 = "iso3",
-                                    ind = "ind") {
+                                    value_col = "value") {
   df %>%
-    dplyr::group_by(iso3, ind) %>%
-    dplyr::filter(.data[[year]] == baseline_year) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+    dplyr::filter(.data[["year"]] == baseline_year) %>%
     dplyr::mutate(
-      target = .data[[value]] * (100 + percent_change) / 100,
+      target = .data[[value_col]] * (100 + percent_change) / 100,
       aroc = calculate_aarc(
         baseline_year = baseline_year,
-        baseline_value = .data[[value]],
+        baseline_value = .data[[value_col]],
         end_year = target_year,
         end_value = .data[["target"]]
       )
     ) %>%
-    dplyr::select(iso3, ind, "aroc")
+    dplyr::select("iso3", "ind", "aroc")
 }
 
 #' Get Average Annual Rate of Reduction
@@ -323,15 +313,15 @@ simple_extrap <- function(x) {
 
 
 remove_unwanted_scenarios <- function(df,
-                                      scenario = "scenario",
+                                      scenario_col = "scenario",
                                       unwanted_scenarios) {
-  scenario_present <- unique(df[[scenario]])
+  scenario_present <- unique(df[[scenario_col]])
 
   unwanted_scenarios_present <- scenario_present %in% unwanted_scenarios
 
   if (sum(unwanted_scenarios_present) <= length(scenario_present)) {
     df %>%
-      dplyr::filter(!scenario %in% unwanted_scenarios)
+      dplyr::filter(!scenario_col %in% unwanted_scenarios)
   } else {
     df
   }

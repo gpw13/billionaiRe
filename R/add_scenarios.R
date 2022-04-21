@@ -49,11 +49,10 @@ add_scenario <- function(df,
                            "return_previous_trajectory"
                          ),
                          ind_ids = billion_ind_codes("all"),
-                         ind = "ind",
                          start_year = 2018,
                          end_year = 2025,
                          ...) {
-  assert_columns(df, ind)
+  assert_columns(df, "ind")
   scenario_function <- rlang::arg_match(scenario_function)
 
   sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids, paste0(c(
@@ -63,7 +62,7 @@ add_scenario <- function(df,
   collapse = "|"
   ))]
 
-  those_inds <- sub_set_inds[sub_set_inds %in% unique(df[[ind]])]
+  those_inds <- sub_set_inds[sub_set_inds %in% unique(df[["ind"]])]
 
   those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$"))
 
@@ -74,7 +73,6 @@ add_scenario <- function(df,
         df = df,
         scenario_function = scenario_function,
         indicator = x,
-        ind = ind,
         ind_ids = ind_ids,
         start_year = start_year,
         end_year = end_year,
@@ -119,14 +117,13 @@ add_scenario_indicator <- function(df,
                                      "return_previous_trajectory"
                                    ),
                                    indicator,
-                                   ind = "ind",
                                    ind_ids = billion_ind_codes("all"),
-                                   scenario = "scenario",
+                                   scenario_col = "scenario",
                                    ...) {
   this_ind <- ind_ids[indicator]
 
-  if (!scenario %in% names(df)) {
-    billionaiRe_add_columns(df, scenario, NA)
+  if (!scenario_col %in% names(df)) {
+    billionaiRe_add_columns(df, scenario_col, NA)
   }
 
   scenario_function <- rlang::arg_match(scenario_function)
@@ -142,7 +139,7 @@ add_scenario_indicator <- function(df,
   ))]
 
   this_ind_df <- df %>%
-    dplyr::filter(.data[[ind]] %in% this_ind_with_sub)
+    dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
 
   if (scenario_function == "accelerate") {
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")

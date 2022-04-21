@@ -19,17 +19,14 @@
 #'
 scenario_quantile <- function(df,
                               n = 5,
-                              value = "value",
-                              ind = "ind",
-                              iso3 = "iso3",
-                              year = "year",
+                              value_col = "value",
                               start_year = 2018,
                               end_year = 2025,
                               quantile_year = 2018,
                               baseline_quantile_year = 2013,
                               baseline_year = 2018,
                               scenario_name = glue::glue("quantile_{n}"),
-                              scenario = "scenario",
+                              scenario_col = "scenario",
                               trim = TRUE,
                               small_is_best = FALSE,
                               keep_better_values = TRUE,
@@ -38,17 +35,17 @@ scenario_quantile <- function(df,
                               trim_years = TRUE,
                               ind_ids = billion_ind_codes("all"),
                               default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
-  assert_ind_start_end_year(df, iso3, year, value, quantile_year, baseline_quantile_year, ind, ind_ids = ind_ids[unique(df[[ind]])])
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
+  assert_ind_start_end_year(df, value_col, quantile_year, baseline_quantile_year, ind_ids = ind_ids[unique(df[["ind"]])])
 
   quantile_df <- df %>%
-    dplyr::group_by(.data[[ind]]) %>%
-    dplyr::filter(.data[[year]] %in% c(quantile_year, baseline_quantile_year)) %>%
-    dplyr::select(dplyr::any_of(c(iso3, year, ind, value))) %>%
+    dplyr::group_by(.data[["ind"]]) %>%
+    dplyr::filter(.data[["year"]] %in% c(quantile_year, baseline_quantile_year)) %>%
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", value_col))) %>%
     tidyr::pivot_wider(
-      names_from = year,
-      values_from = value
+      names_from = "year",
+      values_from = value_col
     ) %>%
     dplyr::mutate(
       quantile = get_quantile(.data[[glue::glue("{quantile_year}")]], n = n),
@@ -67,23 +64,20 @@ scenario_quantile <- function(df,
       )
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(iso3, ind, "qtarget") %>%
+    dplyr::select("iso3", "ind", "qtarget") %>%
     dplyr::distinct()
 
   df %>%
-    dplyr::left_join(quantile_df, by = c(iso3, ind)) %>%
+    dplyr::left_join(quantile_df, by = c("iso3", "ind")) %>%
     scenario_linear_change_col(
       linear_value_col = "qtarget",
-      value = value,
-      ind = ind,
-      iso3 = iso3,
-      year = year,
+      value_col = value_col,
       start_year = start_year,
       end_year = end_year,
       baseline_year = baseline_year,
       target_year = end_year,
       scenario_name = scenario_name,
-      scenario = scenario,
+      scenario_col = scenario_col,
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,
@@ -111,15 +105,12 @@ scenario_quantile <- function(df,
 #' @inheritParams transform_hpop_data
 
 scenario_best_in_region <- function(df,
-                                    value = "value",
-                                    ind = "ind",
-                                    iso3 = "iso3",
-                                    year = "year",
+                                    value_col = "value",
                                     start_year = 2018,
                                     end_year = 2025,
                                     baseline_year = 2018,
                                     target_year = 2013,
-                                    scenario = "scenario",
+                                    scenario_col = "scenario",
                                     scenario_name = "best_in_region",
                                     ind_ids = billion_ind_codes("all"),
                                     trim = TRUE,
@@ -128,21 +119,21 @@ scenario_best_in_region <- function(df,
                                     upper_limit = 100,
                                     lower_limit = 0,
                                     trim_years = TRUE) {
-  assert_columns(df, year, iso3, ind, value)
-  assert_unique_rows(df, ind, iso3, year, ind_ids = ind_ids)
-  assert_ind_start_end_year(df, iso3, year, value, baseline_year, target_year, ind, ind_ids = ind_ids[unique(df[[ind]])])
-  assert_strings(scenario)
+  assert_columns(df, "year", "iso3", "ind", value_col)
+  assert_unique_rows(df, ind_ids = ind_ids)
+  assert_ind_start_end_year(df, value_col, baseline_year, target_year, ind_ids = ind_ids[unique(df[["ind"]])])
+  assert_strings(scenario_col)
 
   region_df <- df %>%
-    dplyr::group_by(iso3, ind) %>%
-    dplyr::filter(.data[[year]] %in% c(baseline_year, target_year)) %>%
-    dplyr::select(dplyr::any_of(c(iso3, year, ind, value))) %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
+    dplyr::filter(.data[["year"]] %in% c(baseline_year, target_year)) %>%
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", value_col))) %>%
     tidyr::pivot_wider(
-      names_from = year,
-      values_from = value
+      names_from = "year",
+      values_from = value_col
     ) %>%
     dplyr::mutate(
-      region = whoville::iso3_to_regions(.data[[iso3]]),
+      region = whoville::iso3_to_regions(.data[["iso3"]]),
       arc = sign(-(target_year - baseline_year)) * (.data[[glue::glue("{baseline_year}")]] - .data[[glue::glue("{target_year}")]]) / abs(baseline_year - target_year)
     ) %>%
     dplyr::group_by("region") %>%
@@ -158,23 +149,20 @@ scenario_best_in_region <- function(df,
       )
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(iso3, ind, "rtarget") %>%
+    dplyr::select("iso3", "ind", "rtarget") %>%
     dplyr::distinct()
 
   df %>%
-    dplyr::left_join(region_df, by = c(iso3, ind)) %>%
+    dplyr::left_join(region_df, by = c("iso3", "ind")) %>%
     scenario_linear_change_col(
       linear_value_col = "rtarget",
-      value = value,
-      ind = ind,
-      iso3 = iso3,
-      year = year,
+      value_col = value_col,
       start_year = start_year,
       end_year = end_year,
       baseline_year = baseline_year,
       target_year = end_year,
       scenario_name = scenario_name,
-      scenario = scenario,
+      scenario_col = scenario_col,
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,

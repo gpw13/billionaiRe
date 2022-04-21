@@ -310,7 +310,7 @@ make_default_scenario <- function(df,
                                   recycle_campaigns = TRUE,
                                   ind_ids = NULL,
                                   trim_years = FALSE) {
-  assert_columns(df, iso3, ind, value_col, year, scenario_col, "type")
+  assert_columns(df, "iso3", "ind", value_col, "year", scenario_col, "type")
   assert_unique_rows(df, scenario_col, ind_ids)
 
   base_scenarios <- c(scenario_reported_estimated, scenario_reference_infilling)
