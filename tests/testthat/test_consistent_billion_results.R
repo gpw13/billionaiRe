@@ -1,6 +1,6 @@
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
-    transform_uhc_data() %>%
+    transform_uhc_data(end_year = 2023) %>%
     calculate_uhc_billion() %>%
     calculate_uhc_contribution(end_year = 2023, pop_year = 2023) %>%
     dplyr::filter(

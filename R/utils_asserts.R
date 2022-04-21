@@ -686,7 +686,7 @@ assert_ind_start_end_year <- function(df,
     full_df <- tidyr::expand_grid(
       iso3 = unique(df[["iso3"]]),
       ind = ind_ids,
-      !!sym(year) := c(start_year, end_year)
+      year = c(start_year, end_year)
     )
   }
 
@@ -697,15 +697,15 @@ assert_ind_start_end_year <- function(df,
       .data[["ind"]] %in% ind_ids
     ) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
-    dplyr::filter(is.na(.data[[value]])) %>%
-    dplyr::select(-.data[[value]])
+    dplyr::filter(is.na(.data[[value_col]])) %>%
+    dplyr::select(-.data[[value_col]])
 
   if (nrow(missing_values) > 0) {
     stop(sprintf(
       "%s have missing values in start_year or end_year (in at least one scenario, if provided).
 Each iso3 and year (and scenario_col if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
 Missing values in:\n",
-      paste(unique(missing_values[[iso3]]), collapse = ", ")
+      paste(unique(missing_values[["iso3"]]), collapse = ", ")
     ),
     paste(utils::capture.output(print(missing_values)), collapse = "\n"),
     call. = FALSE

@@ -21,11 +21,11 @@
 #' @return Data frame in long format.
 assert_data_calculation_hep <- function(df,
                                         value_col = "value",
-                                        scenario = NULL,
+                                        scenario_col = NULL,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("hep")) {
-  assert_iso3_not_empty(df, "iso3", scenario, value_col)
+  assert_iso3_not_empty(df, "iso3", scenario_col, value_col)
 
   # Prevent
 
@@ -45,13 +45,13 @@ assert_data_calculation_hep <- function(df,
   espar_ind <- ind_ids["espar"]
 
   espar_df_2018 <- df %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::filter(
       .data[["ind"]] == espar_ind,
       .data[["year"]] %in% start_year,
       is.na(.data[[value_col]])
     ) %>%
-    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_col)))
 
   if (nrow(espar_df_2018) > 0) {
     stop(sprintf(
@@ -64,13 +64,13 @@ assert_data_calculation_hep <- function(df,
   }
 
   espar_df <- df %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::filter(
       .data[["ind"]] == espar_ind,
       .data[["year"]] %in% end_year,
       is.na(.data[[value_col]])
     ) %>%
-    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_col)))
 
   if (nrow(espar_df) > 0) {
     warning(sprintf(
@@ -87,13 +87,13 @@ assert_data_calculation_hep <- function(df,
   detect_respond_ind <- ind_ids[stringr::str_detect(ind_ids, "detect_respond$")]
 
   detect_respond_df <- df %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::filter(
       .data[["ind"]] == detect_respond_ind,
       .data[["year"]] == end_year,
       is.na(.data[[value_col]])
     ) %>%
-    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario)))
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_col)))
 
   if (nrow(detect_respond_df) > 0) {
     warning(sprintf(
@@ -158,11 +158,11 @@ assert_data_calculation_hpop <- function(df,
 
 assert_data_calculation_uhc <- function(df,
                                         value_col = "value",
-                                        scenario = NULL,
+                                        scenario_col = NULL,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("uhc")) {
-  assert_iso3_not_empty(df, "iso3", scenario, value_col)
+  assert_iso3_not_empty(df, scenario_col, value_col)
 
   necessary_inds <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
 
@@ -170,12 +170,12 @@ assert_data_calculation_uhc <- function(df,
 
   only_full <- df %>%
     dplyr::filter(.data[["ind"]] %in% those_necessary_inds) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario, "ind")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
     dplyr::filter(is.na(.data[[value_col]]))
 
   if (nrow(only_full) > 0) {
     stop(sprintf(
-      "%s have missing values in at least one `iso3`, `year`, and `ind` (and `scenario`, if provided).
+      "%s have missing values in at least one `iso3`, `year`, and `ind` (and `scenario_col`, if provided).
 UHC requires full time series.
 Missing values in:\n",
       paste(unique(only_full[["iso3"]]), collapse = ", ")
@@ -185,19 +185,16 @@ Missing values in:\n",
     )
   }
 
-  assert_ind_start_end_year(df, value_col, start_year, end_year, "ind",
-    ind_ids = those_necessary_inds, scenario
+  assert_ind_start_end_year(df, value_col, start_year, end_year,
+    ind_ids = those_necessary_inds, scenario_col
   )
 
   return(df)
 }
 
 assert_data_contributions <- function(df,
-                                      ind = "ind",
-                                      year = "year",
-                                      iso3 = "iso3",
                                       value_col = "value",
-                                      scenario = NULL,
+                                      scenario_col = NULL,
                                       start_year = 2018,
                                       end_year = 2025,
                                       billion = c("hep", "hpop", "uhc"),
@@ -205,11 +202,11 @@ assert_data_contributions <- function(df,
   billion <- rlang::arg_match(billion)
 
   df_ind <- df %>%
-    dplyr::filter(.data[[ind]] %in% ind_ids)
+    dplyr::filter(.data[["ind"]] %in% ind_ids)
 
   df_ind_start_end_years <- df_ind %>%
-    dplyr::filter(.data[[year]] %in% c(start_year, end_year)) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind)))) %>%
+    dplyr::filter(.data[["year"]] %in% c(start_year, end_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
     dplyr::tally() %>%
     dplyr::filter(.data[["n"]] < 2)
 
@@ -217,7 +214,7 @@ assert_data_contributions <- function(df,
     stop(sprintf(
       "%s have missing values at `start_year` or `end_year` in at least one `iso3` and `ind` (and `scenario`, if provided).
                     Contributions cannot be calculated",
-      paste(unique(df_ind_start_end_years[[iso3]]), collapse = ",")
+      paste(unique(df_ind_start_end_years[["iso3"]]), collapse = ",")
     ),
     call. = FALSE
     )
