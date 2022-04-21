@@ -25,7 +25,7 @@ assert_data_calculation_hep <- function(df,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("hep")) {
-  assert_iso3_not_empty(df, "iso3", scenario_col, value_col)
+  assert_iso3_not_empty(df, scenario_col, value_col)
 
   # Prevent
 

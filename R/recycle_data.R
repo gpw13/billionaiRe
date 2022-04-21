@@ -104,7 +104,6 @@ recycle_data <- function(df,
 #' @param scenario name of scenario to recycle for.
 #' @param scenario_col Column name of column with scenario identifiers.
 #' @param billion name of billion to recycle data for.
-#' @param type Column name of column with types
 #' @param default_scenario name of the default scenario.
 #' @param scenario_reported_estimated name of the reported/estimated scenario.
 #' @param scenario_reference_infilling name of the WHO technical programs projections/imputations scenario.
@@ -204,7 +203,7 @@ recycle_data_scenario_single <- function(df,
 
   if (!include_projection) {
     not_in_scenario_projs <- default_not_in_scenario %>%
-      dplyr::filter(!.data[[type]] %in% c("imputed", "projected"))
+      dplyr::filter(!.data[["type"]] %in% c("imputed", "projected"))
 
     not_in_scenario <- dplyr::bind_rows(not_in_scenario_projs, reported_not_in_default) %>%
       dplyr::bind_rows(reference_infilling_not_in_covid_shock, covid_shock_not_in_default) %>%
@@ -218,7 +217,7 @@ recycle_data_scenario_single <- function(df,
     not_in_scenario_campaigns <- not_in_scenario %>%
       dplyr::filter(
         stringr::str_detect(ind, "campaign"),
-        .data[[type]] %in% c("reported", "estimated")
+        .data[["type"]] %in% c("reported", "estimated")
       )
 
     not_in_scenario_no_campaigns <- not_in_scenario %>%
@@ -311,7 +310,7 @@ make_default_scenario <- function(df,
                                   recycle_campaigns = TRUE,
                                   ind_ids = NULL,
                                   trim_years = FALSE) {
-  assert_columns(df, iso3, ind, value_col, year, scenario_col, type)
+  assert_columns(df, iso3, ind, value_col, year, scenario_col, "type")
   assert_unique_rows(df, scenario_col, ind_ids)
 
   base_scenarios <- c(scenario_reported_estimated, scenario_reference_infilling)
