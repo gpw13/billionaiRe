@@ -1,6 +1,6 @@
 testthat::test_that("basic billion calculations are consistent", {
   uhc_basic_calculated <- uhc_df %>%
-    transform_uhc_data(end_year = 2023) %>%
+    transform_uhc_data(end_year = 2023)%>%
     calculate_uhc_billion() %>%
     calculate_uhc_contribution(end_year = 2023, pop_year = 2023) %>%
     dplyr::filter(
@@ -147,9 +147,9 @@ testthat::test_that("HEP complexe billion calculations with scenarios are consis
   # HEP
   test_data_hep <- test_data %>%
     recycle_data(billion = "hep") %>%
-    transform_hep_data(scenario = "scenario") %>%
-    calculate_hep_components(scenario = "scenario") %>%
-    calculate_hep_billion(scenario = "scenario") %>%
+    transform_hep_data(scenario_col = "scenario") %>%
+    calculate_hep_components(scenario_col = "scenario") %>%
+    calculate_hep_billion(scenario_col = "scenario") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep", include_calculated = T)) %>%
     dplyr::select(iso3, ind, year, scenario, transform_value, level) %>%
     dplyr::arrange(scenario, iso3, ind, year)
@@ -162,7 +162,7 @@ testthat::test_that("HPOP complexe billion calculations with scenarios are consi
     recycle_data(billion = "hpop") %>%
     transform_hpop_data() %>%
     add_hpop_populations() %>%
-    calculate_hpop_billion(scenario = "scenario") %>%
+    calculate_hpop_billion(scenario_col = "scenario") %>%
     dplyr::filter(ind %in% billion_ind_codes("hpop", include_calculated = T)) %>%
     dplyr::select(iso3, ind, year, scenario, transform_value, population) %>%
     dplyr::arrange(iso3, scenario, ind, year)
@@ -177,10 +177,10 @@ testthat::test_that("HPOP complexe billion calculations with scenarios are consi
 
 testthat::test_that("UHC complexe billion calculations with scenarios are consistent", {
   test_data_one_scenario_uhc <- test_data %>%
-    recycle_data(billion = "uhc") %>%
+    recycle_data(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     transform_uhc_data() %>%
-    calculate_uhc_billion(scenario = "scenario") %>%
-    calculate_uhc_contribution(scenario = "scenario") %>%
+    calculate_uhc_billion(scenario_col = "scenario") %>%
+    calculate_uhc_contribution(scenario_col = "scenario") %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
     dplyr::filter(!is.na(transform_value)) %>%
     dplyr::select(iso3, scenario, ind, year, transform_value) %>%

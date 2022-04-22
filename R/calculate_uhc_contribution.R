@@ -19,16 +19,16 @@ calculate_uhc_contribution <- function(df,
                                        transform_value_col = "transform_value",
                                        contribution_col = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
                                        contribution_pct_col = paste0(contribution_col, "_percent"),
-                                       scenario = NULL,
+                                       scenario_col = NULL,
                                        scenario_reported_estimated = "routine",
                                        scenario_covid_shock = "covid_shock",
                                        scenario_reference_infilling = "reference_infilling",
                                        ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)) {
-  assert_columns(df, "year", "iso3", "ind", scenario, transform_value_col)
+  assert_columns(df, "year", "iso3", "ind", scenario_col, transform_value_col)
   assert_same_length(transform_value_col, contribution_col)
   assert_same_length(contribution_col, contribution_pct_col)
   assert_years(start_year, end_year)
-  assert_unique_rows(df, scenario, ind_ids)
+  assert_unique_rows(df, scenario_col, ind_ids)
 
   base_scenarios <- c(
     scenario_reported_estimated,
@@ -36,29 +36,32 @@ calculate_uhc_contribution <- function(df,
     scenario_reference_infilling
   )
 
-  if (!is.null(scenario)) {
+  if (!is.null(scenario_col)) {
     df_base_scenario <- df %>%
       dplyr::filter(
-        .data[[scenario]] %in% base_scenarios,
+        .data[[scenario_col]] %in% base_scenarios,
         .data[["ind"]] %in% ind_ids
       )
 
     df <- remove_unwanted_scenarios(
       df,
-      scenario,
+      scenario_col,
       base_scenarios
     )
   }
 
-  assert_data_contributions(df, value_col, scenario, start_year,
-    end_year,
-    billion = "uhc",
-    ind_ids
+  assert_data_contributions(df,
+                            value_col,
+                            scenario_col,
+                            start_year,
+                            end_year,
+                            billion = "uhc",
+                            ind_ids
   )
 
   df <- billionaiRe_add_columns(df, c(contribution_col, contribution_pct_col), NA_real_) %>%
     dplyr::mutate("_population_temp" := wppdistro::get_population(.data[["iso3"]], year = pop_year)) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario))))
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col))))
 
   for (i in 1:length(contribution_col)) {
     df <- df %>%
@@ -76,7 +79,7 @@ calculate_uhc_contribution <- function(df,
       )
   }
 
-  if (!is.null(scenario)) {
+  if (!is.null(scenario_col)) {
     df <- dplyr::bind_rows(df, df_base_scenario)
   }
 

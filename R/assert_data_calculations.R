@@ -25,6 +25,7 @@ assert_data_calculation_hep <- function(df,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("hep")) {
+  assert_columns(df, value_col, scenario_col, "iso3", "year", "ind")
   assert_iso3_not_empty(df, scenario_col, value_col)
 
   # Prevent
@@ -162,6 +163,8 @@ assert_data_calculation_uhc <- function(df,
                                         start_year = 2018,
                                         end_year = 2025,
                                         ind_ids = billion_ind_codes("uhc")) {
+  assert_columns(df, value_col, scenario_col, "iso3", "year", "ind")
+
   assert_iso3_not_empty(df, scenario_col, value_col)
 
   necessary_inds <- ind_ids[!ind_ids %in% c(ind_ids["nurses"], ind_ids["doctors"], ind_ids["itn"])]
@@ -170,7 +173,7 @@ assert_data_calculation_uhc <- function(df,
 
   only_full <- df %>%
     dplyr::filter(.data[["ind"]] %in% those_necessary_inds) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col, "ind")))) %>%
     dplyr::filter(is.na(.data[[value_col]]))
 
   if (nrow(only_full) > 0) {
@@ -199,6 +202,8 @@ assert_data_contributions <- function(df,
                                       end_year = 2025,
                                       billion = c("hep", "hpop", "uhc"),
                                       ind_ids = billion_ind_codes(billion, include_calculated = TRUE)) {
+  assert_columns(df, value_col, scenario_col, "iso3", "year", "ind")
+
   billion <- rlang::arg_match(billion)
 
   df_ind <- df %>%

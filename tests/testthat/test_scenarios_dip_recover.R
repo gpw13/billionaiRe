@@ -212,7 +212,6 @@ testthat::test_that("scenario_dip_recover carries last reported value when start
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recoverr_2025_2022_recovery, 71)
-
 })
 
 testthat::test_that("scenario_dip_recover carries last reported value when everything past start_year value is NA", {
@@ -238,7 +237,6 @@ testthat::test_that("scenario_dip_recover carries last reported value when every
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recover_types_scenario, NA_real_)
-
 })
 
 testthat::test_that("scenario_dip_recover returns accurate results when there is only the baseline value.", {

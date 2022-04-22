@@ -142,7 +142,7 @@ get_latest_aarc <- function(df,
     dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
     tidyr::pivot_wider(
       names_from = "year",
-      values_from = value_col,
+      values_from = !!value_col,
     ) %>%
     dplyr::mutate(
       aroc = calculate_aarc(
@@ -321,7 +321,7 @@ remove_unwanted_scenarios <- function(df,
 
   if (sum(unwanted_scenarios_present) <= length(scenario_present)) {
     df %>%
-      dplyr::filter(!scenario_col %in% unwanted_scenarios)
+      dplyr::filter(!.data[[scenario_col]] %in% unwanted_scenarios)
   } else {
     df
   }

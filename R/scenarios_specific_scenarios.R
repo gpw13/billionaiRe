@@ -157,7 +157,7 @@ scenario_bau <- function(df,
 
   if(only_reported_estimated){
     scenario_df <- scenario_df %>%
-      dplyr::filter(.data[[type]] %in% c("reported", "estimated"))
+      dplyr::filter(.data[["type"]] %in% c("reported", "estimated"))
   }
 
 

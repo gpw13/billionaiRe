@@ -29,7 +29,7 @@ calculate_hep_billion <- function(df,
                                   end_year = 2019:2025,
                                   pop_year = 2025,
                                   ind_ids = billion_ind_codes("hep", include_calculated = TRUE)) {
-  assert_columns(df, "iso3", "ind", "year", transform_value_col, level_col)
+  assert_columns(df, "iso3", "ind", "year", transform_value_col, level_col, scenario_col)
   assert_ind_ids(ind_ids, "hep")
   assert_unique_rows(df, scenario_col, ind_ids)
   assert_years(start_year, end_year)

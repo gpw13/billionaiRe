@@ -45,7 +45,7 @@ scenario_quantile <- function(df,
     dplyr::select(dplyr::any_of(c("iso3", "year", "ind", value_col))) %>%
     tidyr::pivot_wider(
       names_from = "year",
-      values_from = value_col
+      values_from = !!value_col
     ) %>%
     dplyr::mutate(
       quantile = get_quantile(.data[[glue::glue("{quantile_year}")]], n = n),
@@ -130,7 +130,7 @@ scenario_best_in_region <- function(df,
     dplyr::select(dplyr::any_of(c("iso3", "year", "ind", value_col))) %>%
     tidyr::pivot_wider(
       names_from = "year",
-      values_from = value_col
+      values_from = !!value_col
     ) %>%
     dplyr::mutate(
       region = whoville::iso3_to_regions(.data[["iso3"]]),

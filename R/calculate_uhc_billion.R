@@ -72,7 +72,7 @@ calculate_uhc_billion_single <- function(df,
     ) %>%
     tidyr::pivot_wider(
       names_from = "_billion_group_temp",
-      values_from = transform_value_col
+      values_from = !!transform_value_col
     ) %>%
     dplyr::rowwise() %>%
     dplyr::mutate("asc" := mean(dplyr::c_across(c("_cd_temp", "_ncd_temp", "_rmnch_temp", "_sca_temp")))) %>%

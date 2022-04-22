@@ -370,7 +370,7 @@ accelerate_bp <- function(df,
     dplyr::mutate(
       pop_30_79 = .data[["30_34"]] + .data[["35_39"]] + .data[["40_44"]] + .data[["45_49"]] + .data[["50_54"]] + .data[["55_59"]] + .data[["60_64"]] + .data[["65_69"]] + .data[["70_74"]] + .data[["75_79"]]
     ) %>%
-    dplyr::select(c("iso3", "year", "ind", "sex", value_col, "lower", "upper", "pop_30_79")) %>%
+    dplyr::select(dplyr::all_of(c("iso3", "year", "ind", "sex", value_col, "lower", "upper", "pop_30_79"))) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
     dplyr::summarize(!!sym(value_col) := stats::weighted.mean(.data[[value_col]], w = .data[["pop_30_79"]]), .groups = "drop") %>%
@@ -629,7 +629,7 @@ accelerate_dtp3 <- function(df,
     ) %>%
     dplyr::select(!c("baseline_value", "target")) %>%
     dplyr::filter(!is.na(.data[["acceleration"]])) %>%
-    dplyr::select(!c(value_col)) %>%
+    dplyr::select(!dplyr::all_of(c(value_col))) %>%
     dplyr::rename(!!sym(value_col) := "acceleration") %>%
     dplyr::mutate(!!sym(scenario_col) := "acceleration")
 

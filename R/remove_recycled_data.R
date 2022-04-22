@@ -11,12 +11,14 @@
 #'
 #' @export
 remove_recycled_data <- function(df,
-                                 ind = "ind",
                                  recycled = "recycled",
-                                 scenario = "scenario",
+                                 scenario_col = "scenario",
                                  scenario_reported_estimated = "routine",
                                  scenario_covid_shock = "covid_shock",
                                  scenario_reference_infilling = "reference_infilling") {
+
+  assert_columns(df,scenario_col, "recycled")
+
   calculated_inds <- billionaiRe::indicator_df %>%
     dplyr::filter(.data[["calculated"]] | .data[["ind"]] == "surviving_infants") %>%
     dplyr::pull(.data[["ind"]])
@@ -24,7 +26,7 @@ remove_recycled_data <- function(df,
   df %>%
     dplyr::mutate(!!sym(recycled) := dplyr::case_when(
       .data[[ind]] %in% calculated_inds & is.na(.data[[recycled]]) ~ FALSE,
-      TRUE ~ recycled
+      TRUE ~ .data[[recycled]]
     )) %>%
     dplyr::filter(!.data[[recycled]])
 }
