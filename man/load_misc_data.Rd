@@ -7,7 +7,7 @@
 load_misc_data(file_path, ...)
 }
 \arguments{
-\item{file_path}{The path to the file inside the \verb{3B/Bronze/misc} folder. File
+\item{file_path}{The path to the file inside the \verb{3B/Bronze/misc_data} folder. File
 paths must end with an extension (e.g., .csv)}
 
 \item{...}{Any additionally arguments to pass on to the appropriate \code{read_} function.}
@@ -16,7 +16,7 @@ paths must end with an extension (e.g., .csv)}
 a data frame
 }
 \description{
-This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
+This function fetches and read data stored in the 3B/Bronze/misc_data/ folder in the
 WHDH data lake.
 }
 \details{

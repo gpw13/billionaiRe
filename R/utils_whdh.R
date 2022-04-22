@@ -78,10 +78,10 @@ save_gho_backup_to_whdh <- function(df,
 #'   NULL by default. Ignored if either `billion = "all"` or `ind_codes = "all"`.
 #' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
 #' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
-#' the "official" data is stored (e.g., `3B//...`).
+#'   the "official" data is stored (e.g., `3B/...`).
 #' * If a string, the root folder for the data layers is a sub-folder within the
-#' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
-#' paths would be of the form `3B/Sandbox/my_exp/Silver/...`)
+#'   Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
+#'   paths would be of the form `3B/Sandbox/my_exp/Silver/...`)
 #'
 #' @return A character vector.
 #' @export
@@ -100,6 +100,7 @@ get_whdh_path <- function(operation = c("download", "upload"),
   assert_type(billion, "character")
   assert_type(ind_codes, "character")
   assert_type(experiment, c("NULL", "character"))
+  assert_equals(experiment, "", identical = TRUE, reverse = TRUE)
 
   # For billion = "all", recursively call the function with each billion
   if (billion == "all" && data_type != "final_data") {

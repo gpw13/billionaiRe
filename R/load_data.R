@@ -34,14 +34,12 @@
 #'   where `value` is not missing. Defaults to `TRUE`.
 #' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
 #' Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
-#' are located.
+#' are located. Cannot be an empty string.
 #' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
 #' the "official" data is stored). For example, `3B/Silver/...`.
 #' * If a string, the root folder for the data layers is a sub-folder within the
 #' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
 #' data is download from `3B/Sandbox/my_exp/{data_layer}/...`)
-#' * If an empty string, the root folder for the data layers is the Sandbox itself
-#'   (i.e., if `experiment = ""`, then data is download from `3B/Sandbox/{data_layer}/...`)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a download progress bar. Defaults to `TRUE`.
 #' @param data_source (string) Ether "whdh" or "xmart". Indicates where to download
@@ -317,13 +315,13 @@ load_billion_table <- function(tbl, format, ...) {
 
 #' Load miscellaneous data
 #'
-#' This function fetches and read data stored in the 3B/Bronze/misc/ folder in the
+#' This function fetches and read data stored in the 3B/Bronze/misc_data/ folder in the
 #' WHDH data lake.
 #'
 #' It automatically selects between `readr::read_csv()`, `arrow::read_parquet()`,
 #' and `readxl::read_excel()` based on the file extension.
 #'
-#' @param file_path The path to the file inside the `3B/Bronze/misc` folder. File
+#' @param file_path The path to the file inside the `3B/Bronze/misc_data` folder. File
 #' paths must end with an extension (e.g., .csv)
 #' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
 #'
@@ -334,7 +332,7 @@ load_misc_data <- function(file_path, ...) {
 
   whdh::download_from_data_lake(
     data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_path, sep = "/"),
+    source_path = paste("3B/Bronze/misc_data", file_path, sep = "/"),
     destination_path = f,
     silent = TRUE
   )

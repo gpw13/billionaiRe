@@ -47,15 +47,13 @@ where \code{value} is not missing. Defaults to \code{TRUE}.}
 
 \item{experiment}{(string) Either \code{NULL} or a string ("unofficial" by default).
 Identifies where the Bronze/Silver/Gold data layers from which data is downloaded
-are located.
+are located. Cannot be an empty string.
 \itemize{
 \item If \code{NULL}, the root folder for the data layers is the 3B folder (i.e., where
 the "official" data is stored). For example, \verb{3B/Silver/...}.
 \item If a string, the root folder for the data layers is a sub-folder within the
 Sandbox layer of the 3B data lake (e.g., if \code{experiment = "my_exp"}, then
 data is download from \verb{3B/Sandbox/my_exp/\{data_layer\}/...})
-\item If an empty string, the root folder for the data layers is the Sandbox itself
-(i.e., if \code{experiment = ""}, then data is download from \verb{3B/Sandbox/\{data_layer\}/...})
 }}
 
 \item{silent}{(logical) Specifies whether to show authentication messages and
