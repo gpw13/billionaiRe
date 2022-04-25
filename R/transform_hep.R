@@ -30,7 +30,7 @@ transform_hep_data <- function(df,
                                extrapolate_to = 2025,
                                recycle = FALSE,
                                ...) {
-  assert_columns(df, "iso3", "ind", value_col)
+  assert_columns(df, "iso3", "ind", value_col, scenario_col)
   assert_ind_ids(ind_ids, "hep")
   assert_unique_rows(df, scenario_col, ind_ids)
 

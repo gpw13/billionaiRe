@@ -115,6 +115,7 @@ scenario_dip_recover <- function(df,
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hep_components
 #' @inherit scenario_aroc
+#' @param iso3 (character) ISO3 code of country to scenario
 #'
 scenario_dip_recover_iso3 <- function(df,
                                       iso3,

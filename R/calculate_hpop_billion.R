@@ -13,27 +13,27 @@ calculate_hpop_billion <- function(df,
                                    end_year = 2019:2025,
                                    pop_year = 2025,
                                    transform_value_col = "transform_value",
-                                   contribution = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
-                                   contribution_pct = paste0(contribution, "_percent"),
-                                   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
+                                   contribution_col = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
+                                   contribution_pct_col = paste0(contribution_col, "_percent"),
+                                   contribution_pct_total_pop_col = paste0(contribution_col, "_percent_total_pop"),
                                    scenario_col = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
   assert_columns(df, "iso3", "ind", "year", transform_value_col)
   assert_ind_ids(ind_ids, "hpop")
   assert_unique_rows(df, scenario_col, ind_ids)
-  assert_same_length(transform_value_col, contribution)
-  assert_same_length(contribution, contribution_pct)
+  assert_same_length(transform_value_col, contribution_col)
+  assert_same_length(contribution_col, contribution_pct_col)
   assert_years(start_year, end_year)
 
-  # calculate the contribution_pct (change) and contribution for component HPOP indicators
+  # calculate the contribution_pct_col (change) and contribution_col for component HPOP indicators
   contr_df <- calculate_hpop_contributions(
     df = df,
     start_year = start_year,
     end_year = end_year,
     transform_value_col = transform_value_col,
-    contribution = contribution,
-    contribution_pct = contribution_pct,
-    contribution_pct_total_pop = contribution_pct_total_pop,
+    contribution_col = contribution_col,
+    contribution_pct_col = contribution_pct_col,
+    contribution_pct_total_pop_col = contribution_pct_total_pop_col,
     scenario_col = scenario_col,
     ind_ids = ind_ids
   )
@@ -41,8 +41,8 @@ calculate_hpop_billion <- function(df,
   # calculate the Billion based off the change
   change_df <- calculate_hpop_billion_change(
     df = contr_df,
-    change = contribution_pct,
-    contribution = contribution,
+    change = contribution_pct_col,
+    contribution_col = contribution_col,
     end_year = end_year,
     pop_year = pop_year,
     scenario_col = scenario_col,
@@ -64,11 +64,12 @@ calculate_hpop_billion <- function(df,
 #'
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column(s) with change value
+#' @param population Column name of column to create with population figures.
 #'
 #' @export
 calculate_hpop_billion_change <- function(df,
                                           change = "contribution_percent",
-                                          contribution = "contribution",
+                                          contribution_col = "contribution",
                                           population = "population",
                                           end_year = 2019:2025,
                                           pop_year = 2025,
@@ -77,7 +78,7 @@ calculate_hpop_billion_change <- function(df,
   assert_columns(df, change, "ind", "iso3", "year", scenario_col)
   assert_ind_ids(ind_ids, "hpop")
 
-  df <- billionaiRe_add_columns(df, c(contribution, population), NA_real_)
+  df <- billionaiRe_add_columns(df, c(contribution_col, population), NA_real_)
 
   # only calculate Billion using relevant indicators and years and correct for child nutrition
 
@@ -108,7 +109,7 @@ calculate_hpop_billion_change <- function(df,
   # calculate billions for each contribution column
 
   bill_df_list <- purrr::map2(change,
-    contribution,
+    contribution_col,
     calculate_hpop_billion_single,
     df = change_df,
     pop_year = pop_year,
@@ -138,7 +139,7 @@ calculate_hpop_billion_change <- function(df,
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column with change value
 calculate_hpop_billion_single <- function(change,
-                                          contribution,
+                                          contribution_col,
                                           df,
                                           pop_year,
                                           scenario_col) {
@@ -177,11 +178,11 @@ calculate_hpop_billion_single <- function(change,
       "hpop_healthier_dbl_cntd"
     )),
     names_to = "ind",
-    values_to = contribution
+    values_to = contribution_col
     )
 
-  # creating new columns called change with contributions, to present change / % contribution for Billion
-  contr_df[, change] <- contr_df[, contribution]
+  # creating new columns called change with contributions, to present change / % contribution_col for Billion
+  contr_df[, change] <- contr_df[, contribution_col]
 
   contr_df %>%
     dplyr::mutate(

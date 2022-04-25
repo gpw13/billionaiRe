@@ -9,7 +9,7 @@
 #' @inheritParams recycle_data
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_espar <- function(df,
                              value_col = "value",
@@ -163,7 +163,7 @@ accelerate_espar <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 
 accelerate_detect <- function(df,
@@ -195,7 +195,7 @@ accelerate_detect <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_respond <- function(df,
                                ...) {
@@ -210,7 +210,7 @@ accelerate_respond <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_notify <- function(df,
                               ...) {
@@ -225,7 +225,7 @@ accelerate_notify <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_detect_respond <- function(df,
                                       ...) {
@@ -265,7 +265,7 @@ accelerate_cholera_campaign <- function(df,
                                         ...) {
   this_ind <- ind_ids["cholera_campaign"]
 
-  purrr::walk(unique(df[["iso3"]]), assert_who_iso)
+  purrr::walk(unique(df[["iso3"]]), assert_who_iso3)
 
   df_this_ind <- df %>%
     dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind))
@@ -451,12 +451,12 @@ accelerate_cholera_campaign <- function(df,
 #' best performance should be found.
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 
 accelerate_meningitis_campaign <- function(df,
                                            ind_ids = billion_ind_codes("hep"),
-                                           scenario = "scenario",
+                                           scenario_col = "scenario",
                                            value_col = "value",
                                            start_year = 2018,
                                            end_year = 2025,
@@ -596,7 +596,7 @@ accelerate_meningitis_campaign <- function(df,
         is.na(.data[["scenario_value"]]) ~ .data[["value"]],
         TRUE ~ .data[["scenario_value"]]
       ),
-      "{scenario}" := "acceleration"
+      "{scenario_col}" := "acceleration"
     ) %>%
     dplyr::distinct()
 
@@ -626,12 +626,12 @@ accelerate_meningitis_campaign <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 
 accelerate_measles_routine <- function(df,
                                        ind_ids = billion_ind_codes("hep"),
-                                       scenario = "scenario",
+                                       scenario_col = "scenario",
                                        ...) {
   this_ind <- ind_ids["measles_routine"]
 
@@ -650,7 +650,7 @@ accelerate_measles_routine <- function(df,
   df_accelerated <- do.call(
     scenario_aroc, c(list(df = df_this_ind), params_aroc_percent_change)
   ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration")
+    dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -669,12 +669,12 @@ accelerate_measles_routine <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_meningitis_routine <- function(df,
                                           ind_ids = billion_ind_codes("hep"),
                                           value_col = "value",
-                                          scenario = "scenario",
+                                          scenario_col = "scenario",
                                           start_year = 2018,
                                           ...) {
   this_ind <- ind_ids["meningitis_routine"]
@@ -705,7 +705,7 @@ accelerate_meningitis_routine <- function(df,
   df_accelerated <- do.call(
     scenario_fixed_target_col, c(list(df = this_ind_df), params_fixed_target_col)
   ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration") %>%
+    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
     dplyr::select(-"target_col")
 
   df %>%
@@ -725,11 +725,11 @@ accelerate_meningitis_routine <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_polio_routine <- function(df,
                                      ind_ids = billion_ind_codes("hep"),
-                                     scenario = "scenario",
+                                     scenario_col = "scenario",
                                      ...) {
   this_ind <- ind_ids["polio_routine"]
 
@@ -748,7 +748,7 @@ accelerate_polio_routine <- function(df,
   df_accelerated <- do.call(
     scenario_aroc, c(list(df = df_this_ind), params_aroc_percent_change)
   ) %>%
-    dplyr::filter(.data[[scenario]] == "acceleration")
+    dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -772,12 +772,12 @@ accelerate_polio_routine <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams accelerate_meningitis_campaign
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 
 accelerate_yellow_fever_campaign <- function(df,
                                              ind_ids = billion_ind_codes("hep"),
-                                             scenario = "scenario",
+                                             scenario_col = "scenario",
                                              value_col = "value",
                                              start_year = 2018,
                                              end_year = 2025,
@@ -909,7 +909,7 @@ accelerate_yellow_fever_campaign <- function(df,
         is.na(.data[["scenario_value"]]) ~ .data[["value"]],
         TRUE ~ .data[["scenario_value"]]
       ),
-      "{scenario}" := "acceleration"
+      "{scenario_col}" := "acceleration"
     ) %>%
     dplyr::distinct()
 
@@ -939,7 +939,7 @@ accelerate_yellow_fever_campaign <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_yellow_fever_routine <- function(df,
                                             ...) {

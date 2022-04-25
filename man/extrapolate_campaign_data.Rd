@@ -8,9 +8,7 @@ extrapolate_campaign_data(
   pathogen,
   pathogen_year,
   df,
-  ind,
-  year,
-  transform_value,
+  transform_value_col,
   source
 )
 }
@@ -22,15 +20,11 @@ extrapolate_campaign_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{year}{Column name of column with year data.}
-
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 }
 \description{
-Works across multiple \code{transform_value} columns.
+Works across multiple \code{transform_value_col} columns.
 }

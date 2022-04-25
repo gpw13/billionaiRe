@@ -7,14 +7,11 @@
 calculate_hpop_billion_change(
   df,
   change = "contribution_percent",
-  contribution = "contribution",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
+  contribution_col = "contribution",
   population = "population",
   end_year = 2019:2025,
   pop_year = 2025,
-  scenario = NULL,
+  scenario_col = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -24,22 +21,16 @@ country, year, and indicator.}
 
 \item{change}{Column name of column(s) with change value}
 
-\item{contribution}{Column name of column(s) to store contribution (population)
-values. Must be the same length as \code{transform_value}.}
+\item{contribution_col}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value_col}.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{population}{Column name of column with population figures.}
+\item{population}{Column name of column to create with population figures.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

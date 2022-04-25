@@ -4,17 +4,13 @@
 \alias{transform_hpop_single}
 \title{Perform a transformation on a single column}
 \usage{
-transform_hpop_single(df, iso3, ind, value, transform_col, ind_ids)
+transform_hpop_single(df, value_col, transform_col, ind_ids)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{transform_col}{Column to put transformed values into}
 

@@ -6,10 +6,8 @@
 \usage{
 transform_hpop_data(
   df,
-  iso3 = "iso3",
-  ind = "ind",
-  value = "value",
-  transform_glue = "transform_{value}",
+  value_col = "value",
+  transform_glue = "transform_{value_col}",
   ind_ids = billion_ind_codes("hpop"),
   recycle = FALSE,
   ...
@@ -19,14 +17,10 @@ transform_hpop_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{transform_glue}{Glue expression to be passed to \code{\link[glue:glue]{glue::glue()}}. Defaults to
-\code{'transform_{value}'} which will create new column names by prefixing \code{transform_}
+\code{'transform_{value_col}'} which will create new column names by prefixing \code{transform_}
 to the original name.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
@@ -46,7 +40,7 @@ Data frame in long format.
 that transformed indicator values can be used within Billions calculations.
 Details on the specific transformations applied can be found within the
 Billions methods report. Values in the transform column, if it already exists,
-are replaced for HPOP indicators that have data in the value column, otherwise
+are replaced for HPOP indicators that have data in the \code{value_col} column, otherwise
 the column keeps its original data.
 }
 \details{

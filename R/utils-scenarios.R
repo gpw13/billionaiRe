@@ -31,6 +31,9 @@ trim_values <- function(df,
                         trim_years = TRUE,
                         start_year = 2018,
                         end_year = 2025) {
+
+  assert_columns(df, value_col, col)
+
   if (trim) {
     df %>%
       dplyr::mutate(
@@ -137,6 +140,9 @@ calculate_aarc <- function(baseline_year,
 get_latest_aarc <- function(df,
                             baseline_year,
                             value_col = "value") {
+
+  assert_columns(df, value_col, "year", "iso3", "ind")
+
   df %>%
     dplyr::filter(.data[["year"]] %in% c(baseline_year - 1, baseline_year)) %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
@@ -169,6 +175,9 @@ get_target_aarc <- function(df,
                             baseline_year,
                             target_year,
                             value_col = "value") {
+
+  assert_columns(df, value_col, "year", "iso3", "ind")
+
   df %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind")))) %>%
     dplyr::filter(.data[["year"]] == baseline_year) %>%
@@ -197,6 +206,9 @@ get_percent_change_aarc <- function(df,
                                     baseline_year,
                                     target_year,
                                     value_col = "value") {
+
+  assert_columns(df, value_col, "year", "iso3", "ind")
+
   df %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
     dplyr::filter(.data[["year"]] == baseline_year) %>%
@@ -266,6 +278,9 @@ flat_extrapolation <- function(df,
                                pred_col = "pred",
                                sort_descending = FALSE,
                                replace_obs = c("missing", "none")) {
+
+  assert_columns(df, col, group_col, sort_col)
+
   replace_obs <- rlang::arg_match(replace_obs)
 
   df <- dplyr::group_by(df, dplyr::across(dplyr::all_of(group_col)))
@@ -315,6 +330,9 @@ simple_extrap <- function(x) {
 remove_unwanted_scenarios <- function(df,
                                       scenario_col = "scenario",
                                       unwanted_scenarios) {
+
+  assert_columns(df, scenario_col)
+
   scenario_present <- unique(df[[scenario_col]])
 
   unwanted_scenarios_present <- scenario_present %in% unwanted_scenarios

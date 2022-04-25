@@ -15,7 +15,7 @@
 #' @inherit transform_hpop_data return params
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams add_hpop_populations
-#' @param level Column name of column(s) with indicator levels. Should be same length
+#' @param level_col Column name of column(s) with indicator levels. Should be same length
 #'     as `transform_value_col`.
 #'
 #' @export

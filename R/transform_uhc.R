@@ -78,6 +78,8 @@ transform_uhc_data <- function(df,
 #'
 #' @inheritParams transform_uhc_data
 #' @inheritParams transform_hpop_single
+#' @param transform_value_col Column name of column(s) with transformed
+#'    indicator values
 #'
 #' @return A single column data frame of transformed values.
 transform_uhc_single <- function(df,
@@ -129,7 +131,7 @@ untransform_uhc_data <- function(df,
   assert_ind_ids(ind_ids, "uhc")
 
   for (i in 1:length(value_col)) {
-    df <- untransform_uhc_single(df, "ind", transform_value_col[i], value_col[i], ind_ids)
+    df <- untransform_uhc_single(df, transform_value_col[i], value_col[i], ind_ids)
   }
 
   df

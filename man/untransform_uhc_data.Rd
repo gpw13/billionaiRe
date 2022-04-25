@@ -6,9 +6,8 @@
 \usage{
 untransform_uhc_data(
   df,
-  ind = "ind",
-  transform_value = "transform_value",
-  value = stringr::str_remove(transform_value, "transform_"),
+  transform_value_col = "transform_value",
+  value_col = stringr::str_remove(transform_value_col, "transform_"),
   ind_ids = billion_ind_codes("uhc")
 )
 }
@@ -16,13 +15,11 @@ untransform_uhc_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
+\item{transform_value_col}{Column name(s) of column with transformed values to retrieve.}
 
-\item{transform_value}{Column name(s) of column with transformed values to retrieve.}
-
-\item{value}{Column name(s) of column to place untransformed values. Must be same
-length as \code{transform_value}. If a column already exists, values are overwritten
-wherever \code{ind} and \code{transform_value} are available to be untransformed for
+\item{value_col}{Column name(s) of column to place untransformed values. Must be same
+length as \code{transform_value_col}. If a column already exists, values are overwritten
+wherever \code{ind} and \code{transform_value_col} are available to be untransformed for
 this Billion, but otherwise, the column retains its
 other values.}
 

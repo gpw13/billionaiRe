@@ -29,7 +29,7 @@ impute_covid_shock <- function(df,
                               scenario_reference_infilling = "reference_infilling",
                               source = sprintf("WHO DDI interim infilling and projections, %s", format(Sys.Date(), "%B %Y"))){
 
-  assert_columns(df,value_col, scenario_col, "iso3", "year", "ind", "source", "type")
+  assert_columns(df,value_col, scenario_col, "iso3", "year", "ind", "type")
 
   region <- rlang::arg_match(region)
 
@@ -98,7 +98,7 @@ impute_covid_shock <- function(df,
       value_covid_year_plus1 = .data[[value_col]][.data[["year"]] == covid_year + 1]) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
-      "{value}" = dplyr::case_when(
+      "{value_col}" := dplyr::case_when(
         .data[["year"]] >= covid_year & !is.na(.data[["value_covid_year"]]) & is.na(.data[[value_col]]) ~ as.numeric(.data[["value_covid_year"]]),
         .data[["year"]] >= covid_year & is.na(.data[["value_covid_year"]]) & is.na(.data[["value_covid_year_plus1"]]) ~ as.numeric(.data[["value_pre_covid"]] + .data[["mean_shock"]]),
         TRUE ~ as.numeric(.data[[value_col]])

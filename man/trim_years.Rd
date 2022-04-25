@@ -4,7 +4,7 @@
 \alias{trim_years}
 \title{Trim values}
 \usage{
-trim_years(df, trim_years, year, start_year, end_year)
+trim_years(df, trim_years, start_year, end_year)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -12,8 +12,6 @@ country, year, and indicator.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
-
-\item{year}{Column name of column with years.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 

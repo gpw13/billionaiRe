@@ -9,10 +9,7 @@ get_percent_change_aarc(
   percent_change,
   baseline_year,
   target_year,
-  value = "value",
-  year = "year",
-  iso3 = "iso3",
-  ind = "ind"
+  value_col = "value"
 )
 }
 \arguments{
@@ -29,13 +26,7 @@ Defaults to \code{start_year}}
 \item{target_year}{Year by which the scenario should eventually be
 achieved. Defaults to \code{end_year}}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
+\item{value_col}{Column name of column with indicator values.}
 }
 \value{
 dataframe with AROC (in \code{aroc} column) for every combination of

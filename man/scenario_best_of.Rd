@@ -7,15 +7,12 @@
 scenario_best_of(
   df,
   scenario_names,
-  value = "value",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
   target_year = 2025,
   scenario_name = glue::glue("best_of_{paste0(scenario_names, collapse = '_')}"),
-  scenario = "scenario",
+  scenario_col = "scenario",
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = TRUE,
@@ -31,13 +28,7 @@ country, year, and indicator.}
 
 \item{scenario_names}{names of the scenario to pick from.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -48,7 +39,7 @@ achieved. Defaults to \code{end_year}}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{trim}{logical to indicate if the data should be trimmed between
@@ -59,8 +50,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{limit at which the indicator should be caped.

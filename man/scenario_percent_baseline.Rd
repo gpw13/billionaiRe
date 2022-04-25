@@ -7,15 +7,12 @@
 scenario_percent_baseline(
   df,
   percent_change,
-  value = "value",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
   baseline_year = start_year,
   target_year = end_year,
-  scenario = "scenario",
+  scenario_col = "scenario",
   scenario_name = glue::glue("{percent_change}_{baseline_year}"),
   trim = TRUE,
   small_is_best = FALSE,
@@ -32,18 +29,12 @@ scenario_percent_baseline(
 country, year, and indicator.}
 
 \item{percent_change}{Numeric with the percentage change in \strong{points} that is
-to be achieved from \code{value} in \code{baseline_year} by \code{target_year}. Should be
+to be achieved from \code{value_col} in \code{baseline_year} by \code{target_year}. Should be
 expressed a percentage point and not a fraction of 100 (e.g. 6\% increase = 6,
 and not 0.06).
 For an increase, use a positive numeric, and a negative one for a decrease.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -55,7 +46,7 @@ Defaults to \code{start_year}}
 \item{target_year}{Year by which the scenario should eventually be
 achieved. Defaults to \code{end_year}}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
@@ -68,8 +59,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{limit at which the indicator should be caped.

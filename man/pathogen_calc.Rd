@@ -7,14 +7,9 @@
 pathogen_calc(
   df,
   name,
-  ind,
-  iso3,
-  year,
   numerators,
   denominators,
-  transform_value,
-  type_col,
-  source_col,
+  transform_value_col,
   source,
   ind_ids,
   multiply_surviving_infs,
@@ -27,22 +22,12 @@ country, year, and indicator.}
 
 \item{name}{Name of pathogen to provide in the data frame.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with year data.}
-
 \item{numerators}{Indicator names for numerators.}
 
 \item{denominators}{Indicator names for denominators.}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
-
-\item{type_col}{Column name of column with type data.}
-
-\item{source_col}{Column name of column to store source information.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 

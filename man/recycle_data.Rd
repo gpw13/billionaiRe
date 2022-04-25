@@ -7,14 +7,10 @@
 recycle_data(
   df,
   billion = c("hep", "hpop", "uhc"),
-  iso3 = "iso3",
-  ind = "ind",
-  value = "value",
-  year = "year",
-  type = "type",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
-  scenario = "scenario",
+  scenario_col = "scenario",
   default_scenario = "default",
   scenario_reported_estimated = "routine",
   scenario_covid_shock = "covid_shock",
@@ -31,21 +27,13 @@ country, year, and indicator.}
 
 \item{billion}{name of billion to recycle data for.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
-
-\item{type}{Column name of column with types}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario.}
@@ -77,7 +65,7 @@ size of tables stored.
 }
 \details{
 This function wraps around \code{recycle_data_scenario_single} for all the
-scenarios present in the \code{scenario} column. \code{recycle_data_scenario_single }
+scenarios present in the \code{scenario_col} column. \code{recycle_data_scenario_single }
 reuses values present in the specified  scenarios in \code{default_scenario},
 \code{scenario_reported_estimated}, and \code{scenario_reference_infilling} for the specified scenarios.
 

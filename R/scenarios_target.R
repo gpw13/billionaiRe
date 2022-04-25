@@ -90,6 +90,7 @@ scenario_fixed_target <- function(df,
 #' @inherit scenario_fixed_target
 #' @param target_value vector of values to use as targets
 #' @param baseline_value value at baseline_year
+#' @param year (vector) vector of years
 calculate_fixed_target <- function(target_value,
                                    small_is_best,
                                    year,

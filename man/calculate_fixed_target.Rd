@@ -20,7 +20,7 @@ calculate_fixed_target(
 one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
-\item{year}{Column name of column with years.}
+\item{year}{(vector) vector of years}
 
 \item{baseline_year}{Year from which the scenario is measured.
 Defaults to \code{start_year}}

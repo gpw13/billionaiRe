@@ -1,7 +1,6 @@
 #' Remove recycled values from `df`
 #'
 #' @param df Data frame in long format, where 1 row corresponds to a specific country, year, and indicator.
-#' @param ind Column name of column with indicator names.
 #' @param recycled name of boolean recycle column with whether the data is
 #' recycled or not. Default to "recycle".
 #'
@@ -25,7 +24,7 @@ remove_recycled_data <- function(df,
 
   df %>%
     dplyr::mutate(!!sym(recycled) := dplyr::case_when(
-      .data[[ind]] %in% calculated_inds & is.na(.data[[recycled]]) ~ FALSE,
+      .data[["ind"]] %in% calculated_inds & is.na(.data[[recycled]]) ~ FALSE,
       TRUE ~ .data[[recycled]]
     )) %>%
     dplyr::filter(!.data[[recycled]])

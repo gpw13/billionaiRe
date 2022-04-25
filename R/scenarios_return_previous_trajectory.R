@@ -10,8 +10,6 @@
 #' @inheritParams trim_values
 #' @inherit scenario_aroc
 #' @inheritParams scenario_dip_recover_iso3
-#' @param ind (character) name of the indicator on which to calculate the
-#'    scenario
 #' @param scenario_shock (character) name of the scenario with the shock
 #' @param scenario_previous_trajectory (character) name of the scenario with the previous trajectories.
 #' @param scenario_col (character) name of the column with the scenarios.

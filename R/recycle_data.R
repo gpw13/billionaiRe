@@ -216,7 +216,7 @@ recycle_data_scenario_single <- function(df,
   if (recycle_campaigns & billion == "hep") {
     not_in_scenario_campaigns <- not_in_scenario %>%
       dplyr::filter(
-        stringr::str_detect(ind, "campaign"),
+        stringr::str_detect(.data[["ind"]], "campaign"),
         .data[["type"]] %in% c("reported", "estimated")
       )
 

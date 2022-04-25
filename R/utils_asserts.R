@@ -532,10 +532,10 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
 #' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
 #' using [whoville::is_who_member()].
 #'
-#' @param iso Single ISO3 code
-assert_who_iso <- function(iso) {
-  assert_string(iso, 1)
-  if (!whoville::is_who_member(iso)) {
+#' @param iso3 Single ISO3 code
+assert_who_iso3 <- function(iso3) {
+  assert_string(iso3, 1)
+  if (!whoville::is_who_member(iso3)) {
     stop(strwrap("`iso` must be a valid WHO member state ISO3 code.
                  All valid codes are available through `whoville::who_member_states()`."),
       call. = FALSE
@@ -598,6 +598,9 @@ assert_in_list_or_null <- function(x, list) {
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
 assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") {
+
+  assert_columns(df, scenario_col, value_col)
+
   empty_iso3 <- df %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col)))) %>%
     dplyr::summarise(all_NA = dplyr::case_when(
@@ -631,6 +634,9 @@ assert_start_end_year <- function(df,
                                   start_year = 2018,
                                   end_year = 2025,
                                   scenario_col = "scenario") {
+
+  assert_columns(df, scenario_col, value_col, "year", "iso3")
+
   missing_years <- df %>%
     dplyr::filter(.data[["year"]] %in% c(start_year, end_year)) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col)))) %>%
@@ -675,6 +681,9 @@ assert_ind_start_end_year <- function(df,
                                       end_year = 2020,
                                       ind_ids,
                                       scenario_col = "scenario") {
+
+  assert_columns(df, scenario_col, value_col, "year", "iso3", "ind")
+
   if (!is.null(scenario_col)) {
     full_df <- tidyr::expand_grid(
       iso3 = unique(df[["iso3"]]),
@@ -732,7 +741,12 @@ assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
 }
 
 assert_ind_ids_in_df <- function(df, ind_ids, by_iso3 = TRUE) {
+  assert_columns(df, "ind")
+
   if (by_iso3) {
+
+    assert_columns(df, "ind", "iso3")
+
     df %>%
       dplyr::group_by(.data[["iso3"]]) %>%
       dplyr::group_walk(~ assert_vector_in_column(df = .x, vector = ind_ids, column = "ind"))

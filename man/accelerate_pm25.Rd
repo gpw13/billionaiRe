@@ -7,11 +7,8 @@
 accelerate_pm25(
   df,
   ind_ids = billion_ind_codes("hpop"),
-  scenario = "scenario",
-  ind = "ind",
-  iso3 = "iso3",
-  value = "value",
-  year = "year",
+  scenario_col = "scenario",
+  value_col = "value",
   ...
 )
 }
@@ -24,32 +21,26 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{
 Accelerate pm25 by picking the best value between business as usual, and
-linear change of -2\% * 2018 \code{value} per year.
+linear change of -2\% * 2018 \code{value_col} per year.
 }
 \details{
 Runs:
 \itemize{
 \item \code{scenario_bau(df, small_is_best = TRUE,...)}
-\item \code{scenario_linear_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)}
+\item \code{scenario_linear_change(df, linear_value = df$value_col[df$"year" == 2018] * -0.02, small_is_best = TRUE,...)}
 }
 
 Then picks the best result between the two scenarios.

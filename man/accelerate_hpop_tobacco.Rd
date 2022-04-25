@@ -7,14 +7,10 @@
 accelerate_hpop_tobacco(
   df,
   ind_ids = billion_ind_codes("hpop"),
-  ind = "ind",
-  scenario = "scenario",
-  iso3 = "iso3",
-  value = "value",
-  year = "year",
+  scenario_col = "scenario",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
-  type_col = "type",
   ...
 )
 }
@@ -27,27 +23,19 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{type_col}{Column name of column with type data.}
-
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

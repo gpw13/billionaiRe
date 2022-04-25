@@ -140,7 +140,7 @@ untransform_hpop_data <- function(df,
   df <- billionaiRe_add_columns(df, value_col, NA_real_)
 
   for (i in 1:length(value_col)) {
-    df <- untransform_hpop_single(df, "iso3", "ind", transform_value_col[i], value_col[i], ind_ids)
+    df <- untransform_hpop_single(df, transform_value_col[i], value_col[i], ind_ids)
   }
 
   df
