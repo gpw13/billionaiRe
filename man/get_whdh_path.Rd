@@ -43,7 +43,7 @@ NULL by default. Ignored if either \code{billion = "all"} or \code{ind_codes = "
 \item{experiment}{(string) Either \code{NULL} or a string ("unofficial" by default).
 \itemize{
 \item If \code{NULL}, the root folder for the data layers is the 3B folder (i.e., where
-the "official" data is stored (e.g., \verb{3B//...}).
+the "official" data is stored (e.g., \verb{3B/...}).
 \item If a string, the root folder for the data layers is a sub-folder within the
 Sandbox layer of the 3B data lake (e.g., if \code{experiment = "my_exp"}, then
 paths would be of the form \verb{3B/Sandbox/my_exp/Silver/...})

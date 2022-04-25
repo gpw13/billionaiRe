@@ -28,14 +28,12 @@
 #'   Defaults to `FALSE`.
 #' @param experiment (string) Either `NULL` or a string ("unofficial" by default).
 #' Identifies where the Bronze/Silver/Gold data layers to which data is uploaded
-#' are located.
+#' are located. Cannot be an empty string.
 #' * If `NULL`, the root folder for the data layers is the 3B folder (i.e., where
 #' the "official" data is stored). For example, `3B/Silver/...`.
 #' * If a string, the root folder for the data layers is a sub-folder within the
 #' Sandbox layer of the 3B data lake (e.g., if `experiment = "my_exp"`, then
 #' data is download from `3B/Sandbox/my_exp/{data_layer}/...`)
-#' * If an empty string, the root folder for the data layers is the Sandbox itself
-#'   (i.e., if `experiment = ""`, then data is download from `3B/Sandbox/{data_layer}/...`)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a progress bar. Defaults to `TRUE`.
 #'
