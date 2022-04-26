@@ -333,7 +333,7 @@ load_misc_data <- function(file_path, ...) {
 
   whdh::download_from_data_lake(
     data_lake_name = "srhdteuwstdsa",
-    source_path = paste("3B/Bronze/misc", file_path, sep = "/"),
+    source_path = paste("3B/Bronze/misc_data", file_path, sep = "/"),
     destination_path = f,
     silent = TRUE
   )

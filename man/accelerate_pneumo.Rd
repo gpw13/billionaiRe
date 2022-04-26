@@ -12,6 +12,7 @@ accelerate_pneumo(
   ind = "ind",
   year = "year",
   type_col = "type",
+  value = "value",
   ...
 )
 }
@@ -34,6 +35,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{year}{Column name of column with years.}
 
 \item{type_col}{Column name of column to store type.}
+
+\item{value}{Column name of column with indicator values.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

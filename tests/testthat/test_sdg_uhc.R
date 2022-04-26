@@ -218,7 +218,7 @@ testthat::test_that(paste0("sdg_pneumo returns accurate values:"), {
   # Fixed target of 90 by 2025 (= 90) is better  than BAU (= 35)
   testthat::expect_equal(
     get_2025_value(20:40, ind, "reported"),
-    get_fixed_target(90, 28, 2018, 2025)
+    get_linear_change(3, 28, 2018, 2025)
   )
 })
 

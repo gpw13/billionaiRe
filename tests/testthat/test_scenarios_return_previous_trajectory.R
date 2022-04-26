@@ -80,7 +80,7 @@ testthat::test_that("scenario_return_previous_trajectory produces accurate resul
 })
 
 testthat::test_that("scenario_return_previous_trajectory runs on real data", {
-  df <- load_billion_data("projected_data", "hep", "polio_routine", version ="2022-03-10T15-44-07", experiment = "")
+  df <- load_billion_data("projected_data", "hep", "polio_routine", version ="2022-03-10T15-44-07", experiment = "unofficial")
 
   df_with_covid_impact <- scenario_return_previous_trajectory(df)
 
