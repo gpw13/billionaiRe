@@ -1,6 +1,6 @@
 testthat::test_that("upload_billion_data works as expected", {
   tstamp <- whdh::get_formatted_timestamp()
-  gpw13_code <- "hwf"
+  gpw13_code <- "dtp3"
 
   df <- tibble::tibble(
     iso3 = "AFG", year = 2000:2019, ind = gpw13_code, scenario = "routine",
@@ -25,7 +25,7 @@ testthat::test_that("upload_billion_data works as expected", {
 
   whdh_files <- whdh::list_blobs_in_directory(
     get_data_lake_name(),
-    "3B/Sandbox/unit_tests/Silver/wrangled_data/uhc_hwf/",
+    "3B/Sandbox/unit_tests/Silver/wrangled_data/uhc_dtp3/",
     silent = TRUE
   ) %>%
     dplyr::pull(name)
@@ -35,7 +35,7 @@ testthat::test_that("upload_billion_data works as expected", {
   downloaded_df <- load_billion_data(
     data_type = "wrangled_data",
     billion = "uhc",
-    ind_code = "hwf",
+    ind_code = "dtp3",
     version = tstamp, na_rm = TRUE,
     experiment = "unit_tests",
     data_source = "whdh",

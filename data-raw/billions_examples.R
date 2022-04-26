@@ -168,8 +168,8 @@ test_data_file_name <- glue::glue("test_data_{time_stamp}.parquet")
 
 test_data_output_path <- glue::glue("data-raw/{test_data_file_name}")
 
-test_data_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data/{test_data_file_name}")
-test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data/test_data.parquet")
+test_data_destination_path <- glue::glue("3B/Bronze/misc_data/test_data/test_data/{test_data_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc_data/test_data/test_data/test_data.parquet")
 
 arrow::write_parquet(test_data, test_data_output_path)
 
@@ -191,8 +191,8 @@ test_data_calculated_file_name <- glue::glue("test_data_calculated_{time_stamp}.
 
 test_data_calculated_output_path <- glue::glue("data-raw/{test_data_calculated_file_name}")
 
-test_data_calculated_destination_path <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/{test_data_calculated_file_name}")
-test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc/test_data/test_data_calculated/test_data_calculated.parquet")
+test_data_calculated_destination_path <- glue::glue("3B/Bronze/misc_data/test_data/test_data_calculated/{test_data_calculated_file_name}")
+test_data_destination_path_notimestamp <- glue::glue("3B/Bronze/misc_data/test_data/test_data_calculated/test_data_calculated.parquet")
 
 
 arrow::write_parquet(test_data_calculated, test_data_calculated_output_path)

@@ -185,7 +185,8 @@ save_wrangled_output <- function(df,
     filter_billion_na(na_rm) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::select(xmart_cols(data_type)) %>%
-    dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]])
+    dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]]) %>%
+    dplyr::rename_with(toupper)
 
   if (ext == "csv") {
     readr::write_csv(output_df, path, na = "")
