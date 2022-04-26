@@ -56,8 +56,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.10" id="billionaire-0610">billionaiRe 0.6.10<a class="anchor" aria-label="anchor" href="#billionaire-0610"></a></h2>
 <ul><li>
-<code>save_wrangled_output</code> now saves files with all columns capitalised and <code>load_billion_data_whdh</code> changes all column names to lower case after downloading data from WHDH to simplify WHDH =&gt; xMart pipelines.</li>
-</ul></div>
+<code>save_wrangled_output</code> now saves files with all columns capitalised and <code>load_billion_data_whdh</code> changes all column names to lower case after downloading data from WHDH to simplify WHDH =&gt; xMart pipelines.</li></ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.9" id="billionaire-069">billionaiRe 0.6.9<a class="anchor" aria-label="anchor" href="#billionaire-069"></a></h2>
 <ul><li>Add <code>scenario_return_previous_trajectory</code> to return to <code>pre_covid_trajectory</code> after <code>covid_shock</code>
@@ -98,8 +97,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.5" id="billionaire-065">billionaiRe 0.6.5<a class="anchor" aria-label="anchor" href="#billionaire-065"></a></h2>
-<ul><li>Replace names of scenarios with more informative names:
-<ul><li>
+<ul><li>Replace names of scenarios with more informative names:<ul><li>
 <code>none</code> becomes <code>routine</code>
 </li>
 <li>
@@ -111,8 +109,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.4" id="billionaire-064">billionaiRe 0.6.4<a class="anchor" aria-label="anchor" href="#billionaire-064"></a></h2>
-<ul><li>Adding Sustainable Development Goals acceleration scenarios.</li>
-</ul></div>
+<ul><li>Adding Sustainable Development Goals acceleration scenarios.</li></ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.3" id="billionaire-063">billionaiRe 0.6.3<a class="anchor" aria-label="anchor" href="#billionaire-063"></a></h2>
 <ul><li>Corrected problems with <code>fh</code> where the indicator was not transformed correctly. See [issue <a href="https://github.com/gpw13/billionaiRe/issues/35" class="external-link">#35</a>]{<a href="https://github.com/gpw13/billionaiRe/issues/35" class="external-link uri">https://github.com/gpw13/billionaiRe/issues/35</a>} for more details.</li>
@@ -125,8 +122,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.1" id="billionaire-061">billionaiRe 0.6.1<a class="anchor" aria-label="anchor" href="#billionaire-061"></a></h2>
-<ul><li>Add recycle_data functions to efficiently recycle data. See vignette(“scenarios”, “billionaiRe”) for an overview of the functionality and logic behind data recycling.</li>
-</ul></div>
+<ul><li>Add recycle_data functions to efficiently recycle data. See vignette(“scenarios”, “billionaiRe”) for an overview of the functionality and logic behind data recycling.</li></ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="billionaire-060">billionaiRe 0.6.0<a class="anchor" aria-label="anchor" href="#billionaire-060"></a></h2>
 <p>Various updates to facilitate migration of the Triple Billion data pipeline into the WHDH * Updated <code>load_billion_data</code> to now pull data from the WHDH data lake by default and optionally set xMart as the <code>data_source</code>. Using xMart currently redirects the user to the legacy version of <code>load_billion_data</code>, while the xMart functionality is built. * Added <code>get_whdh_path</code> for easy generation of download/upload paths for the WHDH data lake * Updated <code>save_wrangled_output</code> to work with parquet format. * Added <code>save_gho_backup_to_whdh</code>, making it easier to backup snapshots of GHO data to the WHDH data lake. * Updated <code>billion_ind_codes</code> with a toggle for subindicators (like <code>water_rural</code>, <code>water_urban</code> and the eSpar categories and sub-categories). * Added <code>get_ind_billion</code> for determining which billion a given indicato belongs to. * Updated <code>xmart_cols</code> to return different sets of columns based for different types of data. * Added new assertions: <code>assert_type</code>, <code>assert_fileext</code>, <code>assert_unique_vector</code>, <code>assert_length</code>, <code>assert_min_length</code>, <code>assert_same_length</code>, <code>assert_equals</code>, and <code>assert_x_in_y</code>. * Updated <code>assert_arg_exists</code> to have custom error messages. * Rearranged <code>utils_asserts.R</code> to categorise the different assertions.</p>
@@ -164,8 +160,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.4" id="billionaire-044">billionaiRe 0.4.4<a class="anchor" aria-label="anchor" href="#billionaire-044"></a></h2>
-<ul><li>Added <code>calculate_contribution_sums</code> with the ability to calculate regional or global sums for HEP, HPOP, or UHC billions for a given year.</li>
-</ul></div>
+<ul><li>Added <code>calculate_contribution_sums</code> with the ability to calculate regional or global sums for HEP, HPOP, or UHC billions for a given year.</li></ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.3" id="billionaire-043">billionaiRe 0.4.3<a class="anchor" aria-label="anchor" href="#billionaire-043"></a></h2>
 <ul><li>Added <code>wrangled_rural_urban_gho_data()</code> with functionality to supplant <code><a href="../reference/wrangle_gho_data.html">wrangle_gho_data()</a></code> for indicators where the data has an additional RESIDENCEAREATYPE dimension with possible values of <code>TOTL</code>, <code>URB</code> and <code>RUR</code>.</li>
@@ -208,8 +203,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="billionaire-010">billionaiRe 0.1.0<a class="anchor" aria-label="anchor" href="#billionaire-010"></a></h2>
-<ul><li>Initial release of package. UHC and HPOP Billions available for calculation through the billionaiRe API.</li>
-</ul></div>
+<ul><li>Initial release of package. UHC and HPOP Billions available for calculation through the billionaiRe API.</li></ul></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
@@ -219,7 +213,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer></div>
