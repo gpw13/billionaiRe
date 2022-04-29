@@ -947,6 +947,7 @@ accelerate_pneumo <- function(df,
   params_best_of <- get_right_params(params, scenario_best_of)
   params_best_of[["scenario_names"]] <- c("business_as_usual", "3_percent_change")
   params_best_of[["scenario_name"]] <- "acceleration"
+  params_best_of[["maximize_end_year"]] <- TRUE
 
   if(nrow(dplyr::bind_rows(df_linear_change, df_bau_more_2_values_since_2020)) > 0){
     df_best_of_3_percent_change_bau <- do.call(

@@ -9,12 +9,16 @@
 #' the best value, the first in alphabetical order is picked.
 #'
 #' @param scenario_names names of the scenario to pick from.
+#' @param maximize_end_year (bollean) if TRUE, the best scenario is
+#'    picked on the best value value at `end_year`. Default to FALSE.
+#'
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 
 scenario_best_of <- function(df,
                              scenario_names,
+                             maximize_end_year = FALSE,
                              value = "value",
                              ind = "ind",
                              iso3 = "iso3",
@@ -52,12 +56,23 @@ scenario_best_of <- function(df,
   if (length(unique(best[[scenario]])) > 1) {
     those_scenarios <- unique(best[[scenario]])
 
-    best <- df %>%
-      dplyr::mutate(scenario_value = .data[[value]]) %>%
-      dplyr::select(c({{ iso3 }}, {{ year }}, {{ ind }}, {{ scenario }}, "scenario_value")) %>%
-      dplyr::filter(.data[[scenario]] %in% those_scenarios) %>%
-      dplyr::group_by(iso3, ind, scenario) %>%
-      dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+    if(maximize_end_year){
+      best <- df %>%
+        dplyr::mutate(scenario_value = .data[[value]]) %>%
+        dplyr::select(c({{ iso3 }}, {{ year }}, {{ ind }}, {{ scenario }}, "scenario_value")) %>%
+        dplyr::filter(.data[[scenario]] %in% those_scenarios,
+                      .data[["year"]] == end_year) %>%
+        dplyr::group_by(iso3, ind, scenario) %>%
+        dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+
+    }else{
+      best <- df %>%
+        dplyr::mutate(scenario_value = .data[[value]]) %>%
+        dplyr::select(c({{ iso3 }}, {{ year }}, {{ ind }}, {{ scenario }}, "scenario_value")) %>%
+        dplyr::filter(.data[[scenario]] %in% those_scenarios) %>%
+        dplyr::group_by(iso3, ind, scenario) %>%
+        dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+    }
 
     if (small_is_best) {
       best <- best %>%
