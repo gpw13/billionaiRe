@@ -69,6 +69,7 @@ smaller values are best.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scenario_best_of</span><span class="op">(</span>
   <span class="va">df</span>,
   <span class="va">scenario_names</span>,
+  maximize_end_year <span class="op">=</span> <span class="cn">FALSE</span>,
   value <span class="op">=</span> <span class="st">"value"</span>,
   ind <span class="op">=</span> <span class="st">"ind"</span>,
   iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
@@ -95,6 +96,9 @@ smaller values are best.</p>
 country, year, and indicator.</p></dd>
 <dt>scenario_names</dt>
 <dd><p>names of the scenario to pick from.</p></dd>
+<dt>maximize_end_year</dt>
+<dd><p>(bollean) if TRUE, the best scenario is
+picked on the best value value at <code>end_year</code>. Default to FALSE.</p></dd>
 <dt>value</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
 <dt>ind</dt>
