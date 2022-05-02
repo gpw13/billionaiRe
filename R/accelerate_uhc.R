@@ -878,50 +878,56 @@ accelerate_pneumo <- function(df,
   params_bau <- get_right_params(params, scenario_bau)
   params_bau["scenario_name"] <- "business_as_usual"
 
-  params_fixed_target <- get_right_params(params, scenario_fixed_target)
-  params_fixed_target <- c(
-    params_fixed_target,
-    list(target_value = 90, target_year = 2025, scenario_name = "fixed_target")
+  params_linear_change <- get_right_params(params, scenario_linear_change)
+  params_linear_change <- c(
+    params_linear_change,
+    list(linear_value = 3, target_year = 2025, scenario_name = "3_percent_change",
+         upper_limit = 90)
   )
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
+
+  iso3_more_2_values_since_2020 <- df_this_ind %>%
+    dplyr::filter(.data[["type"]] %in% c("reported", "estimated"),
+                  .data[["year"]] >= 2000) %>%
+    dplyr::group_by(dplyr::across(c("iso3", "ind"))) %>%
+    dplyr::summarise(n = dplyr::n()) %>%
+    dplyr::filter(.data[["n"]] >= 2) %>%
+    dplyr::pull(.data[["iso3"]])
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
 
-  iso3_more_2_values_since_2020 <- df_this_ind %>%
-    dplyr::filter(.data[["type"]] %in% c("reported", "estimated"),
-                  .data[["year"]] >= 2000) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
-    dplyr::summarise(n = dplyr::n()) %>%
-    dplyr::filter(.data[["n"]] >= 2) %>%
-    dplyr::pull(.data[["iso3"]])
-
-  df_fixed_target <- do.call(
-    scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
+  df_linear_change <- do.call(
+    scenario_linear_change, c(list(df = df_this_ind), params_linear_change)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "fixed_target",
+    dplyr::filter(.data[[scenario_col]] == "3_percent_change",
                   .data[["iso3"]] %in% iso3_more_2_values_since_2020)
 
   df_bau_more_2_values_since_2020 <- df_bau %>%
     dplyr::filter(.data[["iso3"]] %in% iso3_more_2_values_since_2020)
 
   params_best_of <- get_right_params(params, scenario_best_of)
-  params_best_of[["scenario_names"]] <- c("business_as_usual", "fixed_target")
+  params_best_of[["scenario_names"]] <- c("business_as_usual", "3_percent_change")
   params_best_of[["scenario_name"]] <- "acceleration"
+  params_best_of[["maximize_end_year"]] <- TRUE
 
-  df_best_of_fixed_target_bau <- do.call(
-    scenario_best_of, c(list(df = dplyr::bind_rows(df_fixed_target, df_bau_more_2_values_since_2020)), params_best_of)
-  )
+  if(nrow(dplyr::bind_rows(df_linear_change, df_bau_more_2_values_since_2020)) > 0){
+    df_best_of_3_percent_change_bau <- do.call(
+      scenario_best_of, c(list(df = dplyr::bind_rows(df_linear_change, df_bau_more_2_values_since_2020)), params_best_of)
+    )
+  }else{
+    df_best_of_3_percent_change_bau <- dplyr::bind_rows(df_linear_change, df_bau_more_2_values_since_2020)
+  }
 
   df_bau_no_more_2_values_since_2020 <- df_bau %>%
     dplyr::filter(!.data[["iso3"]] %in% iso3_more_2_values_since_2020) %>%
     dplyr::mutate("{scenario_col}" := "acceleration")
 
-  df_accelerated <- dplyr::bind_rows(df_bau_no_more_2_values_since_2020, df_best_of_fixed_target_bau)%>%
+  df_accelerated <- dplyr::bind_rows(df_bau_no_more_2_values_since_2020, df_best_of_3_percent_change_bau)%>%
     dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%

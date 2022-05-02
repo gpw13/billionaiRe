@@ -113,6 +113,23 @@ testthat::test_that("scenario_best_of takes the best and only the best scenario"
     dplyr::pull(value)
 
   testthat::expect_equal(df_twice_same_values_diff_interval_best_2025, test_results)
+
+
+
+  df_maximize_last_value <- df %>%
+    dplyr::mutate(
+      value = dplyr::case_when(
+        scenario == "c" & year == 2025 ~ 100L,
+        TRUE ~ value
+      )
+    )
+
+  df_best_small_is_best_2025 <- scenario_best_of(df_maximize_last_value, c("a", "b", "c"), small_is_best = FALSE, maximize_end_year = TRUE) %>%
+    dplyr::filter(scenario == "best_of_a_b_c", year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_best_small_is_best_2025, 100)
+
 })
 
 testthat::test_that("scenario_bau returns accurate values", {

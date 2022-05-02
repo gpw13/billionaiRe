@@ -9,6 +9,9 @@
 #' the best value, the first in alphabetical order is picked.
 #'
 #' @param scenario_names names of the scenario to pick from.
+#' @param maximize_end_year (bollean) if TRUE, the best scenario is
+#'    picked on the best value at `end_year`. Default to FALSE.
+#'
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -16,6 +19,7 @@
 scenario_best_of <- function(df,
                              scenario_names,
                              value_col = "value",
+                             maximize_end_year = FALSE,
                              start_year = 2018,
                              end_year = 2025,
                              target_year = 2025,
@@ -49,12 +53,23 @@ scenario_best_of <- function(df,
   if (length(unique(best[[scenario_col]])) > 1) {
     those_scenarios <- unique(best[[scenario_col]])
 
-    best <- df %>%
-      dplyr::mutate(scenario_value = .data[[value_col]]) %>%
-      dplyr::select(c("iso3", "year", "ind", {{ scenario_col }}, "scenario_value")) %>%
-      dplyr::filter(.data[[scenario_col]] %in% those_scenarios) %>%
-      dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
-      dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+    if(maximize_end_year){
+      best <- df %>%
+        dplyr::mutate(scenario_value = .data[[value_col]]) %>%
+        dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_col, "scenario_value"))) %>%
+        dplyr::filter(.data[[scenario_col]] %in% those_scenarios,
+                      .data[["year"]] == end_year) %>%
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
+        dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+
+    }else{
+      best <- df %>%
+        dplyr::mutate(scenario_value = .data[[value_col]]) %>%
+        dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_col, "scenario_value"))) %>%
+        dplyr::filter(.data[[scenario_col]] %in% those_scenarios) %>%
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
+        dplyr::summarise(sum_values = sum(.data[["scenario_value"]], na.rm = T))
+    }
 
     if (small_is_best) {
       best <- best %>%

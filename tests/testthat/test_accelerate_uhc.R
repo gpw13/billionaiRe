@@ -224,11 +224,24 @@ testthat::test_that(paste0("accelerate_pneumo returns accurate values:"), {
   # BAU is better than fixed target
   testthat::expect_equal(get_2025_value(80:100, ind, "reported"), 95)
 
-  # Fixed target of 90 by 2025 (= 90) is better  than BAU (= 35)
+  # Fixed target of 3 by 2025 (= 49) is better  than BAU (= 35)
   testthat::expect_equal(
     get_2025_value(20:40, ind, "reported"),
-    get_fixed_target(90, 28, 2018, 2025)
+    get_linear_change(3, 28, 2018, 2025)
   )
+
+  # When BAU starts above 90, BAU is kepts
+  testthat::expect_equal(get_2025_value(80:100, ind, "reported"), 95)
+
+  # Cap progress to 90
+  testthat::expect_equal(get_2025_value(70:90, ind, "reported"), 90)
+
+  # Returns BAU when all values are 'projected'
+  testthat::expect_equal(
+    get_2025_value(20:40, ind, "projected"),
+    35
+  )
+
 })
 
 # tb ----------------------------

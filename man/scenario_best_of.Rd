@@ -8,6 +8,7 @@ scenario_best_of(
   df,
   scenario_names,
   value_col = "value",
+  maximize_end_year = FALSE,
   start_year = 2018,
   end_year = 2025,
   target_year = 2025,
@@ -29,6 +30,9 @@ country, year, and indicator.}
 \item{scenario_names}{names of the scenario to pick from.}
 
 \item{value_col}{Column name of column with indicator values.}
+
+\item{maximize_end_year}{(bollean) if TRUE, the best scenario is
+picked on the best value at \code{end_year}. Default to FALSE.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
