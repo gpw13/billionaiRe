@@ -1,3 +1,6 @@
+# billionaiRe 0.7.0
+* Pass to version 0.7.0 after removing of unused column parameters.
+
 # billionaiRe 0.6.10
 * `save_wrangled_output` now saves files with all columns capitalised and
   `load_billion_data_whdh` changes all column names to lower case after downloading data
