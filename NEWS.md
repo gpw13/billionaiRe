@@ -1,4 +1,5 @@
-# billionaiRe 0.6.11
+# billionaiRe 0.7.0
+* Pass to version 0.7.0 after removing of unused column parameters.
 * Remove `ind`, `year`, `iso3`, `type` and `source` from functions parameters
 * Rename parameters `value`, `transform_value`, `scenario`, `contribution` and
   `contribution_pct` to `value_col`, `transform_value_col`, `scenario_col`,
