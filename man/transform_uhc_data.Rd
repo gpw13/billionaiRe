@@ -6,9 +6,8 @@
 \usage{
 transform_uhc_data(
   df,
-  ind = "ind",
-  value = "value",
-  transform_glue = "transform_{value}",
+  value_col = "value",
+  transform_glue = "transform_{value_col}",
   ind_ids = billion_ind_codes("uhc"),
   recycle = FALSE,
   ...
@@ -18,12 +17,10 @@ transform_uhc_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{transform_glue}{Glue expression to be passed to \code{\link[glue:glue]{glue::glue()}}. Defaults to
-\code{'transform_{value}'} which will create new column names by prefixing \code{transform_}
+\code{'transform_{value_col}'} which will create new column names by prefixing \code{transform_}
 to the original name.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

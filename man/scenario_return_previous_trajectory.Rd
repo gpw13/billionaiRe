@@ -6,17 +6,13 @@
 \usage{
 scenario_return_previous_trajectory(
   df,
-  year = "year",
-  ind_col = "ind",
-  iso3_col = "iso3",
   dip_year = 2020,
   recovery_year = 2022,
   start_year = 2018,
   end_year = 2025,
-  value = "value",
+  value_col = "value",
   scenario_col = "scenario",
   scenario_name = "return_previous_trajectory",
-  type_col = "type",
   scenario_shock = "covid_shock",
   scenario_previous_trajectory = "pre_covid_trajectory",
   trim = TRUE,
@@ -25,19 +21,12 @@ scenario_return_previous_trajectory(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
-  source_col = "source",
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y"))
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{year}{Column name of column with years.}
-
-\item{ind_col}{Column name of column with indicator names.}
-
-\item{iso3_col}{(character) name of column with the ISO3 country codes}
 
 \item{dip_year}{(integer) year where the dip appends}
 
@@ -47,14 +36,12 @@ country, year, and indicator.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
-\item{value}{Column name of column with indicator values. This column will be
+\item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
 \item{scenario_col}{(character) name of the column with the scenarios.}
 
 \item{scenario_name}{name of scenario}
-
-\item{type_col}{Column name of column to store type.}
 
 \item{scenario_shock}{(character) name of the scenario with the shock}
 
@@ -68,8 +55,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{upper limit at which the indicator should be caped.}
@@ -79,15 +66,10 @@ than \code{col} will be kept.}
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
 
-\item{source_col}{Column name of column to store source information.}
-
 \item{source}{Source to use if no unique source available for the calculation.}
-
-\item{ind}{(character) name of the indicator on which to calculate the
-scenario}
 }
 \value{
-a data frame with scenario values in \code{value} with a \code{scenario} column.
+a data frame with scenario values in \code{value_col} with a \code{scenario} column.
 }
 \description{
 This scenario returns to the \code{scenario_previous_trajectory} after the last

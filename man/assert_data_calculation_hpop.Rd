@@ -4,22 +4,15 @@
 \alias{assert_data_calculation_hpop}
 \title{Assert presence of minimum HPOP data}
 \usage{
-assert_data_calculation_hpop(
-  df,
-  iso3 = "iso3",
-  value = "value",
-  scenario = NULL
-)
+assert_data_calculation_hpop(df, value_col = "value", scenario_col = NULL)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 }
 \value{

@@ -4,7 +4,7 @@
 #' that transformed indicator values can be used within Billions calculations.
 #' Details on the specific transformations applied can be found within the
 #' Billions methods report. Values in the transform column, if it already exists,
-#' are replaced for HPOP indicators that have data in the value column, otherwise
+#' are replaced for HPOP indicators that have data in the `value_col` column, otherwise
 #' the column keeps its original data.
 #'
 #' For more details on the HPOP Billion calculation process and how this function
@@ -14,11 +14,9 @@
 #'
 #' @param df Data frame in long format, where 1 row corresponds to a specific
 #'     country, year, and indicator.
-#' @param iso3 Column name of column with country ISO3 codes.
-#' @param ind Column name of column with indicator names.
-#' @param value Column name of column with indicator values.
+#' @param value_col Column name of column with indicator values.
 #' @param transform_glue Glue expression to be passed to [glue::glue()]. Defaults to
-#'     `'transform_{value}'` which will create new column names by prefixing `transform_`
+#'     `'transform_{value_col}'` which will create new column names by prefixing `transform_`
 #'     to the original name.
 #' @param ind_ids Named vector of indicator codes for input indicators to the Billion.
 #'     Although separate indicator codes can be used than the standard, they must
@@ -31,23 +29,21 @@
 #'
 #' @export
 transform_hpop_data <- function(df,
-                                iso3 = "iso3",
-                                ind = "ind",
-                                value = "value",
-                                transform_glue = "transform_{value}",
+                                value_col = "value",
+                                transform_glue = "transform_{value_col}",
                                 ind_ids = billion_ind_codes("hpop"),
                                 recycle = FALSE,
                                 ...) {
-  assert_columns(df, iso3, ind, value)
+  assert_columns(df, "iso3", "ind", value_col)
   assert_ind_ids(ind_ids, billion = "hpop")
 
   params <- list(...)
   params_assert_data_calculations <- get_right_params(params, assert_data_calculation_hpop)
 
   if (!is.null(params_assert_data_calculations)) {
-    assert_data_calculation_hpop(df, iso3 = iso3, value = value, params_assert_data_calculations)
+    assert_data_calculation_hpop(df, value_col = value_col, params_assert_data_calculations)
   } else {
-    assert_data_calculation_hpop(df, iso3 = iso3, value = value)
+    assert_data_calculation_hpop(df, value_col = value_col)
   }
 
 
@@ -60,9 +56,7 @@ transform_hpop_data <- function(df,
         list(
           df = df,
           billion = "hpop",
-          iso3 = iso3,
-          ind = ind,
-          value = value,
+          value_col = value_col,
           ind_ids = ind_ids
         ),
         params_recycle
@@ -71,12 +65,12 @@ transform_hpop_data <- function(df,
   }
 
   # get transform column names and add to df
-  transform_value <- glue::glue(transform_glue)
-  df <- billionaiRe_add_columns(df, transform_value, NA_real_)
+  transform_value_col <- glue::glue(transform_glue)
+  df <- billionaiRe_add_columns(df, transform_value_col, NA_real_)
 
   # transform each
-  for (i in 1:length(value)) {
-    df <- transform_hpop_single(df, iso3, ind, value[i], transform_value[i], ind_ids)
+  for (i in 1:length(value_col)) {
+    df <- transform_hpop_single(df, value_col[i], transform_value_col[i], ind_ids)
   }
 
   df
@@ -92,20 +86,18 @@ transform_hpop_data <- function(df,
 #'
 #' @return A single column data frame of transformed values.
 transform_hpop_single <- function(df,
-                                  iso3,
-                                  ind,
-                                  value,
+                                  value_col,
                                   transform_col,
                                   ind_ids) {
   df %>%
     dplyr::mutate(!!sym(transform_col) := dplyr::case_when(
-      is.na(.data[[value]]) ~ .data[[transform_col]],
-      .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ trim_transforms(.data[[value]]),
-      .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[value]]),
-      .data[[ind]] == ind_ids["suicide"] ~ transform_suicide_rate(.data[[value]]),
-      .data[[ind]] == ind_ids["alcohol"] ~ transform_alcohol(.data[[value]]),
-      .data[[ind]] == ind_ids["road"] ~ transform_road_safety(.data[[value]], .data[[iso3]]),
-      .data[[ind]] == ind_ids["transfats"] ~ transform_transfats(.data[[value]]),
+      is.na(.data[[value_col]]) ~ .data[[transform_col]],
+      .data[["ind"]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ trim_transforms(.data[[value_col]]),
+      .data[["ind"]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["suicide"] ~ transform_suicide_rate(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["alcohol"] ~ transform_alcohol(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["road"] ~ transform_road_safety(.data[[value_col]], .data[["iso3"]]),
+      .data[["ind"]] == ind_ids["transfats"] ~ transform_transfats(.data[[value_col]]),
       TRUE ~ .data[[transform_col]]
     ))
 }
@@ -123,12 +115,10 @@ transform_hpop_single <- function(df,
 #'
 #' @param df Data frame in long format, where 1 row corresponds to a specific
 #'     country, year, and indicator.
-#' @param iso3 Column name of column with country ISO3 codes.
-#' @param ind Column name of column with indicator names.
-#' @param transform_value Column name(s) of column with transformed values to retrieve.
-#' @param value Column name(s) of column to place untransformed values. Must be same
-#'     length as `transform_value`. If a column already exists, values are overwritten
-#'     wherever `ind` and `transform_value` are available to be untransformed for
+#' @param transform_value_col Column name(s) of column with transformed values to retrieve.
+#' @param value_col Column name(s) of column to place untransformed values. Must be same
+#'     length as `transform_value_col`. If a column already exists, values are overwritten
+#'     wherever `ind` and `transform_value_col` are available to be untransformed for
 #'     this Billion, but otherwise, the column retains its
 #'     other values.
 #' @param ind_ids Named vector of indicator codes for input indicators to the Billion.
@@ -140,19 +130,17 @@ transform_hpop_single <- function(df,
 #'
 #' @export
 untransform_hpop_data <- function(df,
-                                  iso3 = "iso3",
-                                  ind = "ind",
-                                  transform_value = "transform_value",
-                                  value = stringr::str_remove(transform_value, "transform_"),
+                                  transform_value_col = "transform_value_col",
+                                  value_col = stringr::str_remove(transform_value_col, "transform_"),
                                   ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, iso3, ind, transform_value)
-  assert_string(value, length(transform_value))
+  assert_columns(df, "iso3", "ind", transform_value_col)
+  assert_string(value_col, length(transform_value_col))
   assert_ind_ids(ind_ids, "hpop")
 
-  df <- billionaiRe_add_columns(df, value, NA_real_)
+  df <- billionaiRe_add_columns(df, value_col, NA_real_)
 
-  for (i in 1:length(value)) {
-    df <- untransform_hpop_single(df, iso3, ind, transform_value[i], value[i], ind_ids)
+  for (i in 1:length(value_col)) {
+    df <- untransform_hpop_single(df, transform_value_col[i], value_col[i], ind_ids)
   }
 
   df
@@ -167,20 +155,18 @@ untransform_hpop_data <- function(df,
 #'
 #' @return A single column data frame of transformed values.
 untransform_hpop_single <- function(df,
-                                    iso3,
-                                    ind,
-                                    transform_value,
-                                    value,
+                                    transform_value_col,
+                                    value_col,
                                     ind_ids) {
   df %>%
-    dplyr::mutate(!!sym(value) := dplyr::case_when(
-      is.na(.data[[transform_value]]) ~ .data[[value]],
-      .data[[ind]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ .data[[transform_value]],
-      .data[[ind]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["suicide"] ~ untransform_suicide_rate(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["alcohol"] ~ untransform_alcohol(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["road"] ~ untransform_road_safety(.data[[transform_value]], .data[[iso3]]),
-      .data[[ind]] == ind_ids["transfats"] ~ untransform_transfats(.data[[transform_value]]),
-      TRUE ~ .data[[value]]
+    dplyr::mutate(!!sym(value_col) := dplyr::case_when(
+      is.na(.data[[transform_value_col]]) ~ .data[[value_col]],
+      .data[["ind"]] %in% ind_ids[c("devontrack", "water", "water_urban", "water_rural", "hpop_sanitation", "hpop_sanitation_urban", "hpop_sanitation_rural", "fuel")] ~ .data[[transform_value_col]],
+      .data[["ind"]] %in% ind_ids[c("stunting", "overweight", "wasting", "hpop_tobacco", "ipv", "child_viol", "child_obese", "adult_obese", "pm25")] ~ transform_inversion(.data[[transform_value_col]]),
+      .data[["ind"]] == ind_ids["suicide"] ~ untransform_suicide_rate(.data[[transform_value_col]]),
+      .data[["ind"]] == ind_ids["alcohol"] ~ untransform_alcohol(.data[[transform_value_col]]),
+      .data[["ind"]] == ind_ids["road"] ~ untransform_road_safety(.data[[transform_value_col]], .data[["iso3"]]),
+      .data[["ind"]] == ind_ids["transfats"] ~ untransform_transfats(.data[[transform_value_col]]),
+      TRUE ~ .data[[value_col]]
     ))
 }

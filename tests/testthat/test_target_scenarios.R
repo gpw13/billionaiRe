@@ -9,10 +9,7 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
 
   target_value <- 99
 
-  value <- "value"
-  ind <- "ind"
-  iso3 <- "iso3"
-  year <- "year"
+  value_col <- "value"
   start_year <- 2018
   end_year <- 2025
   baseline_year <- start_year
@@ -21,7 +18,7 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
   small_is_best <- FALSE
 
   n_years <- target_year - baseline_year
-  yearly_change <- (target_value - df[[value]][df$year == baseline_year]) / n_years
+  yearly_change <- (target_value - df[[value_col]][df$year == baseline_year]) / n_years
 
   df_test <- df %>%
     dplyr::filter(year >= start_year, year <= end_year) %>%
@@ -32,10 +29,7 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
 
   df_fixed_percent <- scenario_fixed_target(df,
     target_value = target_value,
-    value = value,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
+    value_col = value_col,
     start_year = start_year,
     end_year = end_year,
     baseline_year = start_year,
@@ -47,7 +41,7 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
 
   testthat::expect_equal(df_fixed_percent, df_test)
 
-  testthat::expect_equal(df_fixed_percent[[value]][df_fixed_percent$year == target_year], target_value)
+  testthat::expect_equal(df_fixed_percent[[value_col]][df_fixed_percent$year == target_year], target_value)
 
   df_fixed_percent_higher_values <- df %>%
     dplyr::mutate(value = dplyr::case_when(
@@ -56,10 +50,7 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
     )) %>%
     scenario_fixed_target(
       target_value = target_value,
-      value = value,
-      ind = ind,
-      iso3 = iso3,
-      year = year,
+      value_col = value_col,
       start_year = start_year,
       end_year = end_year,
       baseline_year = start_year,
@@ -91,10 +82,7 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
     target = target_value
   )
 
-  value <- "value"
-  ind <- "ind"
-  iso3 <- "iso3"
-  year <- "year"
+  value_col <- "value"
   start_year <- 2018
   end_year <- 2025
   baseline_year <- start_year
@@ -103,7 +91,7 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
   small_is_best <- FALSE
 
   n_years <- target_year - baseline_year
-  yearly_change <- (target_value - df[[value]][df$year == baseline_year]) / n_years
+  yearly_change <- (target_value - df[[value_col]][df$year == baseline_year]) / n_years
 
   df_test <- df %>%
     dplyr::filter(year >= start_year, year <= end_year) %>%
@@ -114,10 +102,7 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
 
   df_target_col <- scenario_fixed_target_col(df,
     target_col = "target",
-    value = value,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
+    value_col = value_col,
     start_year = start_year,
     end_year = end_year,
     baseline_year = start_year,
@@ -129,5 +114,5 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
 
   testthat::expect_equal(df_target_col, df_test)
 
-  testthat::expect_equal(df_target_col[[value]][df_target_col$year == target_year], target_value)
+  testthat::expect_equal(df_target_col[[value_col]][df_target_col$year == target_year], target_value)
 })

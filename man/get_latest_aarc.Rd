@@ -4,14 +4,7 @@
 \alias{get_latest_aarc}
 \title{Get the latest AARC for data frame}
 \usage{
-get_latest_aarc(
-  df,
-  baseline_year,
-  value = "value",
-  year = "year",
-  iso3 = "iso3",
-  ind = "ind"
-)
+get_latest_aarc(df, baseline_year, value_col = "value")
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -20,13 +13,7 @@ country, year, and indicator.}
 \item{baseline_year}{Year from which the scenario is measured.
 Defaults to \code{start_year}}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
+\item{value_col}{Column name of column with indicator values.}
 }
 \value{
 dataframe with AROC (in \code{aroc} column) for every combination of

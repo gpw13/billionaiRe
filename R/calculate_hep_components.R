@@ -4,65 +4,50 @@
 #' data, so only Prevent is calculated in this function. It takes the numerator
 #' and denominator data from the inputs and calculates the vaccination coverage
 #' per year and country for each relevant pathogen, as well as the overall Prevent
-#' score. For DNR and its components, the level is calculated in this function.
+#' score. For DNR and its components, the level_col is calculated in this function.
 #'
 #' @inherit transform_hep_data return params
 #' @inheritParams calculate_uhc_billion
 #'
-#' @param level Column name(s) to create to hold levels data. Should be same length
-#'     as `transform_value`.
+#' @param level_col Column name(s) to create to hold levels data. Should be same length
+#'     as `transform_value_col`.
 #' @param hepi_start_year First year to calculate HEP index for.
 #' @param source Source to use if no unique source available for the calculation.
 #'
 #' @export
 calculate_hep_components <- function(df,
-                                     iso3 = "iso3",
-                                     year = "year",
-                                     ind = "ind",
-                                     scenario = NULL,
-                                     transform_value = "transform_value",
-                                     type_col = "type",
-                                     source_col = "source",
+                                     scenario_col = NULL,
+                                     transform_value_col = "transform_value",
                                      source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
-                                     level = stringr::str_replace(transform_value, "transform_value", "level"),
+                                     level_col = stringr::str_replace(transform_value_col, "transform_value", "level"),
                                      hepi_start_year = 2018,
                                      ind_ids = billion_ind_codes("hep", include_calculated = TRUE)) {
-  assert_columns(df, iso3, ind, year, transform_value, scenario)
-  assert_same_length(transform_value, level)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
+  assert_columns(df, "iso3", "ind", "year", transform_value_col, scenario_col)
+  assert_same_length(transform_value_col, level_col)
+  assert_unique_rows(df, scenario_col, ind_ids)
 
-  df <- billionaiRe_add_columns(df, c(type_col, source_col), NA_character_)
+  df <- billionaiRe_add_columns(df, c("type", "source"), NA_character_)
 
   new_df <- df %>%
     dplyr::bind_rows(prevent_calculations(
       .,
-      iso3,
-      year,
-      scenario,
-      ind,
-      type_col,
-      source_col,
+      scenario_col,
       source,
-      transform_value,
+      transform_value_col,
       ind_ids
     )) %>%
     dplyr::bind_rows(calculate_hepi(
       .,
-      iso3,
-      year,
-      scenario,
-      ind,
-      type_col,
-      source_col,
+      scenario_col,
       source,
-      transform_value,
+      transform_value_col,
       hepi_start_year,
       ind_ids
     ))
-  for (i in 1:length(level)) {
+  for (i in 1:length(level_col)) {
     new_df <- new_df %>%
-      dplyr::mutate(!!sym(level[i]) := dplyr::case_when(
-        !(stringr::str_detect(.data[[ind]], paste0(ind_ids[c(
+      dplyr::mutate(!!sym(level_col[i]) := dplyr::case_when(
+        !(stringr::str_detect(.data[["ind"]], paste0(ind_ids[c(
           "detect_respond",
           "detect",
           "notify",
@@ -71,11 +56,11 @@ calculate_hep_components <- function(df,
           "espar",
           "hep_idx"
         )], collapse = "|"))) ~ NA_real_,
-        .data[[transform_value[i]]] < 30 ~ 1,
-        .data[[transform_value[i]]] < 50 ~ 2,
-        .data[[transform_value[i]]] < 70 ~ 3,
-        .data[[transform_value[i]]] < 90 ~ 4,
-        .data[[transform_value[i]]] >= 90 ~ 5
+        .data[[transform_value_col[i]]] < 30 ~ 1,
+        .data[[transform_value_col[i]]] < 50 ~ 2,
+        .data[[transform_value_col[i]]] < 70 ~ 3,
+        .data[[transform_value_col[i]]] < 90 ~ 4,
+        .data[[transform_value_col[i]]] >= 90 ~ 5
       ))
   }
 
@@ -91,16 +76,11 @@ calculate_hep_components <- function(df,
 #'
 #' @inheritParams calculate_hep_components
 prevent_calculations <- function(df,
-                                 iso3,
-                                 year,
-                                 scenario,
-                                 ind,
-                                 type_col,
-                                 source_col,
+                                 scenario_col,
                                  source,
-                                 transform_value,
+                                 transform_value_col,
                                  ind_ids) {
-  df <- dplyr::group_by(df, dplyr::across(c(!!iso3, !!year, !!scenario)))
+  df <- dplyr::group_by(df, dplyr::across(c("iso3", "year", !!scenario_col)))
 
   args <- list(
     name = ind_ids[c(
@@ -154,12 +134,7 @@ prevent_calculations <- function(df,
   purrr::pmap_dfr(args,
     pathogen_calc,
     df = df,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
-    transform_value = transform_value,
-    type_col = type_col,
-    source_col = source_col,
+    transform_value_col = transform_value_col,
     source = source,
     ind_ids = ind_ids
   )
@@ -185,31 +160,26 @@ prevent_calculations <- function(df,
 #'
 pathogen_calc <- function(df,
                           name,
-                          ind,
-                          iso3,
-                          year,
                           numerators,
                           denominators,
-                          transform_value,
-                          type_col,
-                          source_col,
+                          transform_value_col,
                           source,
                           ind_ids,
                           multiply_surviving_infs,
                           max_value) {
   df <- dplyr::filter(
     df,
-    .data[[ind]] %in% c(numerators, denominators),
-    any(numerators %in% .data[[ind]])
+    .data[["ind"]] %in% c(numerators, denominators),
+    any(numerators %in% .data[["ind"]])
   )
 
   if (multiply_surviving_infs) {
     df <- dplyr::mutate(
       df,
       dplyr::across(
-        !!transform_value,
+        !!transform_value_col,
         ~ dplyr::case_when(
-          .data[[ind]] == ind_ids["surviving_infants"] ~ .x * sum(unique(.data[[ind]][!is.na(.x)]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
+          .data[["ind"]] == ind_ids["surviving_infants"] ~ .x * sum(unique(.data[["ind"]][!is.na(.x)]) %in% ind_ids[c("meningitis_routine_num", "yellow_fever_routine_num", "polio_routine_num", "measles_routine_num")]),
           TRUE ~ .x
         )
       )
@@ -218,24 +188,24 @@ pathogen_calc <- function(df,
 
   df %>%
     dplyr::summarize(
-      !!sym(type_col) := reduce_type(.data[[transform_value[1]]], .data[[type_col]]),
+      !!sym("type") := reduce_type(.data[[transform_value_col[1]]], .data[["type"]]),
       dplyr::across(
-        !!transform_value,
+        !!transform_value_col,
         ~ dplyr::case_when(
-          all(is.na(.x[.data[[ind]] %in% ind_ids[numerators]])) ~ NA_real_,
-          TRUE ~ 100 * sum(.x[.data[[ind]] %in% ind_ids[numerators]], na.rm = TRUE) /
-            sum(.x[.data[[ind]] %in% ind_ids[denominators]], na.rm = TRUE)
+          all(is.na(.x[.data[["ind"]] %in% ind_ids[numerators]])) ~ NA_real_,
+          TRUE ~ 100 * sum(.x[.data[["ind"]] %in% ind_ids[numerators]], na.rm = TRUE) /
+            sum(.x[.data[["ind"]] %in% ind_ids[denominators]], na.rm = TRUE)
         )
       ),
-      !!sym(ind) := !!name,
-      !!sym(source_col) := ifelse(length(unique(.data[[source_col]][!is.na(.data[[source_col]])])) == 1,
-        unique(.data[[source_col]][!is.na(.data[[source_col]])]),
+      !!sym("ind") := !!name,
+      !!sym("source") := ifelse(length(unique(.data[["source"]][!is.na(.data[["source"]])])) == 1,
+        unique(.data[["source"]][!is.na(.data[["source"]])]),
         !!source
       ),
       .groups = "drop"
     ) %>%
     dplyr::mutate(dplyr::across(
-      !!transform_value,
+      !!transform_value_col,
       pmin,
       !!max_value
     ))
@@ -249,36 +219,31 @@ pathogen_calc <- function(df,
 #' @inheritParams calculate_hep_components
 #' @param earliest_year Earliest year for HEPI calculation.
 calculate_hepi <- function(df,
-                           iso3,
-                           year,
-                           scenario,
-                           ind,
-                           type_col,
-                           source_col,
+                           scenario_col,
                            source,
-                           transform_value,
+                           transform_value_col,
                            earliest_year,
                            ind_ids) {
   df %>%
     dplyr::filter(
-      .data[[ind]] %in% ind_ids[c(
+      .data[["ind"]] %in% ind_ids[c(
         "detect_respond",
         "prevent",
         "espar"
       )],
-      .data[[year]] >= earliest_year
+      .data[["year"]] >= earliest_year
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::summarize(dplyr::across(
-      !!transform_value,
+      !!transform_value_col,
       ~ mean(.x, na.rm = TRUE)
     ),
-    !!sym(type_col) := ifelse(length(unique(.data[[type_col]][!is.na(.data[[type_col]])])) == 1,
-      unique(.data[[type_col]][!is.na(.data[[type_col]])]),
+    !!sym("type") := ifelse(length(unique(.data[["type"]][!is.na(.data[["type"]])])) == 1,
+      unique(.data[["type"]][!is.na(.data[["type"]])]),
       "projected"
     ),
-    !!sym(source_col) := !!source,
-    !!sym(ind) := "hep_idx",
+    !!sym("source") := !!source,
+    !!sym("ind") := "hep_idx",
     .groups = "drop"
     )
 }

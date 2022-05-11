@@ -12,12 +12,10 @@
 #'
 #' @export
 add_hpop_populations <- function(df,
-                                 iso3 = "iso3",
-                                 ind = "ind",
                                  population = "population",
                                  pop_year = 2025,
                                  ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, iso3, ind)
+  assert_columns(df, "iso3", "ind")
   assert_string(population, 1)
   assert_ind_ids(ind_ids, "hpop")
   assert_numeric(pop_year)
@@ -28,19 +26,19 @@ add_hpop_populations <- function(df,
   # add populations for each unique iso3 and ind value
   pop_df <- df %>%
     dplyr::ungroup() %>%
-    dplyr::select(iso3, ind) %>%
+    dplyr::select("iso3", "ind") %>%
     dplyr::distinct() %>%
     dplyr::mutate(
       "_temp_population" := dplyr::case_when(
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] ~ wppdistro::get_population(.data[[iso3]], pop_year, rural_urb = "rural"),
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation_urban", "water_urban")] ~ wppdistro::get_population(.data[[iso3]], pop_year, rural_urb = "urban"),
-        .data[[ind]] %in% ind_ids[c("hpop_sanitation", "water", "road", "fuel", "pm25", "transfats", "suicide")] ~ wppdistro::get_population(.data[[iso3]], pop_year),
-        .data[[ind]] %in% ind_ids[c("hpop_tobacco", "alcohol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "over_14"),
-        .data[[ind]] %in% ind_ids[c("adult_obese")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "over_19") + (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
-        .data[[ind]] %in% ind_ids[c("child_obese")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "btwn_5_19"),
-        .data[[ind]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_5"),
-        .data[[ind]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[[iso3]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[[iso3]], pop_year, age_range = "15_19") / 2),
-        .data[[ind]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[[iso3]], pop_year, sex = "female", age_range = "over_14")
+        .data[["ind"]] %in% ind_ids[c("hpop_sanitation_rural", "water_rural")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, rural_urb = "rural"),
+        .data[["ind"]] %in% ind_ids[c("hpop_sanitation_urban", "water_urban")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, rural_urb = "urban"),
+        .data[["ind"]] %in% ind_ids[c("hpop_sanitation", "water", "road", "fuel", "pm25", "transfats", "suicide")] ~ wppdistro::get_population(.data[["iso3"]], pop_year),
+        .data[["ind"]] %in% ind_ids[c("hpop_tobacco", "alcohol")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "over_14"),
+        .data[["ind"]] %in% ind_ids[c("adult_obese")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "over_19") + (wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "15_19") / 2),
+        .data[["ind"]] %in% ind_ids[c("child_obese")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "btwn_5_19"),
+        .data[["ind"]] %in% ind_ids[c("wasting", "stunting", "overweight", "devontrack")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "under_5"),
+        .data[["ind"]] %in% ind_ids[c("child_viol")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "under_20") - (wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "15_19") / 2),
+        .data[["ind"]] %in% ind_ids[c("ipv")] ~ wppdistro::get_population(.data[["iso3"]], pop_year, sex = "female", age_range = "over_14")
       )
     )
 

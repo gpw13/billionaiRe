@@ -11,7 +11,6 @@ add_scenario(
     "fixed_target_col", "bau", "accelerate", "sdg", "covid_rapid_return",
     "covid_delayed_return", "covid_sustained_disruption", "return_previous_trajectory"),
   ind_ids = billion_ind_codes("all"),
-  ind = "ind",
   start_year = 2018,
   end_year = 2025,
   ...
@@ -46,8 +45,6 @@ of the following:
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
-
-\item{ind}{Column name of column with indicator names.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

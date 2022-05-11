@@ -4,17 +4,7 @@
 \alias{sdg_fp}
 \title{Accelerate fp to SDG target}
 \usage{
-sdg_fp(
-  df,
-  ind_ids = billion_ind_codes("uhc"),
-  scenario = "scenario",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
-  value = "value",
-  type_col = "type",
-  ...
-)
+sdg_fp(df, ind_ids = billion_ind_codes("uhc"), scenario_col = "scenario", ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -25,23 +15,13 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{type_col}{Column name of column to store type.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

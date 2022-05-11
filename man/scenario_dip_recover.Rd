@@ -6,9 +6,6 @@
 \usage{
 scenario_dip_recover(
   df,
-  year = "year",
-  ind = "ind",
-  iso3 = "iso3",
   start_year = 2018,
   dip_year = 2020,
   recovery_year = 2021,
@@ -16,12 +13,11 @@ scenario_dip_recover(
   aroc_type = c("lastest_year", "average_years_in_range"),
   aroc_start_year = start_year,
   end_year = 2025,
-  value = "value",
-  scenario = "scenario",
+  value_col = "value",
+  scenario_col = "scenario",
   scenario_name = "dip_recover",
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default",
-  source_col = "source",
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
   ...
 )
@@ -29,12 +25,6 @@ scenario_dip_recover(
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{year}{Column name of column with years.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -56,10 +46,11 @@ and \code{dip_year} is used to calculate
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
-\item{value}{Column name of column with indicator values. This column will be
+\item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
-\item{scenario}{name of scenario column to be created}
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_name}{name of scenario}
 
@@ -70,15 +61,15 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{default_scenario}{name of the default scenario.}
 
-\item{source_col}{Column name of column to store source information.}
-
 \item{source}{Source to use if no unique source available for the calculation.}
 
 \item{...}{additional parameters to be passed to
 \code{scenario_dip_recover_iso3()}}
+
+\item{scenario}{name of scenario column to be created}
 }
 \value{
-a data frame with scenario values in \code{value} with a \code{scenario} column.
+a data frame with scenario values in \code{value_col} with a \code{scenario} column.
 }
 \description{
 \code{scenario_dip_recover} creates a scenario where there is a rapid

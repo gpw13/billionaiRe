@@ -4,17 +4,16 @@
 \alias{transform_uhc_single}
 \title{Perform a transformation on a single column}
 \usage{
-transform_uhc_single(df, ind, value, transform_col, ind_ids)
+transform_uhc_single(df, value_col, transform_value_col, ind_ids)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{transform_col}{Column to put transformed values into}
+\item{transform_value_col}{Column name of column(s) with transformed
+indicator values}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

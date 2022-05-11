@@ -6,11 +6,8 @@
 \usage{
 assert_data_calculation_hep(
   df,
-  ind = "ind",
-  year = "year",
-  iso3 = "iso3",
-  value = "value",
-  scenario = NULL,
+  value_col = "value",
+  scenario_col = NULL,
   start_year = 2018,
   end_year = 2025,
   ind_ids = billion_ind_codes("hep")
@@ -20,15 +17,9 @@ assert_data_calculation_hep(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{year}{Column name of column with year data.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}

@@ -6,8 +6,6 @@
 \usage{
 add_hpop_populations(
   df,
-  iso3 = "iso3",
-  ind = "ind",
   population = "population",
   pop_year = 2025,
   ind_ids = billion_ind_codes("hpop")
@@ -16,10 +14,6 @@ add_hpop_populations(
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
 
 \item{population}{Column name of column to create with population figures.}
 

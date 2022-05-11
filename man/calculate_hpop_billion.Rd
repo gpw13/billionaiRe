@@ -6,19 +6,15 @@
 \usage{
 calculate_hpop_billion(
   df,
-  year = "year",
   start_year = 2018,
   end_year = 2019:2025,
-  iso3 = "iso3",
-  ind = "ind",
-  population = "population",
   pop_year = 2025,
-  transform_value = "transform_value",
-  contribution = stringr::str_replace(transform_value, "transform_value",
+  transform_value_col = "transform_value",
+  contribution_col = stringr::str_replace(transform_value_col, "transform_value",
     "contribution"),
-  contribution_pct = paste0(contribution, "_percent"),
-  contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-  scenario = NULL,
+  contribution_pct_col = paste0(contribution_col, "_percent"),
+  contribution_pct_total_pop_col = paste0(contribution_col, "_percent_total_pop"),
+  scenario_col = NULL,
   ind_ids = billion_ind_codes("hpop")
 )
 }
@@ -26,34 +22,26 @@ calculate_hpop_billion(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{year}{Column name of column with years.}
-
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{population}{Column name of column with population figures.}
-
 \item{pop_year}{Year used to pull in HPOP populations, defaults to 2025.}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
-\item{contribution}{Column name of column(s) to store contribution (population)
-values. Must be the same length as \code{transform_value}.}
+\item{contribution_col}{Column name of column(s) to store contribution (population)
+values. Must be the same length as \code{transform_value_col}.}
 
-\item{contribution_pct}{Column name of column(s) to store contribution (percent)
-values. Must be the same length as \code{transform_value}.}
+\item{contribution_pct_col}{Column name of column(s) to store contribution (percent)
+values. Must be the same length as \code{transform_value_col}.}
 
-\item{contribution_pct_total_pop}{Column name of column(s) to store contribution
+\item{contribution_pct_total_pop_col}{Column name of column(s) to store contribution
 (percent of total population of the country) values. Must be the same length
-as \code{transform_value}.}
+as \code{transform_value_col}.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

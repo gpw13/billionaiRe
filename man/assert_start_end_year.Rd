@@ -6,29 +6,23 @@
 \usage{
 assert_start_end_year(
   df,
-  iso3 = "iso3",
-  year = "year",
-  value = "value",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
-  scenario = "scenario"
+  scenario_col = "scenario"
 )
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with year data.}
-
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 }
 \description{

@@ -6,13 +6,9 @@
 \usage{
 accelerate_espar(
   df,
-  iso3 = "iso3",
-  year = "year",
-  value = "value",
+  value_col = "value",
   ind_ids = billion_ind_codes("hep"),
-  ind = "ind",
-  type = "type",
-  scenario = "scenario",
+  scenario_col = "scenario",
   start_year = 2018,
   end_year = 2025,
   ...
@@ -22,22 +18,14 @@ accelerate_espar(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{type}{Column name of column with types}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
@@ -47,7 +35,7 @@ calculating contributions on data in long format rather than wide format.}
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

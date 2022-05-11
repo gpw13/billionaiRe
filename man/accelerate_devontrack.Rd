@@ -8,8 +8,7 @@ accelerate_devontrack(
   df,
   ind_ids = billion_ind_codes("hpop"),
   end_year = 2025,
-  scenario = "scenario",
-  ind = "ind",
+  scenario_col = "scenario",
   ...
 )
 }
@@ -24,15 +23,13 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
-
-\item{ind}{Column name of column with indicator names.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

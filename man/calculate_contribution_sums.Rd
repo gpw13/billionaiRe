@@ -10,11 +10,8 @@ calculate_contribution_sums(
   sum_years,
   sum_type = c("global", "regional"),
   source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
-  scenario = NULL,
-  year = "year",
-  iso3 = "iso3",
-  ind = "ind",
-  contribution = "contribution"
+  scenario_col = NULL,
+  contribution_col = "contribution"
 )
 }
 \arguments{
@@ -30,16 +27,10 @@ global sums.}
 \item{source}{The source for the calculated billions. \verb{WHO DDI calculations},
 with \verb{month, year} timestamp by default.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{year}{Column name of column with years.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{contribution}{Column name of column(s) to store contribution (population) values.}
+\item{contribution_col}{Column name of column(s) to store contribution (population) values.}
 }
 \value{
 A data frame with the global sums for the relevant billion. Does not

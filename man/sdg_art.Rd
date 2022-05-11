@@ -4,13 +4,13 @@
 \alias{sdg_art}
 \title{Accelerate art to SDG target}
 \usage{
-sdg_art(df, scenario = "scenario", ind_ids = billion_ind_codes("uhc"), ...)
+sdg_art(df, scenario_col = "scenario", ind_ids = billion_ind_codes("uhc"), ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
@@ -21,7 +21,7 @@ be supplied as a named vector where the names correspond to the output of
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

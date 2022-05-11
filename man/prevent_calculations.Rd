@@ -4,39 +4,18 @@
 \alias{prevent_calculations}
 \title{Calculate prevent indicators}
 \usage{
-prevent_calculations(
-  df,
-  iso3,
-  year,
-  scenario,
-  ind,
-  type_col,
-  source_col,
-  source,
-  transform_value,
-  ind_ids
-)
+prevent_calculations(df, scenario_col, source, transform_value_col, ind_ids)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with year data.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{type_col}{Column name of column with type data.}
-
-\item{source_col}{Column name of column to store source information.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

@@ -157,3 +157,7 @@ get_country_shares <- function(iso3,
   )
   df[[paste0("share_", share_type)]][match(iso3, df[["iso3"]])]
 }
+
+default_col_names <- function(...){
+  default_cols <- c()
+}

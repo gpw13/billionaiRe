@@ -8,11 +8,7 @@ recycle_data_scenario_single(
   df,
   scenario,
   billion = c("hep", "hpop", "uhc"),
-  iso3 = "iso3",
-  ind = "ind",
-  value = "value",
-  year = "year",
-  type = "type",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
   scenario_col = "scenario",
@@ -34,15 +30,7 @@ country, year, and indicator.}
 
 \item{billion}{name of billion to recycle data for.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{year}{Column name of column with years.}
-
-\item{type}{Column name of column with types}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 

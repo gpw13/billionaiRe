@@ -4,19 +4,13 @@
 \alias{assert_unique_rows}
 \title{Assert unique rows of df}
 \usage{
-assert_unique_rows(df, ind, iso3, year, scenario = NULL, ind_ids)
+assert_unique_rows(df, scenario_col = NULL, ind_ids)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

@@ -6,16 +6,13 @@
 \usage{
 scenario_covid_sustained_disruption(
   df,
-  year = "year",
-  ind = "ind",
-  iso3 = "iso3",
   start_year = 2018,
   covid_year = 2020,
   recovery_year = 2022,
   progressive_recovery = TRUE,
   end_year = 2025,
-  value = "value",
-  scenario = "scenario",
+  value_col = "value",
+  scenario_col = "scenario",
   scenario_name = "covid_sustained_disruption",
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default",
@@ -25,12 +22,6 @@ scenario_covid_sustained_disruption(
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{year}{Column name of column with years.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -43,10 +34,10 @@ should be progressive.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
-\item{value}{Column name of column with indicator values. This column will be
+\item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
-\item{scenario}{name of scenario column to be created}
+\item{scenario_col}{name of scenario column to be created}
 
 \item{scenario_name}{name of scenario}
 
@@ -61,7 +52,7 @@ be supplied as a named vector where the names correspond to the output of
 \code{scenario_dip_recover_iso3()}}
 }
 \value{
-a data frame with scenario values in \code{value} with a \code{scenario} column.
+a data frame with scenario values in \code{value_col} with a \code{scenario_col} column.
 }
 \description{
 \code{scenario_covid_delayed_return} creates a scenario where there is a
