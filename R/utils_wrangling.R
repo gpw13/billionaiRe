@@ -183,6 +183,17 @@ save_wrangled_output <- function(df,
     # Defensive ungroup in case the input is grouped
     dplyr::ungroup() %>%
     filter_billion_na(na_rm) %>%
+    # Removing special characters from character columns
+    dplyr::mutate(source = stringr::str_replace_all(
+      stringr::str_replace_all(
+        stringr::str_replace_all(.data[["source"]],
+                                 "\\r|\\n|\\t|\\v|\\e",
+                                 " "),
+        "\\s+",
+        " "
+      ),
+      ";", ",")
+    ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::select(xmart_cols(data_type)) %>%
     dplyr::arrange(.data[["ind"]], .data[["iso3"]], .data[["year"]]) %>%

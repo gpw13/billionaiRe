@@ -138,9 +138,9 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
     #   silent = silent
     # )
 
-    arrow::read_parquet(temp_file)
-  }) %>%
-    dplyr::rename_with(tolower)
+    arrow::read_parquet(temp_file) %>%
+      dplyr::rename_with(tolower)
+  })
 
   df %>%
     filter_billion_na(na_rm)
