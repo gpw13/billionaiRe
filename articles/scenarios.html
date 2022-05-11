@@ -124,7 +124,7 @@
 <p>billionaiRe <code>transform_</code> and <code>calculate_</code> functions (as well as rapporteur export functions) use the provided scenario column as a group in <a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a>. Scenarios should then contain all the required data needed for billionaiRe calculations. If a scenario does not contain the required data, the functions will fail.</p>
 <p>For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: minimal storage before computation.</p>
 <p>Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call <code>default</code> by default, but as this is a parameter (<code>default_scenario</code>) of <code><a href="../reference/recycle_data.html">recycle_data()</a></code>, it can be modified as required. <code>default</code> scenario provides values when they are absent from scenarios, along with <code>scenario_reported_estimated</code> for reported/estimated values (<code>routine</code> by default) and <code>scenario_reference_infilling</code> for values imputed/projected by technical programs (<code>reference_infilling</code> by default).</p>
-<p>Data recycling works by adding to all scenarios present in the <code>scenario</code> column values that are missing from first <code>default_scenario</code>, then looks in <code>scenario_reported_estimated</code> and <code>scenario_reported_estimated</code> to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
+<p>Data recycling works by adding to all scenarios present in the <code>scenario_col</code> column values that are missing from first <code>default_scenario</code>, then looks in <code>scenario_reported_estimated</code> and <code>scenario_reported_estimated</code> to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span>
 
@@ -190,11 +190,11 @@
 
 <span class="va">test_data_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span>billion <span class="op">=</span> <span class="st">"hep"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span>
 
 <span class="co"># Exactly equivalent to above:</span>
 <span class="va">test_data_hep_transform</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"scenario"</span>, recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span>
@@ -245,18 +245,18 @@
 <span class="va">test_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span>
     scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span>, <span class="co"># picks from a pre-determined list of scenarios</span>
-    scenario <span class="op">=</span> <span class="st">"scenario"</span>,
+    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
     default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>
   <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant).</span>
   <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span>
     scenario_function <span class="op">=</span> <span class="st">"percent_baseline"</span>, <span class="co"># picks from a pre-determined list of scenarios</span>
     percent_change <span class="op">=</span> <span class="fl">10</span>,
-    scenario <span class="op">=</span> <span class="st">"scenario"</span>,
+    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
     default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>
   <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant)</span>
   <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span>
     billion <span class="op">=</span> <span class="st">"hep"</span>, <span class="co"># One function for each billions, so need to specify which one this is applied to.</span>
-    scenario <span class="op">=</span> <span class="st">"scenario"</span>,
+    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
     default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>,
     scenario_reported_estimated <span class="op">=</span> <span class="st">"routine"</span>,
     scenario_reference_infilling <span class="op">=</span> <span class="st">"reference_infilling"</span>,
@@ -264,11 +264,11 @@
     recycle_campaigns <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.</span>
   <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>
-    scenario <span class="op">=</span> <span class="st">"scenario"</span>,
+    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
     recycle <span class="op">=</span> <span class="cn">FALSE</span>
   <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># adds a parameter to `transform_` functions to recycle. In this pipeline it is redundant as data was already recycled.</span>
-  <span class="fu"><a href="../reference/calculate_hep_components.html">calculate_hep_components</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/calculate_hep_billion.html">calculate_hep_billion</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"scenario"</span>, end_year <span class="op">=</span> <span class="fl">2025</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/calculate_hep_components.html">calculate_hep_components</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/calculate_hep_billion.html">calculate_hep_billion</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, end_year <span class="op">=</span> <span class="fl">2025</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span>
     <span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
       <span class="st">"prevent"</span>,

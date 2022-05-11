@@ -72,14 +72,9 @@ and multiplies the surviving infants denominator by that number.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">pathogen_calc</span><span class="op">(</span>
   <span class="va">df</span>,
   <span class="va">name</span>,
-  <span class="va">ind</span>,
-  <span class="va">iso3</span>,
-  <span class="va">year</span>,
   <span class="va">numerators</span>,
   <span class="va">denominators</span>,
-  <span class="va">transform_value</span>,
-  <span class="va">type_col</span>,
-  <span class="va">source_col</span>,
+  <span class="va">transform_value_col</span>,
   <span class="va">source</span>,
   <span class="va">ind_ids</span>,
   <span class="va">multiply_surviving_infs</span>,
@@ -94,23 +89,13 @@ and multiplies the surviving infants denominator by that number.</p>
 country, year, and indicator.</p></dd>
 <dt>name</dt>
 <dd><p>Name of pathogen to provide in the data frame.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>iso3</dt>
-<dd><p>Column name of column with country ISO3 codes.</p></dd>
-<dt>year</dt>
-<dd><p>Column name of column with year data.</p></dd>
 <dt>numerators</dt>
 <dd><p>Indicator names for numerators.</p></dd>
 <dt>denominators</dt>
 <dd><p>Indicator names for denominators.</p></dd>
-<dt>transform_value</dt>
+<dt>transform_value_col</dt>
 <dd><p>Column name of column(s) with transformed indicator values,
 used to calculate contributions.</p></dd>
-<dt>type_col</dt>
-<dd><p>Column name of column with type data.</p></dd>
-<dt>source_col</dt>
-<dd><p>Column name of column to store source information.</p></dd>
 <dt>source</dt>
 <dd><p>Source to use if no unique source available for the calculation.</p></dd>
 <dt>ind_ids</dt>

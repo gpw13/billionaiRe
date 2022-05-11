@@ -68,9 +68,6 @@ before dip is applied from the <code>recovery_year</code>.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scenario_dip_recover</span><span class="op">(</span>
   <span class="va">df</span>,
-  year <span class="op">=</span> <span class="st">"year"</span>,
-  ind <span class="op">=</span> <span class="st">"ind"</span>,
-  iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
   start_year <span class="op">=</span> <span class="fl">2018</span>,
   dip_year <span class="op">=</span> <span class="fl">2020</span>,
   recovery_year <span class="op">=</span> <span class="fl">2021</span>,
@@ -78,12 +75,11 @@ before dip is applied from the <code>recovery_year</code>.</p>
   aroc_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lastest_year"</span>, <span class="st">"average_years_in_range"</span><span class="op">)</span>,
   aroc_start_year <span class="op">=</span> <span class="va">start_year</span>,
   end_year <span class="op">=</span> <span class="fl">2025</span>,
-  value <span class="op">=</span> <span class="st">"value"</span>,
-  scenario <span class="op">=</span> <span class="st">"scenario"</span>,
+  value_col <span class="op">=</span> <span class="st">"value"</span>,
+  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
   scenario_name <span class="op">=</span> <span class="st">"dip_recover"</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span>,
   default_scenario <span class="op">=</span> <span class="st">"default"</span>,
-  source_col <span class="op">=</span> <span class="st">"source"</span>,
   source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
@@ -94,12 +90,6 @@ before dip is applied from the <code>recovery_year</code>.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
-<dt>year</dt>
-<dd><p>Column name of column with years.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>iso3</dt>
-<dd><p>Column name of column with country ISO3 codes.</p></dd>
 <dt>start_year</dt>
 <dd><p>Start year for scenario, defaults to 2018.</p></dd>
 <dt>dip_year</dt>
@@ -118,11 +108,12 @@ and <code>dip_year</code> is used to calculate</p></li>
 <dd><p>(integer) year</p></dd>
 <dt>end_year</dt>
 <dd><p>End year for scenario, defaults to 2025</p></dd>
-<dt>value</dt>
+<dt>value_col</dt>
 <dd><p>Column name of column with indicator values. This column will be
 used to return the results.</p></dd>
-<dt>scenario</dt>
-<dd><p>name of scenario column to be created</p></dd>
+<dt>scenario_col</dt>
+<dd><p>Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.</p></dd>
 <dt>scenario_name</dt>
 <dd><p>name of scenario</p></dd>
 <dt>ind_ids</dt>
@@ -132,17 +123,17 @@ be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
 <dt>default_scenario</dt>
 <dd><p>name of the default scenario.</p></dd>
-<dt>source_col</dt>
-<dd><p>Column name of column to store source information.</p></dd>
 <dt>source</dt>
 <dd><p>Source to use if no unique source available for the calculation.</p></dd>
 <dt>...</dt>
 <dd><p>additional parameters to be passed to
 <code><a href="scenario_dip_recover_iso3.html">scenario_dip_recover_iso3()</a></code></p></dd>
+<dt>scenario</dt>
+<dd><p>name of scenario column to be created</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a data frame with scenario values in <code>value</code> with a <code>scenario</code> column.</p>
+    <p>a data frame with scenario values in <code>value_col</code> with a <code>scenario</code> column.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

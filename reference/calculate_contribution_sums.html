@@ -66,11 +66,8 @@
   <span class="va">sum_years</span>,
   sum_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"global"</span>, <span class="st">"regional"</span><span class="op">)</span>,
   source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI calculation, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>,
-  scenario <span class="op">=</span> <span class="cn">NULL</span>,
-  year <span class="op">=</span> <span class="st">"year"</span>,
-  iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
-  ind <span class="op">=</span> <span class="st">"ind"</span>,
-  contribution <span class="op">=</span> <span class="st">"contribution"</span>
+  scenario_col <span class="op">=</span> <span class="cn">NULL</span>,
+  contribution_col <span class="op">=</span> <span class="st">"contribution"</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -88,16 +85,10 @@ global sums.</p></dd>
 <dt>source</dt>
 <dd><p>The source for the calculated billions. <code>WHO DDI calculations</code>,
 with <code>month, year</code> timestamp by default.</p></dd>
-<dt>scenario</dt>
+<dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
-<dt>year</dt>
-<dd><p>Column name of column with years.</p></dd>
-<dt>iso3</dt>
-<dd><p>Column name of column with country ISO3 codes.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>contribution</dt>
+<dt>contribution_col</dt>
 <dd><p>Column name of column(s) to store contribution (population) values.</p></dd>
 </dl></div>
     <div class="section level2">

@@ -74,14 +74,9 @@ insecticide treated nets, which need not be present.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calculate_uhc_billion</span><span class="op">(</span>
   <span class="va">df</span>,
-  year <span class="op">=</span> <span class="st">"year"</span>,
-  iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
-  ind <span class="op">=</span> <span class="st">"ind"</span>,
-  transform_value <span class="op">=</span> <span class="st">"transform_value"</span>,
-  value <span class="op">=</span> <span class="st">"value"</span>,
-  scenario <span class="op">=</span> <span class="cn">NULL</span>,
-  type_col <span class="op">=</span> <span class="st">"type"</span>,
-  source_col <span class="op">=</span> <span class="st">"source"</span>,
+  transform_value_col <span class="op">=</span> <span class="st">"transform_value"</span>,
+  value_col <span class="op">=</span> <span class="st">"value"</span>,
+  scenario_col <span class="op">=</span> <span class="cn">NULL</span>,
   source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI calculation, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>,
   projected_year <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/now.html" class="external-link">now</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"uhc"</span><span class="op">)</span>
@@ -93,24 +88,14 @@ insecticide treated nets, which need not be present.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
-<dt>year</dt>
-<dd><p>Column name of column with years.</p></dd>
-<dt>iso3</dt>
-<dd><p>Column name of column with country ISO3 codes.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>transform_value</dt>
+<dt>transform_value_col</dt>
 <dd><p>Column name of column(s) with transformed indicator values,
 used to calculate contributions.</p></dd>
-<dt>value</dt>
+<dt>value_col</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
-<dt>scenario</dt>
+<dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
-<dt>type_col</dt>
-<dd><p>Column name of column to store type.</p></dd>
-<dt>source_col</dt>
-<dd><p>Column name of column to store source information.</p></dd>
 <dt>source</dt>
 <dd><p>Source to provide for calculated average service coverage and
 single measure.</p></dd>

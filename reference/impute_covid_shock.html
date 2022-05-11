@@ -79,21 +79,16 @@ Use mean regional chock (difference between 2020 and 2019) to infer a 2020 value
   region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"who_region"</span>, <span class="st">"un_region"</span>, <span class="st">"un_subregion"</span>, <span class="st">"un_intermediate_region"</span>,
     <span class="st">"sdg_region"</span>, <span class="st">"sdg_subregion"</span>, <span class="st">"gbd_region"</span>, <span class="st">"gbd_subregion"</span>, <span class="st">"un_desa_region"</span>,
     <span class="st">"un_desa_subregion"</span>, <span class="st">"wb_region"</span>, <span class="st">"wb_ig"</span><span class="op">)</span>,
-  year <span class="op">=</span> <span class="st">"year"</span>,
-  ind <span class="op">=</span> <span class="st">"ind"</span>,
-  iso3 <span class="op">=</span> <span class="st">"iso3"</span>,
-  type_col <span class="op">=</span> <span class="st">"type"</span>,
   start_year <span class="op">=</span> <span class="fl">2018</span>,
   covid_year <span class="op">=</span> <span class="fl">2020</span>,
   recovery_year <span class="op">=</span> <span class="fl">2022</span>,
   end_year <span class="op">=</span> <span class="fl">2025</span>,
-  value <span class="op">=</span> <span class="st">"value"</span>,
+  value_col <span class="op">=</span> <span class="st">"value"</span>,
   scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
   default_scenario <span class="op">=</span> <span class="st">"default"</span>,
   scenario_reported_estimated <span class="op">=</span> <span class="st">"routine"</span>,
   scenario_covid_shock <span class="op">=</span> <span class="st">"covid_shock"</span>,
   scenario_reference_infilling <span class="op">=</span> <span class="st">"reference_infilling"</span>,
-  source_col <span class="op">=</span> <span class="st">"source"</span>,
   source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"WHO DDI interim infilling and projections, %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,
     <span class="st">"%B %Y"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
@@ -106,14 +101,6 @@ Use mean regional chock (difference between 2020 and 2019) to infer a 2020 value
 country, year, and indicator.</p></dd>
 <dt>region</dt>
 <dd><p>(character) Type of region to use for regional average. See <a href="https://rdrr.io/pkg/whoville/man/iso3_to_regions.html" class="external-link">iso3_to_regions</a> for more details.</p></dd>
-<dt>year</dt>
-<dd><p>Column name of column with years.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>iso3</dt>
-<dd><p>Column name of column with country ISO3 codes.</p></dd>
-<dt>type_col</dt>
-<dd><p>Column name of column to store type.</p></dd>
 <dt>start_year</dt>
 <dd><p>Base year for contribution calculation, defaults to 2018.</p></dd>
 <dt>covid_year</dt>
@@ -122,10 +109,11 @@ country, year, and indicator.</p></dd>
 <dd><p>integer year from which the AROC will be applied. Default to 2022.</p></dd>
 <dt>end_year</dt>
 <dd><p>End year(s) for contribution calculation, defaults to 2019 to 2025.</p></dd>
-<dt>value</dt>
+<dt>value_col</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
 <dt>scenario_col</dt>
-<dd><p>Column name of column with scenario identifiers.</p></dd>
+<dd><p>Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.</p></dd>
 <dt>default_scenario</dt>
 <dd><p>name of the default scenario.</p></dd>
 <dt>scenario_reported_estimated</dt>
@@ -134,8 +122,6 @@ country, year, and indicator.</p></dd>
 <dd><p>name of the scenario with the COVID-19 shock years.</p></dd>
 <dt>scenario_reference_infilling</dt>
 <dd><p>name of the WHO technical programs projections/imputations scenario.</p></dd>
-<dt>source_col</dt>
-<dd><p>Column name of column to store source information.</p></dd>
 <dt>source</dt>
 <dd><p>Source to provide for calculated average service coverage and
 single measure.</p></dd>

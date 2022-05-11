@@ -63,8 +63,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">accelerate_water</span><span class="op">(</span>
   <span class="va">df</span>,
   ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hpop"</span><span class="op">)</span>,
-  scenario <span class="op">=</span> <span class="st">"scenario"</span>,
-  ind <span class="op">=</span> <span class="st">"ind"</span>,
+  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -79,17 +78,15 @@ country, year, and indicator.</p></dd>
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
-<dt>scenario</dt>
+<dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
 <dt>...</dt>
 <dd><p>additional parameters to be passed to scenario function</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario</code> is
+    <p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario_col</code> is
 set to <code>acceleration</code></p>
     </div>
     <div class="section level2">

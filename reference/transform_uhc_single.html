@@ -63,7 +63,7 @@ on a single column.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transform_uhc_single</span><span class="op">(</span><span class="va">df</span>, <span class="va">ind</span>, <span class="va">value</span>, <span class="va">transform_col</span>, <span class="va">ind_ids</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transform_uhc_single</span><span class="op">(</span><span class="va">df</span>, <span class="va">value_col</span>, <span class="va">transform_value_col</span>, <span class="va">ind_ids</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,12 +71,11 @@ on a single column.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
-<dt>ind</dt>
-<dd><p>Column name of column with indicator names.</p></dd>
-<dt>value</dt>
+<dt>value_col</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
-<dt>transform_col</dt>
-<dd><p>Column to put transformed values into</p></dd>
+<dt>transform_value_col</dt>
+<dd><p>Column name of column(s) with transformed
+indicator values</p></dd>
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
