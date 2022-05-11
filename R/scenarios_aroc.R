@@ -44,10 +44,7 @@
 #' @inheritParams recycle_data
 #'
 scenario_aroc <- function(df,
-                          value = "value",
-                          ind = "ind",
-                          iso3 = "iso3",
-                          year = "year",
+                          value_col = "value",
                           start_year = 2018,
                           end_year = 2025,
                           baseline_year = start_year,
@@ -56,7 +53,7 @@ scenario_aroc <- function(df,
                           percent_change = NULL,
                           aroc_type = c("target", "latest", "percent_change"),
                           scenario_name = glue::glue("aroc_{aroc_type}"),
-                          scenario = "scenario",
+                          scenario_col = "scenario",
                           limit_aroc_direction = NULL,
                           limit_aroc_value = 0,
                           trim = TRUE,
@@ -67,62 +64,52 @@ scenario_aroc <- function(df,
                           trim_years = TRUE,
                           ind_ids = billion_ind_codes("all"),
                           default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
 
   aroc_type <- rlang::arg_match(aroc_type)
   # limit_aroc_direction <- rlang::arg_match(limit_aroc_direction)
 
   full_years_df <- tidyr::expand_grid(
-    "{year}" := start_year:end_year,
-    "{iso3}" := unique(df[[iso3]]),
-    "{ind}" := unique(df[[ind]]),
-    "{scenario}" := default_scenario
+    "year" := start_year:end_year,
+    "iso3" := unique(df[["iso3"]]),
+    "ind" := unique(df[["ind"]]),
+    "{scenario_col}" := default_scenario
   )
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
-    dplyr::filter(.data[[scenario]] == default_scenario)
+    dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
 
   if (aroc_type == "latest") {
-    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year - 1, baseline_year, ind, ind_ids[unique(scenario_df[[ind]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year - 1, baseline_year, ind_ids[unique(scenario_df[["ind"]])])
 
     aroc <- get_latest_aarc(scenario_df,
       baseline_year = baseline_year,
-      value = value,
-      year = year,
-      iso3 = iso3,
-      ind = ind
+      value_col = value_col
     )
   } else if (aroc_type == "target") {
     if (is.null(target_value)) {
       stop("target_value must be provided for targeted AROC to be calculated. It was NULL.")
     }
-    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year, end_year = baseline_year, ind, ind_ids[unique(scenario_df[[ind]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, ind_ids[unique(scenario_df[["ind"]])])
     assert_numeric(target_value)
     aroc <- get_target_aarc(scenario_df,
       target_value,
       baseline_year = baseline_year,
       target_year = target_year,
-      value = value,
-      year = year,
-      iso3 = iso3,
-      ind = ind
-    )
+      value_col = value_col)
   } else if (aroc_type == "percent_change") {
     if (is.null(percent_change)) {
       stop("percent_change must be provided for percent_change AROC to be calculated. It was NULL.")
     }
     assert_numeric(target_value)
-    assert_ind_start_end_year(scenario_df, iso3, year, value, baseline_year, end_year = baseline_year, ind, ind_ids[unique(scenario_df[[ind]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, ind_ids[unique(scenario_df[["ind"]])])
     aroc <- get_percent_change_aarc(scenario_df,
       percent_change,
       baseline_year,
       target_year,
-      value = value,
-      year = year,
-      iso3 = iso3,
-      ind = ind
+      value_col = value_col
     )
   }
 
@@ -137,21 +124,21 @@ scenario_aroc <- function(df,
   }
 
   aroc_df <- scenario_df %>%
-    dplyr::group_by(iso3, ind) %>%
-    dplyr::mutate(baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+    dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year)) %>%
     dplyr::ungroup() %>%
-    dplyr::left_join(aroc, by = c(iso3, ind)) %>%
+    dplyr::left_join(aroc, by = c("iso3", "ind")) %>%
     dplyr::mutate(
       scenario_value = dplyr::case_when(
-        .data[[year]] == baseline_year ~ as.numeric(.data[[value]]),
-        .data[[year]] > baseline_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[[year]] - baseline_year)),
+        .data[["year"]] == baseline_year ~ as.numeric(.data[[value_col]]),
+        .data[["year"]] > baseline_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[["year"]] - baseline_year)),
         TRUE ~ NA_real_
       ),
-      !!sym(scenario) := scenario_name
+      !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value", "aroc")) %>%
     trim_values(
-      col = "scenario_value", value = value, year = year, trim = trim, small_is_best = small_is_best,
+      col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,
       lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
     )

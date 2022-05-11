@@ -6,14 +6,9 @@
 \usage{
 calculate_uhc_billion(
   df,
-  year = "year",
-  iso3 = "iso3",
-  ind = "ind",
-  transform_value = "transform_value",
-  value = "value",
-  scenario = NULL,
-  type_col = "type",
-  source_col = "source",
+  transform_value_col = "transform_value",
+  value_col = "value",
+  scenario_col = NULL,
   source = sprintf("WHO DDI calculation, \%s", format(Sys.Date(), "\%B \%Y")),
   projected_year = lubridate::year(lubridate::now()),
   ind_ids = billion_ind_codes("uhc")
@@ -23,23 +18,13 @@ calculate_uhc_billion(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{year}{Column name of column with years.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
-
-\item{type_col}{Column name of column to store type.}
-
-\item{source_col}{Column name of column to store source information.}
 
 \item{source}{Source to provide for calculated average service coverage and
 single measure.}

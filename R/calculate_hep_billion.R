@@ -15,82 +15,79 @@
 #' @inherit transform_hpop_data return params
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams add_hpop_populations
-#' @param level Column name of column(s) with indicator levels. Should be same length
-#'     as `transform_value`.
+#' @param level_col Column name of column(s) with indicator levels. Should be same length
+#'     as `transform_value_col`.
 #'
 #' @export
 calculate_hep_billion <- function(df,
-                                  iso3 = "iso3",
-                                  ind = "ind",
-                                  year = "year",
-                                  scenario = NULL,
-                                  transform_value = "transform_value",
-                                  level = stringr::str_replace(transform_value, "transform_value", "level"),
-                                  contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
-                                  contribution_pct = paste0(contribution, "_percent"),
+                                  scenario_col = NULL,
+                                  transform_value_col = "transform_value",
+                                  level_col = stringr::str_replace(transform_value_col, "transform_value", "level"),
+                                  contribution_col = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
+                                  contribution_pct_col = paste0(contribution_col, "_percent"),
                                   start_year = 2018,
                                   end_year = 2019:2025,
                                   pop_year = 2025,
                                   ind_ids = billion_ind_codes("hep", include_calculated = TRUE)) {
-  assert_columns(df, iso3, ind, year, transform_value, level)
+  assert_columns(df, "iso3", "ind", "year", transform_value_col, level_col, scenario_col)
   assert_ind_ids(ind_ids, "hep")
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
+  assert_unique_rows(df, scenario_col, ind_ids)
   assert_years(start_year, end_year)
-  assert_same_length(transform_value, level)
-  assert_same_length(transform_value, contribution)
+  assert_same_length(transform_value_col, level_col)
+  assert_same_length(transform_value_col, contribution_col)
 
   bill_df <- df %>%
     dplyr::filter(
-      .data[[ind]] %in% ind_ids[c(
+      .data[["ind"]] %in% ind_ids[c(
         "prevent",
         "detect_respond",
         "espar",
         "hep_idx"
       )],
-      .data[[year]] %in% c(!!start_year, !!end_year)
+      .data[["year"]] %in% c(!!start_year, !!end_year)
     ) %>%
-    dplyr::mutate("_pop_temp" := wppdistro::get_population(.data[[iso3]], pop_year))
+    dplyr::mutate("_pop_temp" := wppdistro::get_population(.data[["iso3"]], pop_year))
 
-  bill_df <- billionaiRe_add_columns(bill_df, c(contribution, contribution_pct), NA_real_)
+  bill_df <- billionaiRe_add_columns(bill_df, c(contribution_col, contribution_pct_col), NA_real_)
 
-  for (i in 1:length(contribution)) {
+  for (i in 1:length(contribution_col)) {
     bill_df <- bill_df %>%
-      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, ind, scenario)))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
       dplyr::mutate(
-        !!sym(contribution_pct[i]) := calculate_hep_contribution_pct(
-          .data[[ind]],
-          .data[[year]],
+        !!sym(contribution_pct_col[i]) := calculate_hep_contribution_pct(
+          .data[["ind"]],
+          .data[["year"]],
           !!start_year,
-          .data[[transform_value[i]]],
-          .data[[level[i]]],
+          .data[[transform_value_col[i]]],
+          .data[[level_col[i]]],
           !!ind_ids
         ),
-        !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
+        !!sym(contribution_col[i]) := ifelse(.data[["ind"]] == ind_ids["hep_idx"],
           NA_real_,
-          .data[[contribution_pct[i]]] * .data[["_pop_temp"]] / 100
+          .data[[contribution_pct_col[i]]] * .data[["_pop_temp"]] / 100
         )
       ) %>%
       dplyr::ungroup() %>%
-      dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
       dplyr::mutate(
-        !!sym(contribution[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
-          sum(.data[[contribution[i]]], na.rm = T),
-          .data[[contribution[i]]]
+        !!sym(contribution_col[i]) := ifelse(.data[["ind"]] == ind_ids["hep_idx"],
+          sum(.data[[contribution_col[i]]], na.rm = T),
+          .data[[contribution_col[i]]]
         ),
-        !!sym(contribution_pct[i]) := ifelse(.data[[ind]] == ind_ids["hep_idx"],
-          100 * .data[[contribution[i]]] / .data[["_pop_temp"]],
-          .data[[contribution_pct[i]]]
+        !!sym(contribution_pct_col[i]) := ifelse(.data[["ind"]] == ind_ids["hep_idx"],
+          100 * .data[[contribution_col[i]]] / .data[["_pop_temp"]],
+          .data[[contribution_pct_col[i]]]
         )
       ) %>%
       dplyr::ungroup()
   }
 
   bill_df <- bill_df %>%
-    dplyr::filter(.data[[year]] %in% !!end_year) %>%
+    dplyr::filter(.data[["year"]] %in% !!end_year) %>%
     dplyr::select(-"_pop_temp")
 
   # remove matching rows from original data frame
-  df <- dplyr::anti_join(df, bill_df, by = c(iso3, year, ind, scenario))
+  df <- dplyr::anti_join(df, bill_df, by = c("iso3", "year", "ind", scenario_col))
 
   dplyr::bind_rows(df, bill_df)
 }

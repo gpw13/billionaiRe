@@ -18,7 +18,7 @@ calculate_percent_change_baseline(
 
 \item{goal_value}{vector with the goal value to be used}
 
-\item{year}{Column name of column with years.}
+\item{year}{(vector) vector of years}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 

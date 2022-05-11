@@ -7,15 +7,11 @@
 scenario_bau(
   df,
   only_reported_estimated = FALSE,
-  value = "value",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
-  type_col = "type",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
   scenario_name = glue::glue("business_as_usual"),
-  scenario = "scenario",
+  scenario_col = "scenario",
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = TRUE,
@@ -33,15 +29,7 @@ country, year, and indicator.}
 \item{only_reported_estimated}{(logical) if TRUE only the last \code{reported} and \code{estimated}
 values are imputed.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{type_col}{Column name of column with type data.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -49,7 +37,7 @@ values are imputed.}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{trim}{logical to indicate if the data should be trimmed between
@@ -60,8 +48,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{limit at which the indicator should be caped.
@@ -95,8 +83,8 @@ The returned scenario is a portion of the straight line drawn from the
 \code{baseline_year} value to the \code{target_year}. Only values for years between
 \code{start_year} and \code{end_year} will be returned.
 
-If \code{value} has values that are higher or lower than the scenario values, then
-only \code{value} will be kept, depending on \code{small_is_best}. For instance,
+If \code{value_col} has values that are higher or lower than the scenario values, then
+only \code{value_col} will be kept, depending on \code{small_is_best}. For instance,
 if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
 75 will be kept.
 }

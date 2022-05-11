@@ -9,21 +9,16 @@ impute_covid_shock(
   region = c("who_region", "un_region", "un_subregion", "un_intermediate_region",
     "sdg_region", "sdg_subregion", "gbd_region", "gbd_subregion", "un_desa_region",
     "un_desa_subregion", "wb_region", "wb_ig"),
-  year = "year",
-  ind = "ind",
-  iso3 = "iso3",
-  type_col = "type",
   start_year = 2018,
   covid_year = 2020,
   recovery_year = 2022,
   end_year = 2025,
-  value = "value",
+  value_col = "value",
   scenario_col = "scenario",
   default_scenario = "default",
   scenario_reported_estimated = "routine",
   scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling",
-  source_col = "source",
   source = sprintf("WHO DDI interim infilling and projections, \%s", format(Sys.Date(),
     "\%B \%Y"))
 )
@@ -34,14 +29,6 @@ country, year, and indicator.}
 
 \item{region}{(character) Type of region to use for regional average. See \link[whoville]{iso3_to_regions} for more details.}
 
-\item{year}{Column name of column with years.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{type_col}{Column name of column to store type.}
-
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{covid_year}{(integer) year where the values are impacted by COVID.}
@@ -50,9 +37,10 @@ country, year, and indicator.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{value}{Column name of column with indicator values.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{scenario_col}{Column name of column with scenario identifiers.}
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario.}
 
@@ -61,8 +49,6 @@ country, year, and indicator.}
 \item{scenario_covid_shock}{name of the scenario with the COVID-19 shock years.}
 
 \item{scenario_reference_infilling}{name of the WHO technical programs projections/imputations scenario.}
-
-\item{source_col}{Column name of column to store source information.}
 
 \item{source}{Source to provide for calculated average service coverage and
 single measure.}

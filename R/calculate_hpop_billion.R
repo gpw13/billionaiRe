@@ -9,54 +9,43 @@
 #'
 #' @export
 calculate_hpop_billion <- function(df,
-                                   year = "year",
                                    start_year = 2018,
                                    end_year = 2019:2025,
-                                   iso3 = "iso3",
-                                   ind = "ind",
-                                   population = "population",
                                    pop_year = 2025,
-                                   transform_value = "transform_value",
-                                   contribution = stringr::str_replace(transform_value, "transform_value", "contribution"),
-                                   contribution_pct = paste0(contribution, "_percent"),
-                                   contribution_pct_total_pop = paste0(contribution, "_percent_total_pop"),
-                                   scenario = NULL,
+                                   transform_value_col = "transform_value",
+                                   contribution_col = stringr::str_replace(transform_value_col, "transform_value", "contribution"),
+                                   contribution_pct_col = paste0(contribution_col, "_percent"),
+                                   contribution_pct_total_pop_col = paste0(contribution_col, "_percent_total_pop"),
+                                   scenario_col = NULL,
                                    ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, iso3, ind, year, transform_value)
+  assert_columns(df, "iso3", "ind", "year", transform_value_col)
   assert_ind_ids(ind_ids, "hpop")
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids)
-  assert_same_length(transform_value, contribution)
-  assert_same_length(contribution, contribution_pct)
+  assert_unique_rows(df, scenario_col, ind_ids)
+  assert_same_length(transform_value_col, contribution_col)
+  assert_same_length(contribution_col, contribution_pct_col)
   assert_years(start_year, end_year)
 
-  # calculate the contribution_pct (change) and contribution for component HPOP indicators
+  # calculate the contribution_pct_col (change) and contribution_col for component HPOP indicators
   contr_df <- calculate_hpop_contributions(
     df = df,
-    year = year,
     start_year = start_year,
     end_year = end_year,
-    iso3 = iso3,
-    ind = ind,
-    population = population,
-    transform_value = transform_value,
-    contribution = contribution,
-    contribution_pct = contribution_pct,
-    contribution_pct_total_pop = contribution_pct_total_pop,
-    scenario = scenario,
+    transform_value_col = transform_value_col,
+    contribution_col = contribution_col,
+    contribution_pct_col = contribution_pct_col,
+    contribution_pct_total_pop_col = contribution_pct_total_pop_col,
+    scenario_col = scenario_col,
     ind_ids = ind_ids
   )
 
   # calculate the Billion based off the change
   change_df <- calculate_hpop_billion_change(
     df = contr_df,
-    change = contribution_pct,
-    contribution = contribution,
-    ind = ind,
-    iso3 = iso3,
-    year = year,
+    change = contribution_pct_col,
+    contribution_col = contribution_col,
     end_year = end_year,
     pop_year = pop_year,
-    scenario = scenario,
+    scenario_col = scenario_col,
     ind_ids = ind_ids
   )
 
@@ -75,36 +64,34 @@ calculate_hpop_billion <- function(df,
 #'
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column(s) with change value
+#' @param population Column name of column to create with population figures.
 #'
 #' @export
 calculate_hpop_billion_change <- function(df,
                                           change = "contribution_percent",
-                                          contribution = "contribution",
-                                          ind = "ind",
-                                          iso3 = "iso3",
-                                          year = "year",
+                                          contribution_col = "contribution",
                                           population = "population",
                                           end_year = 2019:2025,
                                           pop_year = 2025,
-                                          scenario = NULL,
+                                          scenario_col = NULL,
                                           ind_ids = billion_ind_codes("hpop")) {
-  assert_columns(df, change, ind, iso3, year, scenario)
+  assert_columns(df, change, "ind", "iso3", "year", scenario_col)
   assert_ind_ids(ind_ids, "hpop")
 
-  df <- billionaiRe_add_columns(df, c(contribution, population), NA_real_)
+  df <- billionaiRe_add_columns(df, c(contribution_col, population), NA_real_)
 
   # only calculate Billion using relevant indicators and years and correct for child nutrition
 
   change_df <- df %>%
     dplyr::filter(
-      .data[[year]] %in% c(!!end_year),
-      .data[[ind]] %in% !!ind_ids
+      .data[["year"]] %in% c(!!end_year),
+      .data[["ind"]] %in% !!ind_ids
     ) %>%
-    dplyr::mutate(!!sym(ind) := ifelse(.data[[ind]] %in% ind_ids[c("wasting", "overweight")],
+    dplyr::mutate(!!sym("ind") := ifelse(.data[["ind"]] %in% ind_ids[c("wasting", "overweight")],
       "child_nutrition",
-      .data[[ind]]
+      .data[["ind"]]
     )) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, scenario, ind, year)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind", "year")))) %>%
     dplyr::summarize(dplyr::across(
       dplyr::all_of(change),
       ~ sum(.x, na.rm = TRUE)
@@ -116,33 +103,30 @@ calculate_hpop_billion_change <- function(df,
 
   change_df <- dplyr::left_join(change_df,
     generate_hpop_populations(pop_year),
-    by = c(iso3 = "iso3", ind = "ind")
+    by = c("iso3" = "iso3", "ind" = "ind")
   )
 
   # calculate billions for each contribution column
 
   bill_df_list <- purrr::map2(change,
-    contribution,
+    contribution_col,
     calculate_hpop_billion_single,
     df = change_df,
-    iso3 = iso3,
-    ind = ind,
-    year = year,
     pop_year = pop_year,
-    scenario = scenario
+    scenario_col = scenario_col
   )
 
   # join back together
   bill_df <- purrr::reduce(bill_df_list,
     dplyr::left_join,
-    by = c(iso3, ind, year, scenario)
+    by = c("iso3", "ind", "year", scenario_col)
   )
 
   # add population column (adding here instead of in calc_single() to not generate multiple columns)
   bill_df <- dplyr::mutate(
     bill_df,
     !!sym(population) := wppdistro::get_population(
-      .data[[iso3]],
+      .data[["iso3"]],
       year = !!pop_year
     )
   )
@@ -155,13 +139,10 @@ calculate_hpop_billion_change <- function(df,
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column with change value
 calculate_hpop_billion_single <- function(change,
-                                          contribution,
+                                          contribution_col,
                                           df,
-                                          iso3,
-                                          ind,
-                                          year,
                                           pop_year,
-                                          scenario) {
+                                          scenario_col) {
 
   # calculate Billion contributions
 
@@ -171,13 +152,13 @@ calculate_hpop_billion_single <- function(change,
       "_od_temp" := 1 - abs(.data[["_delta_temp"]]),
       "_pos_temp" := .data[["_delta_temp"]] > 0
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario, "_pop_group_temp", "_pos_temp")))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col, "_pop_group_temp", "_pos_temp")))) %>%
     dplyr::summarize("_product_temp" := 1 - prod(.data[["_od_temp"]]),
       "_pop_group_population_temp" := unique(.data[["_pop_group_population_temp"]]),
       "_sumi_temp" := sum(.data[["_delta_temp"]]),
       .groups = "drop"
     ) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c(iso3, year, scenario)))) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "year", scenario_col)))) %>%
     dplyr::summarize("hpop_healthier_plus" := sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * .data[["_pos_temp"]]),
       "hpop_healthier_minus" := -sum(.data[["_pop_group_population_temp"]] * .data[["_product_temp"]] * !.data[["_pos_temp"]]),
       "hpop_healthier_plus_dbl_cntd" := sum(.data[["_pop_group_population_temp"]] * .data[["_sumi_temp"]] * .data[["_pos_temp"]]),
@@ -196,16 +177,16 @@ calculate_hpop_billion_single <- function(change,
       "hpop_healthier_minus_dbl_cntd",
       "hpop_healthier_dbl_cntd"
     )),
-    names_to = ind,
-    values_to = contribution
+    names_to = "ind",
+    values_to = contribution_col
     )
 
-  # creating new columns called change with contributions, to present change / % contribution for Billion
-  contr_df[, change] <- contr_df[, contribution]
+  # creating new columns called change with contributions, to present change / % contribution_col for Billion
+  contr_df[, change] <- contr_df[, contribution_col]
 
   contr_df %>%
     dplyr::mutate(
-      "_total_pop_temp" := wppdistro::get_population(iso3, pop_year),
+      "_total_pop_temp" := wppdistro::get_population(.data[["iso3"]], pop_year),
       dplyr::across(
         dplyr::all_of(!!change),
         ~ 100 * .x / .data[["_total_pop_temp"]]
@@ -264,14 +245,14 @@ generate_hpop_populations <- function(pop_year) {
 
 #' Calculate the change for vectors, used in [calculate_hpop_billion()]
 #'
-#' @param transform_value Vector of transform values
+#' @param transform_value_col Vector of transform values
 #' @param year Vector of years
 #' @param start_year Start year
-calculate_hpop_change_vector <- function(transform_value,
+calculate_hpop_change_vector <- function(transform_value_col,
                                          year,
                                          start_year) {
   if (start_year %in% year) {
-    transform_value - transform_value[year == start_year]
+    transform_value_col - transform_value_col[year == start_year]
   } else {
     NA_real_
   }

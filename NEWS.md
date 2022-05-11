@@ -1,5 +1,9 @@
 # billionaiRe 0.7.0
 * Pass to version 0.7.0 after removing of unused column parameters.
+* Remove `ind`, `year`, `iso3`, `type` and `source` from functions parameters
+* Rename parameters `value`, `transform_value`, `scenario`, `contribution` and
+  `contribution_pct` to `value_col`, `transform_value_col`, `scenario_col`,
+  `contribution_col` and `contribution_pct_col` respectively.
 
 # billionaiRe 0.6.10
 * `save_wrangled_output` now saves files with all columns capitalised and

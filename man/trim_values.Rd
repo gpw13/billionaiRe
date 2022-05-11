@@ -7,8 +7,7 @@
 trim_values(
   df,
   col,
-  value = "value",
-  year = "year",
+  value_col = "value",
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = FALSE,
@@ -26,10 +25,8 @@ country, year, and indicator.}
 \item{col}{column to trim values from. Will be removed before returning the
 data frame.}
 
-\item{value}{Column name of column with indicator values. This column will be
+\item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
-
-\item{year}{Column name of column with years.}
 
 \item{trim}{logical to indicate if the data should be trimmed between
 \code{upper_limit} and \code{lower_limit}.}
@@ -39,8 +36,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{upper limit at which the indicator should be caped.}
@@ -56,7 +53,7 @@ than \code{col} will be kept.}
 }
 \value{
 trimed data frame, removing the \code{col} column, and putting the trimmed
-values in \code{value}
+values in \code{value_col}
 }
 \description{
 This scenario allows to change a value by a fixed percentage to a provided year

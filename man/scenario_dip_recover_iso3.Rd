@@ -7,9 +7,6 @@
 scenario_dip_recover_iso3(
   df,
   iso3,
-  year = "year",
-  ind = "ind",
-  iso3_col = "iso3",
   start_year = 2018,
   dip_year = 2020,
   recovery_year = 2021,
@@ -17,8 +14,8 @@ scenario_dip_recover_iso3(
   aroc_type = c("lastest_year", "average_years_in_range"),
   aroc_start_year = start_year,
   end_year = 2025,
-  value = "value",
-  scenario = "scenario",
+  value_col = "value",
+  scenario_col = "scenario",
   scenario_name = "dip_recover",
   trim = TRUE,
   small_is_best = FALSE,
@@ -27,9 +24,7 @@ scenario_dip_recover_iso3(
   lower_limit = 0,
   trim_years = TRUE,
   ind_ids = billion_ind_codes("all"),
-  source_col = "source",
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
-  type_col = "type",
   default_scenario = "default"
 )
 }
@@ -37,13 +32,7 @@ scenario_dip_recover_iso3(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3_col}{(character) name of column with the ISO3 country codes}
+\item{iso3}{(character) ISO3 code of country to scenario}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -65,10 +54,11 @@ and \code{dip_year} is used to calculate
 
 \item{end_year}{End year for scenario, defaults to 2025}
 
-\item{value}{Column name of column with indicator values. This column will be
+\item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
-\item{scenario}{name of scenario column to be created}
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_name}{name of scenario}
 
@@ -80,8 +70,8 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{upper limit at which the indicator should be caped.}
@@ -96,16 +86,12 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{source_col}{Column name of column to store source information.}
-
 \item{source}{Source to use if no unique source available for the calculation.}
-
-\item{type_col}{Column name of column to store type.}
 
 \item{default_scenario}{name of the default scenario.}
 }
 \value{
-a data frame with scenario values in \code{value} with a \code{scenario} column.
+a data frame with scenario values in \code{value_col} with a \code{scenario} column.
 }
 \description{
 Applies \code{scenario_dip_recover()} to a specific iso3.

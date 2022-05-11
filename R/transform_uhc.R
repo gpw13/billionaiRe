@@ -16,25 +16,33 @@
 #'
 #' @export
 transform_uhc_data <- function(df,
-                               ind = "ind",
-                               value = "value",
-                               transform_glue = "transform_{value}",
+                               value_col = "value",
+                               transform_glue = "transform_{value_col}",
                                ind_ids = billion_ind_codes("uhc"),
                                recycle = FALSE,
                                ...) {
-  assert_columns(df, ind, value)
+  assert_columns(df, "ind", value_col)
   assert_ind_ids(ind_ids, billion = "uhc")
 
   # get transform column names
-  transform_value <- glue::glue(transform_glue)
+  transform_value_col <- glue::glue(transform_glue)
 
   params <- list(...)
   params_assert_data_calculations <- get_right_params(params, assert_data_calculation_uhc)
 
   if (!is.null(params_assert_data_calculations)) {
-    assert_data_calculation_uhc(df, value = value, params_assert_data_calculations)
+    do.call(
+      assert_data_calculation_uhc,
+      c(
+        list(
+          df = df,
+          value_col = value_col
+        ),
+        params_assert_data_calculations
+      )
+    )
   } else {
-    assert_data_calculation_hpop(df, value = value)
+    assert_data_calculation_uhc(df, value_col = value_col)
   }
 
   if (recycle) {
@@ -46,8 +54,7 @@ transform_uhc_data <- function(df,
         list(
           df = df,
           billion = "uhc",
-          ind = ind,
-          value = value,
+          value_col = value_col,
           ind_ids = ind_ids
         ),
         params_recycle
@@ -57,8 +64,8 @@ transform_uhc_data <- function(df,
 
 
   # transform each
-  for (i in 1:length(value)) {
-    df <- transform_uhc_single(df, ind, value[i], transform_value[i], ind_ids)
+  for (i in 1:length(value_col)) {
+    df <- transform_uhc_single(df, value_col[i], transform_value_col[i], ind_ids)
   }
 
   df
@@ -71,30 +78,31 @@ transform_uhc_data <- function(df,
 #'
 #' @inheritParams transform_uhc_data
 #' @inheritParams transform_hpop_single
+#' @param transform_value_col Column name of column(s) with transformed
+#'    indicator values
 #'
 #' @return A single column data frame of transformed values.
 transform_uhc_single <- function(df,
-                                 ind,
-                                 value,
-                                 transform_col,
+                                 value_col,
+                                 transform_value_col,
                                  ind_ids) {
 
   # check if transform column in data and create if not
-  if (!(transform_col %in% names(df))) {
-    df[[transform_col]] <- NA_real_
+  if (!(transform_value_col %in% names(df))) {
+    df[[transform_value_col]] <- NA_real_
   }
 
   dplyr::mutate(
     df,
-    !!sym(transform_col) := dplyr::case_when(
-      is.na(.data[[value]]) ~ .data[[transform_col]],
-      .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "itn")] ~ trim_transforms(.data[[value]]),
-      .data[[ind]] == ind_ids["bp"] ~ transform_bp(.data[[value]]),
-      .data[[ind]] == ind_ids["fpg"] ~ transform_glucose(.data[[value]]),
-      .data[[ind]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value]]),
-      .data[[ind]] %in% ind_ids[c("uhc_tobacco", "fh")] ~ transform_inversion(.data[[value]]),
-      .data[[ind]] == ind_ids["hwf"] ~ transform_hwf(.data[[value]]),
-      TRUE ~ .data[[transform_col]]
+    !!sym(transform_value_col) := dplyr::case_when(
+      is.na(.data[[value_col]]) ~ .data[[transform_value_col]],
+      .data[["ind"]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "itn")] ~ trim_transforms(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["bp"] ~ transform_bp(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["fpg"] ~ transform_glucose(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value_col]]),
+      .data[["ind"]] %in% ind_ids[c("uhc_tobacco", "fh")] ~ transform_inversion(.data[[value_col]]),
+      .data[["ind"]] == ind_ids["hwf"] ~ transform_hwf(.data[[value_col]]),
+      TRUE ~ .data[[transform_value_col]]
     )
   )
 }
@@ -115,16 +123,15 @@ transform_uhc_single <- function(df,
 #'
 #' @export
 untransform_uhc_data <- function(df,
-                                 ind = "ind",
-                                 transform_value = "transform_value",
-                                 value = stringr::str_remove(transform_value, "transform_"),
+                                 transform_value_col = "transform_value",
+                                 value_col = stringr::str_remove(transform_value_col, "transform_"),
                                  ind_ids = billion_ind_codes("uhc")) {
-  assert_columns(df, ind, transform_value)
-  assert_string(value, length(transform_value))
+  assert_columns(df, "ind", transform_value_col)
+  assert_string(value_col, length(transform_value_col))
   assert_ind_ids(ind_ids, "uhc")
 
-  for (i in 1:length(value)) {
-    df <- untransform_uhc_single(df, ind, transform_value[i], value[i], ind_ids)
+  for (i in 1:length(value_col)) {
+    df <- untransform_uhc_single(df, transform_value_col[i], value_col[i], ind_ids)
   }
 
   df
@@ -139,21 +146,20 @@ untransform_uhc_data <- function(df,
 #'
 #' @return A single column data frame of transformed values.
 untransform_uhc_single <- function(df,
-                                   ind,
-                                   transform_value,
-                                   value,
+                                   transform_value_col,
+                                   value_col,
                                    ind_ids) {
-  df <- billionaiRe_add_columns(df, value, NA_real_)
+  df <- billionaiRe_add_columns(df, value_col, NA_real_)
 
   df %>%
-    dplyr::mutate(!!sym(value) := dplyr::case_when(
-      is.na(.data[[transform_value]]) ~ .data[[value]],
-      .data[[ind]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ .data[[transform_value]],
-      .data[[ind]] %in% ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value]]),
-      .data[[ind]] == ind_ids["bp"] ~ untransform_bp(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["fpg"] ~ untransform_glucose(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["beds"] ~ untransform_hosp_beds(.data[[transform_value]]),
-      .data[[ind]] == ind_ids["hwf"] ~ untransform_hwf(.data[[transform_value]]),
-      TRUE ~ .data[[value]]
+    dplyr::mutate(!!sym(value_col) := dplyr::case_when(
+      is.na(.data[[transform_value_col]]) ~ .data[[value_col]],
+      .data[[ind_col]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ .data[[transform_value_col]],
+      .data[[ind_col]] %in% ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value_col]]),
+      .data[[ind_col]] == ind_ids["bp"] ~ untransform_bp(.data[[transform_value_col]]),
+      .data[[ind_col]] == ind_ids["fpg"] ~ untransform_glucose(.data[[transform_value_col]]),
+      .data[[ind_col]] == ind_ids["beds"] ~ untransform_hosp_beds(.data[[transform_value_col]]),
+      .data[[ind_col]] == ind_ids["hwf"] ~ untransform_hwf(.data[[transform_value_col]]),
+      TRUE ~ .data[[value_col]]
     ))
 }

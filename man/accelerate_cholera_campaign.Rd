@@ -6,16 +6,12 @@
 \usage{
 accelerate_cholera_campaign(
   df,
-  year = "year",
-  ind = "ind",
-  iso3 = "iso3",
-  value = "value",
-  type_col = "type",
+  value_col = "value",
   end_year = 2025,
   target_year = end_year,
   start_year = 2018,
   ind_ids = billion_ind_codes("hep"),
-  scenario = "scenario",
+  scenario_col = "scenario",
   ...
 )
 }
@@ -23,15 +19,7 @@ accelerate_cholera_campaign(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{year}{Column name of column with years.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{type_col}{Column name of column to store type.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
@@ -45,13 +33,13 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
+data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
 set to \code{acceleration}
 }
 \description{

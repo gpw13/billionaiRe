@@ -6,13 +6,9 @@
 \usage{
 transform_prev_routine_data(
   df,
-  iso3,
-  year,
-  ind,
-  value,
-  transform_value,
-  type_col,
-  scenario,
+  value_col,
+  transform_value_col,
+  scenario_col,
   ind_ids
 )
 }
@@ -20,20 +16,12 @@ transform_prev_routine_data(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{iso3}{Column name of column with country ISO3 codes.}
+\item{value_col}{Column name of column with indicator values.}
 
-\item{year}{Column name of column with year data.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{value}{Column name of column with indicator values.}
-
-\item{transform_value}{Column name of column(s) with transformed indicator values,
+\item{transform_value_col}{Column name of column(s) with transformed indicator values,
 used to calculate contributions.}
 
-\item{type_col}{Column name of column with type data.}
-
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

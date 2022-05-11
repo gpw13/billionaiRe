@@ -44,7 +44,7 @@ For most users of billionaiRe, accessing external data tables (on xMart or Wolrd
 
 Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call `default` by default, but as this is a parameter (`default_scenario`) of `recycle_data()`, it can be modified as required. `default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`routine` by default) and `scenario_reference_infilling` for values imputed/projected by technical programs (`reference_infilling` by default).
 
-Data recycling works by adding to all scenarios present in the `scenario` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated` and `scenario_reported_estimated` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
+Data recycling works by adding to all scenarios present in the `scenario_col` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated` and `scenario_reported_estimated` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
 
 ```{r, include = TRUE, eval = TRUE}
 library(billionaiRe)
@@ -110,11 +110,11 @@ df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet"
 
 test_data_hep <- df %>%
   recycle_data(billion = "hep", include_projection = FALSE) %>%
-  transform_hep_data(scenario = "scenario")
+  transform_hep_data(scenario_col = "scenario")
 
 # Exactly equivalent to above:
 test_data_hep_transform <- df %>%
-  transform_hep_data(scenario = "scenario", recycle = TRUE, include_projection = FALSE)
+  transform_hep_data(scenario_col = "scenario", recycle = TRUE, include_projection = FALSE)
 
 dplyr::setdiff(test_data_hep, test_data_hep_transform)
 
@@ -160,18 +160,18 @@ library(billionaiRe)
 test_hep <- df %>%
   add_scenario(
     scenario_function = "halt_rise", # picks from a pre-determined list of scenarios
-    scenario = "scenario",
+    scenario_col = "scenario",
     default_scenario = "covid_dip_lag"
   ) %>% # indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant).
   add_scenario(
     scenario_function = "percent_baseline", # picks from a pre-determined list of scenarios
     percent_change = 10,
-    scenario = "scenario",
+    scenario_col = "scenario",
     default_scenario = "covid_dip_lag"
   ) %>% # indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant)
   recycle_data(
     billion = "hep", # One function for each billions, so need to specify which one this is applied to.
-    scenario = "scenario",
+    scenario_col = "scenario",
     default_scenario = "covid_dip_lag",
     scenario_reported_estimated = "routine",
     scenario_reference_infilling = "reference_infilling",
@@ -179,11 +179,11 @@ test_hep <- df %>%
     recycle_campaigns = TRUE
   ) %>% # Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.
   transform_hep_data(
-    scenario = "scenario",
+    scenario_col = "scenario",
     recycle = FALSE
   ) %>% # adds a parameter to `transform_` functions to recycle. In this pipeline it is redundant as data was already recycled.
-  calculate_hep_components(scenario = "scenario") %>%
-  calculate_hep_billion(scenario = "scenario", end_year = 2025) %>%
+  calculate_hep_components(scenario_col = "scenario") %>%
+  calculate_hep_billion(scenario_col = "scenario", end_year = 2025) %>%
   dplyr::filter(
     ind %in% c(
       "prevent",

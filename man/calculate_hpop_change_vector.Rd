@@ -4,10 +4,10 @@
 \alias{calculate_hpop_change_vector}
 \title{Calculate the change for vectors, used in \code{\link[=calculate_hpop_billion]{calculate_hpop_billion()}}}
 \usage{
-calculate_hpop_change_vector(transform_value, year, start_year)
+calculate_hpop_change_vector(transform_value_col, year, start_year)
 }
 \arguments{
-\item{transform_value}{Vector of transform values}
+\item{transform_value_col}{Vector of transform values}
 
 \item{year}{Vector of years}
 

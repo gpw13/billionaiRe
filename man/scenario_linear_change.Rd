@@ -7,16 +7,13 @@
 scenario_linear_change(
   df,
   linear_value,
-  value = "value",
-  ind = "ind",
-  iso3 = "iso3",
-  year = "year",
+  value_col = "value",
   start_year = 2018,
   end_year = 2025,
   baseline_year = start_year,
   target_year = end_year,
   scenario_name = glue::glue("linear_change"),
-  scenario = "scenario",
+  scenario_col = "scenario",
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = FALSE,
@@ -33,13 +30,7 @@ country, year, and indicator.}
 
 \item{linear_value}{vector indicating the increase to apply.}
 
-\item{value}{Column name of column with indicator values.}
-
-\item{ind}{Column name of column with indicator names.}
-
-\item{iso3}{Column name of column with country ISO3 codes.}
-
-\item{year}{Column name of column with years.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 
@@ -53,7 +44,7 @@ achieved. Defaults to \code{end_year}}
 
 \item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
-\item{scenario}{Column name of column with scenario identifiers. Useful for
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{trim}{logical to indicate if the data should be trimmed between
@@ -64,15 +55,15 @@ one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).}
 
 \item{keep_better_values}{logical to indicate if "better" values should be
-kept from \code{value} if they are present. Follows the direction set in
-\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value} lower
+kept from \code{value_col} if they are present. Follows the direction set in
+\code{small_is_best}.  For instance, if small_is_best is TRUE, then \code{value_col} lower
 than \code{col} will be kept.}
 
 \item{upper_limit}{numeric indicating the upper bound of the data after
-calculation. If \code{value} is already higher before calculation it will be kept}
+calculation. If \code{value_col} is already higher before calculation it will be kept}
 
 \item{lower_limit}{numeric indicating the lower bound of the data after
-calculation. If \code{value} is already lower before calculation it will be kept}
+calculation. If \code{value_col} is already lower before calculation it will be kept}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
@@ -93,10 +84,10 @@ from a \code{baseline_year}. It provides values for scenarios stated as "Increas
 INDICATOR by XX\% points".
 }
 \details{
-The calculation is done by taking the \code{baseline_year} \code{value} and adding the
+The calculation is done by taking the \code{baseline_year} \code{value_col} and adding the
 \code{linear_value} times the number of years between the baseline year and the
 current year. For instance, if \code{baseline_year} is 2018, \code{linear_value} is 2,
-and \code{baseline_year} \code{value} is 10, then 2019 \code{value} will be 12, 2020 14,
+and \code{baseline_year} \code{value_col} is 10, then 2019 \code{value_col} will be 12, 2020 14,
 etc.
 
 It differs from \code{scenario_aroc} \code{percent_change} in two ways: it is not

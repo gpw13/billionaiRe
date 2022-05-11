@@ -4,10 +4,10 @@
 #' from a `baseline_year`. It provides values for scenarios stated as "Increase
 #' INDICATOR by XX% points".
 #'
-#' The calculation is done by taking the `baseline_year` `value` and adding the
+#' The calculation is done by taking the `baseline_year` `value_col` and adding the
 #' `linear_value` times the number of years between the baseline year and the
 #' current year. For instance, if `baseline_year` is 2018, `linear_value` is 2,
-#' and `baseline_year` `value` is 10, then 2019 `value` will be 12, 2020 14,
+#' and `baseline_year` `value_col` is 10, then 2019 `value_col` will be 12, 2020 14,
 #' etc.
 #'
 #' It differs from `scenario_aroc` `percent_change` in two ways: it is not
@@ -19,25 +19,22 @@
 #'
 #' @param linear_value vector indicating the increase to apply.
 #' @param upper_limit numeric indicating the upper bound of the data after
-#' calculation. If `value` is already higher before calculation it will be kept
+#' calculation. If `value_col` is already higher before calculation it will be kept
 #' @param lower_limit numeric indicating the lower bound of the data after
-#' calculation. If `value` is already lower before calculation it will be kept
+#' calculation. If `value_col` is already lower before calculation it will be kept
 #' @inherit scenario_percent_baseline
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #'
 scenario_linear_change <- function(df,
                                    linear_value,
-                                   value = "value",
-                                   ind = "ind",
-                                   iso3 = "iso3",
-                                   year = "year",
+                                   value_col = "value",
                                    start_year = 2018,
                                    end_year = 2025,
                                    baseline_year = start_year,
                                    target_year = end_year,
                                    scenario_name = glue::glue("linear_change"),
-                                   scenario = "scenario",
+                                   scenario_col = "scenario",
                                    trim = TRUE,
                                    small_is_best = FALSE,
                                    keep_better_values = FALSE,
@@ -46,35 +43,34 @@ scenario_linear_change <- function(df,
                                    trim_years = TRUE,
                                    ind_ids = billion_ind_codes("all"),
                                    default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
   assert_numeric(linear_value)
 
   full_years_df <- tidyr::expand_grid(
-    "{year}" := start_year:end_year,
-    "{iso3}" := unique(df[[iso3]]),
-    "{ind}" := unique(df[[ind]]),
-    "{scenario}" := default_scenario
+    "year" := start_year:end_year,
+    "iso3" := unique(df[["iso3"]]),
+    "ind" := unique(df[["ind"]]),
+    "{scenario_col}" := default_scenario
   )
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario))
+    dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col))
 
   scenario_linear_change <- scenario_df %>%
-    dplyr::filter(.data[[scenario]] == default_scenario) %>%
-    dplyr::group_by(iso3, ind) %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
     dplyr::mutate(
-      baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
+      baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year),
       scenario_value = dplyr::case_when(
-        .data[[year]] >= baseline_year ~ .data[["baseline_value"]] + (linear_value * (.data[[year]] - baseline_year))
+        .data[["year"]] >= baseline_year ~ .data[["baseline_value"]] + (linear_value * (.data[["year"]] - baseline_year))
       ),
-      !!sym(scenario) := scenario_name
+      !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::ungroup() %>%
     trim_values(
       col = "scenario_value",
-      value = value,
-      year = year,
+      value_col = value_col,
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,
@@ -103,15 +99,12 @@ scenario_linear_change <- function(df,
 
 scenario_linear_change_col <- function(df,
                                        linear_value_col,
-                                       value = "value",
-                                       ind = "ind",
-                                       iso3 = "iso3",
-                                       year = "year",
+                                       value_col = "value",
                                        start_year = 2018,
                                        end_year = 2025,
                                        baseline_year = start_year,
                                        target_year = end_year,
-                                       scenario = "scenario",
+                                       scenario_col = "scenario",
                                        scenario_name = glue::glue("linear_change"),
                                        trim = TRUE,
                                        small_is_best = FALSE,
@@ -121,41 +114,40 @@ scenario_linear_change_col <- function(df,
                                        trim_years = TRUE,
                                        ind_ids = billion_ind_codes("all"),
                                        default_scenario = "default") {
-  assert_columns(df, year, iso3, ind, value, scenario)
-  assert_unique_rows(df, ind, iso3, year, scenario, ind_ids = ind_ids)
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
   assert_strings(linear_value_col)
 
   full_years_df <- tidyr::expand_grid(
-    "{year}" := start_year:end_year,
-    "{iso3}" := unique(df[[iso3]]),
-    "{ind}" := unique(df[[ind]]),
-    "{scenario}" := default_scenario
+    "year" := start_year:end_year,
+    "iso3" := unique(df[["iso3"]]),
+    "ind" := unique(df[["ind"]]),
+    "{scenario_col}" := default_scenario
   )
 
   linear_value_col_df <- df %>%
-    dplyr::select(dplyr::all_of(c(iso3, ind, linear_value_col))) %>%
+    dplyr::select(dplyr::all_of(c("iso3", "ind", linear_value_col))) %>%
     dplyr::distinct()
 
   scenario_df <- df %>%
-    dplyr::full_join(full_years_df, by = c(year, iso3, ind, scenario)) %>%
+    dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
     dplyr::select(-.data[[linear_value_col]]) %>%
-    dplyr::left_join(linear_value_col_df, by = c(iso3, ind))
+    dplyr::left_join(linear_value_col_df, by = c("iso3", "ind"))
 
   scenario_linear_change_col_df <- scenario_df %>%
-    dplyr::filter(.data[[scenario]] == default_scenario) %>%
-    dplyr::group_by(iso3, ind) %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
     dplyr::mutate(
-      baseline_value = get_baseline_value(.data[[value]], .data[[year]], baseline_year),
+      baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year),
       scenario_value = dplyr::case_when(
-        .data[[year]] >= baseline_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[[year]] - baseline_year))
+        .data[["year"]] >= baseline_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[["year"]] - baseline_year))
       ),
-      !!sym(scenario) := scenario_name
+      !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::ungroup() %>%
     trim_values(
       col = "scenario_value",
-      value = value,
-      year = year,
+      value_col = value_col,
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,
