@@ -4,9 +4,7 @@
 # billionaiRe <a href='https://github.com/gpw13/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
-
-[![R build
-status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
+[![R-CMD-check](https://github.com/gpw13/billionaiRe/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gpw13/billionaiRe/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/gpw13/billionaiRe/branch/main/graph/badge.svg?token=IT9RI3OOKV)](https://codecov.io/gh/gpw13/billionaiRe)
 <!-- badges: end -->
 
