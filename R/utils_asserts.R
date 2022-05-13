@@ -710,12 +710,10 @@ assert_ind_start_end_year <- function(df,
     dplyr::select(-.data[[value_col]])
 
   if (nrow(missing_values) > 0) {
-    stop(sprintf(
-      "%s have missing values in start_year or end_year (in at least one scenario, if provided).
-Each iso3 and year (and scenario_col if provided) should have values for start_year and end_year for the billion's calculation to be done properly.
+    stop(
+      "Missing values in `start_year` or `end_year` (in at least one scenario, if provided).
+Each iso3 and year (and scenario_col if provided) should have values for `start_year` and `end_year` for the billion's calculation to be done properly.
 Missing values in:\n",
-      paste(unique(missing_values[["iso3"]]), collapse = ", ")
-    ),
     paste(utils::capture.output(print(missing_values)), collapse = "\n"),
     call. = FALSE
     )
