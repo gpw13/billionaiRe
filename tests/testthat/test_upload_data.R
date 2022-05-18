@@ -7,7 +7,7 @@ testthat::test_that("upload_billion_data works as expected", {
     value = as.double(1:20), lower = NA_real_, upper = NA_real_, use_dash = TRUE,
     use_calc = TRUE, source = "DDI", type = "reported", type_detail = NA_character_,
     other_detail = NA_character_, upload_detail = NA_character_,
-    scenario_detail = NA_character_
+    scenario_detail = NA_character_, upload_date = as.Date("2022-05-18")
   )
 
   upload_billion_data(
@@ -21,7 +21,7 @@ testthat::test_that("upload_billion_data works as expected", {
     silent = TRUE
   )
 
-  Sys.sleep(30)
+  Sys.sleep(10)
 
   whdh_files <- whdh::list_blobs_in_directory(
     get_data_lake_name(),
