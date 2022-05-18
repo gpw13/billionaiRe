@@ -9,10 +9,11 @@ wrangle_gho_rural_urban_data(
   source = NULL,
   type = NULL,
   ind = NULL,
+  upload_date = NULL,
   scenario = NULL,
   id_cols = c("SpatialDim", "TimeDim"),
   names_from = "Dim1",
-  values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments")
+  values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments", "Date")
 )
 }
 \arguments{

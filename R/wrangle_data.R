@@ -117,10 +117,11 @@ wrangle_gho_rural_urban_data <- function(df,
                                          source = NULL,
                                          type = NULL,
                                          ind = NULL,
+                                         upload_date = NULL,
                                          scenario = NULL,
                                          id_cols = c("SpatialDim", "TimeDim"),
                                          names_from = "Dim1",
-                                         values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments")) {
+                                         values_from = c("NumericValue", "High", "Low", "DataSourceDim", "Comments", "Date")) {
   assert_df(df)
   assert_string(source, 1)
   assert_string(type, 1)
@@ -223,7 +224,10 @@ wrangle_gho_rural_urban_data <- function(df,
       use_dash = TRUE,
       use_calc = TRUE,
       type_detail = NA_character_,
-      upload_detail = NA_character_
+      upload_detail = NA_character_,
+      "upload_date" := as.Date(dplyr::case_when(
+        !!!make_conds(prefixes = c("Date"), suffixes = c("TOTL", "RUR", "URB"))
+      ))
     ) %>%
     ## Filter out 'mixed' time series
     # Group time series by iso3

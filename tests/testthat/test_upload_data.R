@@ -21,7 +21,7 @@ testthat::test_that("upload_billion_data works as expected", {
     silent = TRUE
   )
 
-  Sys.sleep(10)
+  Sys.sleep(30)
 
   whdh_files <- whdh::list_blobs_in_directory(
     get_data_lake_name(),
