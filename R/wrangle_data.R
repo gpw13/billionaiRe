@@ -57,7 +57,8 @@ wrangle_gho_data <- function(df,
       ),
       "type_detail" := NA_character_,
       "other_detail" := as.character(.data[["Comments"]]),
-      "upload_detail" := NA_character_
+      "upload_detail" := NA_character_,
+      "upload_date" := as.Date(.data[["Date"]])
     ) %>%
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     dplyr::arrange(.data[["iso3"]], .data[["year"]])
