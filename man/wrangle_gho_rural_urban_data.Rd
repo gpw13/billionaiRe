@@ -31,6 +31,9 @@ This is a required argument and will raise an error if not provided.
 If only a RUR or URB values is available, the indicator name has \verb{_rural} or \verb{_urban}
 appended to it in the output data frame.}
 
+\item{upload_date}{Character string indicating on which day the data was last
+updated on GHO}
+
 \item{scenario}{(Character) string of scenario to be provided to the data frame.
 If \code{NULL}, the scenario is set to \code{NA_character}.}
 

@@ -97,6 +97,8 @@ wrangle_gho_data <- function(df,
 #' This is a required argument and will raise an error if not provided.
 #' If only a RUR or URB values is available, the indicator name has `_rural` or `_urban`
 #' appended to it in the output data frame.
+#' @param upload_date Character string indicating on which day the data was last
+#' updated on GHO
 #' @param id_cols Character vector of the columns that are the same regardless of
 #' the TOTL/RUR/URB dimension. Used as the argument of the same name in `pivot_wider`.
 #' @param names_from,values_from A pair of character vectors used as the arguments
