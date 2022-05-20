@@ -24,7 +24,9 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
 
   if (data_type == "final_data") {
     value_cols <- c(
-      value_cols, "transform_value", "transform_lower", "transform_upper",
+      value_cols, "transform_value",
+      # Removing transform_lower and transform_upper as they are not fully implemented in the data pipeline and projection scripts.
+      # "transform_lower", "transform_upper",
       "contribution", "contribution_percent", "contribution_percent_total_pop",
       "population", "level"
     )
@@ -69,8 +71,9 @@ xmart_col_types <- function(data_type = c("wrangled_data", "projected_data", "fi
     value_cols <- c(
       value_cols,
       transform_value = "double",
-      transform_lower = "double",
-      transform_upper = "double",
+      # Removing transform_lower and transform_upper as they are not fully implemented in the data pipeline and projection scripts.
+      # transform_lower = "double",
+      # transform_upper = "double",
       contribution = "double",
       contribution_percent = "double",
       contribution_percent_total_pop = "double",

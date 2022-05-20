@@ -218,7 +218,9 @@ assert_data_contributions <- function(df,
   if (nrow(df_ind_start_end_years) > 1) {
     stop(sprintf(
       "%s have missing values at `start_year` or `end_year` in at least one `iso3` and `ind` (and `scenario`, if provided).
-                    Contributions cannot be calculated",
+      \n%s
+      \nContributions cannot be calculated",
+      paste(unique(df_ind_start_end_years[["ind"]]), collapse = ","),
       paste(unique(df_ind_start_end_years[["iso3"]]), collapse = ",")
     ),
     call. = FALSE

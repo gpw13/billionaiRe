@@ -62,12 +62,18 @@ upload_billion_data <- function(df,
   output_df <- df %>%
     save_wrangled_output(output_file, data_type, na_rm, "gzip")
 
+  if(data_type == "final_data"){
+    file_names <- sprintf("%s_%s.parquet", data_type, version)
+  }else{
+    file_names <- sprintf("%s_%s_%s.parquet", billion, ind_code, version)
+  }
+
   upload_path <- get_whdh_path(
     operation = "upload",
     data_type = data_type,
     billion = billion,
     ind_codes = ind_code,
-    file_names = sprintf("%s_%s_%s.parquet", billion, ind_code, version),
+    file_names = file_names,
     experiment = experiment
   )
 
