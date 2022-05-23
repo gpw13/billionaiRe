@@ -197,10 +197,10 @@
   <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 9 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span>
 
 <span class="va">test_data_hpop</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span><span class="st">"hpop"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -210,10 +210,10 @@
   <span class="fu"><a href="../reference/transform_hpop_data.html">transform_hpop_data</a></span><span class="op">(</span>recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 9 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span></code></pre></div>
 <p>In order to facilitate the cleaning of data, a <code>recycled</code> column is added by the recycling function to identify data points that have been recycled. They can then be removed by the <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code> function that takes into account a few specific scenarios.</p>
 <p>To avoid adding ellipses to all billionaiRe functions which could have opened a number of unforeseeable issues, not all formally recycled data can be identified and thus removed with <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code>, especially for the HEP billion. This includes mostly carried over campaign data.</p>
 <p>A <code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> function is provided to combine the <code>default_scenario</code>, <code>scenario_reported_estimated</code>, and <code>scenario_reference_infilling</code> efficiently.</p>
