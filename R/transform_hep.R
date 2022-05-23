@@ -143,7 +143,10 @@ transform_prev_routine_data <- function(df,
       dplyr::mutate(
         !!sym("ind") := inf_ind,
         !!sym(value_col) := wppdistro::get_population(.data[["iso3"]], .data[["year"]], age_range = "under_1"),
-        !!sym("type") := dplyr::if_else(.data[["year"]] <= 2019, "reported", "projected")
+        !!sym("type") := dplyr::if_else(.data[["year"]] <= 2019, "reported", "projected"),
+        !!sym("use_dash") := TRUE,
+        !!sym("use_calc") := TRUE,
+        !!sym("source") := "United Nations, Department of Economic and Social Affairs, Population Division (2019). World Population Prospects 2019, Online Edition. Rev. 1"
       )
   }
 

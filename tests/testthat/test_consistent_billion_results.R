@@ -32,8 +32,10 @@ testthat::test_that("basic billion calculations are consistent", {
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
       stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
+      stringr::str_detect(source, "United Nations, Department of Economic and Social Affairs") ~ "WHO DDI, November 2021",
       TRUE ~ source
-    ))
+    )) %>%
+    dplyr::select(-use_dash, -use_calc)
 
   all_basic_calculated <- uhc_basic_calculated %>%
     dplyr::bind_rows(hpop_basic_calculated) %>%
