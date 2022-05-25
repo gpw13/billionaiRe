@@ -96,7 +96,7 @@ SDG352_alcohol,alcohol,SA_0000001688,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,
 WHA6610_obesity_5to19,child_obese,NCD_BMI_PLUS2C,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.10,Adolescent/ Child Obesity,%,%,Prevalence of obesity among children and adolescents (aged 5-19) (%),Children not obese,child_obese,5,NA
 SDG1621_physicalpunish,child_viol,CHILDVIOL,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 16.2.1,Violence Against Children,%,%,Proportion of children (aged 1-17) experiencing physical or psychological aggression (%),Reduced child violence,child_viol,7,NA
 SDG421_devontrack,devontrack,SE_DEV_ONTRK,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 4.2.1,Developmentally on Track,%,%,"Proportion of children under 5 developmentally on track (health, learning and psychosocial well-being) (%)",Developmentally on track under 5,devontrack,4,NA
-SDG712_cleanfuel,fuel,PHE_HHAIR_PROP_POP_CLEAN_FUELS,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 7.1.2,Clean Household Fuels,%,%,Proportion of population with primary reliance on clean fuels (%),Clean household fuels,fuel,16,NA
+SDG712_cleanfuel,fuel,PHE_HHAIR_PROP_POP_CLEAN_FUELS,$filter=SpatialDimType eq 'COUNTRY' and  Dim1 eq 'TOTL',"Global Health Observatory (GHO), World Health Organisation (WHO).",proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 7.1.2,Clean Household Fuels,%,%,Proportion of population with primary reliance on clean fuels (%),Clean household fuels,fuel,16,NA
 HP,hpop_healthier,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
 HP_dbl_cntd,hpop_healthier_dbl_cntd,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
 NUHL,hpop_healthier_minus,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
