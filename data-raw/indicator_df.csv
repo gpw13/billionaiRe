@@ -1,112 +1,120 @@
-dashboard_id,ind,gho_code,ind_type,uhc,hpop,hep,covariate,calculated,sdg,short_name,unit_raw,unit_transformed,medium_name,transformed_name,order,pillar,small_is_best
-WHA6610_obesity_adults,adult_obese,NCD_BMI_30C,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.11,Adult Obesity,%,%,Prevalence of obesity among adults (aged 18+) (%),Adults not obese,20,NA,TRUE
-SDG352_alcohol,alcohol,SA_0000001688,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.5.2,Alcohol Consumption,litres of pure alcohol,%,Total alcohol per capita consumption in adults aged 15+ (litres of pure alcohol),Reduced alcohol use,17,NA,TRUE
-WHA6610_obesity_5to19,child_obese,NCD_BMI_PLUS2C,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.10,Adolescent/ Child Obesity,%,%,Prevalence of obesity among children and adolescents (aged 5-19) (%),Children not obese,5,NA,TRUE
-SDG1621_physicalpunish,child_viol,CHILDVIOL,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 16.2.1,Violence Against Children,%,%,Proportion of children (aged 1-17) experiencing physical or psychological aggression (%),Reduced child violence,7,NA,TRUE
-SDG421_devontrack,devontrack,SE_DEV_ONTRK,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 4.2.1,Developmentally on Track,%,%,"Proportion of children under 5 developmentally on track (health, learning and psychosocial well-being) (%)",Developmentally on track under 5,4,NA,FALSE
-SDG712_cleanfuel,fuel,SDGPOLLUTINGFUELS,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 7.1.2,Clean Household Fuels,%,%,Proportion of population with primary reliance on clean fuels (%),Clean household fuels,16,NA,FALSE
-HP,hpop_healthier,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Overall HPOP Population healthier,Overall HPOP Population healthier,NA,NA,
-HP_dbl_cntd,hpop_healthier_dbl_cntd,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Overall HPOP Population healthier (with double counting),Overall HPOP Population healthier (with double counting),NA,NA,
-NUHL,hpop_healthier_minus,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Population less healthy,Population less healthy,NA,NA,
-NA,hpop_healthier_minus_dbl_cntd,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Population less healthy (with double counting),Population less healthy (with double counting),NA,NA,
-NHL,hpop_healthier_plus,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Population healthier,Population healthier,NA,NA,
-NA,hpop_healthier_plus_dbl_cntd,NA,NA,FALSE,TRUE,FALSE,FALSE,TRUE,NA,NA,NA,NA,Population healthier (with double counting),Population healthier (with double counting),NA,NA,
-SDG621_safesanitation,hpop_sanitation,WSH_SANITATION_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation,%,%,Proportion of population using safely managed sanitation services (%),Safely managed sanitation,13,NA,FALSE
-NA,hpop_sanitation_rural,WSH_SANITATION_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation (rural),%,%,Proportion of rural population using safely managed sanitation services (%),Safely managed sanitation (rural),15,NA,FALSE
-NA,hpop_sanitation_urban,WSH_SANITATION_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation (urban),%,%,Proportion of urban population using safely managed sanitation services (%),Safely managed sanitation (urban),14,NA,FALSE
-hpop_tobacco,hpop_tobacco,M_Est_tob_curr,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.a.1,Tobacco Use,%,%,Prevalence of tobacco use in adults aged 15+ (age-standardized) (%),Tobacco non-use,19,NA,TRUE
-SDG521_ipviolence,ipv,SDGIPV,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 5.6.1,Intimate Partner Violence (F),%,%,Proportion of women (15-49) subjected to violence by current or former intimate partner (%),Reduced partner violence,6,NA,TRUE
-SDG222_overweight,overweight,NUTRITION_WH2,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.3,Childhood Overweight,%,%,Prevalence of overweight in children under 5 (%),Children not overweight,3,NA,TRUE
-SDG1162_pm25,pm25,SDGPM25,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 11.6.2,Mean Particulates (PM 2.5),µg/m3,%,Annual mean concentrations of fine particulate matter (PM2.5) in urban areas (Âµg/m3),Ambient air quality,18,NA,TRUE
-SDG361_road,road,RS_198,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.6.1,Road Deaths,per 100 000 population,%,Road traffic mortality rate (per 100 000 population),Road safety,9,NA,TRUE
-SDG221_stunting,stunting,NUTRITION_HA_2,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.1,Childhood Stunting,%,%,Prevalence of stunting in children under 5 (%),Children not stunted,1,NA,TRUE
-SDG342_suicide,suicide,SDGSUICIDE,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.4.2,Suicide Mortality,%,%,Suicide mortality rate (per 100 000 population),Reduced suicide attempts,8,NA,TRUE
-WHA6610_transfats,transfats,UHCTRANSFATS,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.10,Trans Fat Policy,Yes/No,%,Best practice policy implemented for industrially produced trans fatty acids (Y/N),Healthy fats,21,NA,FALSE
-SDG222_wasting,wasting,NUTRITION_WH_2,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.2,Childhood Wasting,%,%,Prevalence of wasting in children under 5 (%),Children not wasted,2,NA,TRUE
-SDG611_safedrinking,water,WSH_WATER_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water,per 100 000 population,%,Proportion of population using safely managed drinking water services (%),Safely managed water,10,NA,FALSE
-NA,water_rural,WSH_WATER_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water (rural),%,%,Proportion of urban population using safely managed drinking water services (%),Safely managed water (rural),12,NA,FALSE
-NA,water_urban,WSH_WATER_SAFELY_MANAGED,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water (urban),%,%,Proportion of urban population using safely managed drinking water services (%),Safely managed water (urban),11,NA,FALSE
-UHC_antenatalcare,anc4,WHS4_154,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.2,Pregnancy and delivery care,%,%,Antenatal care coverage (+4 visits) 2 (%),Antenatal care,23,RMNCH,FALSE
-UHC_hiv,art,HIV_ARTCOVERAGE,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.6,HIV treatment,%,%,HIV ART coverage 4,HIV treatment,27,infec_diseases,FALSE
-ASC,asc,NA,NA,TRUE,FALSE,FALSE,FALSE,TRUE,NA,NA,%,%,Average Service Coverage,NA,65,UHC,
-UHC_hospitalbeds,beds,WHS6_102,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.12,Hospital access,per 10 000 population,%,Hospital beds density*,Hospital bed density,33,service_cap_access,FALSE
-WHA6610_bloodpressure,bp,BP_04,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.9,Prevention of cardiovascular disease,%,%,Prevalence of raised blood pressure*,Non-elevated blood pressure,30,ncd,TRUE
-SDG3c1_densitydoctors,doctors,HWF_0001,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.14,Health workforce - Density of doctors,per 10 000 population,%,Density of doctors,Doctor density,35,service_cap_access,FALSE
-SDG3b1_dtp3,dtp3,WHS4_100,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.3,Child immunization,%,%,DPT3 Immunization coverage (%),Child immunization (DTP3),24,RMNCH,FALSE
-SDG381_houseexp10,fh,FINPROTECTION_CATA_TOT_10_POP,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.2,Financial hardship,%,%,SDG 3.8.2 Proportion of population with household expenditures on health >10% of total household expenditure or income **,Financial hardship,38,fin_hardship,TRUE
-SDG371_famplan,fp,FAMILYPLANNINGUNPDUHC,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.1,Family planning,%,%,Demand satisfied with modern methods (married women or in-union) 1 (%),Family planning,22,RMNCH,FALSE
-UHC_glucose,fpg,NCD_GLUC_01,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.10,Management of diabetes,mmol/l,%,Mean fasting blood glucose (mmol/l)*,Mean fasting plasma glucose,31,ncd,FALSE
-UHC_healthprof,hwf,NA,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.13,Health workforce,per 10 000 population,%,Health worker density*,Health worker density,34,service_cap_access,FALSE
-UHC_nets,itn,MALARIA_ITNPOP,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.7,Malaria prevention,%,%,ITN use 5,Insecticide-treated nets,28,infec_diseases,FALSE
-SDG3c1_densitynurses,nurses,HWF_0006,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.15,Health workforce - Density of nurses/midwives,per 10 000 population,%,Density of nurses/midwives,Nurses/midwives density,36,service_cap_access,FALSE
-UHC_pneumoniacare,pneumo,WHS4_106,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.4,Child treatment,%,%,Care seeking for suspected pneumonia (%),Care-seeking for suspected pneumonia,25,RMNCH,FALSE
-NA,pneumo_mort,NA,unproj_data,TRUE,FALSE,FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
-UHC_tbtreatment,tb,TB_1,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.5,TB treatment,%,%,TB treatment coverage,TB treatment coverage,26,infec_diseases,FALSE
-UHC_basicsanitation,uhc_sanitation,WSH_SANITATION_BASIC,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.8,Water and sanitation,%,%,Use of basic sanitation,At least basic sanitation,29,infec_diseases,FALSE
-UHC,uhc_sm,NA,NA,TRUE,FALSE,FALSE,FALSE,TRUE,NA,NA,%,%,UHC Single Measure,UHC Single Measure,66,UHC,
-uhc_tobacco,uhc_tobacco,SDGTOBACCO,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.11,Tobacco control,%,%,Tobacco use prevalence* 3,Tobacco non-use,32,ncd,TRUE
-HE_cholera,cholera,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,
-NA,cholera_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV7,Cholera - Campaign,%,%,Cholera - Campaign,Cholera - Campaign,58,prevent,FALSE
-HE_cholera_CampignSize,cholera_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
-HE_cholera_Campign,cholera_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
-HE_detect,detect,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP1,Time to detect,days,%,Time to detect,Time to detect,60,detect_respond,FALSE
-HE_events,detect_respond,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP4,Time to detect and respond,days,%,Time to detect and respond,Time to detect and respond,63,detect_respond,FALSE
-HE_legislation,espar01,IHRSPAR_CAPACITY01,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP1,Legislation and Financing,%,%,Legislation and Financing,Legislation and Financing,39,prepare,FALSE
-NA,espar01_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_01,NA,%,%,"Legislation, laws, regulations, policy, administrative requirements or other government instruments to implement the IHR",Legislation and policies for IHR implementation,NA,NA,FALSE
-NA,espar01_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_02,NA,%,%,Financing for the implementation of IHR capacities,Financing of IHR capacities,NA,NA,FALSE
-NA,espar01_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_03,NA,%,%,Financing mechanism and funds for timely response to public health emergencies,Funds for timely response,NA,NA,FALSE
-HE_coordination,espar02,IHRSPAR_CAPACITY02,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP2,IHR functions,%,%,IHR coordination and National IHR Focal Point Functions,IHR functions,40,prepare,FALSE
-NA,espar02_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_01,NA,%,%,National IHR Focal Point functions under IHR,IHR focal point functions,NA,NA,FALSE
-NA,espar02_02,IHRSPAR_CAPACITY02,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_02,NA,%,%,Multisectoral IHR coordination mechanisms,Multisectoral IHR coordination mechanisms,NA,NA,FALSE
-HE_zoonosis,espar03,IHRSPAR_CAPACITY03,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP3,Zoonotic interface,%,%,Zoonotic events and the human-animal interface,Zoonotic interface,41,prepare,FALSE
-HE_food,espar04,IHRSPAR_CAPACITY04,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP4,Food safety,%,%,Food safety,Food safety,42,prepare,FALSE
-HE_laboratory,espar05,IHRSPAR_CAPACITY05,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP5,Laboratory,%,%,Laboratory,Laboratory,43,prepare,FALSE
-NA,espar05_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_01,NA,%,%,Specimen referral and transport system,Specimen referral and transport system,NA,NA,FALSE
-NA,espar05_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_02,NA,%,%,Implementation of a laboratory biosafety and biosecurity regime,Laboratory biosafety and security,NA,NA,FALSE
-NA,espar05_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_03,NA,%,%,Access to laboratory testing capacity for priority diseases,Access to laboratory testing,NA,NA,FALSE
-HE_surveillance,espar06,IHRSPAR_CAPACITY06,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP6,Surveillance,%,%,Surveillance,Surveillance,44,prepare,FALSE
-NA,espar06_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_01,NA,%,%,Early warning function: indicator-and event-based surveillance,Indicator and event-based surveillance,NA,NA,FALSE
-NA,espar06_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_02,NA,%,%,"Mechanism for event management (verification, risk assessment, analysis investigation)",Mechanism for event management,NA,NA,FALSE
-HE_hr,espar07,IHRSPAR_CAPACITY07,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP7,Human resources,%,%,Human resources,Human resources,45,prepare,FALSE
-HE_preparedness,espar08,IHRSPAR_CAPACITY08,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP8,National Health Emergency Framework,%,%,National Health Emergency Framework,National Health Emergency Framework,46,prepare,FALSE
-NA,espar08_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_01,NA,%,%,Planning for emergency preparedness and response mechanism,Preparedness for emergency and response mechanism,NA,NA,FALSE
-NA,espar08_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_02,NA,%,%,Management of health emergency response operations,Management of health emergency response operations,NA,NA,FALSE
-HE_preparedness,espar08_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_03,NA,%,%,Emergency resource mobilization,Emergency resource mobilization,NA,NA,FALSE
-HE_response,espar09,IHRSPAR_CAPACITY09,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP9,Health service provision,%,%,Health service provision,Health service provision,47,prepare,FALSE
-NA,espar09_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_01,NA,%,%,Case management capacity for IHR relevant hazards,Case management for IHR hazards,NA,NA,FALSE
-NA,espar09_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_02,NA,%,%,Capacity for infection prevention and control and chemical and radiation decontamination,Prevention and control of radiation,NA,NA,FALSE
-NA,espar09_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_03,NA,%,%,Access to essential health services,Access to health services,NA,NA,FALSE
-HE_risk,espar10,IHRSPAR_CAPACITY10,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP10,Risk communication,%,%,$Risk communication,Risk communication,48,prepare,FALSE
-HE_points,espar11,IHRSPAR_CAPACITY11,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11,Points of entry,%,%,Points of entry,Points of entry,49,prepare,FALSE
-NA,espar11_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_01,NA,%,%,"Core capacity requirements at all times for designated airports, ports and ground crossings",Core capacity for points of entry,NA,NA,FALSE
-NA,espar11_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_02,NA,%,%,Effective public health response at points of entry,Response at points of entry,NA,NA,FALSE
-HE_chemical,espar12,IHRSPAR_CAPACITY12,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP12,Chemical events,%,%,Chemical events,Chemical events,50,prepare,FALSE
-HE_radionuclear,espar13,IHRSPAR_CAPACITY13,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP13,Radiation emergencies,%,%,Radiation emergencies,Radiation emergencies,51,prepare,FALSE
-HE_hepi,hep_idx,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,HEPI,HEPI,%,%,HEP index,HEP index,64,NA,
-HE_numberofpeople,hep_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,
-NA,measles,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Measles - Campaign and Routine combined,Measles,NA,NA,
-NA,measles_campaign,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Measles - Campaign,Measles - Campaign,NA,NA,
-NA,measles_campaign_denom,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Campaign target population (denominator),Measles Campaign Denominator,NA,NA,FALSE
-NA,measles_campaign_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Campaign reached population (numerator),Measles Campaign Numerator,NA,NA,FALSE
-HE_measles_Routine,measles_routine,WHS8_110,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV2,MCV1 - Routine,%,%,Measles (MCV1) - Routine,MCV1 - Routine,53,prevent,FALSE
-NA,measles_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Measles - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA,FALSE
-NA,meningitis,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Meningitis - Campaigns and Routine combined,Meningitis,NA,NA,
-NA,meningitis_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV6,Meningitis - Campaign,%,%,Meningitis - Campaign,Meningitis - Campaign,57,prevent,FALSE
-HE_meningitis_CampignSize,meningitis_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Campaign target population (denominator),Meningitis Campaign Denominator,NA,NA,FALSE
-HE_meningitis_Campign,meningitis_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Campaign reached population (numerator),Meningitis Campaign Numerator,NA,NA,FALSE
-HE_meningitis_Routine,meningitis_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV5,Meningitis - Routine,%,%,Meningitis - Routine,Meningitis - Routine,56,prevent,FALSE
-NA,meningitis_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Meningitis - Routine reached population (numerator),MCV1 - Routine (numerator),NA,NA,FALSE
-HE_notify,notify,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP2,Time to notify,days,%,Time to notify,Time to notify,61,detect_respond,FALSE
-NA,polio,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Polio - Campaigns and routine combined,Polio,NA,NA,
-HE_polio_Routine,polio_routine,WHS4_544,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV1,Polio 3 - Routine,%,%,Polio 3 - Routine,Polio 3 - Routine,52,prevent,FALSE
-NA,polio_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Polio - Routine reached population (numerator),Polio - Routine (numerator),NA,NA,FALSE
-HE_vaccinecov,prevent,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,59,prevent,
-HE_respond,respond,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP3,Time to respond,days,%,Time to respond,Time to respond,62,detect_respond,FALSE
-HE_surviving_infants,surviving_infants,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Surviving infants,Surviving infants,NA,NA,FALSE
-NA,yellow_fever,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Yellow fever - Campaign and routine combined,Yellow fever,NA,NA,
-NA,yellow_fever_campaign,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV4,Yellow Fever - Campaign,%,%,Yellow Fever - Campaign,Yellow fever - Campaign,55,prevent,FALSE
-HE_yellowfever_CampignSize,yellow_fever_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow Fever - Campaign target population (denominator),Yellow fever Campaign Denominator,NA,NA,FALSE
-HE_yellowfever_Campign,yellow_fever_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Campaign reached population (numerator),Yellow fever Campaign Numerator,NA,NA,FALSE
-HE_yellowfever_Routine,yellow_fever_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV3,Yellow Fever - Routine,%,%,Yellow Fever - Routine,Yellow fever - Routine,54,prevent,FALSE
-NA,yellow_fever_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Routine reached population (numerator),Yellow fever - Routine (numerator),NA,NA,FALSE
-HE_ihr,espar,SDGIHR2018,unproj_data,TRUE,FALSE,TRUE,FALSE,FALSE,SDG 3.8.1.16,Health security,%,%,IHR core capacity index*,IHR core capacity index,37,service_cap_access,FALSE
+﻿dashboard_id,analysis_code,gho_code,gho_query,data_source,ind_type,uhc,hpop,hep,covariate,calculated,sdg,short_name,unit_raw,unit_transformed,medium_name,transformed_name,ind,order,pillar
+HE_ihr,espar,SDGIHR2018,,,unproj_data,TRUE,FALSE,TRUE,FALSE,FALSE,SDG 3.8.1.16,Health security,%,%,IHR core capacity index*,IHR core capacity index,espar,37,service_cap_access
+HE_cholera,cholera,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,cholera_campaign,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV7,Cholera - Campaign,%,%,Cholera - Campaign,Cholera - Campaign,cholera_campaign,58,prevent
+HE_cholera_CampignSize,cholera_campaign_denom,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_cholera_Campign,cholera_campaign_num,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,covid,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,covid_campaign,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,covid_campaign_denom,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,covid_campaign_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_detect,detect,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP1,Time to detect,days,%,Time to detect,Time to detect,detect,60,detect_respond
+HE_events,detect_respond,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,TRUE,DECREP4,Time to detect and respond,days,%,Time to detect and respond,Time to detect and respond,detect_respond,63,detect_respond
+,ebola,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,ebola_campaign,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,ebola_campaign_denom,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,ebola_campaign_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_legislation,espar01,IHRSPAR_CAPACITY01,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP1,Legislation and Financing,%,%,Legislation and Financing,Legislation and Financing,espar01,39,prepare
+,espar01_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_01,,%,%,"Legislation, laws, regulations, policy, administrative requirements or other government instruments to implement the IHR",Legislation and policies for IHR implementation,espar01_01,,
+,espar01_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_02,,%,%,Financing for the implementation of IHR capacities,Financing of IHR capacities,espar01_02,,
+,espar01_03,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_03,,%,%,Financing mechanism and funds for timely response to public health emergencies,Funds for timely response,espar01_03,,
+HE_coordination,espar02,IHRSPAR_CAPACITY02,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP2,IHR functions,%,%,IHR coordination and National IHR Focal Point Functions,IHR functions,espar02,40,prepare
+,espar02_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_01,,%,%,National IHR Focal Point functions under IHR,IHR focal point functions,espar02_01,,
+,espar02_02,IHRSPAR_CAPACITY02,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_02,,%,%,Multisectoral IHR coordination mechanisms,Multisectoral IHR coordination mechanisms,espar02_02,,
+HE_zoonosis,espar03,IHRSPAR_CAPACITY03,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP3,Zoonotic interface,%,%,Zoonotic events and the human-animal interface,Zoonotic interface,espar03,41,prepare
+HE_food,espar04,IHRSPAR_CAPACITY04,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP4,Food safety,%,%,Food safety,Food safety,espar04,42,prepare
+HE_laboratory,espar05,IHRSPAR_CAPACITY05,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP5,Laboratory,%,%,Laboratory,Laboratory,espar05,43,prepare
+,espar05_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_01,,%,%,Specimen referral and transport system,Specimen referral and transport system,espar05_01,,
+,espar05_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_02,,%,%,Implementation of a laboratory biosafety and biosecurity regime,Laboratory biosafety and security,espar05_02,,
+,espar05_03,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_03,,%,%,Access to laboratory testing capacity for priority diseases,Access to laboratory testing,espar05_03,,
+HE_surveillance,espar06,IHRSPAR_CAPACITY06,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP6,Surveillance,%,%,Surveillance,Surveillance,espar06,44,prepare
+,espar06_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_01,,%,%,Early warning function: indicator-and event-based surveillance,Indicator and event-based surveillance,espar06_01,,
+,espar06_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_02,,%,%,"Mechanism for event management (verification, risk assessment, analysis investigation)",Mechanism for event management,espar06_02,,
+HE_hr,espar07,IHRSPAR_CAPACITY07,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP7,Human resources,%,%,Human resources,Human resources,espar07,45,prepare
+HE_preparedness,espar08,IHRSPAR_CAPACITY08,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP8,National Health Emergency Framework,%,%,National Health Emergency Framework,National Health Emergency Framework,espar08,46,prepare
+,espar08_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_01,,%,%,Planning for emergency preparedness and response mechanism,Preparedness for emergency and response mechanism,espar08_01,,
+,espar08_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_02,,%,%,Management of health emergency response operations,Management of health emergency response operations,espar08_02,,
+HE_preparedness,espar08_03,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_03,,%,%,Emergency resource mobilization,Emergency resource mobilization,espar08_03,,
+HE_response,espar09,IHRSPAR_CAPACITY09,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP9,Health service provision,%,%,Health service provision,Health service provision,espar09,47,prepare
+,espar09_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_01,,%,%,Case management capacity for IHR relevant hazards,Case management for IHR hazards,espar09_01,,
+,espar09_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_02,,%,%,Capacity for infection prevention and control and chemical and radiation decontamination,Prevention and control of radiation,espar09_02,,
+,espar09_03,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_03,,%,%,Access to essential health services,Access to health services,espar09_03,,
+HE_risk,espar10,IHRSPAR_CAPACITY10,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP10,Risk communication,%,%,Risk communication,Risk communication,espar10,48,prepare
+HE_points,espar11,IHRSPAR_CAPACITY11,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11,Points of entry,%,%,Points of entry,Points of entry,espar11,49,prepare
+,espar11_01,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_01,,%,%,"Core capacity requirements at all times for designated airports, ports and ground crossings",Core capacity for points of entry,espar11_01,,
+,espar11_02,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_02,,%,%,Effective public health response at points of entry,Response at points of entry,espar11_02,,
+HE_chemical,espar12,IHRSPAR_CAPACITY12,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP12,Chemical events,%,%,Chemical events,Chemical events,espar12,50,prepare
+HE_radionuclear,espar13,IHRSPAR_CAPACITY13,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP13,Radiation emergencies,%,%,Radiation emergencies,Radiation emergencies,espar13,51,prepare
+HE_hepi,hep_idx,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,HEPI,HEPI,%,%,HEP index,HEP index,hep_idx,64,NA
+HE_numberofpeople,hep_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,measles,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,,,,,,,,,
+,measles_campaign,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,measles_campaign_denom,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,measles_campaign_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_measles_Routine,measles_routine,WHS8_110,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV2,MCV1 - Routine,%,%,Measles (MCV1) - Routine,MCV1 - Routine,measles_routine,53,prevent
+,measles_routine_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,meningitis,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,,,,,,,,,
+,meningitis_campaign,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV6,Meningitis - Campaign,%,%,Meningitis - Campaign,Meningitis - Campaign,meningitis_campaign,57,prevent
+HE_meningitis_CampignSize,meningitis_campaign_denom,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_meningitis_Campign,meningitis_campaign_num,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_meningitis_Routine,meningitis_routine,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV5,Meningitis - Routine,%,%,Meningitis - Routine,Meningitis - Routine,meningitis_routine,56,prevent
+,meningitis_routine_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_notify,notify,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP2,Time to notify,days,%,Time to notify,Time to notify,notify,61,detect_respond
+,polio,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,,,,,,,,,
+HE_polio_Routine,polio_routine,WHS4_544,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV1,Polio 3 - Routine,%,%,Polio 3 - Routine,Polio 3 - Routine,polio_routine,52,prevent
+,polio_routine_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_vaccinecov,prevent,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,prevent,59,prevent
+HE_respond,respond,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP3,Time to respond,days,%,Time to respond,Time to respond,respond,62,detect_respond
+HE_surviving_infants,surviving_infants,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+,yellow_fever,,,,,FALSE,FALSE,TRUE,FALSE,TRUE,,,,,,,,,
+,yellow_fever_campaign,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV4,Yellow Fever - Campaign,%,%,Yellow Fever - Campaign,Yellow Fever - Campaign,yellow_fever_campaign,55,prevent
+HE_yellowfever_CampignSize,yellow_fever_campaign_denom,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_yellowfever_Campign,yellow_fever_campaign_num,,,,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+HE_yellowfever_Routine,yellow_fever_routine,,,,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV3,Yellow Fever - Routine,%,%,Yellow Fever - Routine,Yellow Fever - Routine,yellow_fever_routine,54,prevent
+,yellow_fever_routine_num,,,,,FALSE,FALSE,TRUE,FALSE,FALSE,,,,,,,,,
+UHC_antenatalcare,anc4,WHS4_154,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.2,Pregnancy and delivery care,%,%,Antenatal care coverage (+4 visits) 2 (%),Antenatal care,anc4,23,RMNCH
+UHC_hiv,art,HIV_ARTCOVERAGE,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.6,HIV treatment,%,%,HIV ART coverage 4,HIV treatment,art,27,infec_diseases
+ASC,asc,,,,,TRUE,FALSE,FALSE,FALSE,TRUE,,,,,,,,,
+UHC_hospitalbeds,beds,WHS6_102,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.12,Hospital access,per 10 000 population,%,Hospital beds density*,Hospital bed density,beds,33,service_cap_access
+WHA6610_bloodpressure,bp,BP_04,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.9,Prevention of cardiovascular disease,%,%,Prevalence of raised blood pressure*,Non-elevated blood pressure,bp,30,ncd
+SDG3c1_densitydoctors,doctors,HWF_0001,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.14,Health workforce - Density of doctors,per 10 000 population,%,Density of doctors,Doctor density,doctors,35,service_cap_access
+SDG3b1_dtp3,dtp3,WHS4_100,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.3,Child immunization,%,%,DPT3 Immunization coverage (%),Child immunization (DTP3),dtp3,24,RMNCH
+SDG381_houseexp10,fh,FINPROTECTION_CATA_TOT_10_POP,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.2,Financial hardship,%,%,SDG 3.8.2 Proportion of population with household expenditures on health >10% of total household expenditure or income **,Financial hardship,fh,38,fin_hardship
+SDG371_famplan,fp,FAMILYPLANNINGUNPDUHC,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.1,Family planning,%,%,Demand satisfied with modern methods (married women or in-union) 1 (%),Family planning,fp,22,RMNCH
+UHC_glucose,fpg,NCD_GLUC_01,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.10,Management of diabetes,mmol/l,%,Mean fasting blood glucose (mmol/l)*,Mean fasting plasma glucose,fpg,31,ncd
+UHC_healthprof,hwf,,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.13,Health workforce,per 10 000 population,%,Health worker density*,Health worker density,hwf,34,service_cap_access
+UHC_nets,itn,MALARIA_ITNPOP,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.7,Malaria prevention,%,%,ITN use 5,Insecticide-treated nets,itn,28,infec_diseases
+SDG3c1_densitynurses,nurses,HWF_0006,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.15,Health workforce - Density of nurses/midwives,per 10 000 population,%,Density of nurses/midwives,Nurses/midwives density,nurses,36,service_cap_access
+UHC_pneumoniacare,pneumo,WHS4_106,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.4,Child treatment,%,%,Care seeking for suspected pneumonia (%),Care-seeking for suspected pneumonia,pneumo,25,RMNCH
+,pneumo_mort,,,,unproj_data,TRUE,FALSE,FALSE,TRUE,FALSE,,,,,,,,,
+UHC_tbtreatment,tb,TB_1,,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.5,TB treatment,%,%,TB treatment coverage,TB treatment coverage,tb,26,infec_diseases
+UHC_basicsanitation,uhc_sanitation,WSH_SANITATION_BASIC,,,unproj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.8,Water and sanitation,%,%,Use of basic sanitation,At least basic sanitation,uhc_sanitation,29,infec_diseases
+UHC,uhc_sm,,,,,TRUE,FALSE,FALSE,FALSE,TRUE,,,,,,,,,
+uhc_tobacco,uhc_tobacco,M_Est_tob_curr_std,$filter=SpatialDimType eq 'COUNTRY' and  Dim1 eq 'BTSX' and Dim2 eq null,,proj_data,TRUE,FALSE,FALSE,FALSE,FALSE,SDG 3.8.1.11,Tobacco control,%,%,Tobacco use prevalence* 3,Tobacco non-use,uhc_tobacco,32,ncd
+WHA6610_obesity_adults,adult_obese,NCD_BMI_30C,$filter=SpatialDimType eq 'COUNTRY' and  Dim1 eq 'BTSX' and Dim2 eq null,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.11,Adult Obesity,%,%,Prevalence of obesity among adults (aged 18+) (%),Adults not obese,adult_obese,20,NA
+SDG352_alcohol,alcohol,SA_0000001688,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.5.2,Alcohol Consumption,litres of pure alcohol,%,Total alcohol per capita consumption in adults aged 15+ (litres of pure alcohol),Reduced alcohol use,alcohol,17,NA
+WHA6610_obesity_5to19,child_obese,NCD_BMI_PLUS2C,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.10,Adolescent/ Child Obesity,%,%,Prevalence of obesity among children and adolescents (aged 5-19) (%),Children not obese,child_obese,5,NA
+SDG1621_physicalpunish,child_viol,CHILDVIOL,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 16.2.1,Violence Against Children,%,%,Proportion of children (aged 1-17) experiencing physical or psychological aggression (%),Reduced child violence,child_viol,7,NA
+SDG421_devontrack,devontrack,SE_DEV_ONTRK,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 4.2.1,Developmentally on Track,%,%,"Proportion of children under 5 developmentally on track (health, learning and psychosocial well-being) (%)",Developmentally on track under 5,devontrack,4,NA
+SDG712_cleanfuel,fuel,PHE_HHAIR_PROP_POP_CLEAN_FUELS,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 7.1.2,Clean Household Fuels,%,%,Proportion of population with primary reliance on clean fuels (%),Clean household fuels,fuel,16,NA
+HP,hpop_healthier,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+HP_dbl_cntd,hpop_healthier_dbl_cntd,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+NUHL,hpop_healthier_minus,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+,hpop_healthier_minus_dbl_cntd,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+NHL,hpop_healthier_plus,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+,hpop_healthier_plus_dbl_cntd,,,,,FALSE,TRUE,FALSE,FALSE,TRUE,,,,,,,,,
+SDG621_safesanitation,hpop_sanitation,WSH_SANITATION_SAFELY_MANAGED,$filter=SpatialDimType eq 'COUNTRY',,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation,%,%,Proportion of population using safely managed sanitation services (%),Safely managed sanitation,hpop_sanitation,13,NA
+,hpop_sanitation_rural,WSH_SANITATION_SAFELY_MANAGED,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation (rural),%,%,Proportion of rural population using safely managed sanitation services (%),Safely managed sanitation (rural),hpop_sanitation_rural,15,NA
+,hpop_sanitation_urban,WSH_SANITATION_SAFELY_MANAGED,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.2.1,Safely Managed Sanitation (urban),%,%,Proportion of urban population using safely managed sanitation services (%),Safely managed sanitation (urban),hpop_sanitation_urban,14,NA
+hpop_tobacco,hpop_tobacco,M_Est_tob_curr,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.a.1,Tobacco Use,%,%,Prevalence of tobacco use in adults aged 15+ (age-standardized) (%),Tobacco non-use,hpop_tobacco,19,NA
+SDG521_ipviolence,ipv,SDGIPV12M,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 5.6.1,Intimate Partner Violence (F),%,%,Proportion of women (15-49) subjected to violence by current or former intimate partner (%),Reduced partner violence,ipv,6,NA
+SDG222_overweight,overweight,NUTOVERWEIGHTPREV,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.3,Childhood Overweight,%,%,Prevalence of overweight in children under 5 (%),Children not overweight,overweight,3,NA
+SDG1162_pm25,pm25,SDGPM25,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 11.6.2,Mean Particulates (PM 2.5),µg/m3,%,Annual mean concentrations of fine particulate matter (PM2.5) in urban areas (Âµg/m3),Ambient air quality,pm25,18,NA
+SDG361_road,road,RS_198,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.6.1,Road Deaths,per 100 000 population,%,Road traffic mortality rate (per 100 000 population),Road safety,road,9,NA
+SDG221_stunting,stunting,NUTSTUNTINGPREV,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.1,Childhood Stunting,%,%,Prevalence of stunting in children under 5 (%),Children not stunted,stunting,1,NA
+SDG342_suicide,suicide,SDGSUICIDE,$filter=SpatialDimType eq 'COUNTRY' and  Dim1 eq 'BTSX' and Dim2 eq null,"Global Health Estimates 2020: Deaths by Cause, Age, Sex, by Country and by Region, 2000-2019. Geneva, World Health Organization",unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 3.4.2,Suicide Mortality,%,%,Suicide mortality rate (per 100 000 population),Reduced suicide attempts,suicide,8,NA
+WHA6610_transfats,transfats,UHCTRANSFATS,,,proj_data,FALSE,TRUE,FALSE,FALSE,FALSE,WHA66.10,Trans Fat Policy,Yes/No,%,Best practice policy implemented for industrially produced trans fatty acids (Y/N),Healthy fats,transfats,21,NA
+SDG222_wasting,wasting,NUTRITION_WH_2,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 2.2.2,Childhood Wasting,%,%,Prevalence of wasting in children under 5 (%),Children not wasted,wasting,2,NA
+SDG611_safedrinking,water,WSH_WATER_SAFELY_MANAGED,$filter=SpatialDimType eq 'COUNTRY',,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water,per 100 000 population,%,Proportion of population using safely managed drinking water services (%),Safely managed water,water,10,NA
+,water_rural,WSH_WATER_SAFELY_MANAGED,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water (rural),%,%,Proportion of urban population using safely managed drinking water services (%),Safely managed water (rural),water_rural,12,NA
+,water_urban,WSH_WATER_SAFELY_MANAGED,,,unproj_data,FALSE,TRUE,FALSE,FALSE,FALSE,SDG 6.1.1,Safely Managed Water (urban),%,%,Proportion of urban population using safely managed drinking water services (%),Safely managed water (urban),water_urban,11,NA
