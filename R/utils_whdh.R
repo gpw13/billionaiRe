@@ -215,6 +215,9 @@ get_valid_inds <- function(data_type, billion) {
     include_calculated = FALSE,
     include_subindicators = FALSE
   )
+  # Remove surviving_infants from the list of valid_inds as it's not dealt with in whdh anymore.
+
+  valid_inds <- purrr::discard(valid_inds, ~ .x == "surviving_infants")
 
   # Remove hwf from the list of valid_inds for wrangled_data because hwf is only
   # added during the 02_projecting stage. We only wrangle doctors and nurses in the
