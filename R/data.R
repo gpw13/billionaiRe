@@ -24,6 +24,8 @@
 #'   \item{order}{Order of the indicators}
 #'   \item{pillar}{Pillar in which the indicators sits for UHC and HEP (e.g. Prevent, Non communicable diseases (NCDs), etc.)}
 #'   \item{small_is_best}{Logical, is a lower value is a better public health outcome.}
+#'   \item{gho_query}{Query to be passed to ghost to retrieve the data}
+#'   \item{data_source}{Name of the source of the data for a specific indicator.}
 #' }
 "indicator_df"
 
