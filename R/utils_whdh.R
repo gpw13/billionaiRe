@@ -215,9 +215,6 @@ get_valid_inds <- function(data_type, billion) {
     include_calculated = FALSE,
     include_subindicators = FALSE
   )
-  # Remove surviving_infants from the list of valid_inds as it's not dealt with in whdh anymore.
-
-  valid_inds <- purrr::discard(valid_inds, ~ .x == "surviving_infants")
 
   # Remove surviving_infants as it is not used anymore from the whdh: the
   # wppdistro package version is used.
