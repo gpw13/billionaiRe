@@ -83,7 +83,7 @@ upload_billion_data <- function(df,
 
   whdh::upload_to_data_lake(
     data_lake_name = get_data_lake_name(),
-    container = "dropzone",
+    container = "whdh",
     source_path = output_file,
     destination_path = upload_path,
     silent = TRUE
