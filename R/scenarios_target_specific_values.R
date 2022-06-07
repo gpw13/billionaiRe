@@ -83,7 +83,8 @@ scenario_quantile <- function(df,
       keep_better_values = keep_better_values,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
-      trim_years = trim_years
+      trim_years = trim_years,
+      default_scenario = default_scenario
     ) %>%
     dplyr::select(-"qtarget")
 }
@@ -118,7 +119,8 @@ scenario_best_in_region <- function(df,
                                     keep_better_values = TRUE,
                                     upper_limit = 100,
                                     lower_limit = 0,
-                                    trim_years = TRUE) {
+                                    trim_years = TRUE,
+                                    default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col)
   assert_unique_rows(df, ind_ids = ind_ids)
   assert_ind_start_end_year(df, value_col, baseline_year, target_year, ind_ids = ind_ids[unique(df[["ind"]])])
@@ -168,7 +170,8 @@ scenario_best_in_region <- function(df,
       keep_better_values = keep_better_values,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
-      trim_years = trim_years
+      trim_years = trim_years,
+      default_scenario = default_scenario
     ) %>%
     dplyr::select(-c("rtarget"))
 }

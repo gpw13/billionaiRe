@@ -21,6 +21,7 @@ accelerate_adult_obese <- function(df,
   params <- get_right_params(list(...), scenario_halt_rise)
   params["baseline_year"] <- 2010
   params["scenario_name"] <- "acceleration"
+  params["end_year"] <- end_year
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -72,6 +73,7 @@ accelerate_alcohol <- function(df,
   )
 
   params <- list(...)
+  params["end_year"] <- end_year
   params_bau <- get_right_params(params, scenario_bau)
 
   params_perc_baseline <- get_right_params(params, scenario_percent_baseline)
@@ -159,6 +161,7 @@ accelerate_child_viol <- function(df,
   params["target_value"] <- 0
   params["target_year"] <- 2030
   params["scenario_name"] <- "acceleration"
+  params["end_year"] <- end_year
 
   df_accelerated <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params)
@@ -195,6 +198,7 @@ accelerate_devontrack <- function(df,
   params["target_value"] <- 80
   params["target_year"] <- 2030
   params["scenario_name"] <- "acceleration"
+  params["end_year"] <- end_year
 
   df_accelerated <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params)
@@ -305,6 +309,7 @@ accelerate_hpop_sanitation <- function(df,
   params["baseline_quantile_year"] <- 2018
   params["upper_limit"] <- 99
   params["scenario_name"] <- "acceleration"
+  params["end_year"] <- end_year
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -392,6 +397,7 @@ accelerate_hpop_tobacco <- function(df,
   )
 
   params <- list(...)
+  params["end_year"] <- end_year
 
   df_scenario_percent_baseline <- df_this_ind %>%
     dplyr::full_join(full_df, by = (c("iso3", "year", "ind", scenario_col))) %>%
@@ -504,6 +510,7 @@ accelerate_overweight <- function(df,
   this_ind <- ind_ids["overweight"]
 
   params <- list(...)
+  params["end_year"] <- end_year
   params_aroc <- get_right_params(params, scenario_aroc)
   params_aroc["aroc_type"] <- "target"
   params_aroc["target_year"] <- 2030
@@ -873,6 +880,7 @@ accelerate_wasting <- function(df,
   this_ind <- ind_ids["wasting"]
 
   params <- list(...)
+  params["end_year"] <- end_year
   params_aroc <- get_right_params(params, scenario_aroc)
   params_aroc["aroc_type"] <- "target"
   params_aroc["target_year"] <- 2030
