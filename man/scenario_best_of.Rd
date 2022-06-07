@@ -11,7 +11,7 @@ scenario_best_of(
   maximize_end_year = FALSE,
   start_year = 2018,
   end_year = 2025,
-  target_year = 2025,
+  target_year = end_year,
   scenario_name = glue::glue("best_of_{paste0(scenario_names, collapse = '_')}"),
   scenario_col = "scenario",
   trim = TRUE,
