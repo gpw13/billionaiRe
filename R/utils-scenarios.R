@@ -124,7 +124,11 @@ calculate_aarc <- function(baseline_year,
                            baseline_value,
                            end_year,
                            end_value) {
-  ((end_value / baseline_value))^(1 / (end_year - baseline_year)) - 1
+  if(baseline_value == 0){
+    return(baseline_value)
+  }else{
+    ((end_value / baseline_value))^(1 / (end_year - baseline_year)) - 1
+  }
 }
 
 
