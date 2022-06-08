@@ -892,7 +892,8 @@ accelerate_wasting <- function(df,
   df_aroc <- do.call(
     scenario_aroc, c(list(df = df_this_ind), params_aroc)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "aroc_target")
+    dplyr::filter(.data[[scenario_col]] == "aroc_target") %>%
+    flat_extrapolation("value", group_col = c("iso3", "ind"))
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params)

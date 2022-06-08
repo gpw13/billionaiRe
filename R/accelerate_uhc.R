@@ -619,6 +619,13 @@ accelerate_dtp3 <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
+  full_df <- tidyr::expand_grid(
+    "iso3" := unique(df_this_ind[["iso3"]]),
+    "year" := start_year:end_year,
+    "ind" := this_ind,
+    "{scenario_col}" := unique(df_this_ind[[scenario_col]])
+  )
+
   df_target_values <- load_misc_data(
     file_path = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
@@ -627,6 +634,7 @@ accelerate_dtp3 <- function(df,
     dplyr::mutate(!!sym("iso3") := toupper(.data[["iso3"]]), target = .data[["target"]] * 100)
 
   df_accelerated <- df_this_ind %>%
+    dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::mutate(baseline_value = .data[[value_col]][.data[["year"]] == baseline_year]) %>%
     dplyr::ungroup() %>%
@@ -1010,7 +1018,7 @@ accelerate_uhc_sanitation <- function(df,
     dplyr::filter(.data[["ind"]] == this_ind)
 
   df_accelerated <- do.call(
-    scenario_quantile, c(list(df = df_this_ind), params)
+    scenario_quantile, c(list(df = df_this_ind, scenario_name = "acceleration"), params)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration")
 

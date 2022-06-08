@@ -45,6 +45,7 @@ accelerate_espar <- function(df,
     dplyr::pull(.data[["year"]])
 
   baseline_year_espar <- espar_data %>%
+    dplyr::select(dplyr::all_of(c("ind", "iso3", "year", value_col))) %>%
     dplyr::filter(
       .data[["ind"]] == ind_ids["espar"],
       .data[["year"]] %in% start_year:last_year_reported,
