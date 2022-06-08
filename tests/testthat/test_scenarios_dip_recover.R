@@ -9,7 +9,6 @@ testdf <- function(values = 60:80, ind = "water", type = "reported", iso3 = "tes
   )
 }
 
-
 testthat::test_that("scenario_dip_recover produces accurate results with one iso3", {
   df <- testdf() %>%
     dplyr::group_by(iso3) %>%
@@ -86,7 +85,6 @@ testthat::test_that("scenario_dip_recover produces accurate results when the gap
 
   testthat::expect_equal(df_dip_recover_longer_just_scenario, c(60, 60.882353, 61.764706, 62.647059, 63.529412))
 
-
   df_dip_recover_very_long <- scenario_dip_recover(df_nas, recovery_year = 2030)
 
   df_dip_recover_just_scenario <- df_dip_recover_very_long %>%
@@ -126,7 +124,6 @@ testthat::test_that("scenario_dip_recover carries over the last reported value w
 
   testthat::expect_equal(df_dip_recover_with_no_covid_shock_no_reported_only, rep(NA_real_, 6))
 })
-
 
 testthat::test_that("scenario_dip_recover produces accurate results with progressive_recovery == TRUE:", {
   df_reported <- testdf() %>%
@@ -282,7 +279,6 @@ testthat::test_that("scenario_dip_recover produces accurate results with one iso
   testthat::expect_equal(df_dip_recover_2025_one_iso3, 70.036232)
 })
 
-
 testthat::test_that("scenario_dip_recover carries last reported value when start_year value is missing with aroc_type = average_years_in_range", {
   df <- testdf( values = c(70,69,70,69,70,69,70,69,70,69,70,76,80,78,66,75,73,63,62,77,69)) %>%
     dplyr::filter(year >= 2019)
@@ -306,7 +302,7 @@ testthat::test_that("scenario_dip_recover carries last reported value when start
     dplyr::filter(scenario == "dip_recover", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 75.343823)
+  testthat::expect_equal(df_dip_recoverr_2025_NA_2018, 75.291038)
 
   df_dip_recover_2022_recovery <- scenario_dip_recover(df, recovery_year = 2022)
 
@@ -315,7 +311,6 @@ testthat::test_that("scenario_dip_recover carries last reported value when start
     dplyr::pull(value)
 
   testthat::expect_equal(df_dip_recoverr_2025_2022_recovery, 71)
-
 })
 
 testthat::test_that("scenario_dip_recover carries last reported value when everything past start_year value is NA with aroc_type = average_years_in_range", {

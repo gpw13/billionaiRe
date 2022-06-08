@@ -322,7 +322,7 @@ scenario_dip_recover_iso3_ind <- function(df,
         dplyr::filter(.data[["year"]] %in% (aroc_start_year + 1):(dip_year - 1)) %>%
         dplyr::mutate("baseline_year" := dplyr::case_when(
           .data[["year"]]-1  <= baseline_year ~ as.integer(baseline_year),
-          TRUE ~ as.integer(.data[["year"]] - 1))) %>%
+          TRUE ~ as.integer(dplyr::lag(.data[["year"]])))) %>%
         dplyr::select(target_value = !!value_col, target_year = "year", "baseline_year")
 
       aroc <- furrr::future_pmap_dfr(target_value_iso3_ind,

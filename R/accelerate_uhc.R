@@ -449,8 +449,10 @@ accelerate_bp <- function(df,
     scenario_best_of, c(list(df = dplyr::bind_rows(df_bau, df_perc_baseline)), params_best_of)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
-    # convert crude values back to age-standardised
-    dplyr::mutate(value_col = .data[[value_col]] * .data[["ratio_agestd_over_crude"]])
+    dplyr::select(-c("ratio_agestd_over_crude")) %>%
+    dplyr::left_join(bp_agestd_crude_ratio, by = c("iso3", "year")) %>%
+    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), 1, .data[["ratio_agestd_over_crude"]])) %>%
+    dplyr::mutate(!!sym(value_col) := .data[["crude"]] * .data[["ratio_agestd_over_crude"]])
 
   df %>%
     dplyr::bind_rows(df_accelerated)
