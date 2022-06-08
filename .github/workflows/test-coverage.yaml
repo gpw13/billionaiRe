@@ -15,8 +15,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
       GITHUB_PAT: ${{ secrets.PAT_GITHUB}}
       EXECUTION_MODE: "interactive"
-      AZURE_CLIENT_ID: ${{ secrets.WHDH_APP_ID }}
-      TENANT_ID: ${{ secrets.WHDH_TENANT_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.WHDH_TENANT_ID }}
       AZURE_CLIENT_SECRET: ${{ secrets.WHDH_CLIENT_SECRET }}
 
     steps:

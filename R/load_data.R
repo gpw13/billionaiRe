@@ -142,8 +142,14 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
       dplyr::rename_with(tolower)
   })
 
+  if(data_type == "final_data"){
+    na_cols <- c("value", "transform_value", "contribution", "contribution_percent")
+  }else{
+    na_cols <- "value"
+  }
+
   df %>%
-    filter_billion_na(na_rm)
+    filter_billion_na(na_rm, cols = na_cols)
 }
 
 #' Load Billions indicator data from xMart
@@ -267,9 +273,11 @@ filter_billion_date <- function(df, date_filter) {
 }
 
 #' @noRd
-filter_billion_na <- function(df, na_rm) {
+filter_billion_na <- function(df, na_rm, cols = "value") {
   if (na_rm) {
-    df <- dplyr::filter(df, !is.na(.data[["value"]]))
+    df <- df %>%
+      dplyr::filter(
+        dplyr::if_any(dplyr::all_of(cols), ~!is.na(.x)))
   }
   df
 }

@@ -74,26 +74,34 @@ accelerate_anc4 <- function(df,
     ) %>%
       dplyr::filter(.data[[scenario_col]] == "with_data_linear")
 
-    df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear) %>%
-      scenario_best_of(
+    params_scenario_best_of_linear_fixed <- c(get_right_params(params, scenario_best_of))
+    params_scenario_best_of_linear_fixed["small_is_best"] <- TRUE
+
+    df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear)
+    df_with_data_best <- do.call(
+      scenario_best_of, c(list(
+        df = df_with_data_best,
         scenario_names = c("with_data_fixed_target", "with_data_linear"),
-        scenario_name = "best_of_linear_and_fixed_target",
-        small_is_best = TRUE # hard-coding true because we want to take whichever of the two options is easiest for the country to accomplish
-        # elliott: not necessary to hard code, it should be included in params
-      ) %>%
+        scenario_name = "best_of_linear_and_fixed_target"),
+        params_scenario_best_of_linear_fixed)) %>%
       dplyr::filter(.data[[scenario_col]] == "best_of_linear_and_fixed_target")
 
     # Elliott: when binding the df_with_data_best and df_with_data_bau duplicated rows are created. adding a distinct to remove them for now.
     # With new version of scenario_best_of, this shouldn't happen though.
 
+    params_scenario_best <- c(get_right_params(params, scenario_best_of))
+
     df_with_data_accelerated <- dplyr::bind_rows(df_with_data_best, df_with_data_bau) %>%
-      dplyr::distinct() %>%
-      scenario_best_of(
+      dplyr::distinct()
+
+    df_with_data_accelerated <- do.call(
+      scenario_best_of, c(list(
+        df = df_with_data_accelerated,
         scenario_names = c("with_data_bau", "best_of_linear_and_fixed_target"),
-        scenario_name = "acceleration",
-        small_is_best = params[["small_is_best"]]
-      ) %>%
+        scenario_name = "acceleration"),
+        params_scenario_best)) %>%
       dplyr::filter(.data[[scenario_col]] == "acceleration")
+
   } else {
     df_with_data_accelerated <- tibble::tibble()
   }
@@ -178,7 +186,7 @@ accelerate_art <- function(df,
       dplyr::filter(.data[[scenario_col]] == "fixed_target")
 
     params_scenario_best_of <- c(get_right_params(params, scenario_best_of),
-      scenario_name = "acceleration"
+                                 scenario_name = "acceleration"
     )
 
     df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_fixed_target)
@@ -268,13 +276,19 @@ accelerate_beds <- function(df,
     ) %>%
       dplyr::filter(.data[[scenario_col]] == "with_scenario_linear")
 
-    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear) %>%
-      scenario_best_of(
-        scenario_names = c("with_scenario_bau", "with_scenario_linear"),
-        scenario_name = "acceleration",
-        small_is_best = params[["small_is_best"]]
-      ) %>%
+    params_scenario_best_of <- c(get_right_params(params, scenario_best_of),
+                                 scenario_name = "acceleration"
+    )
+
+    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear)
+
+    df_with_scenario_accelerated <- do.call(
+      scenario_best_of, c(list(
+        df = df_with_scenario_accelerated,
+        scenario_names = c("with_scenario_bau", "with_scenario_linear")),
+        params_scenario_best_of)) %>%
       dplyr::filter(.data[[scenario_col]] == "acceleration")
+
   } else {
     df_with_scenario_accelerated <- tibble::tibble()
   }
@@ -303,6 +317,7 @@ accelerate_bp <- function(df,
   this_ind <- ind_ids["bp"]
 
   params <- list(...)
+  params["end_year"] <- end_year
 
   params_perc_baseline <- c(
     get_right_params(params, scenario_percent_baseline),
@@ -312,10 +327,9 @@ accelerate_bp <- function(df,
       scenario_name = "percent_baseline"
     )
   )
+
   params_perc_baseline[[value_col]] <- "crude"
   params_perc_baseline[["start_year"]] <- start_year
-  params_perc_baseline[["end_year"]] <- end_year
-
 
   params_bau <- c(
     get_right_params(params, scenario_bau),
@@ -330,7 +344,7 @@ accelerate_bp <- function(df,
     dplyr::select(-c("Type", "Metric")) %>%
     dplyr::mutate(
       Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
-      !!sym("iso3") := whoville::names_to_iso3(.data[["Country"]])
+      "iso3" = whoville::names_to_iso3(.data[["Country"]],fuzzy_matching = "yes")
     ) %>%
     suppressMessages() %>%
     dplyr::rename(
@@ -387,7 +401,7 @@ accelerate_bp <- function(df,
 
   bp_agestd_crude_ratio <- bp_ratio %>%
     # @Alice, should there final year be 2023 or 2025? (if so, replace 2023 by end_year)
-    dplyr::full_join(tidyr::expand_grid(!!sym("iso3") := unique(bp_agestd$iso3), !!sym("year") := 2020:2023), by = c("iso3", "year")) %>%
+    dplyr::full_join(tidyr::expand_grid(!!sym("iso3") := unique(bp_agestd$iso3), !!sym("year") := 2020:end_year), by = c("iso3", "year")) %>%
     dplyr::left_join(
       bp_ratio %>%
         dplyr::filter(.data[["year"]] == 2019) %>%
@@ -401,7 +415,7 @@ accelerate_bp <- function(df,
 
   bp_agestd_crude_ratio_org <- tidyr::expand_grid(
     iso3 = unique(bp_agestd_crude_ratio$iso3),
-    year = 1990:2025
+    year = 1990:end_year
   ) %>%
     dplyr::full_join(bp_agestd_crude_ratio, by = c("iso3", "year")) %>%
     flat_extrapolation(col = "ratio_agestd_over_crude", group_col = "iso3") %>%
@@ -425,8 +439,6 @@ accelerate_bp <- function(df,
     scenario_percent_baseline, c(list(df = df_this_ind), params_perc_baseline)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "percent_baseline")
-
-  # Elliott: see art for call to scenario_best_of with do.call
 
   params_best_of <- get_right_params(params, scenario_best_of)
   params_best_of[["scenario_name"]] <- "acceleration"
@@ -621,7 +633,7 @@ accelerate_dtp3 <- function(df,
       "acceleration" := dplyr::case_when(
         .data[["year"]] > 2018 & .data[["year"]] <= 2020 ~ as.numeric(.data[["baseline_value"]]),
         .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
-        as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[["year"]] - baseline_year - 1) / (target_year - baseline_year - 1)),
+          as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[["year"]] - baseline_year - 1) / (target_year - baseline_year - 1)),
         .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
         .data[["year"]] == 2018 ~ as.numeric(.data[[value_col]]),
         TRUE ~ NA_real_
@@ -670,12 +682,18 @@ accelerate_fh <- function(df,
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "halt_rise")
 
-  df_accelerated <- dplyr::bind_rows(df_bau, df_halt_rise) %>%
-    scenario_best_of(
-      scenario_names = c("business_as_usual", "halt_rise"),
-      scenario_name = "acceleration",
-      small_is_best = params[["small_is_best"]]
-    ) %>%
+  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of["scenario_name"] <- "acceleration"
+
+  df_accelerated <- dplyr::bind_rows(df_bau, df_halt_rise)
+
+  df_accelerated <- do.call(
+    scenario_best_of, c(
+      list(
+        df = df_accelerated,
+        scenario_names = c("business_as_usual", "halt_rise")
+      ),
+      params_best_of)) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%
@@ -1027,6 +1045,9 @@ accelerate_uhc_tobacco <- function(df,
   this_ind <- ind_ids["uhc_tobacco"]
 
   params <- list(...)
+  params["end_year"] <- end_year
+  params["start_year"] <- start_year
+
 
   params["end_year"] <- end_year
   params["start_year"] <- start_year
@@ -1047,9 +1068,9 @@ accelerate_uhc_tobacco <- function(df,
       scenario_name = "with_data_perc_baseline",
       percent_change = -30,
       baseline_year = 2010,
-      target_year = 2025,
-      start_year = 2018,
-      end_year = 2025
+      target_year = end_year,
+      start_year = start_year,
+      end_year = end_year
     )
   )
 
