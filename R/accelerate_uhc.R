@@ -471,6 +471,7 @@ accelerate_doctors <- function(df,
   this_ind <- ind_ids["doctors"]
 
   params <- list(...)
+  params["upper_limit"] <- 10000
   params <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "acceleration")
@@ -502,6 +503,7 @@ accelerate_nurses <- function(df,
   this_ind <- ind_ids["nurses"]
 
   params <- list(...)
+  params["upper_limit"] <- 10000
   params <- c(
     get_right_params(params, scenario_bau),
     list(scenario_name = "acceleration")
@@ -509,6 +511,7 @@ accelerate_nurses <- function(df,
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
+
 
   df_accelerated <- do.call(
     scenario_bau, c(list(df = df_this_ind), params)
@@ -540,6 +543,7 @@ accelerate_hwf <- function(df,
   this_ind <- ind_ids["hwf"]
 
   params <- list(...)
+  params["upper_limit"] <- 10000
 
   params_with_scenario_linear <- c(
     get_right_params(params, scenario_linear_change),

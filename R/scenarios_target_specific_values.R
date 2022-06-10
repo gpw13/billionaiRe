@@ -138,7 +138,7 @@ scenario_best_in_region <- function(df,
       region = whoville::iso3_to_regions(.data[["iso3"]]),
       arc = sign(-(target_year - baseline_year)) * (.data[[glue::glue("{baseline_year}")]] - .data[[glue::glue("{target_year}")]]) / abs(baseline_year - target_year)
     ) %>%
-    dplyr::group_by("region") %>%
+    dplyr::group_by(.data[["region"]]) %>%
     dplyr::mutate(
       maxq = max(.data[["arc"]]),
       meanq = mean(.data[["arc"]]),
@@ -161,7 +161,7 @@ scenario_best_in_region <- function(df,
       value_col = value_col,
       start_year = start_year,
       end_year = end_year,
-      baseline_year = baseline_year,
+      baseline_year = start_year,
       target_year = end_year,
       scenario_name = scenario_name,
       scenario_col = scenario_col,

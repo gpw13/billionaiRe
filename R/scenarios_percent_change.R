@@ -93,6 +93,10 @@ scenario_percent_baseline <- function(df,
       ),
       !!sym(scenario_col) := scenario_name
     ) %>%
+    dplyr::mutate(scenario_value = dplyr::case_when(
+      .data[["year"]] >= start_year & .data[["year"]] <= baseline_year ~ .data[[value_col]],
+      TRUE ~ .data[["scenario_value"]]
+    )) %>%
     trim_values(
       col = "scenario_value",
       value_col = value_col,

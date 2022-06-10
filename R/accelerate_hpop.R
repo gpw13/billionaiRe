@@ -186,6 +186,8 @@ accelerate_devontrack <- function(df,
                                   ind_ids = billion_ind_codes("hpop"),
                                   end_year = 2025,
                                   scenario_col = "scenario",
+                                  start_year = 2018,
+                                  value_col = "value",
                                   ...) {
   assert_columns(df, scenario_col, "ind")
 
@@ -194,11 +196,43 @@ accelerate_devontrack <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
+  full_df <- tidyr::expand_grid(
+    "iso3" := unique(df_this_ind[["iso3"]]),
+    "year" := start_year,
+    "ind" := this_ind,
+    "{scenario_col}" := unique(df_this_ind[[scenario_col]])
+  )
+
+  df_this_ind <- df_this_ind %>%
+    dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col))
+
+  latest_values <- df_this_ind %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
+    dplyr::filter(.data[["year"]] <= start_year) %>%
+    dplyr::filter(max(.data[["year"]]) == .data[["year"]]) %>%
+    dplyr::mutate(latest_value = .data[[value_col]]) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(c("iso3", "ind", scenario_col, "latest_value"))
+
+  df_this_ind <- df_this_ind %>%
+    dplyr::left_join(latest_values, by = c("iso3", "ind", scenario_col)) %>%
+    dplyr::mutate(
+      !!sym(value_col) := dplyr::case_when(
+        is.na(.data[[value_col]]) ~ .data[["latest_value"]],
+        TRUE ~ .data[[value_col]]
+      )
+    ) %>%
+    dplyr::ungroup()
+
   params <- list(...)
+  params <- get_right_params(params,scenario_fixed_target)
   params["target_value"] <- 80
   params["target_year"] <- 2030
   params["scenario_name"] <- "acceleration"
   params["end_year"] <- end_year
+  params["scenario_col"] <- scenario_col
+  params["start_year"] <- 2018
+  params["value_col"] <- "value"
 
   df_accelerated <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params)
@@ -242,11 +276,10 @@ accelerate_fuel <- function(df,
 
   if ("HIC" %in% unique(this_ind_df$wb_ig)) {
     params_bau <- get_right_params(params, "scenario_bau")
-    params_bau["default_scenario"] <- "acceleration"
+    params_bau["scenario_name"] <- "acceleration"
 
     high_income_df <- this_ind_df %>%
-      dplyr::filter(.data[["wb_ig"]] == "HIC") %>%
-      dplyr::mutate("{scenario_col}" := "acceleration")
+      dplyr::filter(.data[["wb_ig"]] == "HIC")
 
     high_income <- do.call(
       scenario_bau, c(list(df = high_income_df), params_bau)
@@ -630,6 +663,7 @@ accelerate_pm25 <- function(df,
 accelerate_road <- function(df,
                             ind_ids = billion_ind_codes("hpop"),
                             scenario_col = "scenario",
+                            default_scenario = "default",
                             ...) {
   this_ind <- ind_ids["road"]
 
@@ -640,7 +674,8 @@ accelerate_road <- function(df,
   params_percent_baseline["baseline_year"] <- 2020
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   assert_ind_start_end_year(df_this_ind,
     start_year = 2018, end_year = 2020,

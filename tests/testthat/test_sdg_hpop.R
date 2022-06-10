@@ -132,7 +132,7 @@ testthat::test_that(paste0("accelerate_fuel returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, c(81, 70, 75))
+  testthat::expect_equal(df_add_indicator_2025, c(75, 70, 75))
 })
 
 testthat::test_that(paste0("sdg_hpop_sanitation returns accurate values:"), {
