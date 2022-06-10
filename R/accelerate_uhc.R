@@ -979,14 +979,34 @@ accelerate_tb <- function(df,
   this_ind <- ind_ids["tb"]
 
   params <- list(...)
-  params["scenario_name"] <- "acceleration"
-  params["target_value"] <- 90
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
+  params_fixed_target <- get_right_params(params, scenario_bau)
+
+  params_fixed_target["scenario_name"] <- "fixed_target"
+  params_fixed_target["target_value"] <- 90
+
+  df_fixed_target <- do.call(
+    scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
+  ) %>%
+    dplyr::filter(.data[[scenario_col]] == "fixed_target")
+
+  params_bau <- get_right_params(params, scenario_bau)
+  params_bau["scenario_name"] <- "business_as_usual"
+
+  df_bau <- do.call(
+    scenario_bau, c(list(df = df_this_ind), params_bau)
+  ) %>%
+    dplyr::filter(.data[[scenario_col]] == "business_as_usual")
+
+  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of[["scenario_names"]] <- c("business_as_usual", "fixed_target")
+  params_best_of[["scenario_name"]] <- "acceleration"
+
   df_accelerated <- do.call(
-    scenario_fixed_target, c(list(df = df_this_ind), params)
+    scenario_best_of, c(list(df = dplyr::bind_rows(df_bau, df_fixed_target)), params_best_of)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration")
 
@@ -1055,16 +1075,14 @@ accelerate_uhc_tobacco <- function(df,
                                    value_col = "value",
                                    end_year = 2025,
                                    start_year = 2018,
+                                   default_scenario = "default",
                                    ...) {
   this_ind <- ind_ids["uhc_tobacco"]
 
   params <- list(...)
   params["end_year"] <- end_year
   params["start_year"] <- start_year
-
-
-  params["end_year"] <- end_year
-  params["start_year"] <- start_year
+  params["default_scenario"] <- default_scenario
 
   params_without_data_bau <- c(
     get_right_params(params, scenario_bau),
@@ -1093,7 +1111,8 @@ accelerate_uhc_tobacco <- function(df,
   par_wd_pb <- params_with_data_perc_baseline
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   df_without_data <- df_this_ind %>%
     dplyr::group_by(.data[["iso3"]]) %>%
@@ -1162,7 +1181,8 @@ accelerate_uhc_tobacco <- function(df,
     ) %>%
       dplyr::filter(.data[[scenario_col]] == "with_data_bau") %>%
       flat_extrapolation(col = "crude",
-                         group_col = c("iso3", "ind"))
+                         group_col = c("iso3", "ind")) %>%
+      dplyr::mutate(!!sym(value_col) := .data[["crude"]])
 
     df_with_data_perc_baseline <- df_with_data %>%
       dplyr::group_by(.data[["iso3"]]) %>%
@@ -1192,24 +1212,25 @@ accelerate_uhc_tobacco <- function(df,
     df_with_data_perc_baseline <- df_with_data_perc_baseline %>%
       dplyr::select(-c("crude")) %>%
       dplyr::rename("crude" := .data[[par_wd_pb[["scenario_name"]]]]) %>%
-      dplyr::mutate("{scenario_col}" := par_wd_pb[["scenario_name"]])
-
-    params_best_of <- get_right_params(params, scenario_best_of)
-    params_best_of[["scenario_names"]] <- c("with_data_bau", "with_data_perc_baseline")
-    params_best_of[["scenario_name"]] <- "acceleration"
-    params_best_of[["value_col"]] <- "crude"
-
-    df_with_data_accelerated <- do.call(
-      scenario_best_of,
-      c(list(df = dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline)),
-        params_best_of)) %>%
-      dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
+      dplyr::mutate("{scenario_col}" := par_wd_pb[["scenario_name"]]) %>%
       dplyr::select(-c("agestd", "ratio_agestd_over_crude")) %>%
       dplyr::left_join(dplyr::select(tobacco_ratio_df, -"crude"), by = c("iso3", "year")) %>%
       dplyr::left_join(tobm, by = "year") %>%
       dplyr::mutate(ultimate_ratio = dplyr::if_else(is.na(.data[["ratio_agestd_over_crude"]]), .data[["m"]], .data[["ratio_agestd_over_crude"]])) %>%
       dplyr::mutate(!!sym(value_col) := .data[["crude"]] * .data[["ultimate_ratio"]]) %>%
       dplyr::select(-c("agestd", "crude", "ratio_agestd_over_crude", "m"))
+
+    params_best_of <- get_right_params(params, scenario_best_of)
+    params_best_of[["scenario_names"]] <- c("with_data_bau", "with_data_perc_baseline")
+    params_best_of[["scenario_name"]] <- "acceleration"
+    params_best_of[["maximize_end_year"]] <- TRUE
+
+    df_with_data_accelerated <- do.call(
+      scenario_best_of,
+      c(list(df = dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline)),
+        params_best_of)) %>%
+      dplyr::filter(.data[[scenario_col]] == "acceleration")
+
   } else {
     df_with_data_accelerated <- tibble::tibble()
   }

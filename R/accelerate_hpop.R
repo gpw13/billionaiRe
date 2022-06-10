@@ -668,6 +668,7 @@ accelerate_road <- function(df,
   this_ind <- ind_ids["road"]
 
   params <- list(...)
+  params["default_scenario"] <- default_scenario
   params_percent_baseline <- get_right_params(params, scenario_percent_baseline)
   params_percent_baseline["percent_change"] <- -50
   params_percent_baseline["target_year"] <- 2030
@@ -802,11 +803,12 @@ accelerate_stunting <- function(df,
 accelerate_suicide <- function(df,
                                ind_ids = billion_ind_codes("hpop"),
                                scenario_col = "scenario",
+                               default_scenario = "default",
                                ...) {
   this_ind <- ind_ids["suicide"]
 
   params <- list(...)
-
+  params["default_scenario"] <- default_scenario
   params_percent_baseline <- get_right_params(params, scenario_percent_baseline)
   params_percent_baseline["percent_change"] <- -33.333
   params_percent_baseline["baseline_year"] <- 2015
@@ -817,7 +819,8 @@ accelerate_suicide <- function(df,
   params_bau <- get_right_params(params, scenario_bau)
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   assert_ind_start_end_year(df_this_ind,
     start_year = 2015, end_year = 2018,

@@ -9,7 +9,7 @@
 #' the best value, the first in alphabetical order is picked.
 #'
 #' @param scenario_names names of the scenario to pick from.
-#' @param maximize_end_year (bollean) if TRUE, the best scenario is
+#' @param maximize_end_year (Boolean) if TRUE, the best scenario is
 #'    picked on the best value at `end_year`. Default to FALSE.
 #'
 #' @inherit scenario_fixed_target
