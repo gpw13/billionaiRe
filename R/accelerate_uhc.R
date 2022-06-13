@@ -1025,6 +1025,7 @@ accelerate_tb <- function(df,
 accelerate_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
                                       scenario_col = "scenario",
+                                      default_scenario = "default",
                                       ...) {
   this_ind <- ind_ids["uhc_sanitation"]
 
@@ -1039,7 +1040,8 @@ accelerate_uhc_sanitation <- function(df,
   )
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   df_accelerated <- do.call(
     scenario_quantile, c(list(df = df_this_ind, scenario_name = "acceleration"), params)
