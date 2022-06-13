@@ -1031,6 +1031,7 @@ accelerate_uhc_sanitation <- function(df,
 
   params <- list(...)
   params <- get_right_params(params, scenario_quantile)
+  params["default_scenario"] <- default_scenario
   params <- c(
     params,
     list(

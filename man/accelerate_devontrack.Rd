@@ -9,6 +9,8 @@ accelerate_devontrack(
   ind_ids = billion_ind_codes("hpop"),
   end_year = 2025,
   scenario_col = "scenario",
+  start_year = 2018,
+  value_col = "value",
   ...
 )
 }

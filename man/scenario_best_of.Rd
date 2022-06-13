@@ -31,7 +31,7 @@ country, year, and indicator.}
 
 \item{value_col}{Column name of column with indicator values.}
 
-\item{maximize_end_year}{(bollean) if TRUE, the best scenario is
+\item{maximize_end_year}{(Boolean) if TRUE, the best scenario is
 picked on the best value at \code{end_year}. Default to FALSE.}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}

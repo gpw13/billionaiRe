@@ -8,6 +8,7 @@ accelerate_road(
   df,
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
+  default_scenario = "default",
   ...
 )
 }

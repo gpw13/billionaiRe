@@ -11,6 +11,7 @@ accelerate_uhc_tobacco(
   value_col = "value",
   end_year = 2025,
   start_year = 2018,
+  default_scenario = "default",
   ...
 )
 }

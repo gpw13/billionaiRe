@@ -8,6 +8,7 @@ accelerate_uhc_sanitation(
   df,
   ind_ids = billion_ind_codes("uhc"),
   scenario_col = "scenario",
+  default_scenario = "default",
   ...
 )
 }
