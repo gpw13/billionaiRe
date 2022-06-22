@@ -2,16 +2,16 @@
 
 # TODO: Get the test to pass.
 testthat::test_that("WHDH: a single indicator is correctly downloaded", {
-  # wrangled_ind <- load_billion_data("wrangled_data", "hpop", "alcohol") %>%
-  #   dplyr::pull(ind) %>%
-  #   unique()
-  #
-  # projected_ind <- load_billion_data("projected_data", "hpop", "alcohol") %>%
-  #   dplyr::pull(ind) %>%
-  #   unique()
-  #
-  # testthat::expect_equal(wrangled_ind, "alcohol")
-  # testthat::expect_equal(projected_ind, "alcohol")
+  wrangled_ind <- load_billion_data("wrangled_data", "hpop", "alcohol") %>%
+    dplyr::pull(ind) %>%
+    unique()
+  
+  projected_ind <- load_billion_data("projected_data", "hpop", "alcohol") %>%
+    dplyr::pull(ind) %>%
+    unique()
+  
+  testthat::expect_equal(wrangled_ind, "alcohol")
+  testthat::expect_equal(projected_ind, "alcohol")
 })
 
 # TODO: currently failing because of a bug in the data_pipeline
