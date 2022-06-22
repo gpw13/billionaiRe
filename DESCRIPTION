@@ -40,7 +40,8 @@ Imports:
     waldo,
     whoville (>= 0.1.7),
     zoo,
-    furrr
+    furrr,
+    retry
 Suggests: 
     cellranger,
     knitr,
