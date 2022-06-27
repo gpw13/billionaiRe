@@ -36,6 +36,7 @@
 #' data is download from `3B/Sandbox/my_exp/{data_layer}/...`)
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a progress bar. Defaults to `TRUE`.
+#' @param retry_upload (logical) Retry the upload request to WHDH.
 #' @param max_upload_retries (integer) Maxinum number of times to retry upload to WHDH. Defaults to `3`.
 #' @param upload_retry_interval (integer) Amount of time in seconds to wait before retrying upload to WHDH. Defaults to `3`.
 #'
@@ -54,6 +55,7 @@ upload_billion_data <- function(df,
                                 na_rm = TRUE,
                                 experiment = NULL,
                                 silent = TRUE,
+                                retry_upload = TRUE,
                                 max_upload_retries = 3,
                                 upload_retry_interval = 3) {
   data_type <- rlang::arg_match(data_type)
@@ -85,18 +87,28 @@ upload_billion_data <- function(df,
     cli::cli_abort("The file being uploaded is empty.")
   }
 
-  retry::retry({
+  if (retry_upload) {
+    retry::retry({
+      whdh::upload_to_data_lake(
+        data_lake_name = get_data_lake_name(),
+        container = "whdh",
+        source_path = output_file,
+        destination_path = upload_path,
+        silent = FALSE
+      )
+    },
+    when = "Failed to complete Storage Services operation.",
+    interval = upload_retry_interval,
+    max_tries = max_upload_retries)
+  } else {
     whdh::upload_to_data_lake(
       data_lake_name = get_data_lake_name(),
       container = "whdh",
       source_path = output_file,
       destination_path = upload_path,
-      silent = TRUE
+      silent = FALSE
     )
-  },
-  when = "Failed to complete Storage Services operation.",
-  interval = upload_retry_interval,
-  max_tries = max_upload_retries)
+  }
 
   return(output_df)
 }
