@@ -18,7 +18,8 @@ testthat::test_that("upload_billion_data works as expected", {
     version = tstamp,
     na_rm = TRUE,
     experiment = "unit_tests",
-    silent = TRUE
+    silent = TRUE,
+    retry = FALSE
   )
 
   Sys.sleep(30)
