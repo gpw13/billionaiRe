@@ -60,29 +60,38 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extrapolate_campaign_data</span><span class="op">(</span>
-  <span class="va">pathogen</span>,
-  <span class="va">pathogen_year</span>,
-  <span class="va">df</span>,
-  <span class="va">transform_value_col</span>,
-  <span class="va">source</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extrapolate_campaign_data</span><span class="op">(</span></span>
+<span>  <span class="va">pathogen</span>,</span>
+<span>  <span class="va">pathogen_year</span>,</span>
+<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">transform_value_col</span>,</span>
+<span>  <span class="va">source</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>pathogen</dt>
 <dd><p>Indicator IDs of the pathogens</p></dd>
+
+
 <dt>pathogen_year</dt>
 <dd><p>Latest year of data to use for flat extrapolation (extrapolating after that year)</p></dd>
+
+
 <dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+
+
 <dt>transform_value_col</dt>
 <dd><p>Column name of column(s) with transformed indicator values,
 used to calculate contributions.</p></dd>
+
+
 <dt>source</dt>
 <dd><p>Source to use if no unique source available for the calculation.</p></dd>
+
 </dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -94,7 +103,7 @@ used to calculate contributions.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

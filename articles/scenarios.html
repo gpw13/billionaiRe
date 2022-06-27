@@ -80,7 +80,7 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Scenarios</h1>
             
       
@@ -94,12 +94,16 @@
 <h2 id="definition">Definition<a class="anchor" aria-label="anchor" href="#definition"></a>
 </h2>
 <p>In the Triple Billions and the billionaiRe package context, <code>scenarios</code> are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.</p>
-<p>Three sets of scenarios can be identified:</p>
+<p>Two sets of scenarios can be identified:</p>
 <ul>
-<li>Event-based scenarios: an event has a presumed but yet unknown impact on the Billions (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series.</li>
-<li>Trajectory-based scenarios: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets, or acceleration scenarios from technical programs). Those scenarios should start from 2019 as 2018 is the GPW13 baseline year.</li>
-<li>Internal use scenarios: scenarios provide the ability to deal with alternative time series of any kind, which could be include alternative projection methods, update to data sources, etc. While those scenarios might not be displayed for public use, they illustrate the versatility seeking in scenarios.</li>
+<li>
+<em>Event-based scenarios</em>: an event has a presumed but yet unknown impact on the Billions (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series.</li>
+<li>
+<em>Trajectory-based scenarios</em>: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets (e.g. <code>sdg</code> scenarios), or <code>acceleration</code> scenarios from technical programs). Those scenarios should start from 2018 as the GPW13 baseline year.</li>
+<li>
+<em>Internal use scenarios</em>: scenarios provide the ability to deal with alternative time series of any kind, which could be include alternative projection methods, update to data sources, etc. While those scenarios might not be displayed for public use, they illustrate the versatility seeking in scenarios.</li>
 </ul>
+<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are storing values that are alternative, plausible, description of how the future may develop. The <em>internal use</em> scenarios hold values to highlight where the data comes from.</p>
 <p>Scenarios must:</p>
 <ol style="list-style-type: decimal">
 <li>Be <a href="https://r4ds.had.co.nz/tidy-data.html" class="external-link">tidy</a>: each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).</li>
@@ -108,59 +112,61 @@
 <ul>
 <li>If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see <a href="#data-recycling">Data recycling</a>).</li>
 </ul>
-<p>There are three special case scenario:</p>
+<p>There are three <em>internal use</em> special case scenario:</p>
 <ul>
 <li>
 <code>routine</code>: stores the <code>reported</code> and <code>estimated</code> data</li>
 <li>
 <code>reference_infilling</code>: stores WHO technical programs projected data (either <code>projected</code> or <code>imputed</code>).</li>
 <li>
-<code>default</code>: stores the main scenario presented on the dashboard. It can include projections and imputations. It is also the scenario to be used for data recycling (see <a href="#data-recycling">Data recycling</a>)</li>
+<code>covid_shock</code>: stores the data that correspond to the COVID-19 shock.</li>
 </ul>
+<p>All together those three scenarios are the <em>base scenarios</em>. They are the spine of other scenarios and act then as a filling when scenarios do not contain the required data to build a full time series.</p>
 </div>
 <div class="section level2">
 <h2 id="data-recycling">Data recycling<a class="anchor" aria-label="anchor" href="#data-recycling"></a>
 </h2>
-<p>billionaiRe <code>transform_</code> and <code>calculate_</code> functions (as well as rapporteur export functions) use the provided scenario column as a group in <a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a>. Scenarios should then contain all the required data needed for billionaiRe calculations. If a scenario does not contain the required data, the functions will fail.</p>
-<p>For most users of billionaiRe, accessing external data tables (on xMart or Wolrd Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: minimal storage before computation.</p>
-<p>Data recycling infers the existence of a reference scenario, which is be the main scenario displayed on the dashboard. The default scenario is call <code>default</code> by default, but as this is a parameter (<code>default_scenario</code>) of <code><a href="../reference/recycle_data.html">recycle_data()</a></code>, it can be modified as required. <code>default</code> scenario provides values when they are absent from scenarios, along with <code>scenario_reported_estimated</code> for reported/estimated values (<code>routine</code> by default) and <code>scenario_reference_infilling</code> for values imputed/projected by technical programs (<code>reference_infilling</code> by default).</p>
-<p>Data recycling works by adding to all scenarios present in the <code>scenario_col</code> column values that are missing from first <code>default_scenario</code>, then looks in <code>scenario_reported_estimated</code> and <code>scenario_reported_estimated</code> to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
+<p>billionaiRe <code>transform_</code> and <code>calculate_</code> functions (as well as <code>rapporteur</code> export functions) use the <code>scenario</code> column as a <code>group</code> in <a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a>. <em>Scenarios should then contain all the required data needed for billionaiRe calculations</em>. If a scenario does not contain the required data, the functions will fail.</p>
+<p>As the functions require full minimal data sets, <em>data recycling</em> becomes necessary to be able to pull into partial scenarios the minium required data so that they can run.</p>
+<p>For most users of billionaiRe, accessing external data tables (on xMart or World Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: <em>minimal storage before computation</em>.</p>
+<p>Data recycling infers the existence of a reference scenario. This reference scenario is called <code>default</code> by default, and it is a parameter (<code>default_scenario</code>) of <code><a href="../reference/recycle_data.html">recycle_data()</a></code> and all functions that rely on full data sets. The name of <code>default_scenario</code> can then be modified as required.</p>
+<p><code>default</code> scenario provides values when they are absent from scenarios, along with <code>scenario_reported_estimated</code> for reported/estimated values (<code>routine</code> by default), <code>scenario_reference_infilling</code> for values imputed/projected by technical programs (<code>reference_infilling</code> by default) and <code>scenario_covid_shock</code> for COVID-19 shock values. Together <code>scenario_reported_estimated</code>, <code>scenario_reference_infilling</code>, and <code>scenario_covid_shock</code> are the base scenarios.</p>
+<p>Data recycling works by adding to all scenarios present in the <code>scenario_col</code> column values that are missing from first <code>default_scenario</code>, then looks in <code>scenario_reported_estimated</code>, <code>scenario_reported_estimated</code> and <code>scenario_covid_shock</code> to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_misc_data.html">load_misc_data</a></span><span class="op">(</span><span class="st">"test_data/test_data/test_data_2022-03-06T09-30-41.parquet"</span><span class="op">)</span>
-
-<span class="va">scenario_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"covid_dip_lag"</span><span class="op">)</span>
-
-<span class="va">default_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"default"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">reported_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"routine"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">reported_not_in_default</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">reported_not_in_scenario</span>, <span class="va">default_not_in_scenario</span>,
-  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">reference_infilling_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"reference_infilling"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">reference_infilling_not_in_default</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">reference_infilling_not_in_scenario</span>, <span class="va">default_not_in_scenario</span>,
-  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">not_in_scenario</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">default_not_in_scenario</span>, <span class="va">reported_not_in_default</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">reference_infilling_not_in_default</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>recycled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p>As for projections, the track change offered by git will act as a history of what is contained in the default scenario at any given time. It could be interesting to have a log of what is meant by <code>default</code> at any given time in the future to make the retrieval of the history easier.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_misc_data.html">load_misc_data</a></span><span class="op">(</span><span class="st">"test_data/test_data/test_data_2022-03-06T09-30-41.parquet"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">scenario_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"covid_dip_lag"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">default_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"default"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">reported_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"routine"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">reported_not_in_default</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">reported_not_in_scenario</span>, <span class="va">default_not_in_scenario</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">reference_infilling_not_in_scenario</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"reference_infilling"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">scenario_df</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">reference_infilling_not_in_default</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">reference_infilling_not_in_scenario</span>, <span class="va">default_not_in_scenario</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"ind"</span>, <span class="st">"year"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">not_in_scenario</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">default_not_in_scenario</span>, <span class="va">reported_not_in_default</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">reference_infilling_not_in_default</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>recycled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="implementation-of-data-recycling-in-billionaire">Implementation of data recycling in billionaiRe<a class="anchor" aria-label="anchor" href="#implementation-of-data-recycling-in-billionaire"></a>
 </h3>
-<p>Data recycling is implemented in billionaiRe through the <code><a href="../reference/recycle_data.html">recycle_data()</a></code> function. This function wraps around <code><a href="../reference/recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> (not exported for public use) to run the recycling over all the scenarios present in the input data frame.</p>
+<p>Data recycling is implemented in billionaiRe through the <code><a href="../reference/recycle_data.html">recycle_data()</a></code> function. This function wraps around <code><a href="../reference/recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> (not exported for external use) to run the recycling over all the scenarios present in the input data frame.</p>
 <p><code>recycle_data</code> uses similar parameters than other exported billionaiRe functions. However it introduces specific parameters:</p>
 <ul>
 <li>
@@ -170,53 +176,55 @@
 <li>
 <code>scenario_reference_infilling</code>: sets the projected/imputed scenarios. <code>reference_infilling</code> by default.</li>
 <li>
+<code>scenario_covid_shock</code>: sets the data that correspond to the COVID-19 shock. <code>covid_shock</code> by default.</li>
+<li>
 <code>include_projection</code>: Boolean to set if projections should be included in the recycling. <code>TRUE</code> by default.</li>
 <li>
 <code>recycle_campaigns</code>: Boolean to set if campaign data should be included in the recycling. <code>TRUE</code> by default.</li>
 </ul>
 <p>A <code>recycle</code> and <code>...</code>parameters were added to the <code>transform_</code> functions to ease recycling. If <code>recycle</code> is <code>TRUE</code>, data will be recycled, using the eventual parameters passed through the <code>...</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Adding a detect_respond raw to avoid warning from recycle_data.</span>
-<span class="va">detect_respond_afg_2018</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  iso3 <span class="op">=</span> <span class="st">"AFG"</span>,
-  ind <span class="op">=</span> <span class="st">"detect_respond"</span>,
-  value <span class="op">=</span> <span class="fl">46.66667</span>,
-  scenario <span class="op">=</span> <span class="st">"routine"</span>,
-  type <span class="op">=</span> <span class="st">"estimated"</span><span class="op">)</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_misc_data.html">load_misc_data</a></span><span class="op">(</span><span class="st">"test_data/test_data/test_data_2022-03-06T09-30-41.parquet"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">detect_respond_afg_2018</span><span class="op">)</span>
-
-<span class="va">test_data_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span>billion <span class="op">=</span> <span class="st">"hep"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span>
-
-<span class="co"># Exactly equivalent to above:</span>
-<span class="va">test_data_hep_transform</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span>
-
-<span class="va">test_data_hpop</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span><span class="st">"hpop"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Exactly equivalent to above:</span>
-<span class="va">test_data_hpop_transform</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_hpop_data.html">transform_hpop_data</a></span><span class="op">(</span>recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Adding a detect_respond raw to avoid warning from recycle_data.</span></span>
+<span><span class="va">detect_respond_afg_2018</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  iso3 <span class="op">=</span> <span class="st">"AFG"</span>,</span>
+<span>  ind <span class="op">=</span> <span class="st">"detect_respond"</span>,</span>
+<span>  value <span class="op">=</span> <span class="fl">46.66667</span>,</span>
+<span>  scenario <span class="op">=</span> <span class="st">"routine"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"estimated"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_misc_data.html">load_misc_data</a></span><span class="op">(</span><span class="st">"test_data/test_data/test_data_2022-03-06T09-30-41.parquet"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">detect_respond_afg_2018</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">test_data_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span>billion <span class="op">=</span> <span class="st">"hep"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Exactly equivalent to above:</span></span>
+<span><span class="va">test_data_hep_transform</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span></span>
+<span></span>
+<span><span class="va">test_data_hpop</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span><span class="st">"hpop"</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Exactly equivalent to above:</span></span>
+<span><span class="va">test_data_hpop_transform</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/transform_hpop_data.html">transform_hpop_data</a></span><span class="op">(</span>recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 11 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, ind &lt;chr&gt;, scenario &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   value &lt;dbl&gt;, type &lt;chr&gt;, recycled &lt;lgl&gt;, source &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   transform_value &lt;dbl&gt;, use_dash &lt;lgl&gt;, use_calc &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>In order to facilitate the cleaning of data, a <code>recycled</code> column is added by the recycling function to identify data points that have been recycled. They can then be removed by the <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code> function that takes into account a few specific scenarios.</p>
 <p>To avoid adding ellipses to all billionaiRe functions which could have opened a number of unforeseeable issues, not all formally recycled data can be identified and thus removed with <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code>, especially for the HEP billion. This includes mostly carried over campaign data.</p>
-<p>A <code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> function is provided to combine the <code>default_scenario</code>, <code>scenario_reported_estimated</code>, and <code>scenario_reference_infilling</code> efficiently.</p>
+<p>A <code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> function is provided to combine the <code>default_scenario</code>, <code>scenario_reported_estimated</code>, <code>scenario_reference_infilling</code> and <code>scenario_covid_shock</code> efficiently.</p>
 </div>
 </div>
 <div class="section level2">
@@ -229,9 +237,9 @@
 <li>Calculating</li>
 <li>Exporting</li>
 </ol>
-<p>The integration of the scenario happens at stage 3 (Calculating), as does the rest of the billionaiRe calculations.</p>
-<p>Within the billionaiRe calculations pipeline, adding the scenarios values should ideally be the first steps. However, some scenarios, especially event-based and trajectory-based scenarios, might require some level of data recycling before they are run. If this is the case, errors should be produced when user try to run them.</p>
-<p>In the <code><a href="../reference/add_scenario.html">add_scenario()</a></code> function, a <code>default_scenario</code> argument can be passed to provide a specific default_scenario.</p>
+<p>The definition of the <em>internal use</em> scenarios happen in the <code>ingestion</code> and <code>projecting</code> steps.</p>
+<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are calculated at stage 3 (Calculating), as does the rest of the billionaiRe calculations. Those scenarios can be calculated with the <code><a href="../reference/add_scenario.html">add_scenario()</a></code> function.</p>
+<p>Within the billionaiRe calculations pipeline, adding the scenarios values should ideally be the first steps. However, some event-based and trajectory-based scenarios, might require some level of data recycling before they run. If this is the case, errors should be produced.</p>
 <p>The <code>add_scenario</code> functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called :</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -240,66 +248,66 @@
 <strong>wrappers functions</strong> combine base scenario functions to generate more complex scenarios like <code>acceleration</code>, <code>sdg</code>, etc.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span>
-
-<span class="va">test_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span>
-    scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span>, <span class="co"># picks from a pre-determined list of scenarios</span>
-    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>
-  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant).</span>
-  <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span>
-    scenario_function <span class="op">=</span> <span class="st">"percent_baseline"</span>, <span class="co"># picks from a pre-determined list of scenarios</span>
-    percent_change <span class="op">=</span> <span class="fl">10</span>,
-    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>
-  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant)</span>
-  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span>
-    billion <span class="op">=</span> <span class="st">"hep"</span>, <span class="co"># One function for each billions, so need to specify which one this is applied to.</span>
-    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>,
-    scenario_reported_estimated <span class="op">=</span> <span class="st">"routine"</span>,
-    scenario_reference_infilling <span class="op">=</span> <span class="st">"reference_infilling"</span>,
-    include_projection <span class="op">=</span> <span class="cn">TRUE</span>,
-    recycle_campaigns <span class="op">=</span> <span class="cn">TRUE</span>
-  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.</span>
-  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span>
-    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-    recycle <span class="op">=</span> <span class="cn">FALSE</span>
-  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># adds a parameter to `transform_` functions to recycle. In this pipeline it is redundant as data was already recycled.</span>
-  <span class="fu"><a href="../reference/calculate_hep_components.html">calculate_hep_components</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/calculate_hep_billion.html">calculate_hep_billion</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, end_year <span class="op">=</span> <span class="fl">2025</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span>
-    <span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-      <span class="st">"prevent"</span>,
-      <span class="st">"espar"</span>,
-      <span class="st">"detect_respond"</span>,
-      <span class="st">"hep_idx"</span>
-    <span class="op">)</span>,
-    <span class="va">year</span> <span class="op">==</span> <span class="fl">2025</span>
-  <span class="op">)</span>
-<span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span>
-<span class="co">#&gt;       Missing values in AFG:</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [1]</span></span>
-<span class="co">#&gt;   iso3   year ind            scenario </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond halt_rise</span>
-<span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span>
-<span class="co">#&gt;       Missing values in AFG:</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [1]</span></span>
-<span class="co">#&gt;   iso3   year ind            scenario</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond 10_2018</span>
-<span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span>
-<span class="co">#&gt;       Missing values in AFG:</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [2]</span></span>
-<span class="co">#&gt;   iso3   year ind            scenario </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond 10_2018</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">test_hep</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span></span>
+<span>    scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span>, <span class="co"># picks from a pre-determined list of scenarios</span></span>
+<span>    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant).</span></span>
+<span>  <span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span></span>
+<span>    scenario_function <span class="op">=</span> <span class="st">"percent_baseline"</span>, <span class="co"># picks from a pre-determined list of scenarios</span></span>
+<span>    percent_change <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># indicates the scenario used as the default (in addition to `routine` and `reference_infilling`, where relevant)</span></span>
+<span>  <span class="fu"><a href="../reference/recycle_data.html">recycle_data</a></span><span class="op">(</span></span>
+<span>    billion <span class="op">=</span> <span class="st">"hep"</span>, <span class="co"># One function for each billions, so need to specify which one this is applied to.</span></span>
+<span>    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>    default_scenario <span class="op">=</span> <span class="st">"covid_dip_lag"</span>,</span>
+<span>    scenario_reported_estimated <span class="op">=</span> <span class="st">"routine"</span>,</span>
+<span>    scenario_reference_infilling <span class="op">=</span> <span class="st">"reference_infilling"</span>,</span>
+<span>    include_projection <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    recycle_campaigns <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Warnings come from the call to recycle as Afghanistan as in 2018 values for detect_respond. Thus, all scenarios return NAs for Afghanistan for that year as they all require a 2018 value.</span></span>
+<span>  <span class="fu"><a href="../reference/transform_hep_data.html">transform_hep_data</a></span><span class="op">(</span></span>
+<span>    scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>    recycle <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># adds a parameter to `transform_` functions to recycle. In this pipeline it is redundant as data was already recycled.</span></span>
+<span>  <span class="fu"><a href="../reference/calculate_hep_components.html">calculate_hep_components</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/calculate_hep_billion.html">calculate_hep_billion</a></span><span class="op">(</span>scenario_col <span class="op">=</span> <span class="st">"scenario"</span>, end_year <span class="op">=</span> <span class="fl">2025</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"prevent"</span>,</span>
+<span>      <span class="st">"espar"</span>,</span>
+<span>      <span class="st">"detect_respond"</span>,</span>
+<span>      <span class="st">"hep_idx"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="va">year</span> <span class="op">==</span> <span class="fl">2025</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span></span>
+<span><span class="co">#&gt;       Missing values in AFG:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [1]</span></span></span>
+<span><span class="co">#&gt;   iso3   year ind            scenario </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond halt_rise</span></span>
+<span><span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span></span>
+<span><span class="co">#&gt;       Missing values in AFG:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [1]</span></span></span>
+<span><span class="co">#&gt;   iso3   year ind            scenario</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond 10_2018</span></span>
+<span><span class="co">#&gt; Warning: detect_respond must be present in df for at least the start_year and end_year, for each country (and scenario when provided)</span></span>
+<span><span class="co">#&gt;       Missing values in AFG:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   iso3, year, scenario [2]</span></span></span>
+<span><span class="co">#&gt;   iso3   year ind            scenario </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AFG    <span style="text-decoration: underline;">2</span>025 detect_respond 10_2018</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="base-scenario-functions">Base scenario functions:<a class="anchor" aria-label="anchor" href="#base-scenario-functions"></a>
 </h3>
@@ -365,31 +373,31 @@
 </ul>
 <p>Each of the base scenario is wrapped in <code>add_scenario</code>. This function calls a <code>add_</code> function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  value <span class="op">=</span> <span class="fl">80</span><span class="op">:</span><span class="fl">100</span>,
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2030</span>,
-  ind <span class="op">=</span> <span class="st">"adult_obese"</span>,
-  iso3 <span class="op">=</span> <span class="st">"testalia"</span>,
-  scenario <span class="op">=</span> <span class="st">"default"</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span><span class="va">df</span>, scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"halt_rise"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span>
-<span class="co">#&gt;   value  year ind         iso3     scenario </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    88  <span style="text-decoration: underline;">2</span>018 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    88  <span style="text-decoration: underline;">2</span>019 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    88  <span style="text-decoration: underline;">2</span>020 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    88  <span style="text-decoration: underline;">2</span>021 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    88  <span style="text-decoration: underline;">2</span>022 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span>    88  <span style="text-decoration: underline;">2</span>023 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span>    88  <span style="text-decoration: underline;">2</span>024 adult_obese testalia halt_rise</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">8</span>    88  <span style="text-decoration: underline;">2</span>025 adult_obese testalia halt_rise</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  value <span class="op">=</span> <span class="fl">80</span><span class="op">:</span><span class="fl">100</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2030</span>,</span>
+<span>  ind <span class="op">=</span> <span class="st">"adult_obese"</span>,</span>
+<span>  iso3 <span class="op">=</span> <span class="st">"testalia"</span>,</span>
+<span>  scenario <span class="op">=</span> <span class="st">"default"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span><span class="va">df</span>, scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"halt_rise"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span></span>
+<span><span class="co">#&gt;   value  year ind         iso3     scenario </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    88  <span style="text-decoration: underline;">2</span>018 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    88  <span style="text-decoration: underline;">2</span>019 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>    88  <span style="text-decoration: underline;">2</span>020 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>    88  <span style="text-decoration: underline;">2</span>021 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>    88  <span style="text-decoration: underline;">2</span>022 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>    88  <span style="text-decoration: underline;">2</span>023 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>    88  <span style="text-decoration: underline;">2</span>024 adult_obese testalia halt_rise</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span>    88  <span style="text-decoration: underline;">2</span>025 adult_obese testalia halt_rise</span></span></code></pre></div>
 <p>Behind the scenes, <code>add_scenario</code> first get all unique indicators present in <code>df</code>, then passed each of them to <code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code>. <code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code> then find the <code>add_scenario_adult_obese</code> function and runs it with <code>df</code> and <code>halt_rise</code>. <code>add_scenario_adult_obese</code> then passes appropriate parameters to <code>scenario_halt_rise</code>. In this case, this is mostly to pass <code>small_is_best</code> to the scenario function.</p>
-<p>The <code>...</code> ellipsis is used to based down parameters down the functions.</p>
+<p>The <code>...</code> ellipsis is used to pass parameters down the functions.</p>
 <div class="section level4">
 <h4 id="acceleration-scenarios">Acceleration scenarios<a class="anchor" aria-label="anchor" href="#acceleration-scenarios"></a>
 </h4>
@@ -430,7 +438,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer>

@@ -69,12 +69,12 @@ Runs:</p><ul><li><p><code>scenario_halt_rise(df, baseline_year = 2010, small_is_
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">sdg_adult_obese</span><span class="op">(</span>
-  <span class="va">df</span>,
-  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hpop"</span><span class="op">)</span>,
-  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sdg_adult_obese</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hpop"</span><span class="op">)</span>,</span>
+<span>  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -82,21 +82,32 @@ Runs:</p><ul><li><p><code>scenario_halt_rise(df, baseline_year = 2010, small_is_
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+
+
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
+
+
 <dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional parameters to be passed to scenario function</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario</code> is
+    
+
+<p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario</code> is
 set to <code>sdg</code></p>
+
+
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -108,7 +119,7 @@ set to <code>sdg</code></p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

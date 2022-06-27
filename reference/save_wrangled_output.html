@@ -63,21 +63,25 @@ the correct columns as required by the Triple Billions xMart tables.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">save_wrangled_output</span><span class="op">(</span>
-  <span class="va">df</span>,
-  <span class="va">path</span>,
-  data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wrangled_data"</span>, <span class="st">"projected_data"</span>, <span class="st">"final_data"</span><span class="op">)</span>,
-  na_rm <span class="op">=</span> <span class="cn">FALSE</span>,
-  compression <span class="op">=</span> <span class="st">"gzip"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_wrangled_output</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">path</span>,</span>
+<span>  data_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wrangled_data"</span>, <span class="st">"projected_data"</span>, <span class="st">"final_data"</span><span class="op">)</span>,</span>
+<span>  na_rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  compression <span class="op">=</span> <span class="st">"gzip"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
 <dd><p>data frame the output</p></dd>
+
+
 <dt>path</dt>
 <dd><p>the path where the output should be saved</p></dd>
+
+
 <dt>data_type</dt>
 <dd><p>(string): the type of data</p><ul><li><p><code>wrangled_data</code> (default): raw data that has been wrangled into a suitable
 form for analysis.</p></li>
@@ -86,16 +90,23 @@ has not yet been transformed or calculated upon.</p></li>
 <li><p><code>final_data</code>: the complete set of billions data with transformed values,
 contributions, and all calculations available.</p></li>
 </ul></dd>
+
+
 <dt>na_rm</dt>
 <dd><p>(logical) Specifies whether to remove rows where <code>value</code> is missing.
 Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>compression</dt>
 <dd><p>Compression algorithm to use for parquet format. <code>"gzip"</code> by
 default</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame. Note that this is the modified version of in the input
+    
+
+<p>A data frame. Note that this is the modified version of in the input
 the function (such as from removing empty rows when <code>na_rm = TRUE</code>) are carried
 over to the output.</p>
     </div>
@@ -114,7 +125,7 @@ it to work with pipes better.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

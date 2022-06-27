@@ -66,19 +66,19 @@ from a provided baseline year. It provides values for scenarios stated as
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">trim_values</span><span class="op">(</span>
-  <span class="va">df</span>,
-  <span class="va">col</span>,
-  value_col <span class="op">=</span> <span class="st">"value"</span>,
-  trim <span class="op">=</span> <span class="cn">TRUE</span>,
-  small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,
-  keep_better_values <span class="op">=</span> <span class="cn">FALSE</span>,
-  upper_limit <span class="op">=</span> <span class="fl">100</span>,
-  lower_limit <span class="op">=</span> <span class="fl">0</span>,
-  trim_years <span class="op">=</span> <span class="cn">TRUE</span>,
-  start_year <span class="op">=</span> <span class="fl">2018</span>,
-  end_year <span class="op">=</span> <span class="fl">2025</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">trim_values</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">col</span>,</span>
+<span>  value_col <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keep_better_values <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  upper_limit <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  lower_limit <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  trim_years <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  start_year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  end_year <span class="op">=</span> <span class="fl">2025</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -86,40 +86,65 @@ from a provided baseline year. It provides values for scenarios stated as
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+
+
 <dt>col</dt>
 <dd><p>column to trim values from. Will be removed before returning the
 data frame.</p></dd>
+
+
 <dt>value_col</dt>
 <dd><p>Column name of column with indicator values. This column will be
 used to return the results.</p></dd>
+
+
 <dt>trim</dt>
 <dd><p>logical to indicate if the data should be trimmed between
 <code>upper_limit</code> and <code>lower_limit</code>.</p></dd>
+
+
 <dt>small_is_best</dt>
 <dd><p>Logical to identify if a lower value is better than a higher
 one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).</p></dd>
+
+
 <dt>keep_better_values</dt>
 <dd><p>logical to indicate if "better" values should be
 kept from <code>value_col</code> if they are present. Follows the direction set in
 <code>small_is_best</code>.  For instance, if small_is_best is TRUE, then <code>value_col</code> lower
 than <code>col</code> will be kept.</p></dd>
+
+
 <dt>upper_limit</dt>
 <dd><p>upper limit at which the indicator should be caped.</p></dd>
+
+
 <dt>lower_limit</dt>
 <dd><p>lower_limit limit at which the indicator should be caped.</p></dd>
+
+
 <dt>trim_years</dt>
 <dd><p>logical to indicate if years before <code>start_year</code> and after
 <code>end_year</code> should be removed</p></dd>
+
+
 <dt>start_year</dt>
 <dd><p>Start year for scenario, defaults to 2018.</p></dd>
+
+
 <dt>end_year</dt>
 <dd><p>End year for scenario, defaults to 2025</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>trimed data frame, removing the <code>col</code> column, and putting the trimmed
+    
+
+<p>trimed data frame, removing the <code>col</code> column, and putting the trimmed
 values in <code>value_col</code></p>
+
+
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -142,7 +167,7 @@ value (90%) by 30% by 2025", will results to a 2025 value of 63% and not 60%.</p
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

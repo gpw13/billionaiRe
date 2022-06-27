@@ -69,17 +69,17 @@ and multiplies the surviving infants denominator by that number.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">pathogen_calc</span><span class="op">(</span>
-  <span class="va">df</span>,
-  <span class="va">name</span>,
-  <span class="va">numerators</span>,
-  <span class="va">denominators</span>,
-  <span class="va">transform_value_col</span>,
-  <span class="va">source</span>,
-  <span class="va">ind_ids</span>,
-  <span class="va">multiply_surviving_infs</span>,
-  <span class="va">max_value</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pathogen_calc</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">numerators</span>,</span>
+<span>  <span class="va">denominators</span>,</span>
+<span>  <span class="va">transform_value_col</span>,</span>
+<span>  <span class="va">source</span>,</span>
+<span>  <span class="va">ind_ids</span>,</span>
+<span>  <span class="va">multiply_surviving_infs</span>,</span>
+<span>  <span class="va">max_value</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -87,27 +87,44 @@ and multiplies the surviving infants denominator by that number.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>Name of pathogen to provide in the data frame.</p></dd>
+
+
 <dt>numerators</dt>
 <dd><p>Indicator names for numerators.</p></dd>
+
+
 <dt>denominators</dt>
 <dd><p>Indicator names for denominators.</p></dd>
+
+
 <dt>transform_value_col</dt>
 <dd><p>Column name of column(s) with transformed indicator values,
 used to calculate contributions.</p></dd>
+
+
 <dt>source</dt>
 <dd><p>Source to use if no unique source available for the calculation.</p></dd>
+
+
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
+
+
 <dt>multiply_surviving_infs</dt>
 <dd><p>Logical, multiple surviving infant population by
 number of routine vaccines in numerator.</p></dd>
+
+
 <dt>max_value</dt>
 <dd><p>Maximum value the calculated pathogen value can take.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -124,7 +141,7 @@ that sits within <code><a href="calculate_hep_components.html">calculate_hep_com
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

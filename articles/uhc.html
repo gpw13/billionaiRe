@@ -80,7 +80,7 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>UHC Billion calculation</h1>
             
       
@@ -101,21 +101,21 @@
 </ul>
 <p>Run in sequence, these can calculate the entire UHC Billion, or they can be run separately to produce different outputs as required. Details on the inputs of each function are available in their individual documentation, but below you can see the quick and easy Billions calculation done using the the sample fake UHC data provided in the package, <code>uhc_df</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span>
-
-<span class="va">uhc_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/transform_uhc_data.html">transform_uhc_data</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/calculate_uhc_billion.html">calculate_uhc_billion</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/calculate_uhc_contribution.html">calculate_uhc_contribution</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span>, pop_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"uhc_sm"</span>, <span class="st">"asc"</span>, <span class="st">"fh"</span><span class="op">)</span>,
-                <span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 9</span></span>
-<span class="co">#&gt;   iso3   year ind    value type      transform_value source         contribution</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>023 fh      25.4 Projected            74.6 <span style="color: #BB0000;">NA</span>                -<span style="color: #BB0000;">2</span><span style="color: #BB0000; text-decoration: underline;">963</span><span style="color: #BB0000;">536.</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AFG    <span style="text-decoration: underline;">2</span>023 asc     45.6 projected            45.6 WHO DDI calcu…     1<span style="text-decoration: underline;">607</span>136.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> AFG    <span style="text-decoration: underline;">2</span>023 uhc_sm  34.0 projected            34.0 WHO DDI calcu…      -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">238.</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: contribution_percent &lt;dbl&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">uhc_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/transform_uhc_data.html">transform_uhc_data</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/calculate_uhc_billion.html">calculate_uhc_billion</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/calculate_uhc_contribution.html">calculate_uhc_contribution</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span>, pop_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"uhc_sm"</span>, <span class="st">"asc"</span>, <span class="st">"fh"</span><span class="op">)</span>,</span>
+<span>                <span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
+<span><span class="co">#&gt;   iso3   year ind    value type      transform_value source         contribution</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AFG    <span style="text-decoration: underline;">2</span>023 fh      25.4 Projected            74.6 <span style="color: #BB0000;">NA</span>                -<span style="color: #BB0000;">2</span><span style="color: #BB0000; text-decoration: underline;">963</span><span style="color: #BB0000;">536.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AFG    <span style="text-decoration: underline;">2</span>023 asc     45.6 projected            45.6 WHO DDI calcu…     1<span style="text-decoration: underline;">607</span>136.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> AFG    <span style="text-decoration: underline;">2</span>023 uhc_sm  34.0 projected            34.0 WHO DDI calcu…      -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">238.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: contribution_percent &lt;dbl&gt;</span></span></span></code></pre></div>
   </main>
 </div>
 
@@ -128,7 +128,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer>

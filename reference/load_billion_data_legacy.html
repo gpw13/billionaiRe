@@ -75,20 +75,22 @@ certain time period, or to extract all data from the database.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">load_billion_data_legacy</span><span class="op">(</span>
-  billion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hep"</span>, <span class="st">"hpop"</span>, <span class="st">"uhc"</span>, <span class="st">"all"</span><span class="op">)</span>,
-  mart_table <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full_data"</span>, <span class="st">"raw_data"</span>, <span class="st">"projected_data"</span>, <span class="st">"unproj_data"</span>, <span class="st">"proj_data"</span><span class="op">)</span>,
-  date_filter <span class="op">=</span> <span class="st">"latest"</span>,
-  na_rm <span class="op">=</span> <span class="cn">TRUE</span>,
-  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"streaming"</span>, <span class="st">"none"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">load_billion_data_legacy</span><span class="op">(</span></span>
+<span>  billion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hep"</span>, <span class="st">"hpop"</span>, <span class="st">"uhc"</span>, <span class="st">"all"</span><span class="op">)</span>,</span>
+<span>  mart_table <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full_data"</span>, <span class="st">"raw_data"</span>, <span class="st">"projected_data"</span>, <span class="st">"unproj_data"</span>, <span class="st">"proj_data"</span><span class="op">)</span>,</span>
+<span>  date_filter <span class="op">=</span> <span class="st">"latest"</span>,</span>
+<span>  na_rm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"streaming"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>billion</dt>
 <dd><p>Billions data to load, one of "hep" (default), "hpop", "uhc", or "all".</p></dd>
+
+
 <dt>mart_table</dt>
 <dd><p>Name of xMart4 table in the GPW13 mart to load data from.</p><ul><li><p><code>full_data</code>: Full Billions data with transformed values, contributions,
 and all calculations available. (default)</p></li>
@@ -100,27 +102,38 @@ technical programme(s).</p></li>
 <li><p><code>unproj_data</code>: Raw input Billions that has has not been projected by the
 technical programme(s) and needs projection by DDI.</p></li>
 </ul></dd>
+
+
 <dt>date_filter</dt>
 <dd><p>One of <code>NULL</code>, "latest", or a single date string. The date
 string needs to be in ISO6801 format, such as "1989-4-4" or "1988-06-21".
 If a date is provided, will only take values loaded on or prior to that
 date into the xMart4 database.</p></dd>
+
+
 <dt>na_rm</dt>
 <dd><p>Logical value, specifying whether to filter the data to only rows
 where <code>value</code> is not missing. Defaults to <code>TRUE</code>.</p></dd>
+
+
 <dt>format</dt>
 <dd><p>Specification of the output format to be returned by the xMart API.
 Defaults to <code>"csv"</code> for faster download and processing times.
 Passed to <code><a href="https://rdrr.io/pkg/xmart4/man/xmart4_table.html" class="external-link">xmart4::xmart4_table()</a></code>. See the
 <a href="https://portal-uat.who.int/xmart4/docs/xmart_api/use_API.html" class="external-link">xMart4 API documentation</a>
 for details on all three options ("csv", "streaming", and "none").</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="https://rdrr.io/pkg/xmart4/man/xmart4_table.html" class="external-link">xmart4::xmart4_table()</a></code>. Use if
 you need to provide additional token specifications for Azure authentication.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame.</p>
+    
+
+<p>A data frame.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -138,7 +151,7 @@ landing page linked above.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

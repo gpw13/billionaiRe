@@ -66,24 +66,24 @@ smaller values are best.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scenario_best_of</span><span class="op">(</span>
-  <span class="va">df</span>,
-  <span class="va">scenario_names</span>,
-  value_col <span class="op">=</span> <span class="st">"value"</span>,
-  maximize_end_year <span class="op">=</span> <span class="cn">FALSE</span>,
-  start_year <span class="op">=</span> <span class="fl">2018</span>,
-  end_year <span class="op">=</span> <span class="fl">2025</span>,
-  target_year <span class="op">=</span> <span class="va">end_year</span>,
-  scenario_name <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"best_of_{paste0(scenario_names, collapse = '_')}"</span><span class="op">)</span>,
-  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,
-  trim <span class="op">=</span> <span class="cn">TRUE</span>,
-  small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,
-  keep_better_values <span class="op">=</span> <span class="cn">TRUE</span>,
-  upper_limit <span class="op">=</span> <span class="fl">100</span>,
-  lower_limit <span class="op">=</span> <span class="fl">0</span>,
-  trim_years <span class="op">=</span> <span class="cn">TRUE</span>,
-  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scenario_best_of</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">scenario_names</span>,</span>
+<span>  value_col <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  maximize_end_year <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  start_year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  end_year <span class="op">=</span> <span class="fl">2025</span>,</span>
+<span>  target_year <span class="op">=</span> <span class="va">end_year</span>,</span>
+<span>  scenario_name <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"best_of_{paste0(scenario_names, collapse = '_')}"</span><span class="op">)</span>,</span>
+<span>  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keep_better_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  upper_limit <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  lower_limit <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  trim_years <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,57 +91,90 @@ smaller values are best.</p>
     <dl><dt>df</dt>
 <dd><p>Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.</p></dd>
+
+
 <dt>scenario_names</dt>
 <dd><p>names of the scenario to pick from.</p></dd>
+
+
 <dt>value_col</dt>
 <dd><p>Column name of column with indicator values.</p></dd>
+
+
 <dt>maximize_end_year</dt>
-<dd><p>(bollean) if TRUE, the best scenario is
+<dd><p>(Boolean) if TRUE, the best scenario is
 picked on the best value at <code>end_year</code>. Default to FALSE.</p></dd>
+
+
 <dt>start_year</dt>
 <dd><p>Start year for scenario, defaults to 2018.</p></dd>
+
+
 <dt>end_year</dt>
 <dd><p>End year for scenario, defaults to 2025</p></dd>
+
+
 <dt>target_year</dt>
 <dd><p>Year by which the scenario should eventually be
 achieved. Defaults to <code>end_year</code></p></dd>
+
+
 <dt>scenario_name</dt>
 <dd><p>Name of the scenario. Defaults to scenario_percent_change_baseline_year</p></dd>
+
+
 <dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
+
+
 <dt>trim</dt>
 <dd><p>logical to indicate if the data should be trimmed between
 <code>upper_limit</code> and <code>lower_limit</code>.</p></dd>
+
+
 <dt>small_is_best</dt>
 <dd><p>Logical to identify if a lower value is better than a higher
 one (e.g. lower obesity in a positive public health outcome, so obesity rate
 should have small_is_best = TRUE).</p></dd>
+
+
 <dt>keep_better_values</dt>
 <dd><p>logical to indicate if "better" values should be
 kept from <code>value_col</code> if they are present. Follows the direction set in
 <code>small_is_best</code>.  For instance, if small_is_best is TRUE, then <code>value_col</code> lower
 than <code>col</code> will be kept.</p></dd>
+
+
 <dt>upper_limit</dt>
 <dd><p>limit at which the indicator should be caped.
 Can take any of "guess", or any numeric. <code>guess</code> (default) will take 100 as
 the limit if <code>percent_change</code> is positive, and 0 if negative.</p></dd>
+
+
 <dt>lower_limit</dt>
 <dd><p>limit at which the indicator should be caped.
 Can take any of "guess", or 0 to 100. <code>guess</code> (default) will take 0 as the
 limit if <code>percent_change</code> is positive, and 100 if negative.</p></dd>
+
+
 <dt>trim_years</dt>
 <dd><p>logical to indicate if years before <code>start_year</code> and after
 <code>end_year</code> should be removed</p></dd>
+
+
 <dt>ind_ids</dt>
 <dd><p>Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Dataframe with scenario rows</p>
+    
+
+<p>Dataframe with scenario rows</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -159,7 +192,7 @@ the best value, the first in alphabetical order is picked.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>
