@@ -91,7 +91,7 @@ upload_billion_data <- function(df,
       container = "whdh",
       source_path = output_file,
       destination_path = upload_path,
-      silent = TRUE
+      silent = FALSE
     )
   },
   when = "Failed to complete Storage Services operation.",
