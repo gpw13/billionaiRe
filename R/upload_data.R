@@ -91,7 +91,7 @@ upload_billion_data <- function(df,
     retry::retry({
       whdh::upload_to_data_lake(
         data_lake_name = get_data_lake_name(),
-        container = "whdh",
+        container = "dropzone",
         source_path = output_file,
         destination_path = upload_path,
         silent = FALSE
@@ -103,7 +103,7 @@ upload_billion_data <- function(df,
   } else {
     whdh::upload_to_data_lake(
       data_lake_name = get_data_lake_name(),
-      container = "whdh",
+      container = "dropzone",
       source_path = output_file,
       destination_path = upload_path,
       silent = FALSE
