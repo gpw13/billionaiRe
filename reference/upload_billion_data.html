@@ -77,7 +77,10 @@ user.</p>
 <span>  version <span class="op">=</span> <span class="fu">whdh</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/whdh/man/get_formatted_timestamp.html" class="external-link">get_formatted_timestamp</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  na_rm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  experiment <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  retry_upload <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  max_upload_retries <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  upload_retry_interval <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -131,6 +134,18 @@ data is download from <code>3B/Sandbox/my_exp/{data_layer}/...</code>)</p></li>
 <dt>silent</dt>
 <dd><p>(logical) Specifies whether to show authentication messages and
 a progress bar. Defaults to <code>TRUE</code>.</p></dd>
+
+
+<dt>retry_upload</dt>
+<dd><p>(logical) Retry the upload request to WHDH.</p></dd>
+
+
+<dt>max_upload_retries</dt>
+<dd><p>(integer) Maxinum number of times to retry upload to WHDH. Defaults to <code>3</code>.</p></dd>
+
+
+<dt>upload_retry_interval</dt>
+<dd><p>(integer) Amount of time in seconds to wait before retrying upload to WHDH. Defaults to <code>3</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
