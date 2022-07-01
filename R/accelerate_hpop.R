@@ -144,6 +144,8 @@ accelerate_child_obese <- function(df,
 #'  - `scenario_fixed_target(df, target_value = 0, target_year = 2030, small_is_best = TRUE,...)`,
 #'
 #' @inherit accelerate_adult_obese
+#' @param start_year Year from which the acceleration scenario begins, inclusive.
+#' @param value_col Name of the column containing indicator value in `df`.
 #'
 accelerate_child_viol <- function(df,
                                   ind_ids = billion_ind_codes("hpop"),
@@ -214,6 +216,7 @@ accelerate_child_viol <- function(df,
 #'  - `scenario_fixed_target(df, target_value = 80, target_year = 2030, small_is_best = FALSE,...)`,
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_child_viol
 #'
 accelerate_devontrack <- function(df,
                                   ind_ids = billion_ind_codes("hpop"),
@@ -690,6 +693,7 @@ accelerate_pm25 <- function(df,
 #' Then picks the best result between the two scenarios.
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams recycle_data
 #'
 accelerate_road <- function(df,
                             ind_ids = billion_ind_codes("hpop"),
@@ -831,6 +835,7 @@ accelerate_stunting <- function(df,
 #' Then picks the best result between the three scenarios.
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams recycle_data
 accelerate_suicide <- function(df,
                                ind_ids = billion_ind_codes("hpop"),
                                scenario_col = "scenario",

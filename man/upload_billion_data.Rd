@@ -12,7 +12,10 @@ upload_billion_data(
   version = whdh::get_formatted_timestamp(),
   na_rm = TRUE,
   experiment = NULL,
-  silent = TRUE
+  silent = TRUE,
+  retry_upload = TRUE,
+  max_upload_retries = 3,
+  upload_retry_interval = 3
 )
 }
 \arguments{
@@ -53,6 +56,12 @@ data is download from \verb{3B/Sandbox/my_exp/\{data_layer\}/...})
 
 \item{silent}{(logical) Specifies whether to show authentication messages and
 a progress bar. Defaults to \code{TRUE}.}
+
+\item{retry_upload}{(logical) Retry the upload request to WHDH.}
+
+\item{max_upload_retries}{(integer) Maxinum number of times to retry upload to WHDH. Defaults to \code{3}.}
+
+\item{upload_retry_interval}{(integer) Amount of time in seconds to wait before retrying upload to WHDH. Defaults to \code{3}.}
 }
 \value{
 A data frame. Note that this is the modified version of in the input

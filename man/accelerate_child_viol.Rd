@@ -28,6 +28,10 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
+\item{value_col}{Name of the column containing indicator value in \code{df}.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{

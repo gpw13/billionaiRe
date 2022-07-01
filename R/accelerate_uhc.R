@@ -1021,6 +1021,7 @@ accelerate_tb <- function(df,
 #' and upper limits of 0 and 99, respectively, are also imposed on the results.
 #'
 #' @inherit accelerate_anc4
+#' @inheritParams recycle_data
 #'
 accelerate_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
@@ -1071,6 +1072,7 @@ accelerate_uhc_sanitation <- function(df,
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#' @inheritParams recycle_data
 #'
 accelerate_uhc_tobacco <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),
