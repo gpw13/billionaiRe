@@ -37,7 +37,7 @@ save_gho_backup_to_whdh <- function(df,
   # Upload the parquet file to the data lake
   whdh::upload_to_data_lake(
     data_lake_name = get_data_lake_name(),
-    container = "whdh",
+    container = "dropzone",
     source_path = temp_file,
     destination_path = gho_backup_path,
     validate_user_input = FALSE,
