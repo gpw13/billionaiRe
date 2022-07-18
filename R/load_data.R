@@ -76,6 +76,9 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
 #' Load Billions indicator data from WHDH
 #'
 #' @inheritParams load_billion_data
+#' @param retry_upload (logical) Retry the download request to WHDH.
+#' @param max_upload_retries (integer) Maximum number of times to retry download to WHDH. Defaults to `3`.
+#' @param upload_retry_interval (integer) Amount of time in seconds to wait before retrying download WHDH. Defaults to `3`.
 #'
 #' @return A data frame.
 #'
@@ -85,7 +88,10 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
                                    version = "latest",
                                    na_rm = TRUE,
                                    experiment = NULL,
-                                   silent = TRUE) {
+                                   silent = TRUE,
+                                   retry_upload = TRUE,
+                                   max_upload_retries = 3,
+                                   upload_retry_interval = 3) {
 
   # Assertions and checks
   requireNamespace("whdh", quietly = TRUE)
@@ -120,15 +126,32 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
     file_name <- stringr::str_match(.x, "^.+/(\\w+)/?$")[, 2]
     temp_file <- file.path(temp_dir, paste(file_name, "parquet", sep = "."))
 
-    whdh::download_data_asset(
-      data_lake_name = data_lake,
-      data_asset_folder = .x,
-      version = version,
-      destination_dir = temp_dir,
-      strip_timestamp = TRUE,
-      overwrite_destination = TRUE,
-      silent = silent
-    )
+    if (retry_upload) {
+      retry::retry({
+      whdh::download_data_asset(
+        data_lake_name = data_lake,
+        data_asset_folder = .x,
+        version = version,
+        destination_dir = temp_dir,
+        strip_timestamp = TRUE,
+        overwrite_destination = TRUE,
+        silent = silent
+      )
+      },
+      when = "Failed to complete Storage Services operation.",
+      interval = upload_retry_interval,
+      max_tries = max_upload_retries)
+    } else {
+      whdh::download_data_asset(
+        data_lake_name = data_lake,
+        data_asset_folder = .x,
+        version = version,
+        destination_dir = temp_dir,
+        strip_timestamp = TRUE,
+        overwrite_destination = TRUE,
+        silent = silent
+      )
+    }
 
     # whdh::download_from_data_lake(
     #   data_lake_name = data_lake,

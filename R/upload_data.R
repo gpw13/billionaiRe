@@ -37,7 +37,7 @@
 #' @param silent (logical) Specifies whether to show authentication messages and
 #'   a progress bar. Defaults to `TRUE`.
 #' @param retry_upload (logical) Retry the upload request to WHDH.
-#' @param max_upload_retries (integer) Maxinum number of times to retry upload to WHDH. Defaults to `3`.
+#' @param max_upload_retries (integer) Maximum number of times to retry upload to WHDH. Defaults to `3`.
 #' @param upload_retry_interval (integer) Amount of time in seconds to wait before retrying upload to WHDH. Defaults to `3`.
 #'
 #' @return A data frame. Note that this is the modified version of in the input
