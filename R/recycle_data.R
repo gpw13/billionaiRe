@@ -143,6 +143,24 @@ recycle_data_scenario_single <- function(df,
   if (scenario %in% c(scenario_reported_estimated, scenario_covid_shock, scenario_reference_infilling)) {
     df_no_recycling <- df %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario)
+    ## Start of addition to fix issue with missing contributions for covid_shock (and other similar data)
+    
+    #The No recycling "scenarios" are for data that is reported or infilled including the covid shock reported data
+    #Note that for other scenarios (such as flat extrapolation a complete scenario with all years is created using recycled data to fill it out,
+    # but the recycled data is then thrown away after the calculation has been carried out.
+    #There is an issue because these are the values that are retained from the no recycling scenarios can end up with a contribution that is missing
+    #The cotnributions fot these values are calculated as prt of the scenarios ... but then chucked out.
+    # To get around this (may be only a temporaty fix) we make sure the contributions are calculated for the no recycling values
+    #A contribution can be determined if the start year (2018) is present.
+    #So we add in baseline year to these no recyling scenario to ensure contribution can be  calculated 
+    #first find where there are some data but without the initial 2018 value
+    if (dim(df_no_recycling %>% filter(year==start_year))[1]==0 & dim( df_no_recycling %>%filter( year>start_year))[1]>0) {
+      #and for these cases add in an extra recyled value for the start year (this will be thrown away afterwards, but will allow
+      #the contribution to be estimated for the later years)
+      df_2018<- df %>% filter(year==start_year) %>% select(-!!scenario_col) %>% mutate(recycled=TRUE, `:=`(!!sym(scenario_col), scenario))
+      df_no_recycling <- df_no_recycling %>% bind_rows(df_2018) 
+    }
+    ##end of addition
     return(df_no_recycling)
   }
 
