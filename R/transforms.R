@@ -22,12 +22,11 @@ trim_transforms <- function(x, min_val = 0, max_val = 100) {
 
 #' Transform blood pressure data
 #'
-#' Reverses the indicator and rescales from `[50,100]` to `[0,100]`
+#' Reverses the indicator.
 #'
 #' @inheritParams reverse_ind
 transform_bp <- function(x) {
   x <- reverse_ind(x)
-  x <- scales::rescale(x, to = c(0, 100), from = c(50, 100))
   trim_transforms(x)
 }
 
@@ -37,7 +36,6 @@ transform_bp <- function(x) {
 #'
 #' @inheritParams reverse_ind
 untransform_bp <- function(x) {
-  x <- scales::rescale(x, to = c(50, 100), from = c(0, 100))
   x <- reverse_ind(x)
   x
 }
