@@ -94,11 +94,11 @@ untransform_hwf <- function(x) {
 
 #' Transform FPG data
 #'
-#' Rescales FPG data from `[7.4,5.1]` to `[0,100]`
+#' Rescales FPG data from `[70,0]` to `[0,100]`
 #'
 #' @inheritParams reverse_ind
 transform_glucose <- function(x) {
-  x <- scales::rescale(x, from = c(7.4, 5.1), to = c(0, 100))
+  x <- scales::rescale(x, from = c(70, 0), to = c(0, 100))
   trim_transforms(x)
 }
 
@@ -108,7 +108,7 @@ transform_glucose <- function(x) {
 #'
 #' @inheritParams reverse_ind
 untransform_glucose <- function(x) {
-  x <- scales::rescale(x, to = c(7.4, 5.1), from = c(0, 100))
+  x <- scales::rescale(x, to = c(70, 0), from = c(0, 100))
   x
 }
 
