@@ -12,8 +12,6 @@ uhc_ncd_update_2022 <- function() {
 
   indicator_df <- read_csv("indicator_df.csv")
 
-
-
   updated_indicator_df <- indicator_df %>%
     mutate(gho_code = if_else(ind == "fpg", "NCD_GLUC_04", gho_code),
            medium_name = if_else(ind == "fpg", "Raised fasting blood glucose (age-standardized estimate)", medium_name),
@@ -24,6 +22,7 @@ uhc_ncd_update_2022 <- function() {
 ", medium_name),
            transformed_name = if_else(ind == "bp", "Hypertension treatment", transformed_name),
            gho_query = if_else(ind == "bp", "$filter=SpatialDimType eq 'COUNTRY' and  Dim1 eq 'BTSX'", gho_query))
+
 
   updated_indicator_df %>%
     write_csv("indicator_df.csv")
