@@ -22,21 +22,15 @@ trim_transforms <- function(x, min_val = 0, max_val = 100) {
 
 #' Transform blood pressure data
 #'
-#' Reverses the indicator.
-#'
 #' @inheritParams reverse_ind
 transform_bp <- function(x) {
-  x <- reverse_ind(x)
   trim_transforms(x)
 }
 
 #' Untransform blood pressure data
 #'
-#' Reverses the transformation of [transform_bp()]
-#'
 #' @inheritParams reverse_ind
 untransform_bp <- function(x) {
-  x <- reverse_ind(x)
   x
 }
 
