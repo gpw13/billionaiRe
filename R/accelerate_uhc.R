@@ -642,7 +642,7 @@ accelerate_dtp3 <- function(df,
 
   df_accelerated <- df_this_ind %>%
     dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::group_by(.data[["iso3"]], .data[[scenario_col]]) %>%
     dplyr::mutate(baseline_value = .data[[value_col]][.data[["year"]] == baseline_year]) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(df_target_values, by = "iso3") %>%
@@ -760,10 +760,16 @@ accelerate_fp <- function(df,
   params_main_quantile["scenario_name"] <- "quantile_5"
 
   df_exclude <- df_this_ind %>%
-    dplyr::filter(.data[["iso3"]] %in% exclude_countries)
+    dplyr::filter(.data[["iso3"]] %in% exclude_countries
+                  ,
+                  .data[[scenario_col]] == default_scenario
+    )
 
   df_main <- df_this_ind %>%
-    dplyr::filter(!.data[["iso3"]] %in% exclude_countries)
+    dplyr::filter(!.data[["iso3"]] %in% exclude_countries
+                  ,
+                  .data[[scenario_col]] == default_scenario
+                  )
 
   if (nrow(df_exclude) > 0) {
     # Run only scenario_bau for exclude_countries defined above

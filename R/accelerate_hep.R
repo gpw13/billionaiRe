@@ -17,6 +17,7 @@ accelerate_espar <- function(df,
                              scenario_col = "scenario",
                              start_year = 2018,
                              end_year = 2025,
+                             default_scenario = "default",
                              ...) {
   assert_columns(df, "iso3", "year", value_col, "ind", "type", scenario_col)
 
@@ -35,7 +36,8 @@ accelerate_espar <- function(df,
   assert_ind_ids_in_df(df, ind_ids = espar_sub_cat, by_iso3 = FALSE)
 
   espar_data <- df %>%
-    dplyr::filter(.data[["ind"]] %in% espar_inds)
+    dplyr::filter(.data[["ind"]] %in% espar_inds,
+                  .data[[scenario_col]] == default_scenario)
 
   last_year_reported <- espar_data %>%
     dplyr::filter(.data[["type"]] == "reported") %>%
