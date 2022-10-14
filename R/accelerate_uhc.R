@@ -605,6 +605,7 @@ accelerate_hwf <- function(df,
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#' @inheritParams scenario_fixed_target
 #'
 accelerate_dtp3 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
@@ -727,6 +728,7 @@ accelerate_fh <- function(df,
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#' @inheritParams scenario_fixed_target
 #'
 accelerate_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),

@@ -40,7 +40,7 @@ accelerate_espar <- function(df,
   last_year_reported <- espar_data %>%
     dplyr::filter(.data[["type"]] == "reported") %>%
     dplyr::filter(.data[["year"]] == max(.data[["year"]])) %>%
-    dplyr::select(.data[["year"]]) %>%
+    dplyr::select("year") %>%
     dplyr::distinct() %>%
     dplyr::pull(.data[["year"]])
 
@@ -87,7 +87,7 @@ accelerate_espar <- function(df,
     ) %>%
     dplyr::group_by(.data[["region"]], .data[["ind"]]) %>%
     dplyr::summarise(reg_av_sub = mean(.data[[value_col]], na.rm = TRUE), .groups = "drop") %>%
-    dplyr::select(.data[["ind"]], "region", "reg_av_sub")
+    dplyr::select("ind", "region", "reg_av_sub")
 
   espar_year_complete <- espar_full %>%
     dplyr::filter(.data[["year"]] == .data[["baseline_complete"]])
@@ -102,13 +102,13 @@ accelerate_espar <- function(df,
     dplyr::left_join(espar_year_complete_sub_cat, by = c("iso3", "ind", "region")) %>%
     dplyr::left_join(espar_regional, by = c("ind", "region")) %>%
     dplyr::mutate(target = pmax(.data[["reg_av_sub"]], .data[[value_col]], na.rm = TRUE)) %>%
-    dplyr::select(.data[["iso3"]], .data[["ind"]], "target")
+    dplyr::select("iso3", "ind", "target")
 
   espar_cat_target <- espar_sub_target %>%
     dplyr::mutate("ind" := stringr::str_replace(.data[["ind"]], "_[0-9]{2}$", "")) %>%
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
     dplyr::summarise(target = mean(.data[["target"]]), .groups = "drop") %>%
-    dplyr::select(.data[["iso3"]], .data[["ind"]], .data[["target"]])
+    dplyr::select("iso3", "ind", "target")
 
   espar_target <- espar_cat_target %>%
     dplyr::group_by(.data[["iso3"]]) %>%
@@ -117,7 +117,7 @@ accelerate_espar <- function(df,
       "ind" := "espar",
       .groups = "drop"
     ) %>%
-    dplyr::select(.data[["iso3"]], .data[["ind"]], "target") %>%
+    dplyr::select("iso3", "ind", "target") %>%
     dplyr::full_join(baseline_year_espar, by = "iso3") %>%
     dplyr::mutate(baseline = dplyr::case_when(
       is.na(.data[["baseline"]]) ~ as.numeric(start_year),
@@ -296,7 +296,7 @@ accelerate_cholera_campaign <- function(df,
       is.na(.data[[value_col]]) ~ 0,
       TRUE ~ .data[[value_col]] / 12
     )) %>%
-    dplyr::select(-.data[["year"]], -.data[[value_col]])
+    dplyr::select("year", - dplyr::any_of(value_col))
 
   roadmap_full_years <- tidyr::expand_grid(
     "iso3" := unique(raw_global_cholera_roadmap[["iso3"]]),
@@ -312,7 +312,7 @@ accelerate_cholera_campaign <- function(df,
       is.na(.data[[value_col]]) & !is.na(.data[["yearly_target_cholera_2030"]]) & .data[["year"]] >= start_year ~ .data[["yearly_target_cholera_2030"]],
       TRUE ~ .data[[value_col]]
     )) %>%
-    dplyr::select(-.data[["yearly_target_cholera_2030"]])
+    dplyr::select(-"yearly_target_cholera_2030")
 
   best_historical_perf_campaign <- df_this_ind %>%
     dplyr::filter(.data[["year"]] <= start_year) %>%
@@ -337,7 +337,7 @@ accelerate_cholera_campaign <- function(df,
       is.na(.data[["best_perf"]]) ~ .data[["best_perf_region"]],
       TRUE ~ .data[["best_perf"]]
     )) %>%
-    dplyr::select(.data[["iso3"]], .data[["best_perf"]]) %>%
+    dplyr::select("iso3", "best_perf") %>%
     dplyr::distinct()
 
   iso3_no_historical <- dplyr::setdiff(unique(global_cholera_roadmap[["iso3"]]), unique(best_perf_binded[["iso3"]]))
@@ -356,7 +356,7 @@ accelerate_cholera_campaign <- function(df,
       !!sym("ind") := cholera_campaign_num,
       roadmap_value = .data[["num"]]
     ) %>%
-    dplyr::select(.data[["iso3"]], .data[["year"]], .data[["ind"]], .data[["roadmap_value"]])
+    dplyr::select("iso3", "year", "ind", "roadmap_value")
 
   last_observed_year <- df_this_ind %>%
     dplyr::filter(.data[["type"]] != "projected") %>%
@@ -386,7 +386,7 @@ accelerate_cholera_campaign <- function(df,
       .data[["iso3"]] %in% iso3_no_historical ~ NA_real_,
       TRUE ~ .data[[value_col]]
     )) %>%
-    dplyr::select(-.data[[value_col]])
+    dplyr::select(- dplyr::any_of(value_col))
 
   planned_historical_denom <- df_this_ind %>%
     dplyr::full_join(full_table, by = c("iso3", "year", "ind")) %>%
@@ -401,7 +401,7 @@ accelerate_cholera_campaign <- function(df,
 
   final_binded <- dplyr::bind_rows(planned_historical_num, planned_historical_denom) %>%
     dplyr::filter(!.data[["iso3"]] %in% iso3_no_historical) %>%
-    dplyr::select(.data[["iso3"]], .data[["year"]], .data[["ind"]], scenario_value = .data[[value_col]])
+    dplyr::select(dplyr::any_of("iso3", "year", "ind", scenario_value = value_col))
 
   full_table <- final_binded %>%
     dplyr::select(-"scenario_value")
@@ -584,9 +584,9 @@ accelerate_meningitis_campaign <- function(df,
     ))
 
   final_binded <- dplyr::bind_rows(accelerated_num, accelerated_denom) %>%
-    dplyr::select(.data[["iso3"]], .data[["year"]], .data[["ind"]], .data[["scenario_value"]])
+    dplyr::select("iso3", "year", "ind", "scenario_value")
 
-  full_table <- final_binded %>% dplyr::select(-.data[["scenario_value"]])
+  full_table <- final_binded %>% dplyr::select(-"scenario_value")
 
   df_accelerated <- df_this_ind %>%
     dplyr::full_join(full_table, by = c("iso3", "year", "ind")) %>%

@@ -95,6 +95,7 @@ add_scenario <- function(df,
 #' @inheritParams add_scenario
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams scenario_fixed_target
 #'
 add_scenario_indicator <- function(df,
                                    scenario_function = c(
