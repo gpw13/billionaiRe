@@ -59,7 +59,7 @@ a progress bar. Defaults to \code{TRUE}.}
 
 \item{retry_upload}{(logical) Retry the upload request to WHDH.}
 
-\item{max_upload_retries}{(integer) Maxinum number of times to retry upload to WHDH. Defaults to \code{3}.}
+\item{max_upload_retries}{(integer) Maximum number of times to retry upload to WHDH. Defaults to \code{3}.}
 
 \item{upload_retry_interval}{(integer) Amount of time in seconds to wait before retrying upload to WHDH. Defaults to \code{3}.}
 }
