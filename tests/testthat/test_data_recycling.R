@@ -1,6 +1,6 @@
 test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-03-06T09-30-41.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-10-13T17-10-12.parquet")
 
 testthat::test_that("HEP data recycling returns right number of rows", {
   test_data_calculated_hep <- test_data_calculated %>%

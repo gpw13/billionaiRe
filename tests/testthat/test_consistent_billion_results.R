@@ -32,10 +32,8 @@ testthat::test_that("basic billion calculations are consistent", {
     ) %>%
     dplyr::mutate(source = dplyr::case_when(
       stringr::str_detect(source, "WHO DDI") ~ "WHO DDI, November 2021",
-      stringr::str_detect(source, "United Nations, Department of Economic and Social Affairs") ~ "WHO DDI, November 2021",
       TRUE ~ source
-    )) %>%
-    dplyr::select(-use_dash, -use_calc)
+    ))
 
   all_basic_calculated <- uhc_basic_calculated %>%
     dplyr::bind_rows(hpop_basic_calculated) %>%
@@ -46,7 +44,7 @@ testthat::test_that("basic billion calculations are consistent", {
 
 test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-03-06T09-30-41.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-10-13T17-10-12.parquet")
 
 testthat::test_that("HEP complexe billion calculations without scenarios are consistent", {
   test_data_calculated_one_scenario <- test_data_calculated %>%
