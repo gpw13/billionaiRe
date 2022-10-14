@@ -11,6 +11,7 @@ accelerate_dtp3(
   value_col = "value",
   start_year = 2018,
   end_year = 2025,
+  default_scenario = "default",
   ...
 )
 }

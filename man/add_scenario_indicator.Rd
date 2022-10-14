@@ -14,6 +14,7 @@ add_scenario_indicator(
   indicator,
   ind_ids = billion_ind_codes("all"),
   scenario_col = "scenario",
+  default_scenario = "default",
   ...
 )
 }

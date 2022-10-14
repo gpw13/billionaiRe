@@ -9,6 +9,7 @@ accelerate_fp(
   ind_ids = billion_ind_codes("uhc"),
   scenario_col = "scenario",
   value_col = "value",
+  default_scenario = "default",
   ...
 )
 }
