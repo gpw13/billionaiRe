@@ -53,6 +53,8 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{default_scenario}{name of the default scenario to be used.}
+
 \item{...}{additional parameters to be passed to the add_scenario_indicator
 function (e.g. \code{add_scenario_adult_obese}).}
 }

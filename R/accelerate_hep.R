@@ -296,7 +296,7 @@ accelerate_cholera_campaign <- function(df,
       is.na(.data[[value_col]]) ~ 0,
       TRUE ~ .data[[value_col]] / 12
     )) %>%
-    dplyr::select("year", - dplyr::any_of(value_col))
+    dplyr::select(- dplyr::any_of(c(value_col, "year")))
 
   roadmap_full_years <- tidyr::expand_grid(
     "iso3" := unique(raw_global_cholera_roadmap[["iso3"]]),
@@ -401,7 +401,7 @@ accelerate_cholera_campaign <- function(df,
 
   final_binded <- dplyr::bind_rows(planned_historical_num, planned_historical_denom) %>%
     dplyr::filter(!.data[["iso3"]] %in% iso3_no_historical) %>%
-    dplyr::select(dplyr::any_of("iso3", "year", "ind", scenario_value = value_col))
+    dplyr::select(dplyr::any_of(c("iso3", "year", "ind", scenario_value = value_col)))
 
   full_table <- final_binded %>%
     dplyr::select(-"scenario_value")

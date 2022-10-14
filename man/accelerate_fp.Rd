@@ -27,6 +27,8 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{value_col}{Column name of column with indicator values.}
 
+\item{default_scenario}{name of the default scenario to be used.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{

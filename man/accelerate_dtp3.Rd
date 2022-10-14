@@ -33,6 +33,8 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
+\item{default_scenario}{name of the default scenario to be used.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
