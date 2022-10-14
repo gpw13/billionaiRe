@@ -54,7 +54,7 @@ Data recycling infers the existence of a reference scenario. This reference scen
 
 Data recycling works by adding to all scenarios present in the `scenario_col` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated`, `scenario_reported_estimated` and `scenario_covid_shock` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
 
-```{r, include = TRUE, eval = TRUE}
+```{r, include = TRUE, eval = FALSE}
 library(billionaiRe)
 
 df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
@@ -102,7 +102,7 @@ Data recycling is implemented in billionaiRe through the `recycle_data()` functi
 
 A `recycle` and `...`parameters were added to the `transform_` functions to ease recycling. If `recycle` is `TRUE`, data will be recycled, using the eventual parameters passed through the `...`. 
 
-```{r recycling-example, include = TRUE, eval = TRUE}
+```{r recycling-example, include = TRUE, eval = FALSE}
 
 # Adding a detect_respond raw to avoid warning from recycle_data.
 detect_respond_afg_2018 <- data.frame(
@@ -161,7 +161,7 @@ The `add_scenario` functions is built on a range of pre-defined set of scenarios
 2.    **wrappers functions** combine base scenario functions to generate more complex scenarios like `acceleration`, `sdg`, etc.
 
 
-```{r scenario-example-simple, include = TRUE, eval = TRUE}
+```{r scenario-example-simple, include = TRUE, eval = FALSE}
 library(billionaiRe)
 
 test_hep <- df %>%
@@ -237,7 +237,7 @@ Currently there are three wrapper functions implemented:
 
 Each of the base scenario is wrapped in `add_scenario`. This function calls a `add_` function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:
 
-```{r scenario-wrapper-example, include = TRUE, eval = TRUE}
+```{r scenario-wrapper-example, include = TRUE, eval = FALSE}
 library(billionaiRe)
 
 df <- tibble::tibble(
