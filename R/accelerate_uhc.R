@@ -612,6 +612,7 @@ accelerate_dtp3 <- function(df,
                             value_col = "value",
                             start_year = 2018,
                             end_year = 2025,
+                            default_scenario = "default",
                             ...) {
   baseline_year <- 2019
   target_year <- 2030
@@ -621,7 +622,8 @@ accelerate_dtp3 <- function(df,
   params <- list(...)
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   full_df <- tidyr::expand_grid(
     "iso3" := unique(df_this_ind[["iso3"]]),
@@ -730,6 +732,7 @@ accelerate_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
                           value_col = "value",
+                          default_scenario = "default",
                           ...) {
   this_ind <- ind_ids["fp"]
 
