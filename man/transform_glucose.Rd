@@ -10,5 +10,5 @@ transform_glucose(x)
 \item{x}{Indicator value.}
 }
 \description{
-Rescales FPG data from \verb{[7.4,5.1]} to \verb{[0,100]}
+Rescales FPG data from \verb{[70,0]} to \verb{[0,100]}
 }

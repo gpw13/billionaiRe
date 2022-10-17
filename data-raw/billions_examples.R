@@ -12,7 +12,7 @@ uhc_df <- read_csv("data-raw/uhc.csv") %>%
 usethis::use_data(uhc_df, overwrite = TRUE, internal = FALSE)
 
 uhc_calculated <- uhc_df %>%
-  transform_uhc_data() %>%
+  transform_uhc_data(end_year = 2023)%>%
   calculate_uhc_billion() %>%
   calculate_uhc_contribution(end_year = 2023, pop_year = 2023) %>%
   dplyr::filter(
@@ -142,21 +142,21 @@ test_data <- all_data_those_isos %>%
 
 test_data_calculated_hep <- test_data %>%
   filter(ind %in% billion_ind_codes("hep", include_calculated = TRUE)) %>%
-  transform_hep_data(scenario = "scenario", recycle = TRUE) %>%
-  calculate_hep_components(scenario = "scenario") %>%
-  calculate_hep_billion(scenario = "scenario")
+  transform_hep_data(scenario_col = "scenario", recycle = TRUE) %>%
+  calculate_hep_components(scenario_col = "scenario") %>%
+  calculate_hep_billion(scenario_col = "scenario")
 
 test_data_calculated_hpop <- test_data %>%
   filter(ind %in% billion_ind_codes("hpop", include_calculated = TRUE)) %>%
   transform_hpop_data(recycle = TRUE) %>%
   add_hpop_populations() %>%
-  calculate_hpop_billion(scenario = "scenario")
+  calculate_hpop_billion(scenario_col = "scenario")
 
 test_data_calculated_uhc <- test_data %>%
   filter(ind %in% billion_ind_codes("uhc", include_calculated = TRUE)) %>%
   transform_uhc_data(recycle = TRUE) %>%
-  calculate_uhc_billion(scenario = "scenario") %>%
-  calculate_uhc_contribution(scenario = "scenario")
+  calculate_uhc_billion(scenario_col = "scenario") %>%
+  calculate_uhc_contribution(scenario_col = "scenario")
 
 test_data_calculated <- bind_rows(test_data_calculated_uhc, test_data_calculated_hep) %>%
   bind_rows(test_data_calculated_hpop) %>%

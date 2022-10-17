@@ -10,5 +10,5 @@ transform_bp(x)
 \item{x}{Indicator value.}
 }
 \description{
-Reverses the indicator and rescales from \verb{[50,100]} to \verb{[0,100]}
+Transform blood pressure data
 }

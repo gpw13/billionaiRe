@@ -95,6 +95,7 @@ add_scenario <- function(df,
 #' @inheritParams add_scenario
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams scenario_fixed_target
 #'
 add_scenario_indicator <- function(df,
                                    scenario_function = c(
@@ -119,6 +120,7 @@ add_scenario_indicator <- function(df,
                                    indicator,
                                    ind_ids = billion_ind_codes("all"),
                                    scenario_col = "scenario",
+                                   default_scenario = "default",
                                    ...) {
   this_ind <- ind_ids[indicator]
 
@@ -131,12 +133,12 @@ add_scenario_indicator <- function(df,
   params <- list(...)
   params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
 
-  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-    "espar[0-9].{0,3}",
-    this_ind
-  ),
-  collapse = "|"
-  ))]
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      "espar[0-9].{0,3}",
+      this_ind
+    ),
+    collapse = "|"
+    ))]
 
   this_ind_df <- df %>%
     dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
@@ -144,10 +146,18 @@ add_scenario_indicator <- function(df,
   if (scenario_function == "accelerate") {
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
 
+    accelerate_df <- this_ind_df %>%
+      dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+    if(nrow(accelerate_df) == 0 & nrow(this_ind_df > 0)){
+      stop("For acceleration scenarios, `default_scenario` must be present.")
+    }
+
     do.call(
-      accelerate_fn, c(list(df = this_ind_df), params)
+      accelerate_fn, c(list(df = accelerate_df), params)
     ) %>%
       dplyr::distinct()
+
   } else if (scenario_function == "sdg") {
     if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
       sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")

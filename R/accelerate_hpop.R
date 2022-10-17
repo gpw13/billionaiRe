@@ -961,7 +961,7 @@ accelerate_wasting <- function(df,
   params_aroc["target_value"] <- 3
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind, year >= 2008)
+    dplyr::filter(.data[["ind"]] == this_ind, .data[["year"]] >= 2008)
 
   df_aroc <- do.call(
     scenario_aroc, c(list(df = df_this_ind), params_aroc)

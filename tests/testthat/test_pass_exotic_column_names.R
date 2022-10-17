@@ -4,7 +4,7 @@ test_data_param_exotic_names <- test_data %>%
   dplyr::rename(value_test = value,
          scenario_test = scenario)
 
-test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-03-06T09-30-41.parquet")
+test_data_calculated <- load_misc_data("test_data/test_data_calculated/test_data_calculated_2022-10-13T17-10-12.parquet")
 
 test_data_calculated_param_exotic_names <- test_data_calculated %>%
   dplyr::rename(value_test = value,

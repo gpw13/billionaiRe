@@ -10,5 +10,5 @@ untransform_bp(x)
 \item{x}{Indicator value.}
 }
 \description{
-Reverses the transformation of \code{\link[=transform_bp]{transform_bp()}}
+Untransform blood pressure data
 }
