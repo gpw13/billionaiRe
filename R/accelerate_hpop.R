@@ -76,9 +76,8 @@ accelerate_alcohol <- function(df,
   params["end_year"] <- end_year
   params_bau <- get_right_params(params, scenario_bau)
 
-  params_perc_baseline <- get_right_params(params, scenario_percent_baseline)
-  params_perc_baseline["baseline_year"] <- 2010
-  params_perc_baseline["percent_change"] <- -10
+  params_neg10_2010 <- get_right_params(params, scenario_fixed_target_col)
+  params_neg10_2010["scenario_name"] <- "-10_2010"
 
   params_halt_rise <- get_right_params(params, scenario_halt_rise)
   params_halt_rise["baseline_year"] <- 2018
@@ -88,10 +87,19 @@ accelerate_alcohol <- function(df,
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
 
+  neg_10_targets <- df_this_ind %>%
+    dplyr::filter(.data[["year"]] == 2010) %>%
+    dplyr::mutate(target = .data[["value"]] * (100 - 10) / 100) %>%
+    dplyr::select("iso3", "ind", "target")
+
+  df_perc_baseline <- df_this_ind %>%
+    dplyr::left_join(neg_10_targets, by = c("iso3", "ind"))
+
   df_perc_baseline <- do.call(
-    scenario_percent_baseline, c(list(df = df_this_ind, target_year = end_year), params_perc_baseline)
+    scenario_fixed_target_col, c(list(df = df_perc_baseline, target_col = "target"), params_neg10_2010)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "-10_2010")
+    dplyr::filter(.data[[scenario_col]] == "-10_2010") %>%
+    dplyr::select(-"target")
 
   df_halt_rise <- do.call(
     scenario_halt_rise, c(list(df = df_this_ind, target_year = end_year), params_halt_rise)
@@ -946,10 +954,12 @@ accelerate_transfats <- function(df,
 #' Then picks the best result between the three scenarios.
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams scenario_fixed_target
 accelerate_wasting <- function(df,
                                ind_ids = billion_ind_codes("hpop"),
                                end_year = 2025,
                                scenario_col = "scenario",
+                               default_scenario = "default",
                                ...) {
   this_ind <- ind_ids["wasting"]
 
@@ -962,6 +972,27 @@ accelerate_wasting <- function(df,
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind, .data[["year"]] >= 2008)
+
+  has_2018_value <- df_this_ind %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
+    dplyr::filter(.data[["year"]] == 2018, .data[["ind"]] == this_ind)
+
+  no_2018_value <- df_this_ind %>%
+    dplyr::filter(!.data[["iso3"]] %in% unique(has_2018_value$iso3))
+
+  if(nrow(no_2018_value) > 0){
+    last_reported <- no_2018_value %>%
+      dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind",scenario_col)))) %>%
+      dplyr::filter(.data[["year"]] <= 2018) %>%
+      get_last_value() %>%
+      dplyr::mutate(type = "imputed",
+                    year = 2018,
+                    "{scenario_col}" := default_scenario)
+  }else{
+    last_reported <- no_2018_value
+  }
+
+  df_this_ind <- dplyr::bind_rows(df_this_ind, last_reported)
 
   df_aroc <- do.call(
     scenario_aroc, c(list(df = df_this_ind), params_aroc)

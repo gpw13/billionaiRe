@@ -348,3 +348,9 @@ remove_unwanted_scenarios <- function(df,
     df
   }
 }
+
+get_last_value <- function(df, type_filter = c("reported", "estimated")){
+  df %>%
+    dplyr::filter(.data[["type"]] %in% type_filter) %>%
+    dplyr::filter(.data[["year"]] == max(.data[["year"]]))
+}

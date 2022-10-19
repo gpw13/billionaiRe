@@ -321,7 +321,7 @@ testthat::test_that(paste0("sdg_road returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 70 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
+  testthat::expect_equal(df_add_indicator_2025, 69 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
 })
 
 testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
@@ -344,7 +344,7 @@ testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 37.582108)
+  testthat::expect_equal(df_add_indicator_2025, 51.932794)
 })
 
 testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
@@ -367,7 +367,7 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 50.55570)
+  testthat::expect_equal(df_add_indicator_2025, 51.55570)
 })
 
 testthat::test_that(paste0("sdg_transfats returns accurate values:"), {

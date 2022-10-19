@@ -100,17 +100,17 @@ calculate_fixed_target <- function(target_value,
   if (small_is_best) {
     dplyr::case_when(
       year >= baseline_year & year <= target_year & baseline_value > target_value ~
-      baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
+        baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value <= target_value ~
-      as.numeric(baseline_value),
+        as.numeric(baseline_value),
       TRUE ~ NA_real_
     )
   } else {
     dplyr::case_when(
       year >= baseline_year & year <= target_year & baseline_value < target_value ~
-      baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
+        baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value >= target_value ~
-      as.numeric(baseline_value),
+        as.numeric(baseline_value),
       TRUE ~ NA_real_
     )
   }
@@ -182,3 +182,57 @@ scenario_fixed_target_col <- function(df,
   df %>%
     dplyr::bind_rows(scenario_df)
 }
+
+#' Calculate halt rise scenarios
+#'
+#' Special case of `scenario_fixed_target_col` where each country aims at a
+#' value of a specific year.
+#'
+#' @inherit scenario_fixed_target
+#' @inheritParams trim_values
+#' @inheritParams scenario_fixed_target
+#' @inheritParams transform_hpop_data
+scenario_halt_rise <- function(df,
+                               value_col = "value",
+                               start_year = 2018,
+                               end_year = 2025,
+                               baseline_year = start_year,
+                               target_year = end_year,
+                               scenario_col = "scenario",
+                               scenario_name = glue::glue("halt_rise"),
+                               upper_limit = 100,
+                               lower_limit = 0,
+                               trim = TRUE,
+                               keep_better_values = FALSE,
+                               small_is_best = FALSE,
+                               trim_years = TRUE,
+                               ind_ids = billion_ind_codes("all"),
+                               default_scenario = "default") {
+  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
+  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
+
+  target_df <- df %>%
+    dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
+    dplyr::mutate(target = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year)) %>%
+    dplyr::ungroup()
+
+  scenario_fixed_target_col(target_df,
+                            value_col = value_col,
+                            scenario_col = scenario_col,
+                            start_year = start_year,
+                            end_year = end_year,
+                            baseline_year = start_year,
+                            target_col = "target",
+                            target_year = target_year,
+                            scenario_name = scenario_name,
+                            small_is_best = small_is_best,
+                            trim = trim,
+                            keep_better_values = keep_better_values,
+                            upper_limit = upper_limit,
+                            lower_limit = lower_limit,
+                            trim_years = trim_years,
+                            ind_ids = ind_ids,
+                            default_scenario = default_scenario) %>%
+    dplyr::select(-"target")
+}
+

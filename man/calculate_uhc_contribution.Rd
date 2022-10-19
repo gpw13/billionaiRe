@@ -18,7 +18,8 @@ calculate_uhc_contribution(
   scenario_reported_estimated = "routine",
   scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling",
-  ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)
+  ind_ids = billion_ind_codes("uhc", include_calculated = TRUE, include_subindicators =
+    TRUE)
 )
 }
 \arguments{

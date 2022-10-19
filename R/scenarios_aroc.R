@@ -125,13 +125,13 @@ scenario_aroc <- function(df,
 
   aroc_df <- scenario_df %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
-    dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year)) %>%
+    dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year)) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(aroc, by = c("iso3", "ind")) %>%
     dplyr::mutate(
       scenario_value = dplyr::case_when(
-        .data[["year"]] == baseline_year ~ as.numeric(.data[[value_col]]),
-        .data[["year"]] > baseline_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[["year"]] - baseline_year)),
+        .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
+        .data[["year"]] > start_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[["year"]] - start_year)),
         TRUE ~ NA_real_
       ),
       !!sym(scenario_col) := scenario_name

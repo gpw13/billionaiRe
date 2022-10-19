@@ -19,6 +19,13 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_indicator_2025, 60)
+
+  df_add_indicator_2018 <- df_add_indicator %>%
+    dplyr::filter(scenario == "acceleration", year == 2018) %>%
+    dplyr::pull(value)
+
+
+  testthat::expect_equal(df_add_indicator_2018, 68)
 })
 
 testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
@@ -317,7 +324,7 @@ testthat::test_that(paste0("accelerate_road returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 70 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
+  testthat::expect_equal(df_add_indicator_2025, 69 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
 })
 
 testthat::test_that(paste0("accelerate_stunting returns accurate values:"), {
@@ -340,7 +347,7 @@ testthat::test_that(paste0("accelerate_stunting returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 37.582108)
+  testthat::expect_equal(df_add_indicator_2025, 51.932794)
 })
 
 testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
@@ -363,7 +370,7 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 50.55570)
+  testthat::expect_equal(df_add_indicator_2025, 51.55570)
 })
 
 testthat::test_that(paste0("accelerate_transfats returns accurate values:"), {
@@ -398,7 +405,11 @@ testthat::test_that(paste0("accelerate_wasting returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default"
-  )
+  ) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,

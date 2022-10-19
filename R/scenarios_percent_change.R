@@ -79,7 +79,7 @@ scenario_percent_baseline <- function(df,
     dplyr::group_by(.data[["ind"]], .data[["iso3"]]) %>%
     dplyr::mutate(
       "_goal_value" := get_goal(.data[[value_col]], .data[["year"]], !!baseline_year, !!percent_change),
-      "_baseline_value" := get_baseline_value(.data[[value_col]], .data[["year"]], !!baseline_year)
+      "_baseline_value" := get_baseline_value(.data[[value_col]], .data[["year"]], !!start_year)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
@@ -127,55 +127,5 @@ calculate_percent_change_baseline <- function(baseline_value, goal_value, year, 
   dplyr::if_else(year >= start_year & year <= target_year,
     baseline_value + (goal_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
     NA_real_
-  )
-}
-
-#' Calculate halt rise scenarios
-#'
-#' Special case of `scenario_percent_baseline` where \code{`percent_change` = 0}.
-#' Provided as a convenience function.
-#'
-#' @inherit scenario_percent_baseline
-#' @inheritParams trim_values
-#' @inheritParams scenario_fixed_target
-#' @inheritParams transform_hpop_data
-scenario_halt_rise <- function(df,
-                               value_col = "value",
-                               start_year = 2018,
-                               end_year = 2025,
-                               baseline_year = start_year,
-                               target_year = end_year,
-                               scenario_col = "scenario",
-                               scenario_name = glue::glue("halt_rise"),
-                               upper_limit = "guess",
-                               lower_limit = "guess",
-                               trim = TRUE,
-                               keep_better_values = FALSE,
-                               small_is_best = FALSE,
-                               trim_years = TRUE,
-                               ind_ids = billion_ind_codes("all"),
-                               default_scenario = "default") {
-  assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
-  assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
-
-  percent_change <- 0
-
-  scenario_percent_baseline(
-    df,
-    percent_change = percent_change,
-    value_col = value_col,
-    start_year = start_year,
-    end_year = end_year,
-    baseline_year = baseline_year,
-    target_year = target_year,
-    scenario_col = scenario_col,
-    scenario_name = scenario_name,
-    trim = trim,
-    keep_better_values = keep_better_values,
-    small_is_best = small_is_best,
-    upper_limit = upper_limit,
-    lower_limit = lower_limit,
-    trim_years = trim_years,
-    default_scenario = default_scenario
   )
 }

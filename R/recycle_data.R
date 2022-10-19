@@ -368,6 +368,10 @@ make_default_scenario <- function(df,
       trim_years = trim_years
     )
   ) %>%
-    dplyr::distinct() %>%
-    dplyr::bind_rows(df)
+    dplyr::bind_rows(df) %>%
+    dplyr::mutate(recycled = dplyr::case_when(
+      is.na(.data[["recycled"]]) | .data[["recycled"]] == FALSE ~ FALSE,
+      TRUE ~ TRUE
+    )) %>%
+    dplyr::distinct()
 }
