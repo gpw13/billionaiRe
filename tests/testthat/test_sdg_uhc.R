@@ -189,7 +189,7 @@ testthat::test_that(paste0("sdg_fpg returns accurate values:"), {
   ind <- "fpg"
 
   # Doctors returns BAU in all cases
-  testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
+  testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 60)
 })
 
 # itn ----------------------------

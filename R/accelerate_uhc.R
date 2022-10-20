@@ -717,7 +717,7 @@ accelerate_fp <- function(df,
 
 #' Accelerate fpg
 #'
-#' Accelerate fpg using the business as usual scenario.
+#' Accelerate fpg by halting the rise to 2010 value.
 #'
 #' @inherit accelerate_anc4
 #'
@@ -725,24 +725,14 @@ accelerate_fpg <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
                            ...) {
-  this_ind <- ind_ids["fpg"]
+  ind_ids <- "fpg"
+  names(ind_ids) <- "adult_obese"
 
-  params <- list(...)
-  params <- c(
-    get_right_params(params, scenario_bau),
-    list(scenario_name = "acceleration")
+  accelerate_adult_obese(
+    df = df,
+    ind_ids = ind_ids,
+    ...
   )
-
-  df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
-
-  df_accelerated <- do.call(
-    scenario_bau, c(list(df = df_this_ind), params)
-  ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
-
-  df %>%
-    dplyr::bind_rows(df_accelerated)
 }
 
 #' Accelerate itn

@@ -39,7 +39,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate bp by taking the best of business as usual and a \strong{decrease of 25\% from
-2010 to 2025}. These scenarios are run on the crude bp values, which
-are then converted back to their age-standardised equivalents using an approximation.
+Accelerate bp by aiming at reaching 80\% by 2030.
 }

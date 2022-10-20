@@ -30,5 +30,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fpg using the business as usual scenario.
+Accelerate fpg by halting the rise to 2010 value.
 }
