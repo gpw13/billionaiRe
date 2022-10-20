@@ -299,9 +299,7 @@ accelerate_beds <- function(df,
 
 #' Accelerate bp
 #'
-#' Accelerate bp by taking the best of business as usual and a **decrease of 25% from
-#' 2010 to 2025**. These scenarios are run on the crude bp values, which
-#' are then converted back to their age-standardised equivalents using an approximation.
+#' Accelerate bp by aiming at reaching 80% by 2030.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
@@ -319,140 +317,38 @@ accelerate_bp <- function(df,
   params <- list(...)
   params["end_year"] <- end_year
 
-  params_perc_baseline <- c(
-    get_right_params(params, scenario_percent_baseline),
-    list(
-      percent_change = -25,
-      baseline_year = 2010,
-      scenario_name = "percent_baseline"
-    )
-  )
-
-  params_perc_baseline[[value_col]] <- "crude"
-  params_perc_baseline[["start_year"]] <- start_year
-
   params_bau <- c(
     get_right_params(params, scenario_bau),
-    list(value = "crude", scenario_name = "business_as_usual")
+    list(scenario_name = "business_as_usual")
   )
 
-  params_bau[[value_col]] <- "crude"
-
-  # Preliminary wrangling from the bp.R script to get bp_as_cr_ratio
-  bp_agestd <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Age-standardised.csv") %>%
-    dplyr::filter(.data[["Metric"]] == "Hypertension") %>%
-    dplyr::select(-c("Type", "Metric")) %>%
-    dplyr::mutate(
-      Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
-      "iso3" = whoville::names_to_iso3(.data[["Country"]],fuzzy_matching = "yes")
-    ) %>%
-    suppressMessages() %>%
-    dplyr::rename(
-      "country" = "Country",
-      !!sym("year") := "Year",
-      "sex" = "Sex",
-      !!sym(value_col) := "Prevalence",
-      "lower" = "95% lower limit",
-      "upper" = "95% upper limit",
-    ) %>%
-    dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
-    dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
-    dplyr::summarize(!!sym(value_col) := mean(.data[[value_col]], na.rm = TRUE), .groups = "drop") %>% # total value is average of male and female
-    dplyr::mutate(
-      !!sym("ind") := "bp_agestd",
-      !!sym("type") := ifelse(.data[["year"]] <= 2019, "estimated", "projected")
-    ) # check
-
-  bp_crude <- load_misc_data("scenarios/bp/NCD-RisC_Model78_hypertension_treatment_country_estimates_Crude.csv") %>%
-    dplyr::filter(.data[["Metric"]] == "Hypertension") %>%
-    dplyr::select(-c("Type", "Metric")) %>%
-    dplyr::mutate(!!sym("ind") := "bp_crude") %>%
-    dplyr::mutate(
-      Country = ifelse(.data[["Country"]] == "Macedonia (TFYR)", "Macedonia", .data[["Country"]]),
-      !!sym("iso3") := whoville::names_to_iso3(.data[["Country"]])
-    ) %>%
-    suppressMessages() %>%
-    dplyr::rename(
-      "country" = "Country",
-      !!sym("year") := "Year",
-      "sex" = "Sex",
-      !!sym(value_col) := "Prevalence",
-      "lower" = "95% lower limit",
-      "upper" = "95% upper limit",
-    ) %>%
-    dplyr::left_join(wppdistro::wpp_population, by = c("iso3", "year", "sex")) %>%
-    dplyr::mutate(
-      pop_30_79 = .data[["30_34"]] + .data[["35_39"]] + .data[["40_44"]] + .data[["45_49"]] + .data[["50_54"]] + .data[["55_59"]] + .data[["60_64"]] + .data[["65_69"]] + .data[["70_74"]] + .data[["75_79"]]
-    ) %>%
-    dplyr::select(dplyr::all_of(c("iso3", "year", "ind", "sex", value_col, "lower", "upper", "pop_30_79"))) %>%
-    dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
-    dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
-    dplyr::summarize(!!sym(value_col) := stats::weighted.mean(.data[[value_col]], w = .data[["pop_30_79"]]), .groups = "drop") %>%
-    dplyr::mutate(
-      "ind" := "bp_crude",
-      !!sym("type") := ifelse(.data[["year"]] <= 2019, "estimated", "projected")
-    )
-
-  bp_ratio <- bp_agestd %>%
-    dplyr::bind_rows(bp_crude) %>%
-    tidyr::pivot_wider(names_from = .data[["ind"]], values_from = .data[[value_col]]) %>%
-    dplyr::mutate(ratio_agestd_over_crude = .data[["bp_agestd"]] / .data[["bp_crude"]]) %>%
-    dplyr::select(c("year", "iso3", "ratio_agestd_over_crude"))
-
-  bp_agestd_crude_ratio <- bp_ratio %>%
-    # @Alice, should there final year be 2023 or 2025? (if so, replace 2023 by end_year)
-    dplyr::full_join(tidyr::expand_grid(!!sym("iso3") := unique(bp_agestd$iso3), !!sym("year") := 2020:end_year), by = c("iso3", "year")) %>%
-    dplyr::left_join(
-      bp_ratio %>%
-        dplyr::filter(.data[["year"]] == 2019) %>%
-        dplyr::select(-.data[["year"]], ratio = .data[["ratio_agestd_over_crude"]]),
-      by = "iso3"
-    ) %>%
-    # @Alice, please explain the logic for the ifelse(is.na(...)) statement
-    # given that ratio and ratio_agestd_over_crude are the same column
-    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), .data[["ratio"]], .data[["ratio_agestd_over_crude"]])) %>%
-    dplyr::select(!c("ratio"))
-
-  bp_agestd_crude_ratio_org <- tidyr::expand_grid(
-    iso3 = unique(bp_agestd_crude_ratio$iso3),
-    year = 1990:end_year
-  ) %>%
-    dplyr::full_join(bp_agestd_crude_ratio, by = c("iso3", "year")) %>%
-    flat_extrapolation(col = "ratio_agestd_over_crude", group_col = "iso3") %>%
-    dplyr::rename(!!sym("iso3") := "iso3", !!sym("year") := "year")
-
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind) %>%
-    # @Alice
-    # convert to crude, run hpop scenario on crude, convert back to agrestd
-    # NB need to recalculate ratios????
-    dplyr::left_join(bp_agestd_crude_ratio, by = c("iso3", "year")) %>%
-    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), 1, .data[["ratio_agestd_over_crude"]])) %>%
-    dplyr::mutate(crude = .data[[value_col]] / .data[["ratio_agestd_over_crude"]])
+    dplyr::filter(.data[["ind"]] == this_ind)
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
 
-  df_perc_baseline <- do.call(
-    scenario_percent_baseline, c(list(df = df_this_ind), params_perc_baseline)
+  params_fixed_target <- get_right_params(params, scenario_fixed_target)
+  params_fixed_target <- c(
+    params_fixed_target,
+    list(target_value = 80, target_year = 2030, scenario_name = "fixed_target")
+  )
+
+  df_fixed_target <- do.call(
+    scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "percent_baseline")
+    dplyr::filter(.data[[scenario_col]] == "fixed_target")
 
   params_best_of <- get_right_params(params, scenario_best_of)
   params_best_of[["scenario_name"]] <- "acceleration"
-  params_best_of[["scenario_names"]] <- c("business_as_usual", "percent_baseline")
-  params_best_of[[value_col]] <- "crude"
+  params_best_of[["scenario_names"]] <- c("business_as_usual", "fixed_target")
 
   df_accelerated <- do.call(
-    scenario_best_of, c(list(df = dplyr::bind_rows(df_bau, df_perc_baseline)), params_best_of)
+    scenario_best_of, c(list(df = dplyr::bind_rows(df_bau, df_fixed_target)), params_best_of)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
-    dplyr::select(-c("ratio_agestd_over_crude")) %>%
-    dplyr::left_join(bp_agestd_crude_ratio, by = c("iso3", "year")) %>%
-    dplyr::mutate(ratio_agestd_over_crude = ifelse(is.na(.data[["ratio_agestd_over_crude"]]), 1, .data[["ratio_agestd_over_crude"]])) %>%
-    dplyr::mutate(!!sym(value_col) := .data[["crude"]] * .data[["ratio_agestd_over_crude"]])
+    dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%
     dplyr::bind_rows(df_accelerated)

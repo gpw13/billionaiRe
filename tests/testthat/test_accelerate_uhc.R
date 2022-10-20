@@ -80,11 +80,13 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
 # bp ----------------------------
 
 testthat::test_that("accelerate_bp returns accurate values:", {
-  # TODO: Difficult to test due to dependencies on external targets.
 
   ind <- "bp"
-  # Verify that function can be run without errors or messages.
-  testthat::expect_error(get_2025_value(60:80, ind, "reported"), NA)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported"),
+    get_fixed_target(80, 68, 2018, 2030)
+  )
 })
 
 # doctors ----------------------------
