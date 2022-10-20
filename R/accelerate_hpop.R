@@ -387,12 +387,16 @@ accelerate_hpop_sanitation <- function(df,
   params["end_year"] <- end_year
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind)) %>%
+    dplyr::mutate("_temp_ind" := .data[["ind"]],
+                  "ind" := this_ind)
 
   df_accelerated <- do.call(
     scenario_quantile, c(list(df = df_this_ind), params)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
+    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
+    dplyr::mutate("ind":= .data[["_temp_ind"]]) %>%
+    dplyr::select(-"_temp_ind")
 
   df %>%
     dplyr::bind_rows(df_accelerated)
@@ -1045,7 +1049,7 @@ accelerate_water <- function(df,
                              ind_ids = billion_ind_codes("hpop"),
                              scenario_col = "scenario",
                              ...) {
-  this_ind <- ind_ids["water"]
+  this_ind <- "water"
 
   params <- list(...)
   params["n"] <- 5
@@ -1056,17 +1060,21 @@ accelerate_water <- function(df,
   params["scenario_name"] <- "acceleration"
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind)) %>%
+    dplyr::mutate("_temp_ind" := .data[["ind"]],
+                  "ind" := this_ind)
 
   assert_ind_start_end_year(df_this_ind,
     start_year = 2017, end_year = 2018,
-    ind_ids = ind_ids["water"], scenario_col = scenario_col
+    ind_ids = this_ind, scenario_col = scenario_col
   )
 
   df_accelerated <- do.call(
     scenario_quantile, c(list(df = df_this_ind), params)
   ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
+    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
+    dplyr::mutate("ind":= .data[["_temp_ind"]]) %>%
+    dplyr::select(-"_temp_ind")
 
   df %>%
     dplyr::bind_rows(df_accelerated)

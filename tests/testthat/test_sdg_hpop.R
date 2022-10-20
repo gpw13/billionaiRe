@@ -477,7 +477,7 @@ testthat::test_that("sdg can be run on all hpop indicators:", {
 
   calculated_test_data <- add_scenario(hpop_test_df, "sdg")
 
-  testthat::expect_equal(nrow(calculated_test_data), 609)
+  testthat::expect_equal(nrow(calculated_test_data), 577)
 
   testthat::expect_error(
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%

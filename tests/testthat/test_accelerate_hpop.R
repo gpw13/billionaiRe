@@ -176,7 +176,7 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
+    indicator = "hpop_sanitation",
     scenario_function = "accelerate"
   )
 
@@ -191,13 +191,13 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = ind,
+    ind = "hpop_sanitation",
     iso3 = "testalia",
     scenario = "default"
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
+    indicator = "hpop_sanitation",
     scenario_function = "accelerate"
   )
 
@@ -456,7 +456,7 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
+    indicator = "water",
     scenario_function = "accelerate",
     quantile_year = 2010
   )
@@ -501,11 +501,11 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
       TRUE ~ "projected"
     )
   ) %>%
-    tidyr::expand_grid(ind = billion_ind_codes("hpop"))
+    tidyr::expand_grid(ind = billion_ind_codes("hpop", include_subindicators = FALSE))
 
   calculated_test_data <- add_scenario(hpop_test_df, "accelerate")
 
-  testthat::expect_equal(nrow(calculated_test_data), 609)
+  testthat::expect_equal(nrow(calculated_test_data), 493)
 
   testthat::expect_error(
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%

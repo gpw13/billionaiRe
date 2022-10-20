@@ -64,7 +64,7 @@ add_scenario <- function(df,
 
   those_inds <- sub_set_inds[sub_set_inds %in% unique(df[["ind"]])]
 
-  those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$"))
+  those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$|_rural$|_urban$"))
 
   furrr::future_map_dfr(
     those_inds,
