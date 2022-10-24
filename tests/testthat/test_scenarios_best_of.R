@@ -141,7 +141,7 @@ testthat::test_that("scenario_bau returns accurate values", {
     scenario = c(rep("a", 21), rep("b", 21), rep("c", 21))
   )
 
-  df_scenario_bau <- scenario_bau(df, default_scenario = "a") %>%
+  df_scenario_bau <- scenario_bau(df, bau_scenario = "a") %>%
     dplyr::filter(scenario == "business_as_usual")
 
   df_test <- df %>%
@@ -155,7 +155,7 @@ testthat::test_that("scenario_bau returns accurate values", {
 
   df_scenario_bau <- df %>%
     dplyr::filter(year <= 2018) %>%
-    scenario_bau(default_scenario = "a") %>%
+    scenario_bau(bau_scenario = "a") %>%
     dplyr::filter(scenario == "business_as_usual")
 
   df_test_2018 <- df %>%

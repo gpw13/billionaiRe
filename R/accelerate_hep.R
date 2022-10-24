@@ -164,6 +164,7 @@ accelerate_espar <- function(df,
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -172,14 +173,19 @@ accelerate_espar <- function(df,
 accelerate_detect <- function(df,
                               ind_ids = billion_ind_codes("hep"),
                               scenario_col = "scenario",
+                              bau_scenario = "historical",
                               ...) {
   this_ind <- ind_ids["detect"]
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == bau_scenario)
 
   params_bau <- get_right_params(list(...), scenario_bau)
   params_bau["scenario_name"] <- "acceleration"
+  params_bau["scenario_col"] <- scenario_col
+  params_bau["bau_scenario"] <- bau_scenario
+
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind), params_bau)
@@ -265,13 +271,15 @@ accelerate_cholera_campaign <- function(df,
                                         start_year = 2018,
                                         ind_ids = billion_ind_codes("hep"),
                                         scenario_col = "scenario",
+                                        default_scenario = "default",
                                         ...) {
   this_ind <- ind_ids["cholera_campaign"]
 
   purrr::walk(unique(df[["iso3"]]), assert_who_iso3)
 
   df_this_ind <- df %>%
-    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind))
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind),
+                  .data[[scenario_col]] == default_scenario)
 
   cholera_campaign_num <- ind_ids["cholera_campaign_num"]
   cholera_campaign_denom <- ind_ids["cholera_campaign_denom"]
@@ -450,6 +458,7 @@ accelerate_cholera_campaign <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
 #' @param years_best_performance vector of years with the years in which the
 #' best performance should be found.
 #' @param ... additional parameters to be passed to scenario function
@@ -464,11 +473,13 @@ accelerate_meningitis_campaign <- function(df,
                                            start_year = 2018,
                                            end_year = 2025,
                                            years_best_performance = 2015:2018,
+                                           default_scenario = "default",
                                            ...) {
   this_ind <- as.character(ind_ids["meningitis_campaign"])
 
   df_this_ind <- df %>%
-    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind))
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind),
+                  .data[[scenario_col]] == default_scenario)
 
   meningitis_campaign_num <- ind_ids["meningitis_campaign_num"]
   meningitis_campaign_denom <- ind_ids["meningitis_campaign_denom"]
@@ -627,6 +638,7 @@ accelerate_meningitis_campaign <- function(df,
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -635,11 +647,13 @@ accelerate_meningitis_campaign <- function(df,
 accelerate_measles_routine <- function(df,
                                        ind_ids = billion_ind_codes("hep"),
                                        scenario_col = "scenario",
+                                       default_scenario = "default",
                                        ...) {
   this_ind <- ind_ids["measles_routine"]
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   assert_ind_start_end_year(df_this_ind, start_year = 2013, end_year = 2018, ind_ids = this_ind)
 
@@ -670,6 +684,7 @@ accelerate_measles_routine <- function(df,
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -679,13 +694,17 @@ accelerate_meningitis_routine <- function(df,
                                           value_col = "value",
                                           scenario_col = "scenario",
                                           start_year = 2018,
+                                          default_scenario = "default",
                                           ...) {
   this_ind <- ind_ids["meningitis_routine"]
 
-  target_df <- df %>%
+  this_ind_df <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
+
+  target_df <- this_ind_df %>%
     dplyr::filter(
-      .data[["year"]] == start_year,
-      .data[["ind"]] == this_ind
+      .data[["year"]] == start_year
     ) %>%
     dplyr::mutate(
       target_col = dplyr::case_when(
@@ -695,8 +714,7 @@ accelerate_meningitis_routine <- function(df,
     ) %>%
     dplyr::select(c("iso3", "ind", "target_col"))
 
-  this_ind_df <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind) %>%
+  this_ind_df <- this_ind_df %>%
     dplyr::left_join(target_df, by = c("iso3", "ind"))
 
   params_fixed_target_col <- get_right_params(list(...), scenario_fixed_target_col)
@@ -726,6 +744,7 @@ accelerate_meningitis_routine <- function(df,
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_child_viol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -733,11 +752,13 @@ accelerate_meningitis_routine <- function(df,
 accelerate_polio_routine <- function(df,
                                      ind_ids = billion_ind_codes("hep"),
                                      scenario_col = "scenario",
+                                     default_scenario = "default",
                                      ...) {
   this_ind <- ind_ids["polio_routine"]
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
 
   assert_ind_start_end_year(df_this_ind, start_year = 2015, end_year = 2018, ind_ids = this_ind)
 
@@ -774,6 +795,7 @@ accelerate_polio_routine <- function(df,
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams accelerate_meningitis_campaign
+#' @inheritParams accelerate_child_viol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -785,11 +807,13 @@ accelerate_yellow_fever_campaign <- function(df,
                                              start_year = 2018,
                                              end_year = 2025,
                                              years_best_performance = 2015:2018,
+                                             default_scenario = "default",
                                              ...) {
   this_ind <- as.character(ind_ids["yellow_fever_campaign"])
 
   df_this_ind <- df %>%
-    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind))
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind),
+                  .data[[scenario_col]] == default_scenario)
 
   yellow_fever_campaign_num <- as.character(ind_ids["yellow_fever_campaign_num"])
   yellow_fever_campaign_denom <- as.character(ind_ids["yellow_fever_campaign_denom"])

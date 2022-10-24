@@ -11,6 +11,8 @@ accelerate_hpop_tobacco(
   value_col = "value",
   start_year = 2018,
   end_year = 2025,
+  default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -26,17 +28,18 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{value_col}{Column name of column with indicator values.}
+\item{value_col}{Name of the column containing indicator value in \code{df}.}
 
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+\item{start_year}{Year from which the acceleration scenario begins, inclusive.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
+
 \item{...}{additional parameters to be passed to scenario function}
-}
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
 }
 \description{
 Accelerate hpop_tobacco by picking the best value between business as usual,

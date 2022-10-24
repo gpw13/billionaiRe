@@ -18,6 +18,8 @@ sdg_adult_obese <- function(df,
   assert_columns(df,scenario_col, "ind")
 
   this_ind <- ind_ids["adult_obese"]
+  params <- list(...)
+  params["scenario_col"] <- scenario_col
 
   accelerate_adult_obese(
     df = df,

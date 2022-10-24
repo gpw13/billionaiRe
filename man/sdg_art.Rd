@@ -4,7 +4,13 @@
 \alias{sdg_art}
 \title{Accelerate art to SDG target}
 \usage{
-sdg_art(df, scenario_col = "scenario", ind_ids = billion_ind_codes("uhc"), ...)
+sdg_art(
+  df,
+  scenario_col = "scenario",
+  ind_ids = billion_ind_codes("uhc"),
+  bau_scenario = "historical",
+  ...
+)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -17,6 +23,9 @@ calculating contributions on data in long format rather than wide format.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -32,4 +41,14 @@ those without.
 \item For countries with reported data, the best of business as usual and \strong{fixed
 target of 90.25\% by 2025} is chosen.
 }
+}
+\details{
+Runs:
+\itemize{
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+}
+
+Then picks the best result between the three scenarios.
 }

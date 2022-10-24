@@ -10,6 +10,7 @@ accelerate_wasting(
   end_year = 2025,
   scenario_col = "scenario",
   default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -27,7 +28,10 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{default_scenario}{name of the default scenario to be used.}
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -36,13 +40,12 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate wasting by picking the best results between business as usual,
-halt downwards trend from 2018, and AROC by 3\% by 2030.
+Accelerate wasting by picking the best results between halt downwards trend
+from 2018, and AROC by 3\% by 2030.
 }
 \details{
 Runs:
 \itemize{
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}
 \item \code{scenario_halt_rise(df, small_is_best = TRUE,...)}
 \item \code{scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)}
 }

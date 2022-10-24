@@ -290,7 +290,7 @@ scenario_dip_recover_iso3_ind <- function(df,
         trim_years = trim_years,
         small_is_best = small_is_best,
         ind_ids = ind_ids,
-        default_scenario = default_scenario
+        bau_scenario = default_scenario
       ) %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario_name) %>%
       dplyr::mutate(

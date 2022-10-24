@@ -12,13 +12,14 @@ testthat::test_that("adult_obese returns appropriate values", {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "sdg",
+    bau_scenario = "default"
   )
 
-  df_add_indicator <- df_add_indicator %>%
+  df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator, 60)
+  testthat::expect_equal(df_add_indicator_2025, 60)
 })
 
 testthat::test_that(paste0("sdg_alcohol returns accurate values:"), {
@@ -125,7 +126,8 @@ testthat::test_that(paste0("accelerate_fuel returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "sdg"
+    scenario_function = "sdg",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -484,7 +486,7 @@ testthat::test_that("sdg can be run on all hpop indicators:", {
       dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
       make_default_scenario(billion = "hpop") %>%
       dplyr::filter(scenario == "default") %>%
-      add_scenario("sdg"),
+      add_scenario("sdg", bau_scenario = "default"),
     NA
   )
 })

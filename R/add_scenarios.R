@@ -70,13 +70,13 @@ add_scenario <- function(df,
     those_inds,
     function(x) {
       rlang::exec("add_scenario_indicator",
-        df = df,
-        scenario_function = scenario_function,
-        indicator = x,
-        ind_ids = ind_ids,
-        start_year = start_year,
-        end_year = end_year,
-        ...
+                  df = df,
+                  scenario_function = scenario_function,
+                  indicator = x,
+                  ind_ids = ind_ids,
+                  start_year = start_year,
+                  end_year = end_year,
+                  ...
       )
     }
   ) %>%
@@ -96,6 +96,7 @@ add_scenario <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams scenario_fixed_target
+#' @inheritParams accelerate_alcohol
 #'
 add_scenario_indicator <- function(df,
                                    scenario_function = c(
@@ -121,6 +122,7 @@ add_scenario_indicator <- function(df,
                                    ind_ids = billion_ind_codes("all"),
                                    scenario_col = "scenario",
                                    default_scenario = "default",
+                                   bau_scenario = "historical",
                                    ...) {
   this_ind <- ind_ids[indicator]
 
@@ -132,13 +134,16 @@ add_scenario_indicator <- function(df,
 
   params <- list(...)
   params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
+  params["scenario_col"] <- scenario_col
+  params["default_scenario"] <- default_scenario
+  params["bau_scenario"] <- bau_scenario
 
-    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-      "espar[0-9].{0,3}",
-      this_ind
-    ),
-    collapse = "|"
-    ))]
+  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+    "espar[0-9].{0,3}",
+    this_ind
+  ),
+  collapse = "|"
+  ))]
 
   this_ind_df <- df %>%
     dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
@@ -146,15 +151,14 @@ add_scenario_indicator <- function(df,
   if (scenario_function == "accelerate") {
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
 
-    accelerate_df <- this_ind_df %>%
-      dplyr::filter(.data[[scenario_col]] == default_scenario)
+    unique_scenarios <- unique(this_ind_df[[scenario_col]])
 
-    if(nrow(accelerate_df) == 0 & nrow(this_ind_df > 0)){
-      stop("For acceleration scenarios, `default_scenario` must be present.")
+    if(!default_scenario %in% unique_scenarios & !bau_scenario %in% unique_scenarios){
+      stop("For acceleration scenarios, `default_scenario` and `bau_scenario` must be present.")
     }
 
     do.call(
-      accelerate_fn, c(list(df = accelerate_df), params)
+      accelerate_fn, c(list(df = this_ind_df), params)
     ) %>%
       dplyr::distinct()
 
@@ -162,6 +166,9 @@ add_scenario_indicator <- function(df,
     if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
       sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
       params["scenario_name"] <- "sdg"
+
+      params <- get_right_params(params, sdg_fn)
+
     } else {
       sdg_fn <- get(as.character(paste0("sdg_", this_ind)), mode = "function")
     }
@@ -173,8 +180,10 @@ add_scenario_indicator <- function(df,
   } else {
     scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
 
+    params_function <- get_right_params(params, scenario_fn)
+
     do.call(
-      scenario_fn, c(list(df = df), params)
+      scenario_fn, c(list(df = df), params_function)
     ) %>%
       dplyr::distinct()
   }

@@ -1,5 +1,3 @@
-
-
 test_sdg_hep <- function(ind) {
   testthat::test_that(paste0(ind, " returns appropriate values"), {
     df <- tibble::tibble(
@@ -13,6 +11,7 @@ test_sdg_hep <- function(ind) {
     df_add_indicator <- add_scenario_indicator(df,
       indicator = ind,
       scenario_function = "sdg",
+      bau_scenario = "default"
     )
     df_add_indicator <- df_add_indicator %>%
       dplyr::filter(scenario == "sdg", year <= 2025, year >= 2018) %>%

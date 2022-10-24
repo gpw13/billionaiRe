@@ -7,7 +7,8 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     iso3 = iso3,
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate", ind) %>%
+    add_scenario_indicator("accelerate", ind,
+                           bau_scenario = "default") %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 }
@@ -120,7 +121,7 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate", ind) %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "default") %>%
     dplyr::filter(scenario == "acceleration")
 
   # testalia is less than 2018 global median so linear change of 4.54/yr from 2018 to 2025
@@ -293,5 +294,5 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
       scenario == "default"
     )
 
-  testthat::expect_error(add_scenario(uhc_test_df, "accelerate"), NA)
+  testthat::expect_error(add_scenario(uhc_test_df, "accelerate", bau_scenario = "default"), NA)
 })

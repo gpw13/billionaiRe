@@ -41,15 +41,19 @@ sdg_anc4 <- function(df,
 sdg_art <- function(df,
                     scenario_col = "scenario",
                     ind_ids = billion_ind_codes("uhc"),
+                    bau_scenario = "historical",
                     ...) {
 
   assert_columns(df, scenario_col)
 
   this_ind <- ind_ids["art"]
 
+
   accelerate_art(
     df = df,
     ind_ids = this_ind,
+    scenario_col = scenario_col,
+    bau_scenario = bau_scenario,
     ...
   ) %>%
     dplyr::mutate("{scenario_col}" := dplyr::case_when(
@@ -74,7 +78,6 @@ sdg_art <- function(df,
 sdg_beds <- function(df,
                      ind_ids = billion_ind_codes("uhc"),
                      scenario_col = "scenario",
-                     start_year = 2018,
                      ...) {
 
   assert_columns(df, scenario_col)
@@ -133,6 +136,8 @@ sdg_bp <- function(df,
 sdg_doctors <- function(df,
                         ind_ids = billion_ind_codes("uhc"),
                         scenario_col = "scenario",
+                        default_scenario = "default",
+                        bau_scenario = "historical",
                         ...) {
 
   assert_columns(df, scenario_col)
@@ -142,6 +147,9 @@ sdg_doctors <- function(df,
   accelerate_doctors(
     df = df,
     ind_ids = this_ind,
+    scenario_col = scenario_col,
+    default_scenario = default_scenario,
+    bau_scenario = bau_scenario,
     ...
   ) %>%
     dplyr::mutate("{scenario_col}" := dplyr::case_when(
@@ -160,6 +168,8 @@ sdg_doctors <- function(df,
 sdg_nurses <- function(df,
                        ind_ids = billion_ind_codes("uhc"),
                        scenario_col = "scenario",
+                       default_scenario = "default",
+                       bau_scenario = "historical",
                        ...) {
 
   assert_columns(df, scenario_col)
@@ -169,6 +179,9 @@ sdg_nurses <- function(df,
   accelerate_nurses(
     df = df,
     ind_ids = this_ind,
+    scenario_col = scenario_col,
+    default_scenario = default_scenario,
+    bau_scenario = bau_scenario,
     ...
   ) %>%
     dplyr::mutate("{scenario_col}" := dplyr::case_when(
@@ -193,6 +206,8 @@ sdg_hwf <- function(df,
                     ind_ids = billion_ind_codes("uhc"),
                     scenario_col = "scenario",
                     start_year = 2018,
+                    default_scenario = "default",
+                    bau_scenario = "historical",
                     ...) {
 
   assert_columns(df, scenario_col)
@@ -202,6 +217,8 @@ sdg_hwf <- function(df,
   accelerate_hwf(
     df = df,
     ind_ids = this_ind,
+    default_scenario = default_scenario,
+    bau_scenario = bau_scenario,
     ...
   ) %>%
     dplyr::mutate("{scenario_col}" := dplyr::case_when(
@@ -257,6 +274,8 @@ sdg_dtp3 <- function(df,
 sdg_fh <- function(df,
                    ind_ids = billion_ind_codes("uhc"),
                    scenario_col = "scenario",
+                   default_scenario = "default",
+                   bau_scenario = "historical",
                    ...) {
 
   assert_columns(df, scenario_col)
@@ -266,6 +285,8 @@ sdg_fh <- function(df,
   accelerate_fh(
     df = df,
     ind_ids = this_ind,
+    default_scenario = default_scenario,
+    bau_scenario = bau_scenario,
     ...
   ) %>%
     dplyr::mutate("{scenario_col}" := dplyr::case_when(

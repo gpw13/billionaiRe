@@ -8,6 +8,7 @@ accelerate_water(
   df,
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
+  default_scenario = "default",
   ...
 )
 }
@@ -23,11 +24,9 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{default_scenario}{name of the default scenario.}
+
 \item{...}{additional parameters to be passed to scenario function}
-}
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
 }
 \description{
 Accelerate water by aiming at best value in quintile.

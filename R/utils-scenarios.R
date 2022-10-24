@@ -257,7 +257,7 @@ get_quantile <- function(value, n) {
 
 #' Flat extrapolation
 #'
-#' @param df Data frame of model data.#' @param col
+#' @param df Data frame of model data.#'
 #' @param col Name of column to extrapolate/interpolate.
 #' @param group_col Column name(s) of group(s) to use in [dplyr::group_by()] when
 #'     supplying type, calculating mean absolute scaled error on data involving

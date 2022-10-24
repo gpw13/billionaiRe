@@ -9,6 +9,8 @@ accelerate_art(
   ind_ids = billion_ind_codes("uhc"),
   scenario_col = "scenario",
   start_year = 2018,
+  default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -24,13 +26,14 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+\item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
-}
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
 }
 \description{
 Accelerate art by first dividing countries into those with reported data and
@@ -40,4 +43,14 @@ those without.
 \item For countries with reported data, the best of business as usual and \strong{fixed
 target of 90.25\% by 2025} is chosen.
 }
+}
+\details{
+Runs:
+\itemize{
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+}
+
+Then picks the best result between the three scenarios.
 }
