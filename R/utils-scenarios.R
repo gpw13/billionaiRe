@@ -6,6 +6,8 @@
 #' data frame.
 #' @param value_col Column name of column with indicator values. This column will be
 #' used to return the results.
+#' @param baseline_col Column name with baseline values. This is used to ensure
+#' that trimmed values do not get worst values than baseline.
 #' @param trim logical to indicate if the data should be trimmed between
 #' `upper_limit` and `lower_limit`.
 #' @param keep_better_values logical to indicate if "better" values should be
