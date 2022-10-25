@@ -148,6 +148,7 @@ scenario_linear_change_col <- function(df,
     trim_values(
       col = "scenario_value",
       value_col = value_col,
+      baseline_col = "baseline_value",
       trim = trim,
       small_is_best = small_is_best,
       keep_better_values = keep_better_values,

@@ -204,7 +204,7 @@ accelerate_art <- function(df,
       dplyr::filter(.data[[scenario_col]] == "business_as_usual")
 
     df_with_data_default <- df_with_data %>%
-      dplyr::filter(.data[[scenario_col]] == bau_scenario)
+      dplyr::filter(.data[[scenario_col]] == default_scenario)
 
     df_with_data_fixed_target <- do.call(
       scenario_fixed_target, c(list(df = df_with_data_default), params_with_data_fixed_target)
@@ -1048,6 +1048,7 @@ accelerate_uhc_sanitation <- function(df,
   params <- get_right_params(params, scenario_quantile)
   params["scenario_col"] <- scenario_col
   params["default_scenario"] <- default_scenario
+  params["keep_better_values"] <- TRUE
 
   params <- c(
     params,
@@ -1206,10 +1207,7 @@ accelerate_uhc_tobacco <- function(df,
     df_with_data_bau <- do.call(
       scenario_bau, c(list(df = df_with_data_bau), params_with_data_bau)
     ) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_data_bau") %>%
-      flat_extrapolation(col = "crude",
-                         group_col = c("iso3", "ind")) %>%
-      dplyr::mutate(!!sym(value_col) := .data[["crude"]])
+      dplyr::filter(.data[[scenario_col]] == "with_data_bau")
 
     df_with_data_default <- df_with_data %>%
       dplyr::filter(.data[[scenario_col]] == default_scenario)

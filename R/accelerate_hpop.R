@@ -1185,9 +1185,15 @@ accelerate_water <- function(df,
   params["scenario_name"] <- "acceleration"
 
   df_this_ind <- df %>%
-    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind)) %>%
-    dplyr::mutate("_temp_ind" := .data[["ind"]],
-                  "ind" := this_ind)
+    dplyr::filter(stringr::str_detect(.data[["ind"]], this_ind))
+
+  unique_inds <- df_this_ind %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::distinct(temp_ind = .data[["ind"]]) %>%
+    dplyr::ungroup()
+
+  df_this_ind <- df_this_ind %>%
+    dplyr::mutate("ind" := this_ind)
 
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
@@ -1203,8 +1209,9 @@ accelerate_water <- function(df,
     scenario_quantile, c(list(df = df_this_ind_default), params_quantile)
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
-    dplyr::mutate("ind":= .data[["_temp_ind"]]) %>%
-    dplyr::select(-"_temp_ind")
+    dplyr::left_join(unique_inds, by = c("iso3")) %>%
+    dplyr::mutate(ind = temp_ind) %>%
+    dplyr::select(-temp_ind)
 
   df %>%
     dplyr::bind_rows(df_accelerated)

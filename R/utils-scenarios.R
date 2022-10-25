@@ -23,6 +23,7 @@
 trim_values <- function(df,
                         col,
                         value_col = "value",
+                        baseline_col = value_col,
                         trim = TRUE,
                         small_is_best = FALSE,
                         keep_better_values = FALSE,
@@ -44,6 +45,14 @@ trim_values <- function(df,
           !keep_better_values ~ as.numeric(.data[[col]])
         ),
         !!sym(value_col) := dplyr::case_when(
+          baseline_col != value_col
+            & small_is_best
+            & .data[["better_value"]] < lower_limit
+            & .data[[baseline_col]] < lower_limit ~ as.numeric(.data[[baseline_col]]),
+          baseline_col != value_col
+            & !small_is_best
+            & (.data[["better_value"]] > upper_limit)
+            & .data[[baseline_col]] > upper_limit ~ as.numeric(.data[[baseline_col]]),
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),
           .data[["better_value"]] > upper_limit ~ as.numeric(upper_limit),
           TRUE ~ as.numeric(.data[["better_value"]])
