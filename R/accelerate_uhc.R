@@ -262,7 +262,8 @@ accelerate_beds <- function(df,
 
   params_no_scenario_bau <- c(
     get_right_params(params, scenario_bau),
-    list(scenario_name = "acceleration")
+    list(scenario_name = "acceleration",
+         avoid_worstening = TRUE)
   )
 
   params_with_scenario_bau <- c(
