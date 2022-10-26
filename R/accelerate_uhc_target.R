@@ -1,134 +1,24 @@
-#' Accelerate anc4
+#' Accelerate anc4 to 95% by 2030
 #'
-#' Accelerate anc4 by first dividing countries into those with reported data and
-#' those without.
-#' - For countries without reported data, the acceleration scenario_col is the same
-#' as business as usual.
-#' - For countries with reported data, scenarios with both a **fixed target of 95%
-#' by 2030** and a **linear change of 2.6 per year till 2025** are tried, with the easiest
-#' to achieve of the two selected. The selected scenario is then compared against
-#' the business as usual scenario for reported data, and the best of the two chosen
-#' as the acceleration scenario.
+#' Accelerate `anc4` by aiming at **fixed target of 95% by 2030**.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams transform_hpop_data
+#' @inheritParams calculate_hpop_contributions
+#' @inheritParams calculate_uhc_billion
+#' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
+#' @return data frame with acceleration scenario binded to `df`. `scenario` is
 #' set to `acceleration`
 #'
-accelerate_anc4 <- function(df,
-                            ind_ids = billion_ind_codes("uhc"),
-                            scenario_col = "scenario",
-                            default_scenario = "default",
-                            bau_scenario = "historical",
-                            ...) {
-  this_ind <- ind_ids["anc4"]
+accelerate_target_anc4 <- function(df,
+                     ...) {
 
-  params <- list(...)
-  params["default_scenario"] <- default_scenario
-  params["bau_scenario"] <- bau_scenario
-
-
-  params_without_data_bau <- c(
-    get_right_parameters(params, scenario_bau),
-    list(scenario_name = "acceleration")
-  )
-
-  params_with_data_bau <- c(
-    get_right_parameters(params, scenario_bau),
-    list(scenario_name = "with_data_bau")
-  )
-
-  params_with_data_fixed_target <- c(
-    get_right_parameters(params, scenario_fixed_target),
-    list(scenario_name = "with_data_fixed_target", target_value = 95, target_year = 2030)
-  )
-
-  params_with_data_linear <- c(
-    get_right_parameters(params, scenario_linear_change),
-    list(scenario_name = "with_data_linear", linear_value = 2.6)
-  )
-
-  df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
-
-  df_without_data <- df_this_ind %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) <= 1)
-
-  df_with_data <- df_this_ind %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) > 1) %>%
-    dplyr::ungroup()
-
-  if (nrow(df_with_data) > 0) {
-    df_with_data_bau <- df_with_data %>%
-      dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
-    df_with_data_bau <- do.call(
-      scenario_bau, c(list(df = df_with_data_bau), params_with_data_bau)
-    ) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_data_bau")
-
-    df_with_data_default <- df_with_data %>%
-      dplyr::filter(.data[[scenario_col]] == default_scenario)
-
-
-    df_with_data_fixed_target <- do.call(
-      scenario_fixed_target, c(list(df = df_with_data_default), params_with_data_fixed_target)
-    ) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_data_fixed_target")
-
-    df_with_data_linear <- do.call(
-      scenario_linear_change, c(list(df = df_with_data_default), params_with_data_linear)
-    ) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_data_linear")
-
-    params_scenario_best_of_linear_fixed <- c(get_right_parameters(params, scenario_best_of))
-    params_scenario_best_of_linear_fixed["small_is_best"] <- TRUE
-
-    df_with_data_best <- dplyr::bind_rows(df_with_data_fixed_target, df_with_data_linear)
-    df_with_data_best <- do.call(
-      scenario_best_of, c(list(
-        df = df_with_data_best,
-        scenario_names = c("with_data_fixed_target", "with_data_linear"),
-        scenario_name = "best_of_linear_and_fixed_target"),
-        params_scenario_best_of_linear_fixed)) %>%
-      dplyr::filter(.data[[scenario_col]] == "best_of_linear_and_fixed_target")
-
-    # Elliott: when binding the df_with_data_best and df_with_data_bau duplicated rows are created. adding a distinct to remove them for now.
-    # With new version of scenario_best_of, this shouldn't happen though.
-
-    params_scenario_best <- c(get_right_parameters(params, scenario_best_of))
-
-    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_best, df_with_data_bau) %>%
-      dplyr::distinct()
-
-    df_with_data_accelerated <- do.call(
-      scenario_best_of, c(list(
-        df = df_with_data_accelerated,
-        scenario_names = c("with_data_bau", "best_of_linear_and_fixed_target"),
-        scenario_name = "acceleration"),
-        params_scenario_best)) %>%
-      dplyr::filter(.data[[scenario_col]] == "acceleration")
-
-  } else {
-    df_with_data_accelerated <- tibble::tibble()
-  }
-
-  if (nrow(df_without_data) > 0) {
-    df_with_data_bau <- df_without_data %>%
-      dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
-    df_without_data_accelerated <- do.call(
-      scenario_bau, c(list(df = df_with_data_bau), params_without_data_bau)
-    ) %>%
-      dplyr::filter(.data[[scenario_col]] == "acceleration")
-  } else {
-    df_without_data_accelerated <- tibble::tibble()
-  }
-
+  params <- rlang::list2(...)
   df %>%
-    dplyr::bind_rows(df_without_data_accelerated, df_with_data_accelerated)
+    sdg_hpop_sanitation(
+      ind_ids = c("hpop_sanitation" = "anc4"),
+      !!!params
+    )
 }
 
 #' Accelerate art
@@ -142,23 +32,17 @@ accelerate_anc4 <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_art <- function(df,
+accelerate_target_art <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
                            start_year = 2018,
                            default_scenario = "default",
-                           bau_scenario = "historical",
                            ...) {
   this_ind <- ind_ids["art"]
 
-  params <- list(...)
+  params <- rlang::list2(...)
   params["scenario_col"] <- scenario_col
   params["default_scenario"] <- default_scenario
-  params["bau_scenario"] <- bau_scenario
-
-  params_with_data_bau <- get_right_parameters(params, scenario_bau)
-  params_without_data_bau <- get_right_parameters(params, scenario_bau)
-  params_without_data_bau[["scenario_name"]] <- "acceleration"
 
   params_with_data_fixed_target <- c(
     get_right_parameters(params, scenario_fixed_target),
@@ -243,7 +127,7 @@ accelerate_art <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_beds <- function(df,
+accelerate_target_beds <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
                             scenario_col = "scenario",
                             value_col = "value",
@@ -346,7 +230,7 @@ accelerate_beds <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_bp <- function(df,
+accelerate_target_bp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           value_col = "value",
                           scenario_col = "scenario",
@@ -411,7 +295,7 @@ accelerate_bp <- function(df,
 #'
 #' @inherit accelerate_anc4
 #'
-accelerate_doctors <- function(df,
+accelerate_target_doctors <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
                                scenario_col = "scenario",
                                bau_scenario = "historical",
@@ -448,7 +332,7 @@ accelerate_doctors <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #'
-accelerate_nurses <- function(df,
+accelerate_target_nurses <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
                               scenario_col = "scenario",
                               bau_scenario = "historical",
@@ -490,7 +374,7 @@ accelerate_nurses <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
-accelerate_hwf <- function(df,
+accelerate_target_hwf <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
                            value_col = "value",
@@ -572,7 +456,7 @@ accelerate_hwf <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_dtp3 <- function(df,
+accelerate_target_dtp3 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
                             scenario_col = "scenario",
                             value_col = "value",
@@ -639,7 +523,7 @@ accelerate_dtp3 <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #'
-accelerate_fh <- function(df,
+accelerate_target_fh <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
                           default_scenario = "default",
@@ -705,7 +589,7 @@ accelerate_fh <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_fp <- function(df,
+accelerate_target_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
                           value_col = "value",
@@ -808,7 +692,7 @@ accelerate_fp <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #'
-accelerate_fpg <- function(df,
+accelerate_target_fpg <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
                            ...) {
@@ -829,7 +713,7 @@ accelerate_fpg <- function(df,
 #'
 #' @inherit accelerate_anc4
 #'
-accelerate_itn <- function(df,
+accelerate_target_itn <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
                            default_scenario = "default",
@@ -891,7 +775,7 @@ accelerate_itn <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #'
-accelerate_pneumo <- function(df,
+accelerate_target_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
                               scenario_col = "scenario",
                               default_scenario = "default",
@@ -975,7 +859,7 @@ accelerate_pneumo <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #'
-accelerate_tb <- function(df,
+accelerate_target_tb <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
                           default_scenario = "default",
@@ -1037,7 +921,7 @@ accelerate_tb <- function(df,
 #' @inherit accelerate_anc4
 #' @inheritParams recycle_data
 #'
-accelerate_uhc_sanitation <- function(df,
+accelerate_target_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
                                       scenario_col = "scenario",
                                       default_scenario = "default",
@@ -1089,7 +973,7 @@ accelerate_uhc_sanitation <- function(df,
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_uhc_tobacco <- function(df,
+accelerate_target_uhc_tobacco <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),
                                    scenario_col = "scenario",
                                    value_col = "value",

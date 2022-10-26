@@ -197,7 +197,9 @@ sdg_hpop_sanitation <- function(df,
 
   this_ind <- ind_ids["hpop_sanitation"]
 
-  params <- get_right_params(list(...), scenario_fixed_target)
+  params <- rlang::list2(...)
+
+  params <- get_right_parameters(params, scenario_fixed_target)
   params["scenario_name"] <- "sdg"
   params["target_year"] <- 2030
   params["target_value"] <- 95
@@ -368,7 +370,7 @@ sdg_pm25 <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
-  params <- get_right_params(params, scenario_fixed_target)
+  params <- get_right_parameters(params, scenario_fixed_target)
 
   params[["target_value"]] <- 10
   params[["target_year"]] <- 2030

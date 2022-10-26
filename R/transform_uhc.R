@@ -28,7 +28,7 @@ transform_uhc_data <- function(df,
   transform_value_col <- glue::glue(transform_glue)
 
   params <- list(...)
-  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_uhc)
+  params_assert_data_calculations <- get_right_parameters(params, assert_data_calculation_uhc)
 
   if (!is.null(params_assert_data_calculations)) {
     do.call(
@@ -46,7 +46,7 @@ transform_uhc_data <- function(df,
   }
 
   if (recycle) {
-    params_recycle <- get_right_params(params, recycle_data)
+    params_recycle <- get_right_parameters(params, recycle_data)
 
     df <- do.call(
       recycle_data,

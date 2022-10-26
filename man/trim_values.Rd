@@ -8,6 +8,7 @@ trim_values(
   df,
   col,
   value_col = "value",
+  baseline_col = value_col,
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = FALSE,

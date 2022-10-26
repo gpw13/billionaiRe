@@ -80,7 +80,7 @@ scenario_dip_recover <- function(df,
 
   unique_iso3 <- unique(df[["iso3"]])
 
-  params <- get_right_params(list(...), scenario_dip_recover_iso3)
+  params <- get_right_parameters(list(...), scenario_dip_recover_iso3)
 
   furrr::future_map_dfr(unique_iso3, ~ rlang::exec(scenario_dip_recover_iso3,
                                                    iso3 =  .x,

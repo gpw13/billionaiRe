@@ -18,13 +18,13 @@ accelerate_adult_obese <- function(df,
   assert_columns(df, scenario_col, "ind")
   this_ind <- ind_ids["adult_obese"]
 
-  params <- get_right_params(list(...), scenario_halt_rise)
+  params <- get_right_parameters(list(...), scenario_halt_rise)
   params["baseline_year"] <- 2010
   params["scenario_name"] <- "acceleration"
   params["end_year"] <- end_year
   params["default_scenario"] <- default_scenario
 
-  params_halt_rise <- get_right_params(params, scenario_halt_rise)
+  params_halt_rise <- get_right_parameters(params, scenario_halt_rise)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind,
@@ -96,12 +96,12 @@ accelerate_alcohol <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
-  params_neg10_2010 <- get_right_params(params, scenario_fixed_target_col)
+  params_neg10_2010 <- get_right_parameters(params, scenario_fixed_target_col)
   params_neg10_2010["scenario_name"] <- "-10_2010"
 
-  params_halt_rise <- get_right_params(params, scenario_halt_rise)
+  params_halt_rise <- get_right_parameters(params, scenario_halt_rise)
   params_halt_rise["baseline_year"] <- 2018
 
   df_bau <- do.call(
@@ -132,7 +132,7 @@ accelerate_alcohol <- function(df,
     dplyr::bind_rows(df_halt_rise) %>%
     dplyr::bind_rows(df_bau)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -228,7 +228,7 @@ accelerate_child_viol <- function(df,
   params["value_col"] <- value_col
   params["default_scenario"] <- default_scenario
 
-  params_fixed_target <- get_right_params(params, scenario_fixed_target)
+  params_fixed_target <- get_right_parameters(params, scenario_fixed_target)
 
   df_accelerated <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
@@ -301,7 +301,7 @@ accelerate_devontrack <- function(df,
   params["start_year"] <- 2018
   params["value_col"] <- "value"
 
-  params_fixed_target <- get_right_params(params,scenario_fixed_target)
+  params_fixed_target <- get_right_parameters(params,scenario_fixed_target)
 
   df_accelerated <- do.call(
     scenario_fixed_target, c(list(df = df_this_ind), params_fixed_target)
@@ -348,7 +348,7 @@ accelerate_fuel <- function(df,
 
 
   if ("HIC" %in% unique(this_ind_df$wb_ig)) {
-    params_bau <- get_right_params(params, "scenario_bau")
+    params_bau <- get_right_parameters(params, "scenario_bau")
     params_bau["scenario_name"] <- "acceleration"
 
     high_income_df <- this_ind_df %>%
@@ -369,7 +369,7 @@ accelerate_fuel <- function(df,
       dplyr::filter(.data[["wb_ig"]] != "HIC" | is.na(.data[["wb_ig"]]),
                     .data[[scenario_col]] == default_scenario)
 
-    params_others <- get_right_params(params, scenario_best_in_region)
+    params_others <- get_right_parameters(params, scenario_best_in_region)
     params_others["baseline_year"] <- 2013
     params_others["target_year"] <- 2018
     params_others["scenario_name"] <- "acceleration"
@@ -412,7 +412,7 @@ accelerate_hpop_sanitation <- function(df,
 
   this_ind <- ind_ids["hpop_sanitation"]
 
-  params <- get_right_params(list(...), scenario_quantile)
+  params <- get_right_parameters(list(...), scenario_quantile)
   params["n"] <- 5
   params["quantile_year"] <- 2019
   params["baseline_quantile_year"] <- 2018
@@ -558,12 +558,12 @@ accelerate_hpop_tobacco <- function(df,
       trim_years = TRUE
     )
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_this_ind_bau <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == bau_scenario)
 
-  params_halt_rise <- get_right_params(params, scenario_halt_rise)
+  params_halt_rise <- get_right_parameters(params, scenario_halt_rise)
   params_halt_rise["baseline_year"] <- 2018
 
   df_bau <- do.call(
@@ -580,7 +580,7 @@ accelerate_hpop_tobacco <- function(df,
     dplyr::bind_rows(df_halt_rise) %>%
     dplyr::bind_rows(df_bau)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -648,12 +648,12 @@ accelerate_overweight <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_aroc <- get_right_params(params, scenario_aroc)
+  params_aroc <- get_right_parameters(params, scenario_aroc)
   params_aroc["aroc_type"] <- "target"
   params_aroc["target_year"] <- 2030
   params_aroc["target_value"] <- 3
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -677,7 +677,7 @@ accelerate_overweight <- function(df,
   df_binded <- df_aroc %>%
     dplyr::bind_rows(df_bau)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -739,11 +739,11 @@ accelerate_pm25 <- function(df,
   df_this_ind_default <- df_this_ind_default %>%
     dplyr::left_join(linear_value_df, by = "iso3")
 
-  params_linear <- get_right_params(params, scenario_linear_change_col)
+  params_linear <- get_right_parameters(params, scenario_linear_change_col)
 
   params_linear[["linear_value_col"]] <- "linear_value"
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind_bau), params_bau)
@@ -758,7 +758,7 @@ accelerate_pm25 <- function(df,
   df_binded <- df_bau %>%
     dplyr::bind_rows(df_linear)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -802,7 +802,7 @@ accelerate_road <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_percent_baseline <- get_right_params(params, scenario_percent_baseline)
+  params_percent_baseline <- get_right_parameters(params, scenario_percent_baseline)
   params_percent_baseline["percent_change"] <- -50
   params_percent_baseline["target_year"] <- 2030
   params_percent_baseline["baseline_year"] <- 2020
@@ -826,7 +826,7 @@ accelerate_road <- function(df,
   ) %>%
     dplyr::filter(.data[[scenario_col]] == "-50_2020")
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_bau <- do.call(
     scenario_bau, c(list(df = df_this_ind_bau), params_bau)
@@ -836,7 +836,7 @@ accelerate_road <- function(df,
   df_binded <- df_percent_baseline %>%
     dplyr::bind_rows(df_bau)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -878,15 +878,15 @@ accelerate_stunting <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_aroc <- get_right_params(params, scenario_aroc)
+  params_aroc <- get_right_parameters(params, scenario_aroc)
   params_aroc["aroc_type"] <- "percent_change"
   params_aroc["percent_change"] <- -50
   params_aroc["baseline_year"] <- 2012
   params_aroc["target_year"] <- 2030
 
-  params_halt <- get_right_params(params, scenario_halt_rise)
+  params_halt <- get_right_parameters(params, scenario_halt_rise)
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -921,7 +921,7 @@ accelerate_stunting <- function(df,
     dplyr::bind_rows(df_bau) %>%
     dplyr::bind_rows(df_halt_rise)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -964,14 +964,14 @@ accelerate_suicide <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_percent_baseline <- get_right_params(params, scenario_percent_baseline)
+  params_percent_baseline <- get_right_parameters(params, scenario_percent_baseline)
   params_percent_baseline["percent_change"] <- -33.333
   params_percent_baseline["baseline_year"] <- 2015
   params_percent_baseline["target_year"] <- 2030
 
-  params_halt <- get_right_params(params, scenario_halt_rise)
+  params_halt <- get_right_parameters(params, scenario_halt_rise)
 
-  params_bau <- get_right_params(params, scenario_bau)
+  params_bau <- get_right_parameters(params, scenario_bau)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -1006,7 +1006,7 @@ accelerate_suicide <- function(df,
     dplyr::bind_rows(df_bau) %>%
     dplyr::bind_rows(df_halt_rise)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -1049,7 +1049,7 @@ accelerate_transfats <- function(df,
   params["scenario_col"] <- scenario_col
   params["default_scenario"] <- default_scenario
 
-  params_target <- get_right_params(params, scenario_fixed_target)
+  params_target <- get_right_parameters(params, scenario_fixed_target)
   params_target["target_value"] <- 100
   params_target["target_year"] <- 2025
   params_target["scenario_name"] <- "acceleration"
@@ -1094,7 +1094,7 @@ accelerate_wasting <- function(df,
   params["default_scenario"] <- default_scenario
   params["bau_scenario"] <- bau_scenario
 
-  params_aroc <- get_right_params(params, scenario_aroc)
+  params_aroc <- get_right_parameters(params, scenario_aroc)
   params_aroc["aroc_type"] <- "target"
   params_aroc["target_year"] <- 2030
   params_aroc["target_value"] <- 3
@@ -1133,7 +1133,7 @@ accelerate_wasting <- function(df,
     dplyr::filter(.data[[scenario_col]] == "aroc_target") %>%
     flat_extrapolation("value", group_col = c("iso3", "ind"))
 
-  params_halt_rise <- get_right_params(params, scenario_halt_rise)
+  params_halt_rise <- get_right_parameters(params, scenario_halt_rise)
 
   df_halt_rise <- do.call(
     scenario_halt_rise, c(list(df = df_this_ind_default), params_halt_rise)
@@ -1143,7 +1143,7 @@ accelerate_wasting <- function(df,
   df_binded <- df_aroc %>%
     dplyr::bind_rows(df_halt_rise)
 
-  params_best_of <- get_right_params(params, scenario_best_of)
+  params_best_of <- get_right_parameters(params, scenario_best_of)
   params_best_of["scenario_name"] <- "acceleration"
 
   df_accelerated <- do.call(
@@ -1203,7 +1203,7 @@ accelerate_water <- function(df,
     ind_ids = this_ind, scenario_col = scenario_col
   )
 
-  params_quantile <- get_right_params(params, scenario_quantile)
+  params_quantile <- get_right_parameters(params, scenario_quantile)
 
   df_accelerated <- do.call(
     scenario_quantile, c(list(df = df_this_ind_default), params_quantile)

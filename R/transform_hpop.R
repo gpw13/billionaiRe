@@ -38,7 +38,7 @@ transform_hpop_data <- function(df,
   assert_ind_ids(ind_ids, billion = "hpop")
 
   params <- list(...)
-  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_hpop)
+  params_assert_data_calculations <- get_right_parameters(params, assert_data_calculation_hpop)
 
   if (!is.null(params_assert_data_calculations)) {
     assert_data_calculation_hpop(df, value_col = value_col, params_assert_data_calculations)
@@ -48,7 +48,7 @@ transform_hpop_data <- function(df,
 
 
   if (recycle) {
-    params_recycle <- get_right_params(params, recycle_data)
+    params_recycle <- get_right_parameters(params, recycle_data)
 
     df <- do.call(
       recycle_data,

@@ -18,6 +18,8 @@
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
 #' - `bau`: calls \code{\link{scenario_bau}}
 #' - `accelerate`: calls indicator accelerate function.
+#' - `accelerate_target`: calls indicator accelerate function to specific
+#'   targets.
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
 #' - `covid_delayed_return` calls \code{\link{scenario_covid_delayed_return}}
@@ -42,6 +44,7 @@ add_scenario <- function(df,
                            "fixed_target_col",
                            "bau",
                            "accelerate",
+                           "accelerate_target",
                            "sdg",
                            "covid_rapid_return",
                            "covid_delayed_return",
@@ -111,6 +114,7 @@ add_scenario_indicator <- function(df,
                                      "fixed_target_col",
                                      "bau",
                                      "accelerate",
+                                     "accelerate_target",
                                      "sdg",
                                      "covid_rapid_return",
                                      "covid_sustained_disruption",
@@ -124,6 +128,9 @@ add_scenario_indicator <- function(df,
                                    default_scenario = "default",
                                    bau_scenario = "historical",
                                    ...) {
+
+  params <-   get_dots_and_env(...)
+
   this_ind <- ind_ids[indicator]
 
   if (!scenario_col %in% names(df)) {
@@ -132,11 +139,12 @@ add_scenario_indicator <- function(df,
 
   scenario_function <- rlang::arg_match(scenario_function)
 
-  params <- list(...)
-  params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
-  params["scenario_col"] <- scenario_col
-  params["default_scenario"] <- default_scenario
-  params["bau_scenario"] <- bau_scenario
+  params <- set_parameters(params, list(
+    "small_is_best" = get_ind_metadata(indicator, "small_is_best"),
+    "scenario_col" = scenario_col,
+    "default_scenario" = default_scenario,
+    "bau_scenario" = "bau_scenario"
+  ))
 
   this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
     "espar[0-9].{0,3}",
@@ -151,23 +159,16 @@ add_scenario_indicator <- function(df,
   if (scenario_function == "accelerate") {
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
 
-    unique_scenarios <- unique(this_ind_df[[scenario_col]])
+    assert_scenario_in_df(this_ind_df, c(default_scenario, bau_scenario), scenario_col)
 
-    if(!default_scenario %in% unique_scenarios & !bau_scenario %in% unique_scenarios){
-      stop("For acceleration scenarios, `default_scenario` and `bau_scenario` must be present.")
-    }
-
-    do.call(
-      accelerate_fn, c(list(df = this_ind_df), params)
-    ) %>%
-      dplyr::distinct()
+    exec_scenario(this_ind_df, accelerate_fn, params)
 
   } else if (scenario_function == "sdg") {
     if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
       sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
       params["scenario_name"] <- "sdg"
 
-      params <- get_right_params(params, sdg_fn)
+      params <- get_right_parameters(params, sdg_fn)
 
     } else {
       sdg_fn <- get(as.character(paste0("sdg_", this_ind)), mode = "function")
@@ -177,10 +178,25 @@ add_scenario_indicator <- function(df,
       sdg_fn, c(list(df = this_ind_df), params)
     ) %>%
       dplyr::distinct()
+  } else if (scenario_function == "accelerate_target") {
+    if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
+      accelerate_target_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
+      params["scenario_name"] <- "accelerate_target"
+
+      params <- get_right_parameters(params, sdg_fn)
+
+    } else {
+      accelerate_target_fn <- get(as.character(paste0("accelerate_target_", this_ind)), mode = "function")
+    }
+
+    do.call(
+      accelerate_target_fn, c(list(df = this_ind_df), params)
+    ) %>%
+      dplyr::distinct()
   } else {
     scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
 
-    params_function <- get_right_params(params, scenario_fn)
+    params_function <- get_right_parameters(params, scenario_fn)
 
     do.call(
       scenario_fn, c(list(df = df), params_function)

@@ -363,3 +363,12 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
     dplyr::filter(.data[["type"]] %in% type_filter) %>%
     dplyr::filter(.data[["year"]] == max(.data[["year"]]))
 }
+
+exec_scenario <- function(df, fn, parameters){
+  rlang::exec(
+    fn,
+    df = df,
+    !!!parameters
+  ) %>%
+    dplyr::distinct()
+}

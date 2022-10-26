@@ -19,6 +19,9 @@ accelerate_espar <- function(df,
                              end_year = 2025,
                              default_scenario = "default",
                              ...) {
+
+  params <- get_dots_and_env(...)
+
   assert_columns(df, "iso3", "year", value_col, "ind", "type", scenario_col)
 
   espar_inds <- ind_ids[stringr::str_detect(ind_ids, "^espar")]
@@ -133,7 +136,7 @@ accelerate_espar <- function(df,
     ) %>%
     dplyr::left_join(espar_target, by = c("iso3", "ind"))
 
-  params_target_col <- get_right_params(list(...), scenario_fixed_target_col)
+  params_target_col <- get_right_parameters(params, scenario_fixed_target_col)
   params_target_col["scenario_name"] <- "acceleration"
   params_target_col["target_col"] <- "target"
   params_target_col["baseline_year"] <- NULL
@@ -181,7 +184,7 @@ accelerate_detect <- function(df,
     dplyr::filter(.data[["ind"]] == this_ind,
                   .data[[scenario_col]] == bau_scenario)
 
-  params_bau <- get_right_params(list(...), scenario_bau)
+  params_bau <- get_right_parameters(list(...), scenario_bau)
   params_bau["scenario_name"] <- "acceleration"
   params_bau["scenario_col"] <- scenario_col
   params_bau["bau_scenario"] <- bau_scenario
@@ -429,7 +432,7 @@ accelerate_cholera_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_params(list(...), trim_values)
+  params <- get_right_parameters(list(...), trim_values)
   params[["upper_limit"]] <- Inf
   params[["lower_limit"]] <- 0
   params[["keep_better_values"]] <- TRUE
@@ -614,7 +617,7 @@ accelerate_meningitis_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_params(list(...), trim_values)
+  params <- get_right_parameters(list(...), trim_values)
   params[["upper_limit"]] <- Inf
   params[["lower_limit"]] <- 0
   params[["keep_better_values"]] <- TRUE
@@ -657,7 +660,7 @@ accelerate_measles_routine <- function(df,
 
   assert_ind_start_end_year(df_this_ind, start_year = 2013, end_year = 2018, ind_ids = this_ind)
 
-  params_aroc_percent_change <- get_right_params(list(...), scenario_aroc)
+  params_aroc_percent_change <- get_right_parameters(list(...), scenario_aroc)
   params_aroc_percent_change["scenario_name"] <- "acceleration"
   params_aroc_percent_change["aroc_type"] <- "percent_change"
   params_aroc_percent_change["percent_change"] <- 20
@@ -717,7 +720,7 @@ accelerate_meningitis_routine <- function(df,
   this_ind_df <- this_ind_df %>%
     dplyr::left_join(target_df, by = c("iso3", "ind"))
 
-  params_fixed_target_col <- get_right_params(list(...), scenario_fixed_target_col)
+  params_fixed_target_col <- get_right_parameters(list(...), scenario_fixed_target_col)
   params_fixed_target_col["scenario_name"] <- "acceleration"
   params_fixed_target_col["target_col"] <- "target_col"
   params_fixed_target_col["target_year"] <- 2030
@@ -762,7 +765,7 @@ accelerate_polio_routine <- function(df,
 
   assert_ind_start_end_year(df_this_ind, start_year = 2015, end_year = 2018, ind_ids = this_ind)
 
-  params_aroc_percent_change <- get_right_params(list(...), scenario_aroc)
+  params_aroc_percent_change <- get_right_parameters(list(...), scenario_aroc)
   params_aroc_percent_change["scenario_name"] <- "acceleration"
   params_aroc_percent_change["aroc_type"] <- "percent_change"
   params_aroc_percent_change["percent_change"] <- 20
@@ -940,7 +943,7 @@ accelerate_yellow_fever_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_params(list(...), trim_values)
+  params <- get_right_parameters(list(...), trim_values)
   params[["upper_limit"]] <- Inf
   params[["lower_limit"]] <- 0
   params[["keep_better_values"]] <- TRUE
