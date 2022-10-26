@@ -198,7 +198,7 @@ scenario_bau <- function(df,
           TRUE ~ .data[[value_col]]
         )
       ) %>%
-      dplyr::select(-c("last_value", "last_year"))
+      dplyr::select(-c("last_value", "last_year", "baseline_value"))
   }else{
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col))
