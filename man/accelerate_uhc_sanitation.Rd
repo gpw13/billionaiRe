@@ -37,3 +37,13 @@ Accelerate uhc_sanitation by encouraging the country to reach the mean (or upper
 threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
 and upper limits of 0 and 99, respectively, are also imposed on the results.
 }
+\details{
+Runs:
+\itemize{
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+}
+
+Then picks the best result between the three scenarios.
+}

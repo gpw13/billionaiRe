@@ -12,16 +12,10 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
   baseline_year <- 2010
   target_year <- 2030
   start_year <- 2018
-  end_year <- 2025
+  end_year <- 2030
   scenario <- "scenario"
   scenario_name <- glue::glue("scenario_{percent_change}perc_{baseline_year}")
   value <- "value"
-
-  df_test <- df %>%
-    dplyr::filter(year %in% (start_year:end_year)) %>%
-    dplyr::mutate(!!sym(scenario) := scenario_name,
-                  value = c(58:65)
-    )
 
   df_scenario <- scenario_percent_baseline(
     df,
@@ -36,7 +30,11 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
   ) %>%
     dplyr::filter(scenario == "scenario_40perc_2010")
 
-  testthat::expect_equal(df_scenario, df_test)
+  df_scenario_2025 <- df_scenario %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_2025, 67)
 
   df_scenario_2018 <- df %>%
     dplyr::filter(year %in% c(2010, 2018)) %>%
@@ -52,7 +50,11 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
     ) %>%
     dplyr::filter(scenario == "scenario_40perc_2010")
 
-  testthat::expect_equal(df_scenario_2018, df_test)
+  df_scenario_2018_2025 <- df_scenario_2018 %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_2018_2025, 67)
 })
 
 testthat::test_that("scenario_percent_baseline gets corrects with negative change.", {
@@ -74,13 +76,6 @@ testthat::test_that("scenario_percent_baseline gets corrects with negative chang
   scenario_name <- glue::glue("{percent_change}perc_{baseline_year}")
   value <- "value"
 
-  df_test <- df %>%
-    dplyr::filter(year %in% (start_year:end_year)) %>%
-    dplyr::mutate(!!sym(scenario) := scenario_name,
-                  value = 42:35
-    ) %>%
-    dplyr::filter(year %in% (start_year:end_year))
-
   df_scenario <- scenario_percent_baseline(
     df,
     percent_change = percent_change,
@@ -94,7 +89,11 @@ testthat::test_that("scenario_percent_baseline gets corrects with negative chang
   ) %>%
     dplyr::filter(scenario == "-40perc_2010")
 
-  testthat::expect_equal(df_scenario, df_test)
+  df_scenario_2025 <- df_scenario %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_2025, 37)
 
   df_scenario_2018 <- df %>%
     dplyr::filter(year %in% c(2010, 2018)) %>%
@@ -110,7 +109,11 @@ testthat::test_that("scenario_percent_baseline gets corrects with negative chang
     ) %>%
     dplyr::filter(scenario == "-40perc_2010")
 
-  testthat::expect_equal(df_scenario_2018, df_test)
+  df_scenario_2018_2025 <- df_scenario_2018 %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_2018_2025, 37)
 })
 
 testthat::test_that("scenario_percent_baseline sets correct limits.", {
@@ -135,16 +138,6 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
   iso3 <- "iso3"
   year <- "year"
 
-  df_test_neg <- df %>%
-    dplyr::mutate(!!sym(scenario) := scenario_name,
-                  value = seq(20, 20 + 20 * percent_change / 100, length.out = length(baseline_year:target_year)),
-                  value = dplyr::case_when(
-                    value <= 0 ~ 0,
-                    TRUE ~ value
-                  )
-    ) %>%
-    dplyr::filter(year %in% (start_year:end_year))
-
   df_scenario_neg <- scenario_percent_baseline(
     df,
     percent_change = percent_change,
@@ -158,7 +151,11 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
   ) %>%
     dplyr::filter(scenario == scenario_name)
 
-  testthat::expect_equal(df_scenario_neg, df_test_neg)
+  df_scenario_neg_2025 <- df_scenario_neg %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_neg_2025, 0)
 
   df_scenario_neg_setting_limits_explicitely <- scenario_percent_baseline(
     df,
@@ -175,9 +172,11 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
   ) %>%
     dplyr::filter(scenario == scenario_name)
 
+  df_scenario_neg_setting_limits_explicitely_2025 <- df_scenario_neg_setting_limits_explicitely %>%
+    dplyr::filter(year == 2025) %>%
+    dplyr::pull(value)
 
-  testthat::expect_equal(df_scenario_neg_setting_limits_explicitely, df_test_neg)
-
+  testthat::expect_equal(df_scenario_neg_setting_limits_explicitely_2025, 0)
 
   df <- tibble::tibble(
     value = 80:100,
@@ -258,7 +257,7 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
 
   df_test_halt_rise <- df %>%
     dplyr::mutate(!!sym(scenario) := scenario_name,
-                  value = seq(80, 80, length.out = length(baseline_year:target_year))
+                  value = c(80:88, rep(88, 2030-2018))
     ) %>%
     dplyr::filter(year %in% (start_year:end_year))
 
@@ -272,7 +271,8 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
     scenario = scenario,
     scenario_name = scenario_name
   ) %>%
-    dplyr::filter(scenario == scenario_name)
+    dplyr::filter(scenario == scenario_name) %>%
+    dplyr::ungroup()
 
   testthat::expect_equal(df_scenario_halt_rise, df_test_halt_rise)
 
@@ -292,56 +292,6 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
 
   testthat::expect_equal(df_scenario_halt_rise_2018, df_test_halt_rise)
 
-
-  df_scenario_halt_rise_through_base_function <- scenario_percent_baseline(
-    df,
-    percent_change = percent_change,
-    value_col = value,
-    start_year = start_year,
-    end_year = end_year,
-    baseline_year = baseline_year,
-    target_year = target_year,
-    scenario = scenario,
-    scenario_name = scenario_name
-  ) %>%
-    dplyr::filter(scenario == scenario_name)
-
-  testthat::expect_equal(df_scenario_halt_rise_through_base_function, df_test_halt_rise)
-
-  df_scenario_halt_rise_through_base_function_with_limits <- scenario_percent_baseline(
-    df,
-    percent_change = 10000,
-    value_col = value,
-    start_year = start_year,
-    end_year = end_year,
-    baseline_year = baseline_year,
-    target_year = target_year,
-    scenario = scenario,
-    scenario_name = scenario_name,
-    upper_limit = 80,
-    lower_limit = 80
-  ) %>%
-    dplyr::filter(scenario == scenario_name)
-
-
-  testthat::expect_equal(df_scenario_halt_rise_through_base_function_with_limits, df_test_halt_rise)
-
-  df_scenario_halt_rise_through_base_function_with_limits_neg <- scenario_percent_baseline(
-    df,
-    percent_change = -10000,
-    value_col = value,
-    start_year = start_year,
-    end_year = end_year,
-    baseline_year = baseline_year,
-    target_year = target_year,
-    scenario = scenario,
-    scenario_name = scenario_name,
-    upper_limit = 80,
-    lower_limit = 80
-  ) %>%
-    dplyr::filter(scenario == scenario_name)
-
-  testthat::expect_equal(df_scenario_halt_rise_through_base_function_with_limits_neg, df_test_halt_rise)
 })
 
 testthat::test_that("scenario_linear_change provides accurate results:", {

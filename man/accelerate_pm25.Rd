@@ -9,6 +9,8 @@ accelerate_pm25(
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
   value_col = "value",
+  default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -24,13 +26,14 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
-\item{value_col}{Column name of column with indicator values.}
+\item{value_col}{Name of the column containing indicator value in \code{df}.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
-}
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
 }
 \description{
 Accelerate pm25 by picking the best value between business as usual, and

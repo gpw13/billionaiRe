@@ -130,16 +130,19 @@ get_best_equal_scenarios <- function(df,
 
 #' Scenario establish a business as usual scenario
 #'
-#' `scenario_bau` filters for values between start_year and end_year for `default_scenario` and
+#' `scenario_bau` filters for values between start_year and end_year for `bau_scenario` and
 #' returns values in value. If values are missing for years between `start_year` and `end_year`,
 #' the last available value will be imputed.
 #'
 #' @param only_reported_estimated (logical) if TRUE only the last `reported` and `estimated`
 #'    values are imputed.
+#' @param avoid_worstening If TRUE, the value at `start_year` is kept if it is
+#' better (see `small_is_best`).
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
+#' @inheritParams accelerate_alcohol
 
 scenario_bau <- function(df,
                          only_reported_estimated = FALSE,
@@ -148,6 +151,7 @@ scenario_bau <- function(df,
                          end_year = 2025,
                          scenario_name = glue::glue("business_as_usual"),
                          scenario_col = "scenario",
+                         avoid_worstening = FALSE,
                          trim = TRUE,
                          small_is_best = FALSE,
                          keep_better_values = TRUE,
@@ -155,10 +159,10 @@ scenario_bau <- function(df,
                          lower_limit = 0,
                          trim_years = TRUE,
                          ind_ids = billion_ind_codes("all"),
-                         default_scenario = "default") {
+                         bau_scenario = "default") {
 
   scenario_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == default_scenario,
+    dplyr::filter(.data[[scenario_col]] == bau_scenario,
                   !is.na(.data[[value_col]]))
 
   assert_columns(scenario_df, scenario_col, value_col)
@@ -167,7 +171,7 @@ scenario_bau <- function(df,
     "year" := start_year:end_year,
     "iso3" := unique(df[["iso3"]]),
     "ind" := unique(df[["ind"]]),
-    "{scenario_col}" := default_scenario
+    "{scenario_col}" := bau_scenario
   )
 
   if(only_reported_estimated){
@@ -183,12 +187,18 @@ scenario_bau <- function(df,
       dplyr::mutate(
         last_year = max(.data[["year"]][!is.na(.data[[value_col]])], na.rm = TRUE),
         last_value = .data[[value_col]][.data[["year"]] == .data[["last_year"]]],
+        baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year),
         "{value_col}" := dplyr::case_when(
           is.na(.data[[value_col]]) & .data[["year"]] > .data[["last_year"]] ~ .data[["last_value"]],
           TRUE ~ .data[[value_col]]
+        ),
+        "{value_col}" := dplyr::case_when(
+          avoid_worstening & small_is_best & .data[[value_col]] > baseline_value ~ baseline_value,
+          avoid_worstening & !small_is_best & .data[[value_col]] < baseline_value ~ baseline_value,
+          TRUE ~ .data[[value_col]]
         )
       ) %>%
-      dplyr::select(-c("last_value", "last_year"))
+      dplyr::select(-c("last_value", "last_year", "baseline_value"))
   }else{
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col))
@@ -197,7 +207,7 @@ scenario_bau <- function(df,
   bau <- scenario_df %>%
     dplyr::filter(
       .data[["year"]] %in% start_year:end_year,
-      .data[[scenario_col]] == default_scenario
+      .data[[scenario_col]] == bau_scenario
     ) %>%
     dplyr::mutate(scenario_value = .data[[value_col]]) %>%
     dplyr::mutate(!!sym(scenario_col) := scenario_name) %>%

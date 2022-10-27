@@ -12,13 +12,14 @@ testthat::test_that("adult_obese returns appropriate values", {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "sdg",
+    bau_scenario = "default"
   )
 
-  df_add_indicator <- df_add_indicator %>%
+  df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator, 60)
+  testthat::expect_equal(df_add_indicator_2025, 60)
 })
 
 testthat::test_that(paste0("sdg_alcohol returns accurate values:"), {
@@ -125,7 +126,8 @@ testthat::test_that(paste0("accelerate_fuel returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "sdg"
+    scenario_function = "sdg",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -321,7 +323,7 @@ testthat::test_that(paste0("sdg_road returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 70 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
+  testthat::expect_equal(df_add_indicator_2025, 69 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
 })
 
 testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
@@ -344,7 +346,7 @@ testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 37.582108)
+  testthat::expect_equal(df_add_indicator_2025, 51.932794)
 })
 
 testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
@@ -367,7 +369,7 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 50.55570)
+  testthat::expect_equal(df_add_indicator_2025, 51.55570)
 })
 
 testthat::test_that(paste0("sdg_transfats returns accurate values:"), {
@@ -477,14 +479,14 @@ testthat::test_that("sdg can be run on all hpop indicators:", {
 
   calculated_test_data <- add_scenario(hpop_test_df, "sdg")
 
-  testthat::expect_equal(nrow(calculated_test_data), 609)
+  testthat::expect_equal(nrow(calculated_test_data), 577)
 
   testthat::expect_error(
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
       dplyr::filter(ind %in% billion_ind_codes("hpop")) %>%
       make_default_scenario(billion = "hpop") %>%
       dplyr::filter(scenario == "default") %>%
-      add_scenario("sdg"),
+      add_scenario("sdg", bau_scenario = "default"),
     NA
   )
 })

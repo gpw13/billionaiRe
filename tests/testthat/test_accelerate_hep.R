@@ -37,7 +37,8 @@ testthat::test_that("espar returns appropriate values", {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = "espar",
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -47,7 +48,8 @@ testthat::test_that("espar returns appropriate values", {
   testthat::expect_equal(df_add_indicator_2025, df_accelerated_2025)
 
   df_add_scenario <- add_scenario(df,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_scenario_2025 <- df_add_scenario %>%
@@ -70,7 +72,8 @@ basic_hep_test <- function(ind) {
     df_add_indicator <- add_scenario_indicator(df,
       indicator = ind,
       scenario_function = "accelerate",
-      baseline_year = 2018
+      baseline_year = 2018,
+      bau_scenario = "default"
     )
 
     df_add_indicator_2025 <- df_add_indicator %>%
@@ -85,7 +88,8 @@ basic_hep_test <- function(ind) {
     df_add_indicator <- add_scenario_indicator(df_2018,
       indicator = ind,
       scenario_function = "accelerate",
-      baseline_year = 2018
+      baseline_year = 2018,
+      bau_scenario = "default"
     )
 
     df_add_indicator_2025 <- df_add_indicator %>%
@@ -104,7 +108,9 @@ testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "cholera_campaign")],
                   scenario == "default")
 
-  calculated_test_data <- add_scenario(hep_test_df, "accelerate")
+  calculated_test_data <- add_scenario(hep_test_df,
+                                       "accelerate",
+                                       bau_scenario = "default")
 
   testthat::expect_equal(nrow(calculated_test_data), 314)
 
@@ -141,7 +147,9 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
     dplyr::pull(value)
 
 
-  df_add_scenario <- add_scenario(df, "accelerate")
+  df_add_scenario <- add_scenario(df,
+                                  "accelerate",
+                                  bau_scenario = "default")
 
   df_add_scenario_2025 <- df_add_scenario %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -150,7 +158,7 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
 
   testthat::expect_equal(df_add_scenario_2025, aroc_2025)
 
-  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "measles_routine")
+  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "measles_routine", bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -165,7 +173,7 @@ testthat::test_that("accelerate_meningitis_campaign returns accurate results:", 
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "meningitis_campaign")],
                   scenario == "default")
 
-  calculated_test_data <- add_scenario(hep_test_df, "accelerate")
+  calculated_test_data <- add_scenario(hep_test_df, "accelerate", bau_scenario = "default")
 
   testthat::expect_equal(nrow(calculated_test_data), 6)
 
@@ -192,7 +200,7 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
     dplyr::filter(year == 2025, scenario != "default") %>%
     dplyr::pull(value)
 
-  df_add_scenario <- add_scenario(df, "accelerate")
+  df_add_scenario <- add_scenario(df, "accelerate", bau_scenario = "default")
 
   df_add_scenario_2025 <- df_add_scenario %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -242,7 +250,7 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
     dplyr::pull(value)
 
 
-  df_add_scenario <- add_scenario(df, "accelerate")
+  df_add_scenario <- add_scenario(df, "accelerate", bau_scenario = "default")
 
   df_add_scenario_2025 <- df_add_scenario %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -263,7 +271,7 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
 testthat::test_that("accelerate_yellow_fever_campaigns returns accurate results:", {
   hep_test_df <- load_misc_data("scenarios/yellow_fever_campaign/test_data_campaign_yellow_fever.parquet")
 
-  calculated_test_data <- add_scenario(hep_test_df, "accelerate")
+  calculated_test_data <- add_scenario(hep_test_df, "accelerate", bau_scenario = "default")
 
 
   num_UGA_2024 <- calculated_test_data %>%
@@ -294,7 +302,7 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
     dplyr::pull(value)
 
 
-  df_add_scenario <- add_scenario(df, "accelerate")
+  df_add_scenario <- add_scenario(df, "accelerate", bau_scenario = "default")
 
   df_add_scenario_2025 <- df_add_scenario %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -320,7 +328,7 @@ testthat::test_that("accelerate can be run on all hep indicators:", {
       !.data[["ind"]] %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "espar")],
       scenario == "default")
 
-  testthat::expect_error(add_scenario(hep_test_df, "accelerate"), NA)
+  testthat::expect_error(add_scenario(hep_test_df, "accelerate", bau_scenario = "default"), NA)
 
   df_espar <- tidyr::expand_grid(
     iso3 = c("AFG", "BGD", "PAK", "BRN", "CHE", "POL", "SWE", "VUT"),
@@ -349,6 +357,7 @@ testthat::test_that("accelerate can be run on all hep indicators:", {
       scenario = "default"
     )
   testthat::expect_error(add_scenario(df_espar,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   ), NA)
 })

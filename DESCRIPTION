@@ -19,7 +19,6 @@ Depends:
     R (>= 2.10)
 Imports: 
     arrow,
-    DiagrammeR,
     cli,
     dplyr,
     glue,
@@ -36,7 +35,6 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    usethis,
     waldo,
     whoville (>= 0.1.7),
     zoo,
@@ -44,9 +42,11 @@ Imports:
     retry
 Suggests: 
     cellranger,
+    DiagrammeR,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    usethis,
     wppdistro (>= 0.2.0),
     xmart4 (>= 0.2.2),
     whdh (>= 0.1.0.0000)

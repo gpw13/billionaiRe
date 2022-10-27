@@ -6,6 +6,8 @@
 #' data frame.
 #' @param value_col Column name of column with indicator values. This column will be
 #' used to return the results.
+#' @param baseline_col Column name with baseline values. This is used to ensure
+#' that trimmed values do not get worst values than baseline.
 #' @param trim logical to indicate if the data should be trimmed between
 #' `upper_limit` and `lower_limit`.
 #' @param keep_better_values logical to indicate if "better" values should be
@@ -23,6 +25,7 @@
 trim_values <- function(df,
                         col,
                         value_col = "value",
+                        baseline_col = value_col,
                         trim = TRUE,
                         small_is_best = FALSE,
                         keep_better_values = FALSE,
@@ -44,6 +47,14 @@ trim_values <- function(df,
           !keep_better_values ~ as.numeric(.data[[col]])
         ),
         !!sym(value_col) := dplyr::case_when(
+          baseline_col != value_col
+            & small_is_best
+            & .data[["better_value"]] < lower_limit
+            & .data[[baseline_col]] < lower_limit ~ as.numeric(.data[[baseline_col]]),
+          baseline_col != value_col
+            & !small_is_best
+            & (.data[["better_value"]] > upper_limit)
+            & .data[[baseline_col]] > upper_limit ~ as.numeric(.data[[baseline_col]]),
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),
           .data[["better_value"]] > upper_limit ~ as.numeric(upper_limit),
           TRUE ~ as.numeric(.data[["better_value"]])
@@ -257,7 +268,7 @@ get_quantile <- function(value, n) {
 
 #' Flat extrapolation
 #'
-#' @param df Data frame of model data.#' @param col
+#' @param df Data frame of model data.#'
 #' @param col Name of column to extrapolate/interpolate.
 #' @param group_col Column name(s) of group(s) to use in [dplyr::group_by()] when
 #'     supplying type, calculating mean absolute scaled error on data involving
@@ -347,4 +358,10 @@ remove_unwanted_scenarios <- function(df,
   } else {
     df
   }
+}
+
+get_last_value <- function(df, type_filter = c("reported", "estimated")){
+  df %>%
+    dplyr::filter(.data[["type"]] %in% type_filter) %>%
+    dplyr::filter(.data[["year"]] == max(.data[["year"]]))
 }

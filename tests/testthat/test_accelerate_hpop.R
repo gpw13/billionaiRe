@@ -11,7 +11,8 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -19,6 +20,13 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_indicator_2025, 60)
+
+  df_add_indicator_2018 <- df_add_indicator %>%
+    dplyr::filter(scenario == "acceleration", year == 2018) %>%
+    dplyr::pull(value)
+
+
+  testthat::expect_equal(df_add_indicator_2018, 68)
 })
 
 testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
@@ -34,7 +42,8 @@ testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -57,7 +66,8 @@ testthat::test_that(paste0("accelerate_child_obese returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -80,7 +90,8 @@ testthat::test_that(paste0("accelerate_child_viol returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -103,7 +114,8 @@ testthat::test_that(paste0("accelerate_devontrack returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -126,7 +138,8 @@ testthat::test_that(paste0("accelerate_fuel returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -149,7 +162,8 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -169,8 +183,9 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "accelerate"
+    indicator = "hpop_sanitation",
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -184,14 +199,15 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = ind,
+    ind = "hpop_sanitation",
     iso3 = "testalia",
     scenario = "default"
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "accelerate"
+    indicator = "hpop_sanitation",
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -218,7 +234,8 @@ testthat::test_that(paste0("accelerate_hpop_tobacco returns accurate values:"), 
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -241,7 +258,8 @@ testthat::test_that(paste0("accelerate_ipv returns accurate values:"), {
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    baseline_year = 2018
+    baseline_year = 2018,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -264,7 +282,8 @@ testthat::test_that(paste0("accelerate_overweight returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -287,7 +306,8 @@ testthat::test_that(paste0("accelerate_pm25 returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -310,14 +330,15 @@ testthat::test_that(paste0("accelerate_road returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 70 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
+  testthat::expect_equal(df_add_indicator_2025, 69 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
 })
 
 testthat::test_that(paste0("accelerate_stunting returns accurate values:"), {
@@ -333,14 +354,15 @@ testthat::test_that(paste0("accelerate_stunting returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 37.582108)
+  testthat::expect_equal(df_add_indicator_2025, 51.932794)
 })
 
 testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
@@ -356,14 +378,15 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 50.55570)
+  testthat::expect_equal(df_add_indicator_2025, 51.55570)
 })
 
 testthat::test_that(paste0("accelerate_transfats returns accurate values:"), {
@@ -379,7 +402,8 @@ testthat::test_that(paste0("accelerate_transfats returns accurate values:"), {
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -398,11 +422,16 @@ testthat::test_that(paste0("accelerate_wasting returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default"
-  )
+  ) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      year > 2020 ~ "projected",
+      TRUE ~ "reported"
+    ))
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -425,7 +454,8 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
 
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
-    scenario_function = "accelerate"
+    scenario_function = "accelerate",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -445,9 +475,10 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
+    indicator = "water",
     scenario_function = "accelerate",
-    quantile_year = 2010
+    quantile_year = 2010,
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -469,7 +500,8 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    scenario_name = "test"
+    scenario_name = "test",
+    bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -490,11 +522,11 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
       TRUE ~ "projected"
     )
   ) %>%
-    tidyr::expand_grid(ind = billion_ind_codes("hpop"))
+    tidyr::expand_grid(ind = billion_ind_codes("hpop", include_subindicators = FALSE))
 
   calculated_test_data <- add_scenario(hpop_test_df, "accelerate")
 
-  testthat::expect_equal(nrow(calculated_test_data), 609)
+  testthat::expect_equal(nrow(calculated_test_data), 493)
 
   testthat::expect_error(
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
@@ -502,7 +534,7 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
                     scenario != "default") %>%
       make_default_scenario(billion = "hpop") %>%
       dplyr::filter(scenario == "default") %>%
-      add_scenario("accelerate"),
+      add_scenario("accelerate", bau_scenario = "default"),
     NA
   )
 })

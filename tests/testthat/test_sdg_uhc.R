@@ -7,7 +7,7 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     iso3 = iso3,
     scenario = "default"
   ) %>%
-    add_scenario_indicator("sdg", ind) %>%
+    add_scenario_indicator("sdg", ind, bau_scenario = "default") %>%
     dplyr::filter(scenario == "sdg", year == 2025) %>%
     dplyr::pull(value)
 }
@@ -109,7 +109,7 @@ testthat::test_that(paste0("sdg_hwf returns accurate values:"), {
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
     scenario = "default"
   ) %>%
-    add_scenario_indicator("sdg", ind) %>%
+    add_scenario_indicator("sdg", ind, bau_scenario = "default") %>%
     dplyr::filter(scenario == "sdg")
 
   # testalia is less than 2018 global median so linear change of 4.54/yr from 2018 to 2025
@@ -189,7 +189,7 @@ testthat::test_that(paste0("sdg_fpg returns accurate values:"), {
   ind <- "fpg"
 
   # Doctors returns BAU in all cases
-  testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
+  testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 60)
 })
 
 # itn ----------------------------
@@ -259,5 +259,5 @@ testthat::test_that("sdg can be run on all UHC indicator:", {
     make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(scenario == "default")
 
-  testthat::expect_error(add_scenario(uhc_test_df, "sdg"), NA)
+  testthat::expect_error(add_scenario(uhc_test_df, "sdg", bau_scenario = "default"), NA)
 })

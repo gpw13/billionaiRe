@@ -12,6 +12,7 @@ accelerate_yellow_fever_campaign(
   start_year = 2018,
   end_year = 2025,
   years_best_performance = 2015:2018,
+  default_scenario = "default",
   ...
 )
 }
@@ -35,6 +36,8 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{years_best_performance}{vector of years with the years in which the
 best performance should be found.}
+
+\item{default_scenario}{name of the default scenario.}
 
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }

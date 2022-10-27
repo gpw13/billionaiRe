@@ -7,7 +7,8 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     iso3 = iso3,
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate", ind) %>%
+    add_scenario_indicator("accelerate", ind,
+                           bau_scenario = "default") %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 }
@@ -80,11 +81,13 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
 # bp ----------------------------
 
 testthat::test_that("accelerate_bp returns accurate values:", {
-  # TODO: Difficult to test due to dependencies on external targets.
 
   ind <- "bp"
-  # Verify that function can be run without errors or messages.
-  testthat::expect_error(get_2025_value(60:80, ind, "reported"), NA)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported"),
+    get_fixed_target(80, 68, 2018, 2030)
+  )
 })
 
 # doctors ----------------------------
@@ -118,7 +121,7 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate", ind) %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "default") %>%
     dplyr::filter(scenario == "acceleration")
 
   # testalia is less than 2018 global median so linear change of 4.54/yr from 2018 to 2025
@@ -197,8 +200,10 @@ testthat::test_that(paste0("accelerate_fp returns accurate values:"), {
 testthat::test_that(paste0("accelerate_fpg returns accurate values:"), {
   ind <- "fpg"
 
-  # Doctors returns BAU in all cases
-  testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported"),
+    60
+  )
 })
 
 # itn ----------------------------
@@ -289,5 +294,5 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
       scenario == "default"
     )
 
-  testthat::expect_error(add_scenario(uhc_test_df, "accelerate"), NA)
+  testthat::expect_error(add_scenario(uhc_test_df, "accelerate", bau_scenario = "default"), NA)
 })

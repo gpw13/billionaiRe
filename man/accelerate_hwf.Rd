@@ -10,6 +10,8 @@ accelerate_hwf(
   scenario_col = "scenario",
   value_col = "value",
   start_year = 2018,
+  default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -29,6 +31,11 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -43,4 +50,14 @@ business as usual is returned.
 \item For countries with a 2018 value less than the 2018 global median, a \strong{linear change
 of 4.54 per year from 2018 to 2025} is returned.
 }
+}
+\details{
+Runs:
+\itemize{
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+}
+
+Then picks the best result between the three scenarios.
 }

@@ -23,7 +23,7 @@ calculate_uhc_contribution <- function(df,
                                        scenario_reported_estimated = "routine",
                                        scenario_covid_shock = "covid_shock",
                                        scenario_reference_infilling = "reference_infilling",
-                                       ind_ids = billion_ind_codes("uhc", include_calculated = TRUE)) {
+                                       ind_ids = billion_ind_codes("uhc", include_calculated = TRUE, include_subindicators = TRUE)) {
   assert_columns(df, "year", "iso3", "ind", scenario_col, transform_value_col)
   assert_same_length(transform_value_col, contribution_col)
   assert_same_length(contribution_col, contribution_pct_col)
@@ -39,8 +39,7 @@ calculate_uhc_contribution <- function(df,
   if (!is.null(scenario_col)) {
     df_base_scenario <- df %>%
       dplyr::filter(
-        .data[[scenario_col]] %in% base_scenarios,
-        .data[["ind"]] %in% ind_ids
+        .data[[scenario_col]] %in% base_scenarios
       )
 
     df <- remove_unwanted_scenarios(

@@ -18,7 +18,11 @@ test_hpop_scenarios <- function(ind) {
       dplyr::filter(scenario == "halt_rise", year == 2025) %>%
       dplyr::pull(value)
 
-    testthat::expect_equal(df_add_indicator_halt_rise_2025, 60)
+    if(get_ind_metadata(ind, "small_is_best")){
+      testthat::expect_equal(df_add_indicator_halt_rise_2025, 60)
+    }else{
+      testthat::expect_equal(df_add_indicator_halt_rise_2025, 68)
+    }
 
     df_add_indicator_fixed_target <- add_scenario_indicator(df,
       indicator = ind,

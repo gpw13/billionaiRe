@@ -12,10 +12,6 @@ country, year, and indicator.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate hpop_sanitation_urban by aiming at 95\% by 20230
 }

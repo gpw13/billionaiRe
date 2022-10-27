@@ -11,6 +11,7 @@ accelerate_child_viol(
   scenario_col = "scenario",
   start_year = 2018,
   value_col = "value",
+  default_scenario = "default",
   ...
 )
 }
@@ -32,11 +33,9 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{value_col}{Name of the column containing indicator value in \code{df}.}
 
+\item{default_scenario}{name of the default scenario.}
+
 \item{...}{additional parameters to be passed to scenario function}
-}
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
 }
 \description{
 Accelerate child_viol by targeting 0 by 2030.

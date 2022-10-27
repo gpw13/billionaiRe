@@ -9,6 +9,7 @@ accelerate_road(
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
   default_scenario = "default",
+  bau_scenario = "historical",
   ...
 )
 }
@@ -25,6 +26,9 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

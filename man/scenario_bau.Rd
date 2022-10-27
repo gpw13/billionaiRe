@@ -12,6 +12,7 @@ scenario_bau(
   end_year = 2025,
   scenario_name = glue::glue("business_as_usual"),
   scenario_col = "scenario",
+  avoid_worstening = FALSE,
   trim = TRUE,
   small_is_best = FALSE,
   keep_better_values = TRUE,
@@ -19,7 +20,7 @@ scenario_bau(
   lower_limit = 0,
   trim_years = TRUE,
   ind_ids = billion_ind_codes("all"),
-  default_scenario = "default"
+  bau_scenario = "default"
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ values are imputed.}
 
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
+
+\item{avoid_worstening}{If TRUE, the value at \code{start_year} is kept if it is
+better (see \code{small_is_best}).}
 
 \item{trim}{logical to indicate if the data should be trimmed between
 \code{upper_limit} and \code{lower_limit}.}
@@ -68,13 +72,14 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{default_scenario}{name of the default scenario to be used.}
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
 }
 \value{
 Dataframe with scenario rows
 }
 \description{
-\code{scenario_bau} filters for values between start_year and end_year for \code{default_scenario} and
+\code{scenario_bau} filters for values between start_year and end_year for \code{bau_scenario} and
 returns values in value. If values are missing for years between \code{start_year} and \code{end_year},
 the last available value will be imputed.
 }

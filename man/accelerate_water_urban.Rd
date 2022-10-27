@@ -12,16 +12,16 @@ country, year, and indicator.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate water_urban by aiming at best value in quintile.
 }
 \details{
 Runs:
 \itemize{
-\item \verb{scenario_quantile(df, n = 5, quantile_year = 2017, baseline_quantile_year = 2018, upper_limit = 99, lower_limit = 0 small_is_best = FALSE,...)}
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
 }
+
+Then picks the best result between the three scenarios.
 }
