@@ -70,6 +70,7 @@ from a provided baseline year. It provides values for scenarios stated as
 <span>  <span class="va">df</span>,</span>
 <span>  <span class="va">col</span>,</span>
 <span>  value_col <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  baseline_col <span class="op">=</span> <span class="va">value_col</span>,</span>
 <span>  trim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  small_is_best <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  keep_better_values <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -96,6 +97,11 @@ data frame.</p></dd>
 <dt>value_col</dt>
 <dd><p>Column name of column with indicator values. This column will be
 used to return the results.</p></dd>
+
+
+<dt>baseline_col</dt>
+<dd><p>Column name with baseline values. This is used to ensure
+that trimmed values do not get worst values than baseline.</p></dd>
 
 
 <dt>trim</dt>

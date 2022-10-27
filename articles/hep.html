@@ -90,16 +90,29 @@
 
     
     
-<p>To calculate the HEP Billion, there are a series of functions made available through the billionaiRe package:</p>
+<p>To calculate the HEP Billion, there are a series of functions made
+available through the billionaiRe package:</p>
 <ul>
 <li>
-<code><a href="../reference/transform_hep_data.html">transform_hep_data()</a></code> to transform raw values into normalized values used within the calculations. For now, this is primarily calculating the total prevent numerators and denominators for campaign and routine data.</li>
+<code><a href="../reference/transform_hep_data.html">transform_hep_data()</a></code> to transform raw values into
+normalized values used within the calculations. For now, this is
+primarily calculating the total prevent numerators and denominators for
+campaign and routine data.</li>
 <li>
-<code><a href="../reference/calculate_hep_components.html">calculate_hep_components()</a></code> to calculate component indicators (Prevent coverages), the HEP index, and levels for all components.</li>
+<code><a href="../reference/calculate_hep_components.html">calculate_hep_components()</a></code> to calculate component
+indicators (Prevent coverages), the HEP index, and levels for all
+components.</li>
 <li>
-<code><a href="../reference/calculate_hep_billion.html">calculate_hep_billion()</a></code> to calculate the change for the three HEP components (DNR, Prepare, and Prevent), their contribution to the Billion, and overall HEPI change and contribution.</li>
+<code><a href="../reference/calculate_hep_billion.html">calculate_hep_billion()</a></code> to calculate the change for the
+three HEP components (DNR, Prepare, and Prevent), their contribution to
+the Billion, and overall HEPI change and contribution.</li>
 </ul>
-<p>Run in sequence, these can calculate the entire HEP Billion, or they can be run separately to produce different outputs as required. Details on the inputs of each function are available in their individual documentation, but below you can see the quick and easy Billions calculation done using the sample fake HEP data provided in the package, <code>hep_df</code>.</p>
+<p>Run in sequence, these can calculate the entire HEP Billion, or they
+can be run separately to produce different outputs as required. Details
+on the inputs of each function are available in their individual
+documentation, but below you can see the quick and easy Billions
+calculation done using the sample fake HEP data provided in the package,
+<code>hep_df</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
 <span></span>

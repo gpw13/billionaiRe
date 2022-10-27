@@ -68,6 +68,8 @@ AROC of 3 by 2030.</p>
 <span>  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hpop"</span><span class="op">)</span>,</span>
 <span>  end_year <span class="op">=</span> <span class="fl">2025</span>,</span>
 <span>  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>  default_scenario <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  bau_scenario <span class="op">=</span> <span class="st">"historical"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -93,6 +95,15 @@ be supplied as a named vector where the names correspond to the output of
 <dt>scenario_col</dt>
 <dd><p>Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.</p></dd>
+
+
+<dt>default_scenario</dt>
+<dd><p>name of the default scenario.</p></dd>
+
+
+<dt>bau_scenario</dt>
+<dd><p>name of scenario to be used for business as usual.
+Default is <code>historical</code>.</p></dd>
 
 
 <dt>...</dt>

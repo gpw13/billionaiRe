@@ -68,6 +68,7 @@ halt downwards trend, and -33.333% points between 2015 and 2030.</p>
 <span>  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"hpop"</span><span class="op">)</span>,</span>
 <span>  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
 <span>  default_scenario <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  bau_scenario <span class="op">=</span> <span class="st">"historical"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,19 +96,15 @@ calculating contributions on data in long format rather than wide format.</p></d
 <dd><p>name of the default scenario.</p></dd>
 
 
+<dt>bau_scenario</dt>
+<dd><p>name of scenario to be used for business as usual.
+Default is <code>historical</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional parameters to be passed to scenario function</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario_col</code> is
-set to <code>acceleration</code></p>
-
-
-    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Runs:</p><ul><li><p><code>scenario_bau(df, small_is_best = TRUE,...)</code>,</p></li>

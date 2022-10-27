@@ -82,6 +82,8 @@ values.</p>
 <span>  value_col <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  start_year <span class="op">=</span> <span class="fl">2018</span>,</span>
 <span>  end_year <span class="op">=</span> <span class="fl">2025</span>,</span>
+<span>  default_scenario <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  bau_scenario <span class="op">=</span> <span class="st">"historical"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -106,30 +108,30 @@ calculating contributions on data in long format rather than wide format.</p></d
 
 
 <dt>value_col</dt>
-<dd><p>Column name of column with indicator values.</p></dd>
+<dd><p>Name of the column containing indicator value in <code>df</code>.</p></dd>
 
 
 <dt>start_year</dt>
-<dd><p>Base year for contribution calculation, defaults to 2018.</p></dd>
+<dd><p>Year from which the acceleration scenario begins, inclusive.</p></dd>
 
 
 <dt>end_year</dt>
 <dd><p>End year(s) for contribution calculation, defaults to 2019 to 2025.</p></dd>
 
 
+<dt>default_scenario</dt>
+<dd><p>name of the default scenario.</p></dd>
+
+
+<dt>bau_scenario</dt>
+<dd><p>name of scenario to be used for business as usual.
+Default is <code>historical</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional parameters to be passed to scenario function</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario_col</code> is
-set to <code>acceleration</code></p>
-
-
-    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Runs:</p><ul><li><p>custom scenario_percent_baseline (see above).</p></li>

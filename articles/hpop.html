@@ -90,18 +90,29 @@
 
     
     
-<p>To calculate the HPOP Billion, there are a series of functions made available through the billionaiRe package:</p>
+<p>To calculate the HPOP Billion, there are a series of functions made
+available through the billionaiRe package:</p>
 <ul>
 <li>
-<code><a href="../reference/transform_hpop_data.html">transform_hpop_data()</a></code> to transform raw values into normalized values used within the calculations.</li>
+<code><a href="../reference/transform_hpop_data.html">transform_hpop_data()</a></code> to transform raw values into
+normalized values used within the calculations.</li>
 <li>
-<code><a href="../reference/add_hpop_populations.html">add_hpop_populations()</a></code> to get relevant population groups for each country and indicator.</li>
+<code><a href="../reference/add_hpop_populations.html">add_hpop_populations()</a></code> to get relevant population
+groups for each country and indicator.</li>
 <li>
-<code><a href="../reference/calculate_hpop_contributions.html">calculate_hpop_contributions()</a></code> to calculate indicator level changes and contributions to the Billion.</li>
+<code><a href="../reference/calculate_hpop_contributions.html">calculate_hpop_contributions()</a></code> to calculate indicator
+level changes and contributions to the Billion.</li>
 <li>
-<code><a href="../reference/calculate_hpop_billion.html">calculate_hpop_billion()</a></code> to calculate indicator level changes, country-level Billion, adjusting for double counting, and all contributions.</li>
+<code><a href="../reference/calculate_hpop_billion.html">calculate_hpop_billion()</a></code> to calculate indicator level
+changes, country-level Billion, adjusting for double counting, and all
+contributions.</li>
 </ul>
-<p>Run in sequence, these can calculate the entire HPOP Billion, or they can be run separately to produce different outputs as required. Details on the inputs of each function are available in their individual documentation, but below you can see the quick and easy Billions calculation done using the sample fake HPOP data provided in the package, <code>hpop_df</code>.</p>
+<p>Run in sequence, these can calculate the entire HPOP Billion, or they
+can be run separately to produce different outputs as required. Details
+on the inputs of each function are available in their individual
+documentation, but below you can see the quick and easy Billions
+calculation done using the sample fake HPOP data provided in the
+package, <code>hpop_df</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
 <span></span>

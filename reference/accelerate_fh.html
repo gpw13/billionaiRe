@@ -67,6 +67,8 @@ in the data to the 2018 value.</p>
 <span>  <span class="va">df</span>,</span>
 <span>  ind_ids <span class="op">=</span> <span class="fu"><a href="billion_ind_codes.html">billion_ind_codes</a></span><span class="op">(</span><span class="st">"uhc"</span><span class="op">)</span>,</span>
 <span>  scenario_col <span class="op">=</span> <span class="st">"scenario"</span>,</span>
+<span>  default_scenario <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  bau_scenario <span class="op">=</span> <span class="st">"historical"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -90,18 +92,25 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.</p></dd>
 
 
+<dt>default_scenario</dt>
+<dd><p>name of the default scenario.</p></dd>
+
+
+<dt>bau_scenario</dt>
+<dd><p>name of scenario to be used for business as usual.
+Default is <code>historical</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional parameters to be passed to scenario function</p></dd>
 
 </dl></div>
     <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>data frame with acceleration scenario binded to <code>df</code>. <code>scenario_col</code> is
-set to <code>acceleration</code></p>
-
-
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Runs:</p><ul><li><p><code>scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)</code>,</p></li>
+<li><p><code>scenario_bau(df, small_is_best = TRUE,...)</code>, and</p></li>
+<li><p><code>scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)</code></p></li>
+</ul><p>Then picks the best result between the three scenarios.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

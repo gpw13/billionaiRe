@@ -93,45 +93,107 @@
 <div class="section level2">
 <h2 id="definition">Definition<a class="anchor" aria-label="anchor" href="#definition"></a>
 </h2>
-<p>In the Triple Billions and the billionaiRe package context, <code>scenarios</code> are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.</p>
+<p>In the Triple Billions and the billionaiRe package context,
+<code>scenarios</code> are understood as alternative, plausible,
+description of how the future may develop based on a set of defined
+assumptions.</p>
 <p>Two sets of scenarios can be identified:</p>
 <ul>
 <li>
-<em>Event-based scenarios</em>: an event has a presumed but yet unknown impact on the Billions (e.g. COVID-19 scenarios). This type of scenario usually starts from the last reported value, but the scenarios could provide their own values points for any part of the time series.</li>
+<em>Event-based scenarios</em>: an event has a presumed but yet
+unknown impact on the Billions (e.g. COVID-19 scenarios). This type of
+scenario usually starts from the last reported value, but the scenarios
+could provide their own values points for any part of the time
+series.</li>
 <li>
-<em>Trajectory-based scenarios</em>: certain targets or trajectories must be reached by a certain date (e.g. Sustainable Development Goal targets (e.g. <code>sdg</code> scenarios), or <code>acceleration</code> scenarios from technical programs). Those scenarios should start from 2018 as the GPW13 baseline year.</li>
+<em>Trajectory-based scenarios</em>: certain targets or trajectories
+must be reached by a certain date (e.g. Sustainable Development Goal
+targets (e.g. <code>sdg</code> scenarios), or <code>acceleration</code>
+scenarios from technical programs). Those scenarios should start from
+2018 as the GPW13 baseline year.</li>
 <li>
-<em>Internal use scenarios</em>: scenarios provide the ability to deal with alternative time series of any kind, which could be include alternative projection methods, update to data sources, etc. While those scenarios might not be displayed for public use, they illustrate the versatility seeking in scenarios.</li>
+<em>Internal use scenarios</em>: scenarios provide the ability to
+deal with alternative time series of any kind, which could be include
+alternative projection methods, update to data sources, etc. While those
+scenarios might not be displayed for public use, they illustrate the
+versatility seeking in scenarios.</li>
 </ul>
-<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are storing values that are alternative, plausible, description of how the future may develop. The <em>internal use</em> scenarios hold values to highlight where the data comes from.</p>
+<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are
+storing values that are alternative, plausible, description of how the
+future may develop. The <em>internal use</em> scenarios hold values to
+highlight where the data comes from.</p>
 <p>Scenarios must:</p>
 <ol style="list-style-type: decimal">
-<li>Be <a href="https://r4ds.had.co.nz/tidy-data.html" class="external-link">tidy</a>: each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).</li>
-<li>Contain <strong>all</strong> and <strong>only</strong> the data that is strictly needed for calculations with billionaiRe</li>
+<li>Be <a href="https://r4ds.had.co.nz/tidy-data.html" class="external-link">tidy</a>: each
+row is a unique combination of iso3 country-code, year, indicator, and
+scenario (if relevant).</li>
+<li>Contain <strong>all</strong> and <strong>only</strong> the data that
+is strictly needed for calculations with billionaiRe</li>
 </ol>
 <ul>
-<li>If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see <a href="#data-recycling">Data recycling</a>).</li>
+<li>If billionaiRe require data that is missing in the scenario, they
+will be recycled from other scenarios (see <a href="#data-recycling">Data recycling</a>).</li>
 </ul>
 <p>There are three <em>internal use</em> special case scenario:</p>
 <ul>
 <li>
-<code>routine</code>: stores the <code>reported</code> and <code>estimated</code> data</li>
+<code>routine</code>: stores the <code>reported</code> and
+<code>estimated</code> data</li>
 <li>
-<code>reference_infilling</code>: stores WHO technical programs projected data (either <code>projected</code> or <code>imputed</code>).</li>
+<code>reference_infilling</code>: stores WHO technical programs
+projected data (either <code>projected</code> or
+<code>imputed</code>).</li>
 <li>
-<code>covid_shock</code>: stores the data that correspond to the COVID-19 shock.</li>
+<code>covid_shock</code>: stores the data that correspond to the
+COVID-19 shock.</li>
 </ul>
-<p>All together those three scenarios are the <em>base scenarios</em>. They are the spine of other scenarios and act then as a filling when scenarios do not contain the required data to build a full time series.</p>
+<p>All together those three scenarios are the <em>base scenarios</em>.
+They are the spine of other scenarios and act then as a filling when
+scenarios do not contain the required data to build a full time
+series.</p>
 </div>
 <div class="section level2">
 <h2 id="data-recycling">Data recycling<a class="anchor" aria-label="anchor" href="#data-recycling"></a>
 </h2>
-<p>billionaiRe <code>transform_</code> and <code>calculate_</code> functions (as well as <code>rapporteur</code> export functions) use the <code>scenario</code> column as a <code>group</code> in <a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a>. <em>Scenarios should then contain all the required data needed for billionaiRe calculations</em>. If a scenario does not contain the required data, the functions will fail.</p>
-<p>As the functions require full minimal data sets, <em>data recycling</em> becomes necessary to be able to pull into partial scenarios the minium required data so that they can run.</p>
-<p>For most users of billionaiRe, accessing external data tables (on xMart or World Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: <em>minimal storage before computation</em>.</p>
-<p>Data recycling infers the existence of a reference scenario. This reference scenario is called <code>default</code> by default, and it is a parameter (<code>default_scenario</code>) of <code><a href="../reference/recycle_data.html">recycle_data()</a></code> and all functions that rely on full data sets. The name of <code>default_scenario</code> can then be modified as required.</p>
-<p><code>default</code> scenario provides values when they are absent from scenarios, along with <code>scenario_reported_estimated</code> for reported/estimated values (<code>routine</code> by default), <code>scenario_reference_infilling</code> for values imputed/projected by technical programs (<code>reference_infilling</code> by default) and <code>scenario_covid_shock</code> for COVID-19 shock values. Together <code>scenario_reported_estimated</code>, <code>scenario_reference_infilling</code>, and <code>scenario_covid_shock</code> are the base scenarios.</p>
-<p>Data recycling works by adding to all scenarios present in the <code>scenario_col</code> column values that are missing from first <code>default_scenario</code>, then looks in <code>scenario_reported_estimated</code>, <code>scenario_reported_estimated</code> and <code>scenario_covid_shock</code> to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
+<p>billionaiRe <code>transform_</code> and <code>calculate_</code>
+functions (as well as <code>rapporteur</code> export functions) use the
+<code>scenario</code> column as a <code>group</code> in <a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a>.
+<em>Scenarios should then contain all the required data needed for
+billionaiRe calculations</em>. If a scenario does not contain the
+required data, the functions will fail.</p>
+<p>As the functions require full minimal data sets, <em>data
+recycling</em> becomes necessary to be able to pull into partial
+scenarios the minium required data so that they can run.</p>
+<p>For most users of billionaiRe, accessing external data tables (on
+xMart or World Health Data Hub) is more resource intensive than
+computation. This means that large tables should be avoided. Recycling
+the data between scenarios is then key to avoid storing identical data
+multiple times that will then be used by different scenarios. This is
+what data recycling aims to achieve: <em>minimal storage before
+computation</em>.</p>
+<p>Data recycling infers the existence of a reference scenario. This
+reference scenario is called <code>default</code> by default, and it is
+a parameter (<code>default_scenario</code>) of
+<code><a href="../reference/recycle_data.html">recycle_data()</a></code> and all functions that rely on full data
+sets. The name of <code>default_scenario</code> can then be modified as
+required.</p>
+<p><code>default</code> scenario provides values when they are absent
+from scenarios, along with <code>scenario_reported_estimated</code> for
+reported/estimated values (<code>routine</code> by default),
+<code>scenario_reference_infilling</code> for values imputed/projected
+by technical programs (<code>reference_infilling</code> by default) and
+<code>scenario_covid_shock</code> for COVID-19 shock values. Together
+<code>scenario_reported_estimated</code>,
+<code>scenario_reference_infilling</code>, and
+<code>scenario_covid_shock</code> are the base scenarios.</p>
+<p>Data recycling works by adding to all scenarios present in the
+<code>scenario_col</code> column values that are missing from first
+<code>default_scenario</code>, then looks in
+<code>scenario_reported_estimated</code>,
+<code>scenario_reported_estimated</code> and
+<code>scenario_covid_shock</code> to add values that are not present in
+the scenario, nor any of the preceding scenarios. This is done through a
+series of <a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
 <span></span>
@@ -166,23 +228,39 @@
 <div class="section level3">
 <h3 id="implementation-of-data-recycling-in-billionaire">Implementation of data recycling in billionaiRe<a class="anchor" aria-label="anchor" href="#implementation-of-data-recycling-in-billionaire"></a>
 </h3>
-<p>Data recycling is implemented in billionaiRe through the <code><a href="../reference/recycle_data.html">recycle_data()</a></code> function. This function wraps around <code><a href="../reference/recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> (not exported for external use) to run the recycling over all the scenarios present in the input data frame.</p>
-<p><code>recycle_data</code> uses similar parameters than other exported billionaiRe functions. However it introduces specific parameters:</p>
+<p>Data recycling is implemented in billionaiRe through the
+<code><a href="../reference/recycle_data.html">recycle_data()</a></code> function. This function wraps around
+<code><a href="../reference/recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> (not exported for external
+use) to run the recycling over all the scenarios present in the input
+data frame.</p>
+<p><code>recycle_data</code> uses similar parameters than other exported
+billionaiRe functions. However it introduces specific parameters:</p>
 <ul>
 <li>
-<code>default_scenario</code>: sets the default parameter (see above). <code>default</code> by default</li>
+<code>default_scenario</code>: sets the default parameter (see
+above). <code>default</code> by default</li>
 <li>
-<code>scenario_reported_estimated</code>: sets the reported/estimated scenario (see above). <code>routine</code> by default</li>
+<code>scenario_reported_estimated</code>: sets the
+reported/estimated scenario (see above). <code>routine</code> by
+default</li>
 <li>
-<code>scenario_reference_infilling</code>: sets the projected/imputed scenarios. <code>reference_infilling</code> by default.</li>
+<code>scenario_reference_infilling</code>: sets the
+projected/imputed scenarios. <code>reference_infilling</code> by
+default.</li>
 <li>
-<code>scenario_covid_shock</code>: sets the data that correspond to the COVID-19 shock. <code>covid_shock</code> by default.</li>
+<code>scenario_covid_shock</code>: sets the data that correspond to
+the COVID-19 shock. <code>covid_shock</code> by default.</li>
 <li>
-<code>include_projection</code>: Boolean to set if projections should be included in the recycling. <code>TRUE</code> by default.</li>
+<code>include_projection</code>: Boolean to set if projections
+should be included in the recycling. <code>TRUE</code> by default.</li>
 <li>
-<code>recycle_campaigns</code>: Boolean to set if campaign data should be included in the recycling. <code>TRUE</code> by default.</li>
+<code>recycle_campaigns</code>: Boolean to set if campaign data
+should be included in the recycling. <code>TRUE</code> by default.</li>
 </ul>
-<p>A <code>recycle</code> and <code>...</code>parameters were added to the <code>transform_</code> functions to ease recycling. If <code>recycle</code> is <code>TRUE</code>, data will be recycled, using the eventual parameters passed through the <code>...</code>.</p>
+<p>A <code>recycle</code> and <code>...</code>parameters were added to
+the <code>transform_</code> functions to ease recycling. If
+<code>recycle</code> is <code>TRUE</code>, data will be recycled, using
+the eventual parameters passed through the <code>...</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Adding a detect_respond raw to avoid warning from recycle_data.</span></span>
@@ -214,9 +292,21 @@
 <span>  <span class="fu"><a href="../reference/transform_hpop_data.html">transform_hpop_data</a></span><span class="op">(</span>recycle <span class="op">=</span> <span class="cn">TRUE</span>, include_projection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">test_data_hep</span>, <span class="va">test_data_hep_transform</span><span class="op">)</span></span></code></pre></div>
-<p>In order to facilitate the cleaning of data, a <code>recycled</code> column is added by the recycling function to identify data points that have been recycled. They can then be removed by the <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code> function that takes into account a few specific scenarios.</p>
-<p>To avoid adding ellipses to all billionaiRe functions which could have opened a number of unforeseeable issues, not all formally recycled data can be identified and thus removed with <code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code>, especially for the HEP billion. This includes mostly carried over campaign data.</p>
-<p>A <code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> function is provided to combine the <code>default_scenario</code>, <code>scenario_reported_estimated</code>, <code>scenario_reference_infilling</code> and <code>scenario_covid_shock</code> efficiently.</p>
+<p>In order to facilitate the cleaning of data, a <code>recycled</code>
+column is added by the recycling function to identify data points that
+have been recycled. They can then be removed by the
+<code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code> function that takes into account a
+few specific scenarios.</p>
+<p>To avoid adding ellipses to all billionaiRe functions which could
+have opened a number of unforeseeable issues, not all formally recycled
+data can be identified and thus removed with
+<code><a href="../reference/remove_recycled_data.html">remove_recycled_data()</a></code>, especially for the HEP billion.
+This includes mostly carried over campaign data.</p>
+<p>A <code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> function is provided to
+combine the <code>default_scenario</code>,
+<code>scenario_reported_estimated</code>,
+<code>scenario_reference_infilling</code> and
+<code>scenario_covid_shock</code> efficiently.</p>
 </div>
 </div>
 <div class="section level2">
@@ -229,15 +319,32 @@
 <li>Calculating</li>
 <li>Exporting</li>
 </ol>
-<p>The definition of the <em>internal use</em> scenarios happen in the <code>ingestion</code> and <code>projecting</code> steps.</p>
-<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are calculated at stage 3 (Calculating), as does the rest of the billionaiRe calculations. Those scenarios can be calculated with the <code><a href="../reference/add_scenario.html">add_scenario()</a></code> function.</p>
-<p>Within the billionaiRe calculations pipeline, adding the scenarios values should ideally be the first steps. However, some event-based and trajectory-based scenarios, might require some level of data recycling before they run. If this is the case, errors should be produced.</p>
-<p>The <code>add_scenario</code> functions is built on a range of pre-defined set of scenarios calculation functions that are called within the add_scenario function. There is then two layers of scenario functions that can be called :</p>
+<p>The definition of the <em>internal use</em> scenarios happen in the
+<code>ingestion</code> and <code>projecting</code> steps.</p>
+<p>The <em>event-based</em> and <em>trajectory-based</em> scenarios are
+calculated at stage 3 (Calculating), as does the rest of the billionaiRe
+calculations. Those scenarios can be calculated with the
+<code><a href="../reference/add_scenario.html">add_scenario()</a></code> function.</p>
+<p>Within the billionaiRe calculations pipeline, adding the scenarios
+values should ideally be the first steps. However, some event-based and
+trajectory-based scenarios, might require some level of data recycling
+before they run. If this is the case, errors should be produced.</p>
+<p>The <code>add_scenario</code> functions is built on a range of
+pre-defined set of scenarios calculation functions that are called
+within the add_scenario function. There is then two layers of scenario
+functions that can be called :</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>base scenario functions</strong>: they are the building blocs of the wrapper functions. For instance, <code>scenario_fixed_target</code> sets the values on a linear trajectory towards a target by a certain year, <code>scenario_percent_baseline</code> sets a progression from the baseline with a fix percentage increase.</li>
+<strong>base scenario functions</strong>: they are the building
+blocs of the wrapper functions. For instance,
+<code>scenario_fixed_target</code> sets the values on a linear
+trajectory towards a target by a certain year,
+<code>scenario_percent_baseline</code> sets a progression from the
+baseline with a fix percentage increase.</li>
 <li>
-<strong>wrappers functions</strong> combine base scenario functions to generate more complex scenarios like <code>acceleration</code>, <code>sdg</code>, etc.</li>
+<strong>wrappers functions</strong> combine base scenario functions
+to generate more complex scenarios like <code>acceleration</code>,
+<code>sdg</code>, etc.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
@@ -283,48 +390,74 @@
 </h3>
 <ul>
 <li>
-<code>scenario_aroc</code>: sets the values on the annual rate of change (AROC) from the data. Three cases of AROC are possible:
+<code>scenario_aroc</code>: sets the values on the annual rate of
+change (AROC) from the data. Three cases of AROC are possible:
 <ul>
 <li>
-<code>target</code>: aims at a specific <code>target_value</code> by <code>target_year</code>
+<code>target</code>: aims at a specific <code>target_value</code> by
+<code>target_year</code>
 </li>
 <li>
-<code>latest</code>: takes the AROC between <code>baseline_year</code> and the previous year</li>
+<code>latest</code>: takes the AROC between
+<code>baseline_year</code> and the previous year</li>
 <li>
-<code>percent_change</code>: applies <code>percent_change</code> for the AROC from <code>baseline_year</code>.</li>
+<code>percent_change</code>: applies <code>percent_change</code> for
+the AROC from <code>baseline_year</code>.</li>
 </ul>
 </li>
 <li>
-<code>scenario_halt_rise</code>: stops the rise of the indicator</li>
+<code>scenario_halt_rise</code>: stops the rise of the
+indicator</li>
 <li>
-<code>scenario_percent_baseline</code>: change by a fixed percentage from a baseline value by target year. Done in percentage of value and not percentage points.</li>
+<code>scenario_percent_baseline</code>: change by a fixed percentage
+from a baseline value by target year. Done in percentage of value and
+not percentage points.</li>
 <li>
-<code>scenario_linear_change</code>: change by a fixed percentage point from a baseline value by target year. Done in percentage points.</li>
+<code>scenario_linear_change</code>: change by a fixed percentage
+point from a baseline value by target year. Done in percentage
+points.</li>
 <li>
-<code>scenario_linear_change_col</code>: change by a fixed percentage point from a baseline value by target year, with the percentage change value provided in a column and not as a a single value. This allow for instance to have a different change for every country, indicator and year combinationss. Done in percentage points.</li>
+<code>scenario_linear_change_col</code>: change by a fixed
+percentage point from a baseline value by target year, with the
+percentage change value provided in a column and not as a a single
+value. This allow for instance to have a different change for every
+country, indicator and year combinationss. Done in percentage
+points.</li>
 <li>
-<code>scenario_quantile</code>: aims at a change in value based on the quantile’s AROC.</li>
+<code>scenario_quantile</code>: aims at a change in value based on
+the quantile’s AROC.</li>
 <li>
-<code>scenario_best_in_region</code>: aims at the AROC of the best country in the region.</li>
+<code>scenario_best_in_region</code>: aims at the AROC of the best
+country in the region.</li>
 <li>
-<code>scenario_fixed_target</code>: aims at a fixed target (e.g. 90, 5, etc.)</li>
+<code>scenario_fixed_target</code>: aims at a fixed target (e.g. 90,
+5, etc.)</li>
 <li>
-<code>scenario_fixed_target_col</code>: aims at a fixed target provided in a column.</li>
+<code>scenario_fixed_target_col</code>: aims at a fixed target
+provided in a column.</li>
 </ul>
 <p>Each of those functions use their own parameters.</p>
-<p>In order to have clean scenarios, a series of parameters are passed to the functions to run properly:</p>
+<p>In order to have clean scenarios, a series of parameters are passed
+to the functions to run properly:</p>
 <ul>
 <li>
-<code>small_is_best</code>: if TRUE, a lower value is considered as a better public health outcome (e.g. adult obesity)</li>
+<code>small_is_best</code>: if TRUE, a lower value is considered as
+a better public health outcome (e.g. adult obesity)</li>
 <li>
 <code>trim_values</code>: if TRUE, values will be trimed around:
 <ul>
 <li>
-<code>keep_better_values</code>: if TRUE, if values before running the scenario are better than after, the original values will be kept.</li>
+<code>keep_better_values</code>: if TRUE, if values before running
+the scenario are better than after, the original values will be
+kept.</li>
 <li>
-<code>upper_limit</code>, <code>lower_limit</code>: if <code>trim</code> is TRUE, values above the upper_limit will have upper_limit and values below lower_limit will hasve lower_limit.</li>
+<code>upper_limit</code>, <code>lower_limit</code>: if
+<code>trim</code> is TRUE, values above the upper_limit will have
+upper_limit and values below lower_limit will hasve lower_limit.</li>
 <li>
-<code>trim_year</code>: if TRUE values before <code>start_year</code> and after <code>end_year</code> will be removed.</li>
+<code>trim_year</code>: if TRUE values before
+<code>start_year</code> and after <code>end_year</code> will be
+removed.</li>
 </ul>
 </li>
 </ul>
@@ -335,13 +468,20 @@
 <p>Currently there are three wrapper functions implemented:</p>
 <ul>
 <li>
-<code>add_scenario</code> that wraps around any of the scenarios in its <code>scenario_function</code> parameter</li>
+<code>add_scenario</code> that wraps around any of the scenarios in
+its <code>scenario_function</code> parameter</li>
 <li>
-<code>acceleration</code> that implements the acceleration scenarios defined in coordination with WHO technical programs.</li>
+<code>acceleration</code> that implements the acceleration scenarios
+defined in coordination with WHO technical programs.</li>
 <li>
-<code>sdg</code> that implements acceleration scenarios to reach sustainable development goals.</li>
+<code>sdg</code> that implements acceleration scenarios to reach
+sustainable development goals.</li>
 </ul>
-<p>Each of the base scenario is wrapped in <code>add_scenario</code>. This function calls a <code>add_</code> function for each indicator in the data frame. This allows to apply the same base scenario to all indicators in the data frame, while passing indicator specific defaults:</p>
+<p>Each of the base scenario is wrapped in <code>add_scenario</code>.
+This function calls a <code>add_</code> function for each indicator in
+the data frame. This allows to apply the same base scenario to all
+indicators in the data frame, while passing indicator specific
+defaults:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
 <span></span>
@@ -355,12 +495,26 @@
 <span></span>
 <span><span class="fu"><a href="../reference/add_scenario.html">add_scenario</a></span><span class="op">(</span><span class="va">df</span>, scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">scenario</span> <span class="op">==</span> <span class="st">"halt_rise"</span><span class="op">)</span></span></code></pre></div>
-<p>Behind the scenes, <code>add_scenario</code> first get all unique indicators present in <code>df</code>, then passed each of them to <code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code>. <code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code> then find the <code>add_scenario_adult_obese</code> function and runs it with <code>df</code> and <code>halt_rise</code>. <code>add_scenario_adult_obese</code> then passes appropriate parameters to <code>scenario_halt_rise</code>. In this case, this is mostly to pass <code>small_is_best</code> to the scenario function.</p>
-<p>The <code>...</code> ellipsis is used to pass parameters down the functions.</p>
+<p>Behind the scenes, <code>add_scenario</code> first get all unique
+indicators present in <code>df</code>, then passed each of them to
+<code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code>.
+<code><a href="../reference/add_scenario_indicator.html">add_scenario_indicator()</a></code> then find the
+<code>add_scenario_adult_obese</code> function and runs it with
+<code>df</code> and <code>halt_rise</code>.
+<code>add_scenario_adult_obese</code> then passes appropriate parameters
+to <code>scenario_halt_rise</code>. In this case, this is mostly to pass
+<code>small_is_best</code> to the scenario function.</p>
+<p>The <code>...</code> ellipsis is used to pass parameters down the
+functions.</p>
 <div class="section level4">
 <h4 id="acceleration-scenarios">Acceleration scenarios<a class="anchor" aria-label="anchor" href="#acceleration-scenarios"></a>
 </h4>
-<p>Acceleration scenarios are a special case scenario that wraps different base scenario for each indicator. This is to take into consideration the specific cases of each indicator and what accelerating means for each of each individually. They can then be called directly from <code>add_scenario</code> or through indicator level function following the <code>accelerate_{indicator}</code> naming convention.</p>
+<p>Acceleration scenarios are a special case scenario that wraps
+different base scenario for each indicator. This is to take into
+consideration the specific cases of each indicator and what accelerating
+means for each of each individually. They can then be called directly
+from <code>add_scenario</code> or through indicator level function
+following the <code>accelerate_{indicator}</code> naming convention.</p>
 </div>
 </div>
 </div>
@@ -368,20 +522,30 @@
 <h2 id="scenarios-naming-convention">Scenarios naming convention<a class="anchor" aria-label="anchor" href="#scenarios-naming-convention"></a>
 </h2>
 <ul>
-<li><p><a href="https://en.wikipedia.org/wiki/Snake_case" class="external-link">Lower Snake case</a> is used</p></li>
-<li><p>Short and very descriptive names: use verbs as much as possible</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Snake_case" class="external-link">Lower Snake
+case</a> is used</p></li>
+<li><p>Short and very descriptive names: use verbs as much as
+possible</p></li>
 <li><p>Use only commonly understood acronyms and abbreviations</p></li>
 <li>
-<p><code>event</code> scenarios start with them. E.g. covid, pre_covid_bau</p>
+<p><code>event</code> scenarios start with them. E.g. covid,
+pre_covid_bau</p>
 <ul>
-<li>Sub-event scenarios should have a descriptive word rather than numbering or other undefined markers. <strong>DO</strong>: covid_never_return. <strong>DON’T</strong>: COVID_1</li>
+<li>Sub-event scenarios should have a descriptive word rather than
+numbering or other undefined markers. <strong>DO</strong>:
+covid_never_return. <strong>DON’T</strong>: COVID_1</li>
 </ul>
 </li>
-<li><p><code>routine</code> is reserved for reported/estimated data</p></li>
-<li><p><code>reference_infilling</code> is reserved for imputed/projected data</p></li>
-<li><p><code>default</code> is reserved for the main data present on the dashboard</p></li>
-<li><p><code>acceleration</code> is reserved for acceleration scenarios / trajectories</p></li>
-<li><p><code>sdg</code> is reserved for sustainable development goals</p></li>
+<li><p><code>routine</code> is reserved for reported/estimated
+data</p></li>
+<li><p><code>reference_infilling</code> is reserved for
+imputed/projected data</p></li>
+<li><p><code>default</code> is reserved for the main data present on the
+dashboard</p></li>
+<li><p><code>acceleration</code> is reserved for acceleration scenarios
+/ trajectories</p></li>
+<li><p><code>sdg</code> is reserved for sustainable development
+goals</p></li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
