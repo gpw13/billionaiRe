@@ -29,6 +29,9 @@ data frame.}
 \item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
+\item{baseline_col}{Column name with baseline values. This is used to ensure
+that trimmed values do not get worst values than baseline.}
+
 \item{trim}{logical to indicate if the data should be trimmed between
 \code{upper_limit} and \code{lower_limit}.}
 

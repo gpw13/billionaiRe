@@ -136,6 +136,8 @@ get_best_equal_scenarios <- function(df,
 #'
 #' @param only_reported_estimated (logical) if TRUE only the last `reported` and `estimated`
 #'    values are imputed.
+#' @param avoid_worstening If TRUE, the value at `start_year` is kept if it is
+#' better (see `small_is_best`).
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -149,6 +151,7 @@ scenario_bau <- function(df,
                          end_year = 2025,
                          scenario_name = glue::glue("business_as_usual"),
                          scenario_col = "scenario",
+                         avoid_worstening = FALSE,
                          trim = TRUE,
                          small_is_best = FALSE,
                          keep_better_values = TRUE,
@@ -184,12 +187,18 @@ scenario_bau <- function(df,
       dplyr::mutate(
         last_year = max(.data[["year"]][!is.na(.data[[value_col]])], na.rm = TRUE),
         last_value = .data[[value_col]][.data[["year"]] == .data[["last_year"]]],
+        baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year),
         "{value_col}" := dplyr::case_when(
           is.na(.data[[value_col]]) & .data[["year"]] > .data[["last_year"]] ~ .data[["last_value"]],
           TRUE ~ .data[[value_col]]
+        ),
+        "{value_col}" := dplyr::case_when(
+          avoid_worstening & small_is_best & .data[[value_col]] > baseline_value ~ baseline_value,
+          avoid_worstening & !small_is_best & .data[[value_col]] < baseline_value ~ baseline_value,
+          TRUE ~ .data[[value_col]]
         )
       ) %>%
-      dplyr::select(-c("last_value", "last_year"))
+      dplyr::select(-c("last_value", "last_year", "baseline_value"))
   }else{
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col))

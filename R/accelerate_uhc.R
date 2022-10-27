@@ -262,12 +262,14 @@ accelerate_beds <- function(df,
 
   params_no_scenario_bau <- c(
     get_right_parameters(params, scenario_bau),
-    list(scenario_name = "acceleration")
+         avoid_worstening = TRUE,
+         upper_limit = Inf)
   )
 
   params_with_scenario_bau <- c(
     get_right_parameters(params, scenario_bau),
-    list(scenario_name = "with_scenario_bau")
+    list(scenario_name = "with_scenario_bau",
+         upper_limit = Inf)
   )
 
   params_with_scenario_linear <- c(
@@ -1244,7 +1246,7 @@ accelerate_uhc_tobacco <- function(df,
     # Replace crude column with {scenario_name} column and set scenario = {scenario_name}
     # Now both df_with_data_bau and df_with_data_perc_baseline have the scenario-projected values in the crude column
     # with the scenario column disambiguating between the two scenarios
-    df_with_data_perc_baseline <- df_with_data_perc_baseline %>%
+    df_with_data_perc_baseline_final <- df_with_data_perc_baseline %>%
       dplyr::select(-c("crude")) %>%
       dplyr::rename("crude" := .data[[par_wd_pb[["scenario_name"]]]]) %>%
       dplyr::mutate("{scenario_col}" := par_wd_pb[["scenario_name"]]) %>%
@@ -1262,7 +1264,7 @@ accelerate_uhc_tobacco <- function(df,
 
     df_with_data_accelerated <- do.call(
       scenario_best_of,
-      c(list(df = dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline)),
+      c(list(df = dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline_final)),
         params_best_of)) %>%
       dplyr::filter(.data[[scenario_col]] == "acceleration")
 
