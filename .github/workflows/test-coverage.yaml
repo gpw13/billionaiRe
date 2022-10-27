@@ -13,9 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.PAT_GITHUB }}
-      AZURE_CLIENT_ID: ${{ secrets.WHDH_TENANT_ID }}
+      EXECUTION_MODE: "interactive"
+      AZURE_CLIENT_ID: ${{ secrets.WHDH_APP_ID }}
+      TENANT_ID: ${{ secrets.WHDH_TENANT_ID }}
       AZURE_CLIENT_SECRET: ${{ secrets.WHDH_CLIENT_SECRET }}
-
     steps:
       - uses: actions/checkout@v3
 
