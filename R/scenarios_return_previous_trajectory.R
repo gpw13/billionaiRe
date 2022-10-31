@@ -44,7 +44,7 @@ scenario_return_previous_trajectory <- function(df,
     dplyr::filter(.data[[scenario_col]] == scenario_shock) %>%
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
     dplyr::filter(.data[["year"]] == max(.data[["year"]]), .data[["year"]] >= dip_year) %>%
-    dplyr::select(.data[["iso3"]], .data[["ind"]], last_shock_year = .data[["year"]], last_shock_value = .data[[value_col]])
+    dplyr::select(tidyselect::all_of(c("iso3", "ind", last_shock_year = "year", last_shock_value = value_col)))
 
   df_return_previous_trajectory <- df %>%
     dplyr::filter(.data[[scenario_col]] == scenario_previous_trajectory) %>%

@@ -131,7 +131,7 @@ scenario_linear_change_col <- function(df,
 
   scenario_df <- df %>%
     dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
-    dplyr::select(-.data[[linear_value_col]]) %>%
+    dplyr::select(-tidyselect::all_of(linear_value_col)) %>%
     dplyr::left_join(linear_value_col_df, by = c("iso3", "ind"))
 
   scenario_linear_change_col_df <- scenario_df %>%

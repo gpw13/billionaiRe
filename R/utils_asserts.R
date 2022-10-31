@@ -707,7 +707,7 @@ assert_ind_start_end_year <- function(df,
     ) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", scenario_col, "ind")))) %>%
     dplyr::filter(is.na(.data[[value_col]])) %>%
-    dplyr::select(-.data[[value_col]])
+    dplyr::select(-tidyselect::all_of(value_col))
 
   if (nrow(missing_values) > 0) {
     stop(

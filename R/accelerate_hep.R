@@ -57,7 +57,7 @@ accelerate_espar <- function(df,
       !is.na(.data[[value_col]])
     ) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
-    tidyr::pivot_wider(names_from = .data[["year"]], names_prefix = "value_", values_from = .data[[value_col]]) %>%
+    tidyr::pivot_wider(names_from = "year", names_prefix = "value_", values_from = tidyselect::all_of(value_col)) %>%
     dplyr::mutate(baseline = dplyr::case_when(
       !is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & (is.na(.data[[glue::glue("{value_col}_{start_year}")]]) | .data[[glue::glue("{value_col}_{last_year_reported - 1}")]] > .data[[glue::glue("{value_col}_{start_year}")]]) ~ as.integer(last_year_reported - 1),
       is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & is.na(.data[[glue::glue("{value_col}_{start_year}")]]) & !is.na(.data[[glue::glue("{value_col}_{last_year_reported}")]]) ~ as.integer(last_year_reported),
@@ -512,7 +512,7 @@ accelerate_meningitis_campaign <- function(df,
       "campaign_targeted_population" = as.character(meningitis_campaign_denom),
       "iso3" = as.character("iso3")
     ))) %>%
-    tidyr::pivot_longer(-.data[["iso3"]],
+    tidyr::pivot_longer(-"iso3",
       names_to = c("year", "ind"), values_to = "planned_campaign_values", names_pattern = "([0-9]{4})_(.*)"
     ) %>%
     dplyr::mutate(
@@ -849,7 +849,7 @@ accelerate_yellow_fever_campaign <- function(df,
     )),
     "iso3" = "iso3"
     ) %>%
-    tidyr::pivot_longer(-.data[["iso3"]], names_to = c("year" , "ind"), values_to = "planned_campaign_values", names_pattern = "([0-9]{4})_(.*)") %>%
+    tidyr::pivot_longer(-"iso3", names_to = c("year" , "ind"), values_to = "planned_campaign_values", names_pattern = "([0-9]{4})_(.*)") %>%
     dplyr::mutate("year" := as.integer(.data[["year"]])) %>%
     dplyr::filter(!is.na(.data[["planned_campaign_values"]])) %>%
     dplyr::filter(.data[["planned_campaign_values"]] > 0)
@@ -861,7 +861,7 @@ accelerate_yellow_fever_campaign <- function(df,
     dplyr::ungroup() %>%
     dplyr::filter(.data[["type"]] != "projected", .data[["year"]] <= start_year) %>%
     dplyr::select("iso3", "year", {{ this_ind }}) %>%
-    tidyr::pivot_longer(.data[[this_ind]], names_to = "ind", values_to = {{ value_col }}) %>%
+    tidyr::pivot_longer({{this_ind}}, names_to = "ind", values_to = {{ value_col }}) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::mutate(best_perf = dplyr::case_when(
       is.na(.data[[value_col]]) ~ 0,
@@ -890,7 +890,7 @@ accelerate_yellow_fever_campaign <- function(df,
       !is.na(.data[["planned_campaign_values"]])
     ) %>%
     dplyr::left_join(best_perf, by = "iso3") %>%
-    dplyr::rename("{yellow_fever_campaign_denom}" := .data[["planned_campaign_values"]]) %>%
+    dplyr::rename("{yellow_fever_campaign_denom}" := "planned_campaign_values") %>%
     dplyr::mutate(
       yellow_fever_campaign_num = dplyr::case_when(
         is.na(.data[["best_perf_hist"]]) ~ .data[[yellow_fever_campaign_denom]] * (replacement_hist_no_avail),
@@ -898,7 +898,7 @@ accelerate_yellow_fever_campaign <- function(df,
       ),
       "{this_ind}" := .data[[yellow_fever_campaign_num]] / .data[[yellow_fever_campaign_denom]]
     ) %>%
-    dplyr::select(-.data[["ind"]], -.data[["best_perf_hist"]]) %>%
+    dplyr::select(-"ind", -"best_perf_hist") %>%
     dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
     tidyr::pivot_longer(dplyr::starts_with("yellow_fever"), names_to = "ind", values_to = "scenario_value") %>%
     dplyr::distinct()
@@ -946,9 +946,9 @@ accelerate_yellow_fever_campaign <- function(df,
     ))
 
   final_binded <- dplyr::bind_rows(accelerated_num, accelerated_denom) %>%
-    dplyr::select(.data[["iso3"]], .data[["year"]], .data[["ind"]], .data[["scenario_value"]])
+    dplyr::select("iso3", "year", "ind", "scenario_value")
 
-  full_table <- final_binded %>% dplyr::select(-.data[["scenario_value"]])
+  full_table <- final_binded %>% dplyr::select(-"scenario_value")
 
   df_accelerated <- df_this_ind %>%
     dplyr::full_join(full_table, by = c("iso3", "year", "ind")) %>%

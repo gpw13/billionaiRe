@@ -38,7 +38,7 @@ calculate_hpop_contributions <- function(df,
 
   total_pop <- df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[["iso3"]]) %>%
+    dplyr::select("iso3") %>%
     dplyr::distinct() %>%
     dplyr::mutate("total_pop" := wppdistro::get_population(.data[["iso3"]], year = max(end_year)))
 
