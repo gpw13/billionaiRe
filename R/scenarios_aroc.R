@@ -82,7 +82,7 @@ scenario_aroc <- function(df,
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
   if (aroc_type == "latest") {
-    assert_ind_start_end_year(scenario_df, value_col, baseline_year - 1, baseline_year, ind_ids[unique(scenario_df[["ind"]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year - 1, baseline_year, unique(scenario_df[["ind"]]))
 
     aroc <- get_latest_aarc(scenario_df,
       baseline_year = baseline_year,
@@ -92,7 +92,7 @@ scenario_aroc <- function(df,
     if (is.null(target_value)) {
       stop("target_value must be provided for targeted AROC to be calculated. It was NULL.")
     }
-    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, ind_ids[unique(scenario_df[["ind"]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, unique(scenario_df[["ind"]]))
     assert_numeric(target_value)
     aroc <- get_target_aarc(scenario_df,
       target_value,
@@ -104,7 +104,7 @@ scenario_aroc <- function(df,
       stop("percent_change must be provided for percent_change AROC to be calculated. It was NULL.")
     }
     assert_numeric(target_value)
-    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, ind_ids[unique(scenario_df[["ind"]])])
+    assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, unique(scenario_df[["ind"]]))
     aroc <- get_percent_change_aarc(scenario_df,
       percent_change,
       baseline_year,

@@ -20,7 +20,7 @@ accelerate_espar <- function(df,
                              default_scenario = "default",
                              ...) {
 
-  params <- get_dots_and_env(...)
+  params <- get_dots_and_call_parameters(...)
 
   assert_columns(df, "iso3", "year", value_col, "ind", "type", scenario_col)
 
@@ -144,13 +144,10 @@ accelerate_espar <- function(df,
   df_accelerated <- espar_df %>%
     dplyr::group_by(.data[["baseline"]]) %>%
     dplyr::group_modify(
-      ~ do.call(
-        scenario_fixed_target_col, c(list(
-          df = .x,
-          baseline_year = .y[[1]][1],
-          value_col = value_col,
-          ind_ids = ind_ids
-        ), params_target_col)
+      ~ exec_scenario(
+        .x,
+        scenario_fixed_target_col,
+        c(baseline_year = .y[[1]][1], params_target_col)
       )
     ) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
@@ -211,7 +208,14 @@ accelerate_detect <- function(df,
 #' set to `acceleration`
 accelerate_respond <- function(df,
                                ...) {
-  accelerate_detect(df, ind_ids = c("detect" = "respond"), ...)
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(ind_ids = c("detect" = "respond"))
+
+  exec_scenario(df,
+                accelerate_detect,
+                params)
+
 }
 
 #' Accelerate notify
@@ -226,7 +230,14 @@ accelerate_respond <- function(df,
 #' set to `acceleration`
 accelerate_notify <- function(df,
                               ...) {
-  accelerate_detect(df, ind_ids = c("detect" = "notify"), ...)
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(ind_ids = c("detect" = "notify"))
+
+  exec_scenario(df,
+                accelerate_detect,
+                params)
+
 }
 
 #' Accelerate detect_respond
@@ -241,7 +252,14 @@ accelerate_notify <- function(df,
 #' set to `acceleration`
 accelerate_detect_respond <- function(df,
                                       ...) {
-  accelerate_detect(df, ind_ids = c("detect" = "detect_respond"), ...)
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(ind_ids = c("detect" = "detect_respond"))
+
+  exec_scenario(df,
+                accelerate_detect,
+                params)
+
 }
 
 #' Accelerate cholera_campaign
@@ -759,22 +777,24 @@ accelerate_polio_routine <- function(df,
                                      ...) {
   this_ind <- ind_ids["polio_routine"]
 
+  params <- get_dots_and_call_parameters(...)
+
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind,
                   .data[[scenario_col]] == default_scenario)
 
   assert_ind_start_end_year(df_this_ind, start_year = 2015, end_year = 2018, ind_ids = this_ind)
 
-  params_aroc_percent_change <- get_right_parameters(list(...), scenario_aroc)
+  params_aroc_percent_change <- get_right_parameters(params, scenario_aroc)
   params_aroc_percent_change["scenario_name"] <- "acceleration"
   params_aroc_percent_change["aroc_type"] <- "percent_change"
   params_aroc_percent_change["percent_change"] <- 20
   params_aroc_percent_change["scenario_name"] <- "acceleration"
   params_aroc_percent_change["baseline_year"] <- 2015
 
-  df_accelerated <- do.call(
-    scenario_aroc, c(list(df = df_this_ind), params_aroc_percent_change)
-  ) %>%
+  df_accelerated <- exec_scenario(df_this_ind,
+                                  scenario_aroc,
+                                  params_aroc_percent_change) %>%
     dplyr::filter(.data[[scenario_col]] == "acceleration")
 
   df %>%
@@ -973,9 +993,12 @@ accelerate_yellow_fever_campaign <- function(df,
 #' set to `acceleration`
 accelerate_yellow_fever_routine <- function(df,
                                             ...) {
-  df %>%
-    accelerate_polio_routine(
-      ind_ids = c("polio_routine" = "yellow_fever_routine"),
-      ...
-    )
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(ind_ids = c("polio_routine" = "yellow_fever_routine"))
+
+  exec_scenario(df,
+                accelerate_polio_routine,
+                params)
+
 }

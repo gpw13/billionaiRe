@@ -253,17 +253,17 @@ accelerate_beds <- function(df,
                             ...) {
   this_ind <- ind_ids["beds"]
 
-  params <- list(...)
-  params["scenario_col"] <- scenario_col
-  params["value_col"] <- value_col
-  params["start_year"] <- start_year
-  params["default_scenario"] <- default_scenario
-  params["bau_scenario"] <- bau_scenario
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(
+      "value_col" = value_col,
+      "start_year" = start_year
+    )
 
-  params_no_scenario_bau <- c(
+  params_no_scenario_bau <- set_parameters(
     get_right_parameters(params, scenario_bau),
-         avoid_worstening = TRUE,
-         upper_limit = Inf)
+    avoid_worstening = TRUE,
+    upper_limit = Inf,
+    scenario_name = "acceleration"
   )
 
   params_with_scenario_bau <- c(

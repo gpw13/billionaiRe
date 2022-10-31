@@ -129,7 +129,7 @@ add_scenario_indicator <- function(df,
                                    bau_scenario = "historical",
                                    ...) {
 
-  params <-   get_dots_and_env(...)
+  params <-   get_dots_and_call_parameters(...)
 
   this_ind <- ind_ids[indicator]
 
@@ -139,12 +139,12 @@ add_scenario_indicator <- function(df,
 
   scenario_function <- rlang::arg_match(scenario_function)
 
-  params <- set_parameters(params, list(
+  params <- set_parameters(params,
     "small_is_best" = get_ind_metadata(indicator, "small_is_best"),
     "scenario_col" = scenario_col,
     "default_scenario" = default_scenario,
-    "bau_scenario" = "bau_scenario"
-  ))
+    "bau_scenario" = bau_scenario
+  )
 
   this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
     "espar[0-9].{0,3}",
@@ -160,6 +160,8 @@ add_scenario_indicator <- function(df,
     accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
 
     assert_scenario_in_df(this_ind_df, c(default_scenario, bau_scenario), scenario_col)
+
+    # params_accelerate <- get_right_parameters(params, accelerate_fn)
 
     exec_scenario(this_ind_df, accelerate_fn, params)
 

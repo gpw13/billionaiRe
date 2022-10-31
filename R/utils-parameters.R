@@ -6,27 +6,53 @@ get_right_parameters <- function(params, fn) {
   }
 }
 
-get_dots_and_env <- function(...){
-
+get_dots_and_call_parameters <- function(...,
+                             call_parameters = rlang::caller_call(),
+                             fn_formals = rlang::fn_fmls(rlang::caller_fn()),
+                             remove_df = TRUE,
+                             remove_unnamed = TRUE){
   dots <- rlang::list2(...)
 
-  call_params <- as.list(rlang::caller_call(1))
+  call_parameters <- as.list(call_parameters)
 
-  named_params <- as.character(names(call_params)) %>%
-    purrr::keep(~nchar(.x)>1)
+  fn_formals <- fn_formals[names(fn_formals) != "..."]
 
-  call_params <- call_params[names(call_params) %in% named_params] %>%
-    purrr::discard(~is.data.frame(.x))
+
+  for(i in 1:length(fn_formals)){
+    if(class(fn_formals[[i]]) == "call"){
+      fn <- as.character(fn_formals[[i]][1])
+
+      args <- rlang::list2(as.character(fn_formals[[i]][2:length(fn_formals[[i]])]))
+
+      fn_formals[[i]] <- rlang::exec(fn, !!!args)
+    }else{
+      fn_formals[[i]] <- fn_formals[[i]]
+    }
+  }
+
+  if(remove_unnamed){
+    call_parameters <- call_parameters[nchar(names(call_parameters)) > 0]
+    dots <- dots[nchar(names(dots)) > 0]
+  }
+
+  if(remove_df){
+    call_parameters <- call_parameters[names(call_parameters) != "df"]
+    fn_formals <- fn_formals[names(fn_formals) != "df"]
+  }
+
+  params <- c(call_parameters, fn_formals)[!duplicated(c(names(call_parameters), names(fn_formals)), fromLast = FALSE)]
 
   if(!purrr::is_empty(dots)){
-    set_parameters(call_params, dots)
+    set_parameters(params, !!!dots)
   }else{
-    call_params
+    params
   }
+
 }
 
-set_parameters <- function(parameters, changes){
-  assert_list(changes)
+set_parameters <- function(parameters, ...){
+  changes <- rlang::list2(...)
+
   assert_has_names(changes)
 
   replace(parameters, names(changes), changes)

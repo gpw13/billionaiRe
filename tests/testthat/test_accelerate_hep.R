@@ -213,7 +213,10 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(scenario == "default")
 
-  df_add_scenario_indicator <- add_scenario_indicator(test_data, "accelerate", "meningitis_routine")
+  df_add_scenario_indicator <- add_scenario_indicator(test_data,
+                                                      "accelerate",
+                                                      "meningitis_routine",
+                                                      bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -227,7 +230,7 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
       TRUE ~ value
     ))
 
-  df_add_scenario_indicator <- add_scenario_indicator(df_with_zero, "accelerate", "meningitis_routine")
+  df_add_scenario_indicator <- add_scenario_indicator(df_with_zero, "accelerate", "meningitis_routine", bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -259,7 +262,7 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
 
   testthat::expect_equal(df_add_scenario_2025, aroc_2025)
 
-  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "polio_routine")
+  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "polio_routine", bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -311,7 +314,7 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
 
   testthat::expect_equal(df_add_scenario_2025, aroc_2025)
 
-  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "yellow_fever_routine")
+  df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "yellow_fever_routine", bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
