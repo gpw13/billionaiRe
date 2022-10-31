@@ -68,7 +68,6 @@ scenario_aroc <- function(df,
   assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
 
   aroc_type <- rlang::arg_match(aroc_type)
-  # limit_aroc_direction <- rlang::arg_match(limit_aroc_direction)
 
   full_years_df <- tidyr::expand_grid(
     "year" := start_year:end_year,

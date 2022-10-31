@@ -605,7 +605,7 @@ accelerate_dtp3 <- function(df,
     file_path = "scenarios/dtp3/IA ZD and coverage targets_GPW13.xlsx",
     skip = 1
   ) %>%
-    dplyr::select(!!sym("iso3") := .data[["ISO"]], target = "DTP 3 Target") %>%
+    dplyr::select(!!sym("iso3") := "ISO", target = "DTP 3 Target") %>%
     dplyr::mutate(!!sym("iso3") := toupper(.data[["iso3"]]), target = .data[["target"]] * 100)
 
   df_accelerated <- df_this_ind %>%
@@ -626,7 +626,7 @@ accelerate_dtp3 <- function(df,
     ) %>%
     dplyr::select(!c("baseline_value", "target")) %>%
     dplyr::filter(!is.na(.data[["acceleration"]])) %>%
-    dplyr::select(!dplyr::all_of(c(value_col))) %>%
+    dplyr::select(!dplyr::all_of(value_col)) %>%
     dplyr::rename(!!sym(value_col) := "acceleration") %>%
     dplyr::mutate(!!sym(scenario_col) := "acceleration")
 
@@ -1172,7 +1172,7 @@ accelerate_uhc_tobacco <- function(df,
 
     tobacco_ratio_df <- trajectory_df %>%
       dplyr::mutate(measure = ifelse(.data[["measure"]] == "Crude", "crude", "agestd")) %>%
-      tidyr::pivot_wider(names_from = .data[["measure"]], values_from = .data[[value_col]]) %>%
+      tidyr::pivot_wider(names_from = "measure", values_from = tidyselect::all_of(value_col)) %>%
       dplyr::mutate(ratio_agestd_over_crude = .data[["agestd"]] / .data[["crude"]])
 
     # Extending the input trajectories to end_year, using flat_extrap from 2023 values
@@ -1249,7 +1249,7 @@ accelerate_uhc_tobacco <- function(df,
     # with the scenario column disambiguating between the two scenarios
     df_with_data_perc_baseline_final <- df_with_data_perc_baseline %>%
       dplyr::select(-c("crude")) %>%
-      dplyr::rename("crude" := .data[[par_wd_pb[["scenario_name"]]]]) %>%
+      dplyr::rename("crude" := tidyselect::any_of(par_wd_pb[["scenario_name"]])) %>%
       dplyr::mutate("{scenario_col}" := par_wd_pb[["scenario_name"]]) %>%
       dplyr::select(-c("agestd", "ratio_agestd_over_crude")) %>%
       dplyr::left_join(dplyr::select(tobacco_ratio_df, -"crude"), by = c("iso3", "year")) %>%

@@ -206,7 +206,7 @@ accelerate_child_viol <- function(df,
     dplyr::filter(max(.data[["year"]]) == .data[["year"]]) %>%
     dplyr::mutate(latest_value = .data[[value_col]]) %>%
     dplyr::ungroup() %>%
-    dplyr::select(c("iso3", "ind", scenario_col, "latest_value"))
+    dplyr::select(tidyselect::all_of(c("iso3", "ind", scenario_col, "latest_value")))
 
   df_this_ind <- df_this_ind %>%
     dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
@@ -279,7 +279,7 @@ accelerate_devontrack <- function(df,
     dplyr::filter(max(.data[["year"]]) == .data[["year"]]) %>%
     dplyr::mutate(latest_value = .data[[value_col]]) %>%
     dplyr::ungroup() %>%
-    dplyr::select(c("iso3", "ind", scenario_col, "latest_value"))
+    dplyr::select(tidyselect::all_of(c("iso3", "ind", scenario_col, "latest_value")))
 
   df_this_ind <- df_this_ind %>%
     dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
@@ -1211,7 +1211,7 @@ accelerate_water <- function(df,
     dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
     dplyr::left_join(unique_inds, by = c("iso3")) %>%
     dplyr::mutate(ind = .data[["temp_ind"]]) %>%
-    dplyr::select(-.data[["temp_ind"]])
+    dplyr::select(-"temp_ind")
 
   df %>%
     dplyr::bind_rows(df_accelerated)

@@ -83,7 +83,7 @@ transform_hep_data <- function(df,
   df <- billionaiRe_add_columns(df, transform_value_col, NA_real_)
 
   new_df <- df %>%
-    dplyr::filter(dplyr::if_any(.data[[value_col]], ~ !is.na(.x))) %>%
+    dplyr::filter(dplyr::if_any(tidyselect::all_of(value_col), ~ !is.na(.x))) %>%
     transform_prev_cmpgn_data(
       scenario_col,
       value_col,

@@ -157,7 +157,7 @@ scenario_fixed_target_col <- function(df,
 
   scenario_df <- df %>%
     dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
-    dplyr::select(-.data[[target_col]]) %>%
+    dplyr::select(-tidyselect::all_of(target_col)) %>%
     dplyr::left_join(target_df, by = c("iso3", "ind")) %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 

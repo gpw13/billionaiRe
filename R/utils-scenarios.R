@@ -60,7 +60,7 @@ trim_values <- function(df,
           TRUE ~ as.numeric(.data[["better_value"]])
         )
       ) %>%
-      dplyr::select(-c("better_value", .data[[col]])) %>%
+      dplyr::select(-tidyselect::all_of(c("better_value", col))) %>%
       trim_years(trim_years, start_year, end_year)
   } else {
     return(df)
