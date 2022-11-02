@@ -5,7 +5,7 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 111 rows and 20 variables:
+A data frame with 114 rows and 20 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{ind}{Code used in the analysis scripts within the billionaiRe package}
