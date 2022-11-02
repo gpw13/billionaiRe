@@ -111,6 +111,7 @@ HE_yellowfever_Campign,yellow_fever_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,F
 HE_yellowfever_Routine,yellow_fever_routine,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV3,Yellow Fever - Routine,%,%,Yellow Fever - Routine,Yellow fever - Routine,54,prevent,FALSE,NA,NA
 NA,yellow_fever_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Yellow fever - Routine reached population (numerator),Yellow fever - Routine (numerator),NA,NA,FALSE,NA,NA
 HE_ihr,espar,SDGIHR2018,unproj_data,TRUE,FALSE,TRUE,FALSE,FALSE,SDG 3.8.1.16,Health security,%,%,IHR core capacity index*,IHR core capacity index,37,service_cap_access,FALSE,NA,NA
-NA,covid,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
-NA,covid_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
-NA,covid_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+NA,covid,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA
+NA,covid_campaign,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA
+NA,covid_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA
+NA,covid_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,,
