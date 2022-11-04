@@ -27,11 +27,10 @@ testthat::test_that(paste0("accelerate_anc4 returns accurate values:"), {
   ind <- "anc4"
 
   # fixed target, 95 by 2030 = 83.75 & linear change of 2.6/yr to 2025 = 86.2
-  # fixed target is easier to achieve so it's selected. This is also better than
-  # bau (75) so final value is 83.75 from fixed target.
+  # bau (75) so final value is 86.2 from fixed target.
   testthat::expect_equal(
     get_2025_value(60:80, ind, "reported"),
-    get_fixed_target(95, 68, 2018, 2030)
+    68 + 2.6*(2025-2018)
   )
 
   # No reported data, so bau result is returned
@@ -85,9 +84,25 @@ testthat::test_that("accelerate_bp returns accurate values:", {
   ind <- "bp"
 
   testthat::expect_equal(
+    get_2025_value(50:70, ind, "reported"),
+    get_fixed_target(80, 58, 2018, 2030)
+  )
+
+  # Fixed target value of 90.25 in 2025 is better than bau (75)
+  testthat::expect_equal(
     get_2025_value(60:80, ind, "reported"),
     get_fixed_target(80, 68, 2018, 2030)
   )
+
+  # Fixed target value of 90.25 in 2025 is not better than bau (95), with
+  testthat::expect_equal(
+    get_2025_value(80:100, ind, "reported"),
+    95
+  )
+
+  # No reported data, so bau result is returned
+  testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
+
 })
 
 # doctors ----------------------------

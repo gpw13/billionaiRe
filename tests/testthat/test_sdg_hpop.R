@@ -268,8 +268,8 @@ testthat::test_that(paste0("sdg_overweight returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -292,8 +292,8 @@ testthat::test_that(paste0("sdg_pm25 returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -315,8 +315,8 @@ testthat::test_that(paste0("sdg_road returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -338,8 +338,8 @@ testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -361,8 +361,8 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -384,8 +384,8 @@ testthat::test_that(paste0("sdg_transfats returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -407,8 +407,8 @@ testthat::test_that(paste0("sdg_water returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -430,8 +430,8 @@ testthat::test_that(paste0("sdg_water_rural  returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -453,8 +453,8 @@ testthat::test_that(paste0("sdg_water_rural returns accurate values:"), {
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-    indicator = ind,
-    scenario_function = "sdg"
+                                             indicator = ind,
+                                             scenario_function = "sdg"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -479,7 +479,7 @@ testthat::test_that("sdg can be run on all hpop indicators:", {
 
   calculated_test_data <- add_scenario(hpop_test_df, "sdg")
 
-  testthat::expect_equal(nrow(calculated_test_data), 577)
+  testthat::expect_equal(nrow(calculated_test_data), 493)
 
   testthat::expect_error(
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%

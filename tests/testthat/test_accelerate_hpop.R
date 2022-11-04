@@ -500,7 +500,6 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
   df_add_indicator <- add_scenario_indicator(df,
     indicator = ind,
     scenario_function = "accelerate",
-    scenario_name = "test",
     bau_scenario = "default"
   )
 
@@ -511,7 +510,7 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
   testthat::expect_equal(df_add_indicator_2025, 75)
 })
 
-testthat::test_that("accelerate can be run on all hpop indicators:", {
+testthat::test_that("acceleration can be run on all hpop indicators:", {
   hpop_test_df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
@@ -524,7 +523,7 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
   ) %>%
     tidyr::expand_grid(ind = billion_ind_codes("hpop", include_subindicators = FALSE))
 
-  calculated_test_data <- add_scenario(hpop_test_df, "accelerate")
+  calculated_test_data <- add_scenario(hpop_test_df, "accelerate", bau_scenario = "default")
 
   testthat::expect_equal(nrow(calculated_test_data), 493)
 
@@ -532,7 +531,7 @@ testthat::test_that("accelerate can be run on all hpop indicators:", {
     load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
       dplyr::filter(ind %in% billion_ind_codes("hpop"),
                     scenario != "default") %>%
-      make_default_scenario(billion = "hpop") %>%
+      make_default_scenario(billion = "hpop", default_scenario = "pre_covid_trajectory") %>%
       dplyr::filter(scenario == "default") %>%
       add_scenario("accelerate", bau_scenario = "default"),
     NA

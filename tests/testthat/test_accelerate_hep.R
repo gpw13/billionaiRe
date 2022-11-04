@@ -265,7 +265,7 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
   df_add_scenario_indicator <- add_scenario_indicator(df, "accelerate", "polio_routine", bau_scenario = "default")
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
-    dplyr::filter(year == 2025, scenario == "acceleration") %>%
+    dplyr::filter(year == 2025, scenario == "accelerate") %>%
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_scenario_2025, aroc_2025)
@@ -323,7 +323,7 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
   testthat::expect_equal(df_add_scenario_2025, aroc_2025)
 })
 
-testthat::test_that("accelerate can be run on all hep indicators:", {
+testthat::test_that("acceleration can be run on all hep indicators:", {
   hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     dplyr::filter(scenario != "default") %>%
     make_default_scenario(billion = "hep") %>%

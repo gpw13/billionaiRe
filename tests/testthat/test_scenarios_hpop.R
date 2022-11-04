@@ -28,6 +28,7 @@ test_hpop_scenarios <- function(ind) {
       indicator = ind,
       target_year = 2025,
       scenario_function = "fixed_target",
+      scenario_name = "90_2025",
       target_value = 90,
       small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
     )
@@ -52,6 +53,7 @@ test_hpop_scenarios <- function(ind) {
       indicator = ind,
       target_year = 2025,
       scenario_function = "fixed_target",
+      scenario_name = "30_2025",
       target_value = 30,
       small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
     )
@@ -73,14 +75,17 @@ purrr::walk(hpop_ind, ~ test_hpop_scenarios(.x))
 testthat::test_that("add_scenarios runs properly on hpop_df", {
   hpop_halt_rise <- hpop_df %>%
     dplyr::mutate(scenario = "default") %>%
-    add_scenario("halt_rise", baseline_year = 2018)
+    add_scenario("halt_rise", baseline_year = 2018) %>%
+    dplyr::arrange(iso3, ind, year)
 
   hpop_halt_rise_2023 <- hpop_halt_rise %>%
     dplyr::filter(scenario == "halt_rise", year == 2023) %>%
+    dplyr::arrange(iso3, ind, year) %>%
     dplyr::select(-scenario, -year, -type)
 
   hpop_2018 <- hpop_df %>%
     dplyr::filter(year == 2018) %>%
+    dplyr::arrange(iso3, ind, year) %>%
     dplyr::select(-year, -type)
 
   testthat::expect_equal(hpop_halt_rise_2023, hpop_2018)

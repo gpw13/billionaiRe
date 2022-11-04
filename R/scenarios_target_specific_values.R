@@ -37,7 +37,7 @@ scenario_quantile <- function(df,
                               default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
   assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
-  assert_ind_start_end_year(df, value_col, quantile_year, baseline_quantile_year, ind_ids = ind_ids[unique(df[["ind"]])])
+  assert_ind_start_end_year(df, value_col, quantile_year, baseline_quantile_year, ind_ids = unique(df[["ind"]]))
 
   quantile_df <- df %>%
     dplyr::group_by(.data[["ind"]]) %>%

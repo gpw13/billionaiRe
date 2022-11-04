@@ -18,6 +18,7 @@ accelerate_espar <- function(df,
                              start_year = 2018,
                              end_year = 2025,
                              default_scenario = "default",
+                             scenario_name = "acceleration",
                              ...) {
 
   params <- get_dots_and_call_parameters(...)
@@ -136,10 +137,11 @@ accelerate_espar <- function(df,
     ) %>%
     dplyr::left_join(espar_target, by = c("iso3", "ind"))
 
-  params_target_col <- get_right_parameters(params, scenario_fixed_target_col)
-  params_target_col["scenario_name"] <- "acceleration"
-  params_target_col["target_col"] <- "target"
-  params_target_col["baseline_year"] <- NULL
+  params_target_col <- get_right_parameters(params, scenario_fixed_target_col) %>%
+    set_parameters(
+      scenario_name = scenario_name,
+      target_col = "target"
+    )
 
   df_accelerated <- espar_df %>%
     dplyr::group_by(.data[["baseline"]]) %>%
@@ -147,10 +149,10 @@ accelerate_espar <- function(df,
       ~ exec_scenario(
         .x,
         scenario_fixed_target_col,
-        c(baseline_year = .y[[1]][1], params_target_col)
+        set_parameters(params_target_col, baseline_year = .y[[1]][1])
       )
     ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
+    dplyr::filter(.data[[scenario_col]] == scenario_name) %>%
     dplyr::ungroup() %>%
     dplyr::select(-c("baseline", "target"))
 
@@ -174,6 +176,7 @@ accelerate_detect <- function(df,
                               ind_ids = billion_ind_codes("hep"),
                               scenario_col = "scenario",
                               bau_scenario = "historical",
+                              scenario_name = "acceleration",
                               ...) {
   this_ind <- ind_ids["detect"]
 
@@ -181,19 +184,12 @@ accelerate_detect <- function(df,
     dplyr::filter(.data[["ind"]] == this_ind,
                   .data[[scenario_col]] == bau_scenario)
 
-  params_bau <- get_right_parameters(list(...), scenario_bau)
-  params_bau["scenario_name"] <- "acceleration"
-  params_bau["scenario_col"] <- scenario_col
-  params_bau["bau_scenario"] <- bau_scenario
+  params_bau <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_bau)
 
-
-  df_bau <- do.call(
-    scenario_bau, c(list(df = df_this_ind), params_bau)
-  ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
-
-  df %>%
-    dplyr::bind_rows(df_bau)
+  exec_scenario(df_this_ind,
+                          scenario_bau,
+                          params_bau)
 }
 
 #' Accelerate respond
@@ -207,6 +203,7 @@ accelerate_detect <- function(df,
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_respond <- function(df,
+                               scenario_name = "acceleration",
                                ...) {
 
   params <- get_dots_and_call_parameters(...) %>%
@@ -229,6 +226,7 @@ accelerate_respond <- function(df,
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_notify <- function(df,
+                              scenario_name = "acceleration",
                               ...) {
 
   params <- get_dots_and_call_parameters(...) %>%
@@ -251,6 +249,7 @@ accelerate_notify <- function(df,
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_detect_respond <- function(df,
+                                      scenario_name = "acceleration",
                                       ...) {
 
   params <- get_dots_and_call_parameters(...) %>%
@@ -293,6 +292,7 @@ accelerate_cholera_campaign <- function(df,
                                         ind_ids = billion_ind_codes("hep"),
                                         scenario_col = "scenario",
                                         default_scenario = "default",
+                                        scenario_name = "acceleration",
                                         ...) {
   this_ind <- ind_ids["cholera_campaign"]
 
@@ -450,13 +450,19 @@ accelerate_cholera_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_parameters(list(...), trim_values)
-  params[["upper_limit"]] <- Inf
-  params[["lower_limit"]] <- 0
-  params[["keep_better_values"]] <- TRUE
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(trim_values) %>%
+    set_parameters(
+      upper_limit = Inf,
+      lower_limit = 0,
+      keep_better_values = TRUE,
+      col = "scenario_value"
+    )
 
-  df_accelerated <- do.call(
-    trim_values, c(list(df = df_accelerated, col = "scenario_value"), params)
+  df_accelerated <- exec_scenario(
+    df_accelerated,
+    trim_values,
+    params
   )
 
   df %>%
@@ -495,6 +501,7 @@ accelerate_meningitis_campaign <- function(df,
                                            end_year = 2025,
                                            years_best_performance = 2015:2018,
                                            default_scenario = "default",
+                                           scenario_name = "scenario_name",
                                            ...) {
   this_ind <- as.character(ind_ids["meningitis_campaign"])
 
@@ -635,13 +642,19 @@ accelerate_meningitis_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_parameters(list(...), trim_values)
-  params[["upper_limit"]] <- Inf
-  params[["lower_limit"]] <- 0
-  params[["keep_better_values"]] <- TRUE
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(trim_values) %>%
+    set_parameters(
+      upper_limit = Inf,
+      lower_limit = 0,
+      keep_better_values = TRUE,
+      col = "scenario_value"
+    )
 
-  df_accelerated <- do.call(
-    trim_values, c(list(df = df_accelerated, col = "scenario_value"), params)
+  df_accelerated <- exec_scenario(
+    df_accelerated,
+    trim_values,
+    params
   )
 
   df %>%
@@ -669,6 +682,7 @@ accelerate_measles_routine <- function(df,
                                        ind_ids = billion_ind_codes("hep"),
                                        scenario_col = "scenario",
                                        default_scenario = "default",
+                                       scenario_name = "acceleration",
                                        ...) {
   this_ind <- ind_ids["measles_routine"]
 
@@ -678,20 +692,17 @@ accelerate_measles_routine <- function(df,
 
   assert_ind_start_end_year(df_this_ind, start_year = 2013, end_year = 2018, ind_ids = this_ind)
 
-  params_aroc_percent_change <- get_right_parameters(list(...), scenario_aroc)
-  params_aroc_percent_change["scenario_name"] <- "acceleration"
-  params_aroc_percent_change["aroc_type"] <- "percent_change"
-  params_aroc_percent_change["percent_change"] <- 20
-  params_aroc_percent_change["scenario_name"] <- "acceleration"
-  params_aroc_percent_change["baseline_year"] <- 2013
+  params_aroc_percent_change <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_aroc) %>%
+    set_parameters(
+      aroc_type = "percent_change",
+      percent_change = 20,
+      baseline_year = 2013
+    )
 
-  df_accelerated <- do.call(
-    scenario_aroc, c(list(df = df_this_ind), params_aroc_percent_change)
-  ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
-
-  df %>%
-    dplyr::bind_rows(df_accelerated)
+  exec_scenario(df_this_ind,
+                scenario_aroc,
+                params_aroc_percent_change)
 }
 
 #' Accelerate meningitis_routine
@@ -716,6 +727,7 @@ accelerate_meningitis_routine <- function(df,
                                           scenario_col = "scenario",
                                           start_year = 2018,
                                           default_scenario = "default",
+                                          scenario_name = "acceleration",
                                           ...) {
   this_ind <- ind_ids["meningitis_routine"]
 
@@ -738,20 +750,15 @@ accelerate_meningitis_routine <- function(df,
   this_ind_df <- this_ind_df %>%
     dplyr::left_join(target_df, by = c("iso3", "ind"))
 
-  params_fixed_target_col <- get_right_parameters(list(...), scenario_fixed_target_col)
-  params_fixed_target_col["scenario_name"] <- "acceleration"
-  params_fixed_target_col["target_col"] <- "target_col"
-  params_fixed_target_col["target_year"] <- 2030
-  params_fixed_target_col["upper_limit"] <- 99
+  params_fixed_target_col <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_fixed_target_col) %>%
+    set_parameters(target_col = "target_col",
+                   target_year = 2030,
+                   upper_limit = 99)
 
-  df_accelerated <- do.call(
-    scenario_fixed_target_col, c(list(df = this_ind_df), params_fixed_target_col)
-  ) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration") %>%
-    dplyr::select(-"target_col")
-
-  df %>%
-    dplyr::bind_rows(df_accelerated)
+  df_accelerated <- exec_scenario(this_ind_df,
+                                  scenario_fixed_target_col,
+                                  params_fixed_target_col)
 }
 
 #' Accelerate polio_routine
@@ -774,6 +781,7 @@ accelerate_polio_routine <- function(df,
                                      ind_ids = billion_ind_codes("hep"),
                                      scenario_col = "scenario",
                                      default_scenario = "default",
+                                     scenario_name = "acceleration",
                                      ...) {
   this_ind <- ind_ids["polio_routine"]
 
@@ -785,20 +793,17 @@ accelerate_polio_routine <- function(df,
 
   assert_ind_start_end_year(df_this_ind, start_year = 2015, end_year = 2018, ind_ids = this_ind)
 
-  params_aroc_percent_change <- get_right_parameters(params, scenario_aroc)
-  params_aroc_percent_change["scenario_name"] <- "acceleration"
-  params_aroc_percent_change["aroc_type"] <- "percent_change"
-  params_aroc_percent_change["percent_change"] <- 20
-  params_aroc_percent_change["scenario_name"] <- "acceleration"
-  params_aroc_percent_change["baseline_year"] <- 2015
+  params_aroc_percent_change <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_aroc) %>%
+    set_parameters(
+      aroc_type = "percent_change",
+      percent_change = 20,
+      baseline_year = 2015
+    )
 
   df_accelerated <- exec_scenario(df_this_ind,
                                   scenario_aroc,
-                                  params_aroc_percent_change) %>%
-    dplyr::filter(.data[[scenario_col]] == "acceleration")
-
-  df %>%
-    dplyr::bind_rows(df_accelerated)
+                                  params_aroc_percent_change)
 }
 
 #' Accelerate yellow_fever_campaign
@@ -831,6 +836,7 @@ accelerate_yellow_fever_campaign <- function(df,
                                              end_year = 2025,
                                              years_best_performance = 2015:2018,
                                              default_scenario = "default",
+                                             scenario_name = "acceleration",
                                              ...) {
   this_ind <- as.character(ind_ids["yellow_fever_campaign"])
 
@@ -963,17 +969,18 @@ accelerate_yellow_fever_campaign <- function(df,
     ) %>%
     dplyr::distinct()
 
-  params <- get_right_parameters(list(...), trim_values)
-  params[["upper_limit"]] <- Inf
-  params[["lower_limit"]] <- 0
-  params[["keep_better_values"]] <- TRUE
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(trim_values) %>%
+    set_parameters(
+      upper_limit = Inf,
+      lower_limit = 0,
+      keep_better_values = TRUE,
+      col = "scenario_value"
+    )
 
-  df_accelerated <- do.call(
-    trim_values, c(list(df = df_accelerated, col = "scenario_value"), params)
-  )
-
-  df %>%
-    dplyr::bind_rows(df_accelerated)
+  df_accelerated <- exec_scenario(df_accelerated,
+                                  trim_values,
+                                  params)
 }
 
 #' Accelerate yellow_fever_routine
@@ -992,6 +999,7 @@ accelerate_yellow_fever_campaign <- function(df,
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 accelerate_yellow_fever_routine <- function(df,
+                                            scenario_name = "acceleration",
                                             ...) {
 
   params <- get_dots_and_call_parameters(...) %>%

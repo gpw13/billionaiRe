@@ -8,7 +8,7 @@ add_scenario(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg",
+    "fixed_target_col", "bau", "acceleration", "accelerate_target", "sdg",
     "covid_rapid_return", "covid_delayed_return", "covid_sustained_disruption",
     "return_previous_trajectory"),
   ind_ids = billion_ind_codes("all"),
@@ -34,8 +34,8 @@ of the following:
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
 \item \code{bau}: calls \code{\link{scenario_bau}}
-\item \code{accelerate}: calls indicator accelerate function.
-\item \code{accelerate_target}: calls indicator accelerate function to specific
+\item \code{acceleration}: calls indicator acceleration function.
+\item \code{accelerate_target}: calls indicator acceleration function to specific
 targets.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}

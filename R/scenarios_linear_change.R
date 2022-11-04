@@ -158,7 +158,7 @@ scenario_linear_change_col <- function(df,
       start_year = start_year,
       end_year = end_year
     ) %>%
-    dplyr::select(-c("baseline_value"))
+    dplyr::select(- tidyselect::all_of(c("baseline_value", linear_value_col)))
 
   df %>%
     dplyr::bind_rows(scenario_linear_change_col_df)
