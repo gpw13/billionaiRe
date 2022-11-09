@@ -7,7 +7,7 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     iso3 = iso3,
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate_target", ind, bau_scenario = "default") %>%
+    add_scenario_indicator("accelerate_target", ind, bau_scenario = "default", start_scenario_last_default = FALSE) %>%
     dplyr::filter(scenario == "acceleration_target", year == 2025) %>%
     dplyr::pull(value)
 }
@@ -242,5 +242,5 @@ testthat::test_that("accelerate_target can be run on all UHC indicator:", {
       scenario == "default"
     )
 
-  testthat::expect_error(add_scenario(uhc_test_df, "accelerate_target", bau_scenario = "default"), NA)
+  testthat::expect_error(add_scenario(uhc_test_df, "accelerate_target", bau_scenario = "default", start_scenario_last_default = FALSE), NA)
 })

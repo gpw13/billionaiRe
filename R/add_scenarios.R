@@ -28,6 +28,9 @@
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams add_scenario_indicator
+#' @inheritParams accelerate_alcohol
+#'
 #'
 #' @return data frame with additional rows with scenario values.
 #' @export
@@ -52,25 +55,54 @@ add_scenario <- function(df,
                            "return_previous_trajectory"
                          ),
                          ind_ids = billion_ind_codes("all"),
+                         scenario_col = "scenario",
                          start_year = 2018,
                          end_year = 2025,
+                         default_scenario = "default",
+                         make_default = FALSE,
+                         start_scenario_last_default = TRUE,
                          ...) {
   assert_columns(df, "ind")
   scenario_function <- rlang::arg_match(scenario_function)
 
-  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids, paste0(c(
-    "espar[0-9].{0,3}",
-    "surviving_infants"
-  ),
-  collapse = "|"
-  ))]
+  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids,
+                                               paste0(c(
+                                                 "espar[0-9].{0,3}",
+                                                 "surviving_infants"
+                                               ),
+                                               collapse = "|"
+                                               ))]
+
+  if(default_scenario %in% unique(df[[scenario_col]])){
+    last_year_default_scenario <- get_last_year_default_scenario(df, default_scenario, scenario_col)
+  }else{
+    last_year_default_scenario <- end_year
+  }
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(scenario_function = scenario_function)
+
+  if(make_default){
+
+    params_make_default <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = last_year_default_scenario)
+
+    df <- exec_scenario(df,
+                        make_default_scenario,
+                        params_make_default)
+
+    params <- set_parameters(params,
+                             make_default = FALSE)
+  }
+
+  if(start_scenario_last_default){
+    params <- set_parameters(params,
+                             start_year = last_year_default_scenario)
+  }
 
   those_inds <- sub_set_inds[sub_set_inds %in% unique(df[["ind"]])]
 
   those_inds <- unique(stringr::str_remove_all(those_inds, "_num$|_denom$|_rural$|_urban$"))
-
-  params <- get_dots_and_call_parameters(...) %>%
-    set_parameters(scenario_function = scenario_function)
 
   furrr::future_map_dfr(
     those_inds,
@@ -91,6 +123,10 @@ add_scenario <- function(df,
 #' indicator specified and adds the scenario.
 #'
 #' @param indicator name of indicator to be passed to `scenario_function`
+#' @param make_default (Boolean) if `TRUE`, then `make_default_scenario` is used to
+#' generate the `default_scenario`
+#' @param start_scenario_last_default (Boolean) if `TRUE`, then the last year with values
+#' in the `default_scenario` is the starting point of the scenario, and not `start_year`.
 #' @param ... additional parameters to be passed to the add_scenario_indicator
 #' function (e.g. `add_scenario_adult_obese`).
 #'
@@ -126,6 +162,8 @@ add_scenario_indicator <- function(df,
                                    scenario_col = "scenario",
                                    default_scenario = "default",
                                    bau_scenario = "historical",
+                                   make_default = FALSE,
+                                   start_scenario_last_default = TRUE,
                                    ...) {
 
   params <-   get_dots_and_call_parameters(...) %>%
@@ -166,20 +204,33 @@ add_scenario_indicator <- function(df,
   params <- set_parameters(params,
                            scenario_name = scenario_name)
 
-  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-    "espar[0-9].{0,3}",
-    this_ind
-  ),
-  collapse = "|"
-  ))]
+  if(stringr::str_detect(this_ind, "espar")){
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      "espar[0-9].{0,3}",
+      this_ind
+    ),
+    collapse = "|"
+    ))]
+  }else{
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, this_ind)]
+  }
 
   this_ind_df <- df %>%
     dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
 
-  if (scenario_function == "accelerate") {
+  if(make_default){
 
-    assert_scenario_in_df(this_ind_df, c(default_scenario, bau_scenario), scenario_col)
+    params_make_default <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = get_last_year_default_scenario(df, default_scenario, scenario_col))
 
+    df <- exec_scenario(df,
+                        make_default_scenario,
+                        params_make_default)
+  }
+
+  if(start_scenario_last_default){
+    params <- set_parameters(params,
+                             start_year = get_last_year_default_scenario(df, default_scenario, scenario_col))
   }
 
   exec_scenario(this_ind_df,

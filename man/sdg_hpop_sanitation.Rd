@@ -9,6 +9,7 @@ sdg_hpop_sanitation(
   ind_ids = billion_ind_codes("hpop"),
   end_year = 2025,
   scenario_col = "scenario",
+  scenario_name = "sdg",
   ...
 )
 }
@@ -25,6 +26,8 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

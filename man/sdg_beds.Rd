@@ -8,6 +8,11 @@ sdg_beds(
   df,
   ind_ids = billion_ind_codes("uhc"),
   scenario_col = "scenario",
+  value_col = "value",
+  start_year = 2018,
+  default_scenario = "default",
+  bau_scenario = "historical",
+  scenario_name = "sdg",
   ...
 )
 }
@@ -23,6 +28,17 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{value_col}{Column name of column with indicator values.}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
+
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -35,8 +51,7 @@ Accelerate beds by first dividing countries into two groups:
 \item For countries with 18 or more beds for all years after 2018, business
 as usual is returned.
 \item For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-the best of business as usual and a \strong{linear change of 0.36 per year up to 2025},
-with an upper limit of 18, is returned.
+18 beds is targeted by 2025
 }
 }
 \details{

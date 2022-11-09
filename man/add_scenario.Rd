@@ -8,12 +8,16 @@ add_scenario(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "acceleration", "accelerate_target", "sdg",
+    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg",
     "covid_rapid_return", "covid_delayed_return", "covid_sustained_disruption",
     "return_previous_trajectory"),
   ind_ids = billion_ind_codes("all"),
+  scenario_col = "scenario",
   start_year = 2018,
   end_year = 2025,
+  default_scenario = "default",
+  make_default = FALSE,
+  start_scenario_last_default = TRUE,
   ...
 )
 }
@@ -34,8 +38,8 @@ of the following:
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
 \item \code{bau}: calls \code{\link{scenario_bau}}
-\item \code{acceleration}: calls indicator acceleration function.
-\item \code{accelerate_target}: calls indicator acceleration function to specific
+\item \code{accelerate}: calls indicator accelerate function.
+\item \code{accelerate_target}: calls indicator accelerate function to specific
 targets.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
@@ -49,9 +53,20 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+
+\item{default_scenario}{name of the default scenario to be used.}
+
+\item{make_default}{(Boolean) if \code{TRUE}, then \code{make_default_scenario} is used to
+generate the \code{default_scenario}}
+
+\item{start_scenario_last_default}{(Boolean) if \code{TRUE}, then the last year with values
+in the \code{default_scenario} is the starting point of the scenario, and not \code{start_year}.}
 
 \item{...}{additional arguments passed to \code{add_scenario_indicator}}
 }

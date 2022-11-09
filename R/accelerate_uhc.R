@@ -114,7 +114,9 @@ accelerate_anc4 <- function(df,
 accelerate_art <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
+                           value_col = "value",
                            start_year = 2018,
+                           end_year = 2025,
                            default_scenario = "default",
                            bau_scenario = "historical",
                            scenario_name = "acceleration",
@@ -532,11 +534,11 @@ accelerate_dtp3 <- function(df,
     dplyr::left_join(df_target_values, by = "iso3") %>%
     dplyr::mutate(
       "{scenario_name}" := dplyr::case_when(
-        .data[["year"]] > 2018 & .data[["year"]] <= 2020 ~ as.numeric(.data[["baseline_value"]]),
+        .data[["year"]] > start_year & .data[["year"]] <= 2020 ~ as.numeric(.data[["baseline_value"]]),
         .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
           as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[["year"]] - baseline_year - 1) / (target_year - baseline_year - 1)),
         .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
-        .data[["year"]] == 2018 ~ as.numeric(.data[[value_col]]),
+        .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
         TRUE ~ NA_real_
       )
     ) %>%
@@ -768,7 +770,8 @@ accelerate_itn <- function(df,
     dplyr::filter(.data[[scenario_col]] == "fixed_target")
 
   params_best_of <- get_right_parameters(params, scenario_best_of) %>%
-    set_parameters(scenario_names = c("business_as_usual", "fixed_target"))
+    set_parameters(scenario_names = c("business_as_usual", "fixed_target"),
+                   maximize_end_year = TRUE)
 
   df_accelerated <- dplyr::bind_rows(df_fixed_target, df_bau) %>%
     exec_scenario(
@@ -938,8 +941,8 @@ accelerate_uhc_sanitation <- function(df,
                                       ...) {
   this_ind <- ind_ids["uhc_sanitation"]
 
-  params <- list(...)
-  params <- get_right_parameters(params, scenario_quantile) %>%
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_quantile) %>%
     set_parameters(keep_better_values = TRUE,
                    n = 5,
                    quantile_year = 2017,

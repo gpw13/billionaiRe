@@ -1,4 +1,4 @@
-get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
+get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia", start_scenario_last_default = FALSE) {
   tibble::tibble(
     value = values,
     year = 2010:2030,
@@ -7,8 +7,17 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     iso3 = iso3,
     scenario = "default"
   ) %>%
+    dplyr::mutate(scenario = dplyr::case_when(
+      start_scenario_last_default & year > 2021 ~ "historical",
+      TRUE ~ scenario
+    ),
+    type = dplyr::case_when(
+      start_scenario_last_default & year > 2021 ~ "projected",
+      TRUE ~ type
+    )) %>%
     add_scenario_indicator("accelerate", ind,
-                           bau_scenario = "default") %>%
+                           bau_scenario = "default",
+                           start_scenario_last_default = start_scenario_last_default) %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 }
@@ -35,6 +44,12 @@ testthat::test_that(paste0("accelerate_anc4 returns accurate values:"), {
 
   # No reported data, so bau result is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
+    get_fixed_target(95, 71,2021, 2030)
+  )
+
 })
 
 # art ----------------------------
@@ -56,6 +71,12 @@ testthat::test_that(paste0("accelerate_art returns accurate values:"), {
 
   # No reported data, so bau result is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
+    get_fixed_target(90.25, 68, 2019, 2025)
+  )
+
 })
 
 # beds ----------------------------
@@ -75,6 +96,12 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
   # Beds in 2018 (= 17) < 18 so linear change of 0.36/yr but exceeds 18 by 2025
   # so scenario_linear_change is capped at 18. BAU of 18.75 is better, so BAU is returned.
   testthat::expect_equal(get_2025_value(seq(from = 15, by = 0.25, length.out = 21), ind, "reported"), 18.75)
+
+  testthat::expect_equal(
+    get_2025_value(seq(from = 5, by = 0.25, length.out = 21), ind, "reported", start_scenario_last_default = TRUE),
+    get_linear_change(0.36, 7.75, 2021)
+  )
+
 })
 
 # bp ----------------------------
@@ -103,6 +130,11 @@ testthat::test_that("accelerate_bp returns accurate values:", {
   # No reported data, so bau result is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
 
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
+    get_fixed_target(80, 68, 2018, 2030)
+  )
+
 })
 
 # doctors ----------------------------
@@ -112,6 +144,14 @@ testthat::test_that(paste0("accelerate_doctors returns accurate values:"), {
 
   # Doctors returns BAU in all cases
   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
+
+  testthat::expect_equal(get_2025_value(60:80, ind, "imputed"), 75)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
+    71
+  )
+
 })
 
 # nurses ----------------------------
@@ -121,6 +161,12 @@ testthat::test_that(paste0("accelerate_nurses returns accurate values:"), {
 
   # Nurses returns BAU in all cases
   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
+
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
+    71
+  )
+
 })
 
 # hwf ----------------------------
@@ -136,7 +182,7 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
     scenario = "default"
   ) %>%
-    add_scenario_indicator("accelerate", ind, bau_scenario = "default") %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "default", start_scenario_last_default = FALSE) %>%
     dplyr::filter(scenario == "acceleration")
 
   # testalia is less than 2018 global median so linear change of 4.54/yr from 2018 to 2025
@@ -156,6 +202,25 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     dplyr::filter(df_acceleration, iso3 == "testina", year == 2025) %>% dplyr::pull(value),
     75
   )
+
+  df_acceleration <- tibble::tibble(
+    value = c(20:40, 40:60, 60:80),
+    year = rep(2010:2030, 3),
+    ind = ind,
+    type = "reported",
+    iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
+    scenario = rep(c(rep("default", 12), rep("historical", 9)),3)
+  ) %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "historical", start_scenario_last_default = TRUE) %>%
+    dplyr::filter(scenario == "acceleration")
+
+
+  testthat::expect_equal(
+    dplyr::filter(df_acceleration, iso3 == "testalia", year == 2025) %>%
+      dplyr::pull(value),
+    get_linear_change(4.54, 31, 2021)
+  )
+
 })
 
 # dtp3 ----------------------------
@@ -167,6 +232,8 @@ testthat::test_that(paste0("accelerate_dtp3 returns accurate values:"), {
 
   # Verify that function can be run without errors or messages.
   testthat::expect_error(get_2025_value(60:80, ind, "reported", iso3 = "AFG"), NA)
+  testthat::expect_error(get_2025_value(60:80, ind, "reported", iso3 = "AFG", start_scenario_last_default = TRUE), NA)
+
 })
 
 # fh ----------------------------
@@ -179,6 +246,12 @@ testthat::test_that(paste0("accelerate_fh returns accurate values:"), {
 
   # small_is_best = TRUE so lower BAU value (= 65) is returned
   testthat::expect_equal(get_2025_value(80:60, ind, "reported"), 65)
+
+  # small_is_best = TRUE so halt_rise stops upward trend at 2018 value (= 68)
+  testthat::expect_equal(get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE), 68)
+
+  # small_is_best = TRUE so lower BAU value (= 69) is returned
+  testthat::expect_equal(get_2025_value(80:60, ind, "reported", start_scenario_last_default = TRUE), 69)
 })
 
 # fp ----------------------------
@@ -208,6 +281,8 @@ testthat::test_that(paste0("accelerate_fp returns accurate values:"), {
 
   # CYP is one of exclude_countries so BAU is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "reported", "CYP"), 75)
+  testthat::expect_equal(get_2025_value(60:80, ind, "reported", "CYP", start_scenario_last_default = TRUE), 71)
+
 })
 
 # fpg ----------------------------
@@ -217,6 +292,10 @@ testthat::test_that(paste0("accelerate_fpg returns accurate values:"), {
 
   testthat::expect_equal(
     get_2025_value(60:80, ind, "reported"),
+    60
+  )
+  testthat::expect_equal(
+    get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
     60
   )
 })
@@ -233,6 +312,11 @@ testthat::test_that(paste0("accelerate_itn returns accurate values:"), {
   testthat::expect_equal(
     get_2025_value(20:40, ind, "reported"),
     get_fixed_target(80, 28, 2018, 2030)
+  )
+
+  testthat::expect_equal(
+    get_2025_value(20:40, ind, "reported", start_scenario_last_default = TRUE),
+    get_fixed_target(80, 31, 2021, 2030)
   )
 })
 
@@ -262,6 +346,28 @@ testthat::test_that(paste0("accelerate_pneumo returns accurate values:"), {
     35
   )
 
+  # BAU is better than fixed target
+  testthat::expect_equal(get_2025_value(80:100, ind, "reported", start_scenario_last_default = TRUE), 91)
+
+  # Fixed target of 3 by 2025 (= 43) is better  than BAU (= 35)
+  testthat::expect_equal(
+    get_2025_value(20:40, ind, "reported", start_scenario_last_default = TRUE),
+    get_linear_change(3, 31, 2021, 2025)
+  )
+
+  # When BAU starts above 90, BAU is kepts
+  testthat::expect_equal(get_2025_value(80:100, ind, "reported", start_scenario_last_default = TRUE), 91)
+
+  # Cap progress to 90
+  testthat::expect_equal(get_2025_value(70:90, ind, "reported", start_scenario_last_default = TRUE), 90)
+
+  # Returns BAU when all values are 'projected'
+  testthat::expect_equal(
+    get_2025_value(20:40, ind, "projected", start_scenario_last_default = TRUE),
+    31
+  )
+
+
 })
 
 # tb ----------------------------
@@ -271,6 +377,8 @@ testthat::test_that(paste0("accelerate_tb returns accurate values:"), {
 
   # Fixed target of 90 by 2025
   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 90)
+  testthat::expect_equal(get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE), 90)
+
 })
 
 # uhc_sanitation ----------------------------
@@ -281,6 +389,8 @@ testthat::test_that(paste0("accelerate_uhc_sanitation returns accurate values:")
 
   # Verify that function can be run without errors or messages.
   testthat::expect_error(get_2025_value(60:80, ind, "reported"), NA)
+  testthat::expect_error(get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE), NA)
+
 })
 
 # uhc_tobacco ----------------------------
@@ -293,10 +403,15 @@ testthat::test_that(paste0("accelerate_uhc_tobacco returns accurate values:"), {
 
   # TODO: Hard to test for countries with routine (estimated) data due to external dependencies
   # testthat::expect_equal(get_2025_value(60:80, ind, "estimated"), 75)
+
+  testthat::expect_equal(get_2025_value(60:80, ind, "imputed", start_scenario_last_default = TRUE),71)
+
 })
 
 testthat::test_that("accelerate can be run on all UHC indicator:", {
-  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+  uhc_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
+
+  classic_test_df <- uhc_test_df %>%
     dplyr::mutate(scenario = dplyr::case_when(
       .data[["scenario"]] == "default" ~ "pre_covid_trajectory",
       TRUE ~ .data[["scenario"]]
@@ -309,5 +424,22 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
       scenario == "default"
     )
 
-  testthat::expect_error(add_scenario(uhc_test_df, "accelerate", bau_scenario = "default"), NA)
+  testthat::expect_error(add_scenario(classic_test_df, "accelerate", bau_scenario = "default",
+                                      start_scenario_last_default = FALSE), NA)
+
+
+  testthat::expect_error(uhc_test_df %>%
+                           dplyr::filter(ind %in% billion_ind_codes("uhc"), !stringr::str_detect(ind, "espar")) %>%
+                           make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory", end_year = 2021) %>%
+                           dplyr::filter(dplyr::case_when(
+                             scenario == "default" & year > 2021 ~ FALSE,
+                             TRUE ~ TRUE
+                           )) %>%
+                           add_scenario("accelerate",
+                                        bau_scenario = "pre_covid_trajectory",
+                                        start_scenario_last_default = TRUE,
+                                        default_scenario = "default",
+                                        billion = "uhc"),
+                         NA)
+
 })

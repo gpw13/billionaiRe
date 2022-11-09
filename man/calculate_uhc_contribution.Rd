@@ -19,7 +19,8 @@ calculate_uhc_contribution(
   scenario_covid_shock = "covid_shock",
   scenario_reference_infilling = "reference_infilling",
   ind_ids = billion_ind_codes("uhc", include_calculated = TRUE, include_subindicators =
-    TRUE)
+    TRUE),
+  default_scenario = "default"
 )
 }
 \arguments{
@@ -56,6 +57,8 @@ calculating contributions on data in long format rather than wide format.}
 Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
+
+\item{default_scenario}{name of the default scenario.}
 }
 \value{
 Data frame in long format.

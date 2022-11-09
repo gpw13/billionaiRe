@@ -7,6 +7,8 @@
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams recycle_data
+#' @inheritParams scenario_percent_baseline
+#' @inherit accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -16,6 +18,7 @@ accelerate_espar <- function(df,
                              ind_ids = billion_ind_codes("hep"),
                              scenario_col = "scenario",
                              start_year = 2018,
+                             baseline_year = 2018,
                              end_year = 2025,
                              default_scenario = "default",
                              scenario_name = "acceleration",
@@ -54,7 +57,7 @@ accelerate_espar <- function(df,
     dplyr::select(dplyr::all_of(c("ind", "iso3", "year", value_col))) %>%
     dplyr::filter(
       .data[["ind"]] == ind_ids["espar"],
-      .data[["year"]] %in% start_year:last_year_reported,
+      .data[["year"]] %in% baseline_year:last_year_reported,
       !is.na(.data[[value_col]])
     ) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
@@ -79,7 +82,7 @@ accelerate_espar <- function(df,
     dplyr::mutate(region = whoville::iso3_to_regions(.data[["iso3"]])) %>%
     dplyr::filter(
       !is.na(.data[["region"]]),
-      .data[["year"]] >= start_year
+      .data[["year"]] >= baseline_year
     ) %>%
     dplyr::mutate(
       is_cat = dplyr::if_else(.data[["ind"]] %in% espar_cat, TRUE, FALSE),
@@ -102,7 +105,7 @@ accelerate_espar <- function(df,
     dplyr::filter(.data[["is_sub_cat"]])
 
   espar_sub_target <- tidyr::expand_grid("iso3" := whoville::who_member_states(),
-    "ind" := unique(espar_regional[["ind"]])
+                                         "ind" := unique(espar_regional[["ind"]])
   ) %>%
     dplyr::mutate(region = whoville::iso3_to_regions(.data[["iso3"]])) %>%
     dplyr::left_join(espar_year_complete_sub_cat, by = c("iso3", "ind", "region")) %>%
@@ -126,14 +129,14 @@ accelerate_espar <- function(df,
     dplyr::select("iso3", "ind", "target") %>%
     dplyr::full_join(baseline_year_espar, by = "iso3") %>%
     dplyr::mutate(baseline = dplyr::case_when(
-      is.na(.data[["baseline"]]) ~ as.numeric(start_year),
+      is.na(.data[["baseline"]]) ~ as.numeric(baseline_year),
       TRUE ~ as.numeric(.data[["baseline"]])
     ))
 
   espar_df <- df %>%
     dplyr::filter(
       .data[["ind"]] == "espar",
-      .data[["year"]] >= start_year
+      .data[["year"]] >= baseline_year
     ) %>%
     dplyr::left_join(espar_target, by = c("iso3", "ind"))
 
@@ -181,15 +184,16 @@ accelerate_detect <- function(df,
   this_ind <- ind_ids["detect"]
 
   df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind,
-                  .data[[scenario_col]] == bau_scenario)
+    dplyr::filter(.data[["ind"]] == this_ind)
 
   params_bau <- get_dots_and_call_parameters(...) %>%
     get_right_parameters(scenario_bau)
 
-  exec_scenario(df_this_ind,
-                          scenario_bau,
-                          params_bau)
+  df_accelerated <- exec_scenario(df_this_ind,
+                scenario_bau,
+                params_bau)
+
+  dplyr::bind_rows(df, df_accelerated)
 }
 
 #' Accelerate respond
@@ -199,6 +203,7 @@ accelerate_detect <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
+#' @inherit accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -222,6 +227,7 @@ accelerate_respond <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
+#' @inherit accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -242,6 +248,7 @@ accelerate_notify <- function(df,
 #'
 #' Accelerate detect_respond by taking the business as usual.
 #'
+#' @inherit accelerate_alcohol
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
@@ -520,7 +527,7 @@ accelerate_meningitis_campaign <- function(df,
       "iso3" = as.character("iso3")
     ))) %>%
     tidyr::pivot_longer(-"iso3",
-      names_to = c("year", "ind"), values_to = "planned_campaign_values", names_pattern = "([0-9]{4})_(.*)"
+                        names_to = c("year", "ind"), values_to = "planned_campaign_values", names_pattern = "([0-9]{4})_(.*)"
     ) %>%
     dplyr::mutate(
       !!sym("planned_campaign_values") := dplyr::case_when(
@@ -756,9 +763,10 @@ accelerate_meningitis_routine <- function(df,
                    target_year = 2030,
                    upper_limit = 99)
 
-  df_accelerated <- exec_scenario(this_ind_df,
-                                  scenario_fixed_target_col,
-                                  params_fixed_target_col)
+  exec_scenario(this_ind_df,
+                scenario_fixed_target_col,
+                params_fixed_target_col) %>%
+    dplyr::select(-"target_col")
 }
 
 #' Accelerate polio_routine
@@ -816,14 +824,15 @@ accelerate_polio_routine <- function(df,
 #' vaccination coverage achieved, or if not available by taking the best historical
 #' coverage across all countries in 2018.
 #'
-#' Planned campaigns are the planned campaingns targets provided by WHO technical
-#' programs based on member states planifications.
+#' Planned campaigns are the planned campaigns targets provided by WHO technical
+#' programs based on member states planification.
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams accelerate_meningitis_campaign
 #' @inheritParams accelerate_child_viol
+#' @inheritParams accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -994,6 +1003,7 @@ accelerate_yellow_fever_campaign <- function(df,
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is

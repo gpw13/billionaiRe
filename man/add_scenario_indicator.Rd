@@ -8,7 +8,7 @@ add_scenario_indicator(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "acceleration", "accelerate_target", "sdg",
+    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg",
     "covid_rapid_return", "covid_sustained_disruption", "covid_delayed_return",
     "covid_never_return", "return_previous_trajectory"),
   indicator,
@@ -16,6 +16,8 @@ add_scenario_indicator(
   scenario_col = "scenario",
   default_scenario = "default",
   bau_scenario = "historical",
+  make_default = FALSE,
+  start_scenario_last_default = TRUE,
   ...
 )
 }
@@ -36,8 +38,8 @@ of the following:
 \item \code{fixed_target}: calls \code{\link{scenario_fixed_target}}
 \item \code{fixed_target_col}: calls \code{\link{scenario_fixed_target_col}}
 \item \code{bau}: calls \code{\link{scenario_bau}}
-\item \code{acceleration}: calls indicator acceleration function.
-\item \code{accelerate_target}: calls indicator acceleration function to specific
+\item \code{accelerate}: calls indicator accelerate function.
+\item \code{accelerate_target}: calls indicator accelerate function to specific
 targets.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
@@ -60,6 +62,12 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
+
+\item{make_default}{(Boolean) if \code{TRUE}, then \code{make_default_scenario} is used to
+generate the \code{default_scenario}}
+
+\item{start_scenario_last_default}{(Boolean) if \code{TRUE}, then the last year with values
+in the \code{default_scenario} is the starting point of the scenario, and not \code{start_year}.}
 
 \item{...}{additional parameters to be passed to the add_scenario_indicator
 function (e.g. \code{add_scenario_adult_obese}).}

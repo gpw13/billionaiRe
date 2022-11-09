@@ -4,11 +4,13 @@
 \alias{accelerate_yellow_fever_routine}
 \title{Accelerate yellow_fever_routine}
 \usage{
-accelerate_yellow_fever_routine(df, ...)
+accelerate_yellow_fever_routine(df, scenario_name = "acceleration", ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

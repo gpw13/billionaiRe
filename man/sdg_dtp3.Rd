@@ -4,30 +4,11 @@
 \alias{sdg_dtp3}
 \title{Accelerate dtp3 to SDG target}
 \usage{
-sdg_dtp3(
-  df,
-  ind_ids = billion_ind_codes("uhc"),
-  scenario_col = "scenario",
-  start_year = 2018,
-  end_year = 2025,
-  ...
-)
+sdg_dtp3(df, ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
-
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

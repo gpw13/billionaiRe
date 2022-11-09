@@ -7,7 +7,7 @@ get_right_parameters <- function(params, fn) {
 }
 
 get_dots_and_call_parameters <- function(...,
-                             remove_df = TRUE){
+                                         remove_df = TRUE){
   dots <- rlang::list2(...)
 
   fn_formals_names <- rlang::fn_fmls_names(rlang::caller_fn())
@@ -15,7 +15,13 @@ get_dots_and_call_parameters <- function(...,
   call_parameters <- rlang::call_args(rlang::caller_call()) %>%
     purrr::discard(rlang::is_missing)
 
-  call_parameters <- call_parameters[call_parameters != "..."] %>%
+  call_parameters <- call_parameters %>%
+    purrr::discard(function(x)
+      if(is.symbol(x)){
+        sum(x == "...") > 0
+      }else{
+        FALSE
+      }) %>%
     name_call_parameters(fn_formals_names) %>%
     purrr::map_if(is.call, rlang::eval_tidy)
 
@@ -40,7 +46,7 @@ get_dots_and_call_parameters <- function(...,
 
 name_call_parameters <- function(call_parameters, fn_formals_names){
 
-  for(i in seq_along(call_parameters)){
+  for(i in 1:length(call_parameters)){
     if(nchar(names(call_parameters)[i]) == 0 && call_parameters[[i]] != "..."){
       names(call_parameters)[i] <- fn_formals_names[i]
     }

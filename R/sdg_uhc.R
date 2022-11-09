@@ -6,6 +6,7 @@
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario` is
@@ -17,6 +18,7 @@ sdg_anc4 <- function(df,
                      bau_scenario = "historical",
                      scenario_name = "acceleration_target",
                      ind_ids = billion_ind_codes("uhc"),
+                     end_year = 2030,
                      ...) {
 
   this_ind <- ind_ids["anc4"]
@@ -98,6 +100,7 @@ sdg_anc4 <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #'
 sdg_art <- function(df,
+                    end_year = 2030,
                     ...) {
 
   params <- get_dots_and_call_parameters(...)
@@ -218,9 +221,14 @@ sdg_bp <- function(df,
                    ...) {
   params <- get_dots_and_call_parameters(...)
 
+  params_fixed_target <- get_right_parameters(params, scenario_fixed_target) %>%
+    set_parameters(
+      target_value = 80,
+      target_year = 2030)
+
   exec_scenario(df,
-                accelerate_bp,
-                params)
+                scenario_fixed_target,
+                params_fixed_target)
 }
 
 #' Accelerate doctors to SDG target

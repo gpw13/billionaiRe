@@ -4,19 +4,11 @@
 \alias{sdg_fpg}
 \title{Accelerate fpg to SDG target}
 \usage{
-sdg_fpg(df, ind_ids = billion_ind_codes("uhc"), scenario_col = "scenario", ...)
+sdg_fpg(df, ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -25,7 +17,7 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fpg using the business as usual scenario.
+Accelerate fpg by halting the rise to 2010 value.
 }
 \details{
 Runs:

@@ -49,18 +49,38 @@ sdg_adult_obese <- function(df,
 #' Then picks the best result between the three scenarios.
 #'
 #' @inherit sdg_adult_obese
+#' @inheritParams accelerate_alcohol
 #'
 sdg_alcohol <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
                         scenario_col = "scenario",
+                        default_scenario = "default",
                         ...) {
 
-  params <- get_dots_and_call_parameters(...)
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_fixed_target_col) %>%
+    set_parameters(
+      target_col = "target",
+    )
 
-  exec_scenario(df,
-                accelerate_alcohol,
-                params
-                )
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == ind_ids["alcohol"])
+
+  df_this_ind_default <- df_this_ind %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+  neg_10_targets <- df_this_ind_default %>%
+    dplyr::filter(.data[["year"]] == 2010) %>%
+    dplyr::mutate(target = .data[["value"]] * (100 - 10) / 100) %>%
+    dplyr::select("iso3", "ind", "target")
+
+  df_perc_baseline <- df_this_ind_default %>%
+    dplyr::left_join(neg_10_targets, by = c("iso3", "ind"))
+
+  exec_scenario(df_perc_baseline,
+                scenario_fixed_target_col,
+                params) %>%
+    dplyr::select(-"target")
 }
 
 #' Accelerate child_obese to SDG target
@@ -145,10 +165,13 @@ sdg_fuel <- function(df,
                      ind_ids = billion_ind_codes("hpop"),
                      scenario_col = "scenario",
                      ...) {
-  params <- get_dots_and_call_parameters(...)
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_fixed_target) %>%
+    set_parameters(target_year = 2030,
+                   target_value = 95)
 
   exec_scenario(df,
-                accelerate_fuel,
+                scenario_fixed_target,
                 params)
 }
 
@@ -241,12 +264,67 @@ sdg_hpop_tobacco <- function(df,
                              scenario_col = "scenario",
                              start_year = 2018,
                              end_year = 2025,
+                             default_scenario = "default",
+                             value_col = "value",
                              ...) {
+
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
-                accelerate_hpop_tobacco,
-                params)
+  this_ind <- ind_ids["hpop_tobacco"]
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  df_this_ind_default <- df_this_ind %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+  full_df <- tidyr::expand_grid(
+    "iso3" := unique(df_this_ind_default[["iso3"]]),
+    "year" := start_year:end_year,
+    "ind" := this_ind,
+    "{scenario_col}" := unique(df_this_ind_default[[scenario_col]])
+  )
+
+  assert_ind_start_end_year(df_this_ind_default,
+                            start_year = 2010, end_year = 2018,
+                            ind_ids = ind_ids[this_ind], scenario_col = scenario_col
+  )
+
+  df_scenario_percent_baseline <- df_this_ind_default %>%
+    dplyr::full_join(full_df, by = (c("iso3", "year", "ind", scenario_col))) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::mutate(
+      has_estimates = any(.data[["type"]] %in% c("estimated", "reported")),
+      baseline_value = .data[[value_col]][.data[["year"]] == start_year],
+      old_baseline_value = .data[[value_col]][.data[["year"]] == 2010]
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
+      "{scenario_col}" := params[["scenario_name"]],
+      scenario_value = dplyr::if_else(
+        .data[["year"]] >= start_year & .data[["year"]] <= 2025 & .data[["has_estimates"]],
+        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
+        NA_real_
+      ),
+      "type_" := dplyr::if_else(
+        is.na(.data[["type"]]) & .data[["year"]] >= start_year,
+        "projected",
+        .data[["type"]])
+    ) %>%
+    dplyr::select(-c("baseline_value", "goalend", "old_baseline_value", "has_estimates", "type_")) %>%
+    trim_values(
+      col = "scenario_value",
+      trim = TRUE,
+      small_is_best = params[["small_is_best"]],
+      keep_better_values = FALSE,
+      upper_limit = 100,
+      lower_limit = 0,
+      trim_years = TRUE
+    )
+
+  df %>%
+    dplyr::bind_rows(df_scenario_percent_baseline)
 }
 
 #' Accelerate ipv to SDG target
@@ -301,7 +379,6 @@ sdg_overweight <- function(df,
 #'
 #' Runs:
 #'
-#'  - `scenario_bau(df, small_is_best = TRUE,...)`
 #'  - `scenario_linear_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)`
 #'
 #' Then picks the best result between the two scenarios.
@@ -317,7 +394,7 @@ sdg_pm25 <- function(df,
 
   params <- get_dots_and_call_parameters(...) %>%
     get_right_parameters(scenario_fixed_target) %>%
-    set_parameters(target_value = 10,
+    set_parameters(target_value = 5,
                    target_year = 2030)
 
   df_this_ind <- df %>%
@@ -347,11 +424,16 @@ sdg_road <- function(df,
                      scenario_col = "scenario",
                      ...) {
 
-  params <- get_dots_and_call_parameters(...)
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_percent_baseline) %>%
+    set_parameters(percent_change = -50,
+                   target_year = 2030,
+                   baseline_year = 2020)
 
   exec_scenario(df,
-                accelerate_road,
+                scenario_percent_baseline,
                 params)
+
 }
 
 #' Accelerate stunting to SDG target
@@ -371,13 +453,22 @@ sdg_road <- function(df,
 sdg_stunting <- function(df,
                          ind_ids = billion_ind_codes("hpop"),
                          scenario_col = "scenario",
+                         default_scenario,
                          ...) {
 
-  params <- get_dots_and_call_parameters(...)
+  df_this_ind_default <- df %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  exec_scenario(df,
-                accelerate_stunting,
-                params)
+  params_aroc <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_aroc) %>%
+    set_parameters(aroc_type = "percent_change",
+                   percent_change = -50,
+                   baseline_year = 2012,
+                   target_year = 2030)
+
+  exec_scenario(df_this_ind_default,
+                scenario_aroc,
+                params_aroc)
 }
 
 #' Accelerate suicide to SDG targets
@@ -397,13 +488,32 @@ sdg_stunting <- function(df,
 sdg_suicide <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
                         scenario_col = "scenario",
+                        default_scenario = "default",
                         ...) {
+  this_ind <- ind_ids["suicide"]
 
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
-                accelerate_suicide,
-                params)
+  params_percent_baseline <- get_right_parameters(params, scenario_percent_baseline) %>%
+    set_parameters(
+      percent_change = -33.333,
+      baseline_year = 2015,
+      target_year = 2030
+    )
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  df_this_ind_default <- df_this_ind %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+
+  df_percent_baseline <- exec_scenario(df_this_ind_default,
+                                       scenario_percent_baseline,
+                                       params_percent_baseline)%>%
+    dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_percent_baseline)
 }
 
 #' Accelerate transfats to SDG targets
@@ -442,17 +552,33 @@ sdg_transfats <- function(df,
 #' Then picks the best result between the three scenarios.
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_child_viol
 sdg_wasting <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
-                        end_year = 2025,
+                        start_year = 2018,
                         scenario_col = "scenario",
+                        default_scenario = "default",
                         ...) {
 
-  params <- get_dots_and_call_parameters(...)
+  df_this_ind_default <-df %>%
+    dplyr::filter(.data[["ind"]] == ind_ids["wasting"], .data[["year"]] >= 2008) %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  exec_scenario(df,
-                accelerate_wasting,
-                params)
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_aroc) %>%
+    set_parameters(
+      aroc_type = "target",
+      target_year = 2030,
+      target_value = 3,
+      baseline_year = start_year
+    )
+
+  df_sdg <- exec_scenario(df_this_ind_default,
+                          scenario_aroc,
+                          params) %>%
+    dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_sdg)
 }
 
 #' Accelerate water to SDG target

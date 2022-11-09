@@ -55,6 +55,7 @@ accelerate_adult_obese <- function(df,
 #' @param default_scenario name of the default scenario.
 #' @param bau_scenario name of scenario to be used for business as usual.
 #' Default is `historical`.
+#' @param scenario_name name of scenario
 #' @param ... additional parameters to be passed to scenario function
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
@@ -78,9 +79,6 @@ accelerate_alcohol <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
   assert_ind_start_end_year(df_this_ind_default,
                             start_year = 2010, end_year = 2018,
                             ind_ids = ind_ids[this_ind], scenario_col = scenario_col
@@ -102,7 +100,7 @@ accelerate_alcohol <- function(df,
       target_year = end_year
     )
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -334,8 +332,7 @@ accelerate_fuel <- function(df,
     params_bau <- get_right_parameters(params, "scenario_bau")
 
     high_income_df <- this_ind_df %>%
-      dplyr::filter(.data[["wb_ig"]] == "HIC",
-                    .data[[scenario_col]] == bau_scenario)
+      dplyr::filter(.data[["wb_ig"]] == "HIC")
 
     high_income <- exec_scenario(high_income_df,
                                  scenario_bau,
@@ -518,17 +515,17 @@ accelerate_hpop_tobacco <- function(df,
     dplyr::full_join(full_df, by = (c("iso3", "year", "ind", scenario_col))) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::mutate(
-      has_estimates = any(.data[["type"]] == "estimated"),
+      has_estimates = any(.data[["type"]] %in% c("estimated", "reported")),
       baseline_value = .data[[value_col]][.data[["year"]] == start_year],
       old_baseline_value = .data[[value_col]][.data[["year"]] == 2010]
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (2025 - 2010),
+      goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
       "{scenario_col}" := "-30_2020",
       scenario_value = dplyr::if_else(
         .data[["year"]] >= start_year & .data[["year"]] <= 2025 & .data[["has_estimates"]],
-        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - 2018) / (end_year - start_year),
+        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
         NA_real_
       ),
       "type_" := dplyr::if_else(
@@ -550,15 +547,12 @@ accelerate_hpop_tobacco <- function(df,
   params_bau <- get_right_parameters(params, scenario_bau) %>%
     set_parameters(scenario_name = "business_as_usual")
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
   params_halt_rise <- get_right_parameters(params, scenario_halt_rise) %>%
     set_parameters(baseline_year = 2018,
                    scenario_name = "halt_rise",
                    target_year = end_year)
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -656,13 +650,11 @@ accelerate_overweight <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
 
   df_aroc <- exec_scenario(df_this_ind_default, scenario_aroc, params_aroc) %>%
     dplyr::filter(.data[[scenario_col]] == "aroc_target")
 
-  df_bau <- exec_scenario(df_this_ind_bau, scenario_bau, params_bau) %>%
+  df_bau <- exec_scenario(df_this_ind, scenario_bau, params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
 
   df_binded <- df_aroc %>%
@@ -714,9 +706,6 @@ accelerate_pm25 <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
   linear_value_df <- df_this_ind_default %>%
     dplyr::filter(.data[["year"]] == 2018) %>%
     dplyr::mutate(linear_value = .data[[value_col]] * -0.02) %>%
@@ -736,7 +725,7 @@ accelerate_pm25 <- function(df,
       scenario_name = "business_as_usual"
     )
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -805,9 +794,6 @@ accelerate_road <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
   assert_ind_start_end_year(df_this_ind_default,
                             start_year = 2018, end_year = 2020,
                             ind_ids = ind_ids[this_ind], scenario_col = scenario_col
@@ -821,7 +807,7 @@ accelerate_road <- function(df,
   params_bau <- get_right_parameters(params, scenario_bau) %>%
     set_parameters(scenario_name = "business_as_usual")
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -895,9 +881,6 @@ accelerate_stunting <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
-
   assert_ind_start_end_year(df_this_ind_default,
                             start_year = 2012, end_year = 2018,
                             ind_ids = this_ind, scenario_col = scenario_col
@@ -914,7 +897,7 @@ accelerate_stunting <- function(df,
                                 params_halt) %>%
     dplyr::filter(.data[[scenario_col]] == "halt_rise")
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -987,8 +970,6 @@ accelerate_suicide <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  df_this_ind_bau <- df_this_ind %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario)
 
   assert_ind_start_end_year(df_this_ind_default,
                             start_year = 2015, end_year = 2018,
@@ -1005,7 +986,7 @@ accelerate_suicide <- function(df,
                                 params_halt) %>%
     dplyr::filter(.data[[scenario_col]] == "halt_rise")
 
-  df_bau <- exec_scenario(df_this_ind_bau,
+  df_bau <- exec_scenario(df_this_ind,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -1069,7 +1050,7 @@ accelerate_transfats <- function(df,
 #' Accelerate wasting
 #'
 #' Accelerate wasting by picking the best results between halt downwards trend
-#' from 2018, and AROC by 3% by 2030.
+#' from `start_year`, and AROC by 3% by 2030.
 #'
 #' Runs:
 #'
@@ -1085,6 +1066,7 @@ accelerate_transfats <- function(df,
 accelerate_wasting <- function(df,
                                ind_ids = billion_ind_codes("hpop"),
                                end_year = 2025,
+                               start_year = 2018,
                                scenario_col = "scenario",
                                default_scenario = "default",
                                bau_scenario = "historical",
@@ -1099,7 +1081,8 @@ accelerate_wasting <- function(df,
       aroc_type = "target",
       target_year = 2030,
       target_value = 3,
-      scenario_name = "aroc_target"
+      scenario_name = "aroc_target",
+      baseline_year = start_year
     )
 
   df_this_ind <- df %>%
@@ -1108,23 +1091,23 @@ accelerate_wasting <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  has_2018_value <- df_this_ind_default %>%
+  has_start_year_value <- df_this_ind_default %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
-    dplyr::filter(.data[["year"]] == 2018, .data[["ind"]] == this_ind)
+    dplyr::filter(.data[["year"]] == start_year, .data[["ind"]] == this_ind)
 
-  no_2018_value <- df_this_ind_default %>%
-    dplyr::filter(!.data[["iso3"]] %in% unique(has_2018_value$iso3))
+  no_start_year_value <- df_this_ind_default %>%
+    dplyr::filter(!.data[["iso3"]] %in% unique(has_start_year_value$iso3))
 
-  if(nrow(no_2018_value) > 0){
-    last_reported <- no_2018_value %>%
+  if(nrow(no_start_year_value) > 0){
+    last_reported <- no_start_year_value %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind",scenario_col)))) %>%
-      dplyr::filter(.data[["year"]] <= 2018) %>%
+      dplyr::filter(.data[["year"]] <= start_year) %>%
       get_last_value() %>%
       dplyr::mutate(type = "imputed",
-                    year = 2018,
+                    year = start_year,
                     "{scenario_col}" := default_scenario)
   }else{
-    last_reported <- no_2018_value
+    last_reported <- no_start_year_value
   }
 
   df_this_ind_default <- dplyr::bind_rows(df_this_ind_default, last_reported) %>%

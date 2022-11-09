@@ -4,19 +4,11 @@
 \alias{sdg_fp}
 \title{Accelerate fp to SDG target}
 \usage{
-sdg_fp(df, ind_ids = billion_ind_codes("uhc"), scenario_col = "scenario", ...)
+sdg_fp(df, ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -25,13 +17,7 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fp by dividing the countries into two groups:
-\itemize{
-\item For BRN, CYP, FSM, ISL, LUX, and SYC, return business as usual.
-\item For all other countries, take the best of business as usual and the quantile
-target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
-value in 2018).
-}
+Accelerate fp by returning to business as usual, as there are no globally agreed target.
 }
 \details{
 Runs:

@@ -13,6 +13,7 @@ accelerate_hpop_tobacco(
   end_year = 2025,
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -38,6 +39,8 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

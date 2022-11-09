@@ -19,7 +19,7 @@
 scenario_best_of <- function(df,
                              scenario_names,
                              value_col = "value",
-                             maximize_end_year = FALSE,
+                             maximize_end_year = TRUE,
                              start_year = 2018,
                              end_year = 2025,
                              target_year = end_year,
@@ -159,10 +159,11 @@ scenario_bau <- function(df,
                          lower_limit = 0,
                          trim_years = TRUE,
                          ind_ids = billion_ind_codes("all"),
-                         bau_scenario = "default") {
+                         bau_scenario = "historical",
+                         default_scenario = "default") {
 
   scenario_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == bau_scenario,
+    dplyr::filter(.data[[scenario_col]] %in% c(bau_scenario, default_scenario),
                   !is.na(.data[[value_col]]))
 
   assert_columns(scenario_df, scenario_col, value_col)
@@ -171,8 +172,9 @@ scenario_bau <- function(df,
     "year" := start_year:end_year,
     "iso3" := unique(df[["iso3"]]),
     "ind" := unique(df[["ind"]]),
-    "{scenario_col}" := bau_scenario
-  )
+    "{scenario_col}" := c(bau_scenario, default_scenario)
+  ) %>%
+    dplyr::distinct()
 
   if(only_reported_estimated){
     scenario_df <- scenario_df %>%
@@ -184,11 +186,14 @@ scenario_bau <- function(df,
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col)) %>%
       dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+      dplyr::mutate(start_value = .data[[value_col]][.data[["year"]] == start_year & .data[[scenario_col]] == default_scenario])%>%
+      dplyr::filter(.data[[scenario_col]] == bau_scenario) %>%
       dplyr::mutate(
         last_year = max(.data[["year"]][!is.na(.data[[value_col]])], na.rm = TRUE),
         last_value = .data[[value_col]][.data[["year"]] == .data[["last_year"]]],
         baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year),
         "{value_col}" := dplyr::case_when(
+          !is.na(.data[["start_value"]]) & .data[["year"]] == start_year ~ .data[["start_value"]],
           is.na(.data[[value_col]]) & .data[["year"]] > .data[["last_year"]] ~ .data[["last_value"]],
           TRUE ~ .data[[value_col]]
         ),
@@ -198,7 +203,7 @@ scenario_bau <- function(df,
           TRUE ~ .data[[value_col]]
         )
       ) %>%
-      dplyr::select(-c("last_value", "last_year", "baseline_value"))
+      dplyr::select(-c("last_value", "last_year", "baseline_value", "start_value"))
   }else{
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col))

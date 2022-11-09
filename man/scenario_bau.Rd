@@ -20,7 +20,8 @@ scenario_bau(
   lower_limit = 0,
   trim_years = TRUE,
   ind_ids = billion_ind_codes("all"),
-  bau_scenario = "default"
+  bau_scenario = "historical",
+  default_scenario = "default"
 )
 }
 \arguments{
@@ -74,6 +75,8 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
+
+\item{default_scenario}{name of the default scenario to be used.}
 }
 \value{
 Dataframe with scenario rows

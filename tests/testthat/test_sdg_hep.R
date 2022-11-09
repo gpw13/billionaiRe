@@ -11,7 +11,8 @@ test_sdg_hep <- function(ind) {
     df_add_indicator <- add_scenario_indicator(df,
       indicator = ind,
       scenario_function = "sdg",
-      bau_scenario = "default"
+      bau_scenario = "default",
+      start_scenario_last_default = FALSE
     )
     df_add_indicator <- df_add_indicator %>%
       dplyr::filter(scenario == "sdg", year <= 2025, year >= 2018) %>%

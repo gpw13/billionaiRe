@@ -10,6 +10,8 @@ sdg_hpop_tobacco(
   scenario_col = "scenario",
   start_year = 2018,
   end_year = 2025,
+  default_scenario = "default",
+  value_col = "value",
   ...
 )
 }
@@ -28,6 +30,10 @@ calculating contributions on data in long format rather than wide format.}
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{value_col}{Column name of column with indicator values.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

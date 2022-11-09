@@ -13,6 +13,7 @@ accelerate_yellow_fever_campaign(
   end_year = 2025,
   years_best_performance = 2015:2018,
   default_scenario = "default",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -39,6 +40,8 @@ best performance should be found.}
 
 \item{default_scenario}{name of the default scenario.}
 
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }
 \value{
@@ -55,6 +58,6 @@ vaccination coverage achieved, or if not available by taking the best historical
 coverage across all countries in 2018.
 }
 \details{
-Planned campaigns are the planned campaingns targets provided by WHO technical
-programs based on member states planifications.
+Planned campaigns are the planned campaigns targets provided by WHO technical
+programs based on member states planification.
 }

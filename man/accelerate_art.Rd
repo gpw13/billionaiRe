@@ -8,9 +8,12 @@ accelerate_art(
   df,
   ind_ids = billion_ind_codes("uhc"),
   scenario_col = "scenario",
+  value_col = "value",
   start_year = 2018,
+  end_year = 2025,
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -26,12 +29,18 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{value_col}{Name of the column containing indicator value in \code{df}.}
+
 \item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{default_scenario}{name of the default scenario.}
 
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

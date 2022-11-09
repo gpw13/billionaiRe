@@ -8,7 +8,7 @@ scenario_best_of(
   df,
   scenario_names,
   value_col = "value",
-  maximize_end_year = FALSE,
+  maximize_end_year = TRUE,
   start_year = 2018,
   end_year = 2025,
   target_year = end_year,

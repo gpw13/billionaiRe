@@ -106,6 +106,7 @@ calculate_fixed_target <- function(target_value,
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value <= target_value ~
         as.numeric(baseline_value),
+      year > target_year ~ target_value,
       TRUE ~ NA_real_
     )
   } else {
@@ -114,6 +115,7 @@ calculate_fixed_target <- function(target_value,
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value >= target_value ~
         as.numeric(baseline_value),
+      year > target_year ~ target_value,
       TRUE ~ NA_real_
     )
   }

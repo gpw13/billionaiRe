@@ -23,7 +23,8 @@ calculate_uhc_contribution <- function(df,
                                        scenario_reported_estimated = "routine",
                                        scenario_covid_shock = "covid_shock",
                                        scenario_reference_infilling = "reference_infilling",
-                                       ind_ids = billion_ind_codes("uhc", include_calculated = TRUE, include_subindicators = TRUE)) {
+                                       ind_ids = billion_ind_codes("uhc", include_calculated = TRUE, include_subindicators = TRUE),
+                                       default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", scenario_col, transform_value_col)
   assert_same_length(transform_value_col, contribution_col)
   assert_same_length(contribution_col, contribution_pct_col)
@@ -59,16 +60,31 @@ calculate_uhc_contribution <- function(df,
   )
 
   df <- billionaiRe_add_columns(df, c(contribution_col, contribution_pct_col), NA_real_) %>%
-    dplyr::mutate("_population_temp" := wppdistro::get_population(.data[["iso3"]], year = pop_year)) %>%
-    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col))))
+    dplyr::mutate("_population_temp" := wppdistro::get_population(.data[["iso3"]], year = pop_year))
 
   for (i in 1:length(contribution_col)) {
+
+    if(!is.null(scenario_col)){
+      df <- df %>%
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+        dplyr::mutate(
+          baseline_value = .data[[transform_value_col[i]]][.data[["year"]] == start_year & .data[[scenario_col]] == default_scenario]
+        )
+    }else{
+      df <- df %>%
+        dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+        dplyr::mutate(
+          baseline_value = .data[[transform_value_col[i]]][.data[["year"]] == start_year]
+        )
+    }
+
     df <- df %>%
+      dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind", scenario_col)))) %>%
       dplyr::mutate(
         !!sym(contribution_pct_col[i]) := dplyr::case_when(
           !(.data[["ind"]] %in% ind_ids) ~ .data[[contribution_pct_col[i]]],
           !(.data[["year"]] %in% end_year) ~ .data[[contribution_pct_col[i]]],
-          TRUE ~ (.data[[transform_value_col[i]]] - .data[[transform_value_col[i]]][.data[["year"]] == !!start_year])
+          TRUE ~ (.data[[transform_value_col[i]]] - .data[["baseline_value"]])
         ),
         !!sym(contribution_col[i]) := dplyr::case_when(
           !(.data[["ind"]] %in% ind_ids) ~ .data[[contribution_col[i]]],
@@ -82,6 +98,6 @@ calculate_uhc_contribution <- function(df,
     df <- dplyr::bind_rows(df, df_base_scenario)
   }
 
-  dplyr::select(df, -"_population_temp") %>%
+  dplyr::select(df, -c("_population_temp", "baseline_value")) %>%
     dplyr::ungroup()
 }

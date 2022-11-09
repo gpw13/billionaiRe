@@ -366,6 +366,13 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
     dplyr::filter(.data[["year"]] == max(.data[["year"]]))
 }
 
+get_last_year_default_scenario <- function(df, default_scenario, scenario_col = "scenario", type_filter = c("reported", "estimated")){
+  df %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
+    dplyr::summarise(max_year = max(.data[["year"]])) %>%
+    dplyr::pull(.data[["max_year"]])
+}
+
 exec_scenario <- function(df, fn, parameters){
   rlang::exec(
     fn,
