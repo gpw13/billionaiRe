@@ -32,9 +32,11 @@ scenario_best_of <- function(df,
                              lower_limit = 0,
                              trim_years = TRUE,
                              ind_ids = billion_ind_codes("all")) {
+
+  this_ind <- unique(df[["ind"]])
   assert_columns(df, "year", "iso3", "ind", scenario_col, value_col)
   assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
-  assert_ind_start_end_year(df, value_col, target_year, target_year, scenario_col, ind_ids = ind_ids[unique(df[["ind"]])])
+  assert_ind_start_end_year(df, value_col, target_year, target_year, scenario_col, ind_ids = this_ind)
 
   best <- df %>%
     dplyr::filter(.data[["year"]] == target_year) %>%
@@ -162,16 +164,23 @@ scenario_bau <- function(df,
                          bau_scenario = "historical",
                          default_scenario = "default") {
 
+  indicator <- unique(df[["ind"]]) %>%
+    stringr::str_remove_all(paste0(c("espar[0-9]{2}_[0-9]{2}$", "espar[0-9]{2}$"), collapse = "|")) %>%
+    unique()
+
+  indicator <- indicator[indicator != ""]
+
   scenario_df <- df %>%
     dplyr::filter(.data[[scenario_col]] %in% c(bau_scenario, default_scenario),
-                  !is.na(.data[[value_col]]))
+                  !is.na(.data[[value_col]]),
+                  .data[["ind"]] %in% indicator)
 
   assert_columns(scenario_df, scenario_col, value_col)
 
   full_years <- tidyr::expand_grid(
     "year" := start_year:end_year,
     "iso3" := unique(df[["iso3"]]),
-    "ind" := unique(df[["ind"]]),
+    "ind" := indicator,
     "{scenario_col}" := c(bau_scenario, default_scenario)
   ) %>%
     dplyr::distinct()

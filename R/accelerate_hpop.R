@@ -11,7 +11,6 @@
 #' set to `acceleration`
 accelerate_adult_obese <- function(df,
                                    ind_ids = billion_ind_codes("hpop"),
-                                   end_year = 2025,
                                    scenario_col = "scenario",
                                    default_scenario = "default",
                                    scenario_name = "acceleration",
@@ -34,9 +33,12 @@ accelerate_adult_obese <- function(df,
                             ind_ids = ind_ids["adult_obese"], scenario_col = scenario_col
   )
 
-  exec_scenario(df_this_ind,
+  df_accelerated <- exec_scenario(df_this_ind,
                 scenario_halt_rise,
-                params)
+                params) %>%
+    dplyr::filter(.data[[scenario_col]] %in% params["scenario_name"])
+
+  dplyr::bind_rows(df, df_accelerated)
 }
 
 #' Accelerate alcohol
@@ -222,9 +224,12 @@ accelerate_child_viol <- function(df,
     ) %>%
     get_right_parameters(scenario_fixed_target)
 
-  exec_scenario(df_this_ind,
+  df_accelerated <- exec_scenario(df_this_ind,
                 scenario_fixed_target,
-                params)
+                params) %>%
+    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_accelerated)
 }
 
 #' Accelerate devontrack
@@ -286,13 +291,16 @@ accelerate_devontrack <- function(df,
     set_parameters(
       target_value = 80,
       target_year = 2030,
-      start_year = 2018
+      start_year = start_year
     ) %>%
     get_right_parameters(scenario_fixed_target)
 
-  exec_scenario(df_this_ind,
+  df_accelerated <- exec_scenario(df_this_ind,
                 scenario_fixed_target,
-                params)
+                params) %>%
+    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_accelerated)
 }
 
 #' Accelerate fuel
@@ -897,7 +905,7 @@ accelerate_stunting <- function(df,
                                 params_halt) %>%
     dplyr::filter(.data[[scenario_col]] == "halt_rise")
 
-  df_bau <- exec_scenario(df_this_ind,
+  df_bau <- exec_scenario(df,
                           scenario_bau,
                           params_bau) %>%
     dplyr::filter(.data[[scenario_col]] == "business_as_usual")
@@ -1041,9 +1049,12 @@ accelerate_transfats <- function(df,
     set_parameters(target_value = 100,
                    target_year = 2025)
 
-  exec_scenario(df_this_ind_default,
+  df_accelerated <- exec_scenario(df_this_ind_default,
                 scenario_fixed_target,
-                params_target)
+                params_target) %>%
+    dplyr::filter(.data[[scenario_col]] %in% params_target[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_accelerated)
 
 }
 

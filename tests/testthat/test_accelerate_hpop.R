@@ -352,7 +352,7 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-                                             indicator = "hpop_sanitation",
+                                             indicator = ind,
                                              scenario_function = "accelerate",
                                              bau_scenario = "default",
                                              start_scenario_last_default = FALSE)
@@ -368,13 +368,13 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
   df <- tibble::tibble(
     value = 60:80,
     year = 2010:2030,
-    ind = "hpop_sanitation",
+    ind = ind,
     iso3 = "testalia",
     scenario = "default"
   )
 
   df_add_indicator <- add_scenario_indicator(df,
-                                             indicator = "hpop_sanitation",
+                                             indicator = ind,
                                              scenario_function = "accelerate",
                                              bau_scenario = "default",
                                              start_scenario_last_default = FALSE)

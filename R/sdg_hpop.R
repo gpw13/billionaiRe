@@ -77,10 +77,13 @@ sdg_alcohol <- function(df,
   df_perc_baseline <- df_this_ind_default %>%
     dplyr::left_join(neg_10_targets, by = c("iso3", "ind"))
 
-  exec_scenario(df_perc_baseline,
+  df_sdg <- exec_scenario(df_perc_baseline,
                 scenario_fixed_target_col,
                 params) %>%
-    dplyr::select(-"target")
+    dplyr::select(-"target") %>%
+    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_sdg)
 }
 
 #' Accelerate child_obese to SDG target
@@ -130,6 +133,7 @@ sdg_child_viol <- function(df,
 #'  - `scenario_fixed_target(df, target_value = 80, target_year = 2030, small_is_best = FALSE,...)`,
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams calculate_hpop_contributions
 #'
 sdg_devontrack <- function(df,
                            ind_ids = billion_ind_codes("hpop"),
@@ -184,6 +188,8 @@ sdg_fuel <- function(df,
 #'  - `scenario_fixed_target(df, target_value = 95,target_year = 2030, small_is_best = FALSE)`
 #'
 #' @inherit accelerate_adult_obese
+#' @inheritParams calculate_hpop_contributions
+#'
 sdg_hpop_sanitation <- function(df,
                                 ind_ids = billion_ind_codes("hpop"),
                                 end_year = 2025,
@@ -193,17 +199,50 @@ sdg_hpop_sanitation <- function(df,
 
   this_ind <- ind_ids["hpop_sanitation"]
 
-  params <- get_dots_and_call_parameters(...) %>%
+  params <- get_dots_and_call_parameters(...)
+
+  params_95_2030 <- params %>%
     get_right_parameters(scenario_fixed_target) %>%
     set_parameters(target_year = 2030,
-                   target_value = 95)
+                   target_value = 95,
+                   scenario_name = "95_2030")
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
-  exec_scenario(df_this_ind,
-                scenario_fixed_target,
-                params)
+  df_95_2030 <- exec_scenario(df_this_ind,
+                              scenario_fixed_target,
+                              params_95_2030) %>%
+    dplyr::filter(.data[[scenario_col]] == "95_2030")
+
+
+  params_bau <- get_right_parameters(params, scenario_bau) %>%
+    set_parameters(scenario_name = "business_as_usual")
+
+  df_bau <- exec_scenario(df_this_ind,
+                          scenario_bau,
+                          params_bau) %>%
+    dplyr::filter(.data[[scenario_col]] == "business_as_usual")
+
+  df_binded <- df_95_2030 %>%
+    dplyr::bind_rows(df_bau)
+
+  params_best_of <- get_right_parameters(params, scenario_best_of) %>%
+    set_parameters(
+      scenario_names = c(
+        "95_2030",
+        "business_as_usual"
+      )
+    )
+
+  df_sdg <- exec_scenario(df_binded,
+                          scenario_best_of,
+                          params_best_of) %>%
+    dplyr::filter(.data[[scenario_col]] == params["scenario_name"])
+
+  df %>%
+    dplyr::bind_rows(df_sdg)
+
 }
 
 #' Accelerate hpop_sanitation_rural to SDG target
@@ -303,7 +342,7 @@ sdg_hpop_tobacco <- function(df,
       goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
       "{scenario_col}" := params[["scenario_name"]],
       scenario_value = dplyr::if_else(
-        .data[["year"]] >= start_year & .data[["year"]] <= 2025 & .data[["has_estimates"]],
+        .data[["year"]] >= start_year & .data[["year"]] <= end_year & .data[["has_estimates"]],
         .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
         NA_real_
       ),
@@ -320,7 +359,9 @@ sdg_hpop_tobacco <- function(df,
       keep_better_values = FALSE,
       upper_limit = 100,
       lower_limit = 0,
-      trim_years = TRUE
+      trim_years = TRUE,
+      end_year = end_year,
+      start_year = start_year
     )
 
   df %>%
@@ -466,9 +507,12 @@ sdg_stunting <- function(df,
                    baseline_year = 2012,
                    target_year = 2030)
 
-  exec_scenario(df_this_ind_default,
+  df_sdg <- exec_scenario(df_this_ind_default,
                 scenario_aroc,
-                params_aroc)
+                params_aroc) %>%
+    dplyr::filter(.data[[scenario_col]] %in% params_aroc[["scenario_name"]])
+
+  dplyr::bind_rows(df, df_sdg)
 }
 
 #' Accelerate suicide to SDG targets
@@ -540,13 +584,10 @@ sdg_transfats <- function(df,
 
 #' Accelerate wasting to SDG targets
 #'
-#' Accelerate wasting by picking the best results between business as usual,
-#' halt downwards trend from 2018, and AROC by 3% by 2030.
+#' Accelerate wasting by picking AROC by 3% by 2030.
 #'
 #' Runs:
 #'
-#'  - `scenario_bau(df, small_is_best = TRUE,...)`
-#'  - `scenario_halt_rise(df, small_is_best = TRUE,...)`
 #'  - `scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)`
 #'
 #' Then picks the best result between the three scenarios.
@@ -560,22 +601,72 @@ sdg_wasting <- function(df,
                         default_scenario = "default",
                         ...) {
 
+  this_ind <- ind_ids["wasting"]
+
   df_this_ind_default <-df %>%
-    dplyr::filter(.data[["ind"]] == ind_ids["wasting"], .data[["year"]] >= 2008) %>%
+    dplyr::filter(.data[["ind"]] == this_ind, .data[["year"]] >= 2008) %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  params <- get_dots_and_call_parameters(...) %>%
+  params <- get_dots_and_call_parameters(...)
+
+  params_aroc <- params %>%
     get_right_parameters(scenario_aroc) %>%
     set_parameters(
       aroc_type = "target",
       target_year = 2030,
       target_value = 3,
-      baseline_year = start_year
+      baseline_year = start_year,
+      scenario_name = "3_2030"
     )
 
-  df_sdg <- exec_scenario(df_this_ind_default,
-                          scenario_aroc,
-                          params) %>%
+  has_start_year_value <- df_this_ind_default %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
+    dplyr::filter(.data[["year"]] == start_year, .data[["ind"]] == this_ind)
+
+  no_start_year_value <- df_this_ind_default %>%
+    dplyr::filter(!.data[["iso3"]] %in% unique(has_start_year_value$iso3))
+
+  if(nrow(no_start_year_value) > 0){
+    last_reported <- no_start_year_value %>%
+      dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind",scenario_col)))) %>%
+      dplyr::filter(.data[["year"]] <= start_year) %>%
+      get_last_value() %>%
+      dplyr::mutate(type = "imputed",
+                    year = start_year,
+                    "{scenario_col}" := default_scenario)
+  }else{
+    last_reported <- no_start_year_value
+  }
+
+  df_this_ind_default <- dplyr::bind_rows(df_this_ind_default, last_reported) %>%
+    dplyr::distinct()
+
+  df_3_2030 <- exec_scenario(df_this_ind_default,
+                             scenario_aroc,
+                             params_aroc) %>%
+    dplyr::filter(.data[[scenario_col]] == params_aroc[["scenario_name"]])
+
+  params_bau <- get_right_parameters(params, scenario_bau) %>%
+    set_parameters(scenario_name  = "bau",
+                   bau_scenario = "default")
+
+  df_bau <- exec_scenario(df_this_ind_default,
+                          scenario_bau,
+                          params_bau) %>%
+    dplyr::filter(.data[[scenario_col]] == params_bau["scenario_name"])
+
+  df_binded <- df_3_2030 %>%
+    dplyr::bind_rows(df_bau)
+
+  params_best_of <- get_right_parameters(params, scenario_best_of) %>%
+    set_parameters(scenario_names = c(
+      "3_2030",
+      "bau"
+    ))
+
+  df_sdg <- exec_scenario(df_binded,
+                          scenario_best_of,
+                          params_best_of) %>%
     dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
 
   dplyr::bind_rows(df, df_sdg)

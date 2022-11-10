@@ -18,12 +18,13 @@ get_dots_and_call_parameters <- function(...,
   call_parameters <- call_parameters %>%
     purrr::discard(function(x)
       if(is.symbol(x)){
-        sum(x == "...") > 0
+        sum(x == "...", x == ".") > 0
       }else{
         FALSE
       }) %>%
     name_call_parameters(fn_formals_names) %>%
     purrr::map_if(is.call, rlang::eval_tidy)
+
 
   fn_formals <- rlang::fn_fmls(rlang::caller_fn())
   fn_formals <- fn_formals[names(fn_formals) != "..."] %>%

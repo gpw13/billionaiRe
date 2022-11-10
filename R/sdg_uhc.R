@@ -282,7 +282,8 @@ sdg_hwf <- function(df,
                     ...) {
 
   params <- get_dots_and_call_parameters(...) %>%
-    get_right_parameters(scenario_bau)
+    get_right_parameters(scenario_bau) %>%
+    set_parameters(upper_limit = 10000)
 
   exec_scenario(df,
                 scenario_bau,

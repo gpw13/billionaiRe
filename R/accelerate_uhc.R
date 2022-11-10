@@ -1135,7 +1135,8 @@ accelerate_uhc_tobacco <- function(df,
     df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_perc_baseline_final) %>%
       exec_scenario(scenario_best_of,
                     params_best_of) %>%
-      dplyr::filter(.data[[scenario_col]] == scenario_name)
+      dplyr::filter(.data[[scenario_col]] == scenario_name) %>%
+      dplyr::select(-c("agestd", "crude", "ratio_agestd_over_crude"))
 
   } else {
     df_with_data_accelerated <- tibble::tibble()

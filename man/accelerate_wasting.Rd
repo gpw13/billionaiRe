@@ -25,7 +25,7 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+\item{end_year}{End year for scenario, defaults to 2025}
 
 \item{start_year}{Start year for scenario, defaults to 2018.}
 

@@ -173,6 +173,29 @@ add_scenario_indicator <- function(df,
 
   this_ind <- ind_ids[indicator]
 
+  if(stringr::str_detect(this_ind, "espar")){
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      "espar[0-9].{0,3}",
+      glue::glue("^{this_ind}$")
+    ),
+    collapse = "|"
+    ))]
+  }else {
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      glue::glue("^{this_ind}$"),
+      glue::glue("^{this_ind}_num$"),
+      glue::glue("^{this_ind}_denom$"),
+      glue::glue("^{this_ind}_urban$"),
+      glue::glue("^{this_ind}_rural$")
+    ),
+    collapse = "|"
+    ))]
+  }
+
+  this_ind_df <- df %>%
+    dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
+
+
   if (!scenario_col %in% names(df)) {
     billionaiRe_add_columns(df, scenario_col, NA)
   }
@@ -181,8 +204,20 @@ add_scenario_indicator <- function(df,
 
   if(scenario_function %in% c("accelerate", "sdg", "accelerate_target")){
     if (scenario_function == "sdg" & this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
+
       scenario_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
       params <- get_right_parameters(params, scenario_fn)
+
+      if(stringr::str_detect(this_ind, "_campaign")){
+
+        this_ind_df <- exec_scenario(this_ind_df,
+                                     transform_hep_data,
+                                     params)
+
+        params <- set_parameters(params, value_col = "transform_value")
+        this_ind_df <- this_ind_df %>%
+          transform_hep_data(scenario_col = scenario_col,)
+      }
     }else{
       scenario_fn <- get(glue::glue("{scenario_function}_{this_ind}"), mode = "function")
     }
@@ -203,20 +238,6 @@ add_scenario_indicator <- function(df,
 
   params <- set_parameters(params,
                            scenario_name = scenario_name)
-
-  if(stringr::str_detect(this_ind, "espar")){
-    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-      "espar[0-9].{0,3}",
-      this_ind
-    ),
-    collapse = "|"
-    ))]
-  }else{
-    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, this_ind)]
-  }
-
-  this_ind_df <- df %>%
-    dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
 
   if(make_default){
 
