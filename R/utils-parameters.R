@@ -10,32 +10,13 @@ get_dots_and_call_parameters <- function(...,
                                          remove_df = TRUE){
   dots <- rlang::list2(...)
 
-  fn_formals_names <- rlang::fn_fmls_names(rlang::caller_fn())
-
-  call_parameters <- rlang::call_args(rlang::caller_call()) %>%
-    purrr::discard(rlang::is_missing)
-
-  call_parameters <- call_parameters %>%
-    purrr::discard(function(x)
-      if(is.symbol(x)){
-        sum(x == "...", x == ".") > 0
-      }else{
-        FALSE
-      }) %>%
-    name_call_parameters(fn_formals_names) %>%
-    purrr::map_if(is.call, rlang::eval_tidy)
-
-
-  fn_formals <- rlang::fn_fmls(rlang::caller_fn())
-  fn_formals <- fn_formals[names(fn_formals) != "..."] %>%
-    purrr::map_if(is.call, rlang::eval_tidy)
+  params <- rlang::env_clone(rlang::caller_env()) %>%
+    rlang::env_unbind("...") %>%
+    as.list()
 
   if(remove_df){
-    call_parameters <- call_parameters[names(call_parameters) != "df"]
-    fn_formals <- fn_formals[names(fn_formals) != "df"]
+    params <- params[names(params) != "df"]
   }
-
-  params <- c(call_parameters, fn_formals)[!duplicated(c(names(call_parameters), names(fn_formals)), fromLast = FALSE)]
 
   if(!purrr::is_empty(dots)){
     set_parameters(params, !!!dots)

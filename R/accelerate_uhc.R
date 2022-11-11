@@ -248,15 +248,19 @@ accelerate_beds <- function(df,
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
 
-  df_with_scenario <- df_this_ind %>%
+  iso3_with_scenario <- df_this_ind %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::filter(any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::pull(.data[["iso3"]]) %>%
+    unique()
+
+  df_with_scenario <- df_this_ind %>%
+    dplyr::filter(.data[["iso3"]] %in% iso3_with_scenario)
 
   df_no_scenario <- df_this_ind %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(!any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
-    dplyr::ungroup()
+    dplyr::filter(!.data[["iso3"]] %in% iso3_with_scenario)
 
   if (nrow(df_no_scenario) > 0) {
 

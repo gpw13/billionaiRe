@@ -85,7 +85,8 @@ add_scenario <- function(df,
   if(make_default){
 
     params_make_default <- get_right_parameters(params, make_default_scenario) %>%
-      set_parameters(end_year = last_year_default_scenario)
+      set_parameters(end_year = last_year_default_scenario,
+                     scenario = default_scenario)
 
     df <- exec_scenario(df,
                         make_default_scenario,
