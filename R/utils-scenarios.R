@@ -48,13 +48,13 @@ trim_values <- function(df,
         ),
         !!sym(value_col) := dplyr::case_when(
           baseline_col != value_col
-            & small_is_best
-            & .data[["better_value"]] < lower_limit
-            & .data[[baseline_col]] < lower_limit ~ as.numeric(.data[[baseline_col]]),
+          & small_is_best
+          & .data[["better_value"]] < lower_limit
+          & .data[[baseline_col]] < lower_limit ~ as.numeric(.data[[baseline_col]]),
           baseline_col != value_col
-            & !small_is_best
-            & (.data[["better_value"]] > upper_limit)
-            & .data[[baseline_col]] > upper_limit ~ as.numeric(.data[[baseline_col]]),
+          & !small_is_best
+          & (.data[["better_value"]] > upper_limit)
+          & .data[[baseline_col]] > upper_limit ~ as.numeric(.data[[baseline_col]]),
           .data[["better_value"]] < lower_limit ~ as.numeric(lower_limit),
           .data[["better_value"]] > upper_limit ~ as.numeric(upper_limit),
           TRUE ~ as.numeric(.data[["better_value"]])
@@ -138,7 +138,7 @@ calculate_aarc <- function(baseline_year,
   # if(baseline_value == 0){
   #   baseline_value
   # }else{
-    ((end_value / baseline_value))^(1 / (end_year - baseline_year)) - 1
+  ((end_value / baseline_value))^(1 / (end_year - baseline_year)) - 1
   # }
 }
 
@@ -307,7 +307,7 @@ flat_extrapolation <- function(df,
       fn <- NULL
     }
     df <- dplyr::arrange(df, dplyr::across(dplyr::all_of(sort_col), fn),
-      .by_group = TRUE
+                         .by_group = TRUE
     )
   }
 
@@ -380,4 +380,34 @@ exec_scenario <- function(df, fn, parameters){
     !!!parameters
   ) %>%
     dplyr::distinct()
+}
+
+fill_cols_scenario <- function(df,
+                               scenario_col = "scenario",
+                               cols = list("type",
+                                        "source",
+                                        "use_dash",
+                                        "use_calc"),
+                               values = list("projected",
+                                          glue::glue("WHO DDI interim infilling and projections, {format(Sys.Date(), '%B %Y')}"),
+                                          TRUE,
+                                          TRUE)){
+
+  assert_same_length(cols, values)
+
+  values <- setNames(values, cols) %>%
+    purrr::discard(!unlist(cols) %in% names(df))
+
+  if(length(values) > 0 ){
+    for(i in 1:length(values)){
+
+      col <- names(values)[i]
+      df <- df %>%
+        dplyr::mutate("{col}" := dplyr::case_when(
+        is.na(.data[[col]]) ~ values[[i]],
+        TRUE ~ .data[[col]])
+      )
+    }
+  }
+  return(df)
 }

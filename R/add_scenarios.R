@@ -257,6 +257,7 @@ add_scenario_indicator <- function(df,
 
   exec_scenario(this_ind_df,
                 scenario_fn,
-                params)
+                params) %>%
+    fill_cols_scenario(scenario_col = scenario_col)
 }
 
