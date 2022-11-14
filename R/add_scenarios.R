@@ -18,7 +18,7 @@
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
 #' - `bau`: calls \code{\link{scenario_bau}}
 #' - `accelerate`: calls indicator accelerate function.
-#' - `accelerate_target`: calls indicator accelerate function to specific
+#' - `accelerate_target`: calls indicator accelerate function to specified
 #'   targets.
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}

@@ -268,7 +268,7 @@ get_quantile <- function(value, n) {
 
 #' Flat extrapolation
 #'
-#' @param df Data frame of model data.#'
+#' @param df Data frame of model data
 #' @param col Name of column to extrapolate/interpolate.
 #' @param group_col Column name(s) of group(s) to use in [dplyr::group_by()] when
 #'     supplying type, calculating mean absolute scaled error on data involving
@@ -342,6 +342,11 @@ simple_extrap <- function(x) {
 }
 
 
+#' Remove unwanted scenarios from df
+#'
+#' @param df (data.frame) containing the data. Needs to have at least the `scenario_col` column
+#' @param unwanted_scenarios character vector of scenarios to be remove
+#' @inherit recycle_data_scenario_single
 remove_unwanted_scenarios <- function(df,
                                       scenario_col = "scenario",
                                       unwanted_scenarios) {
@@ -360,19 +365,43 @@ remove_unwanted_scenarios <- function(df,
   }
 }
 
+#' Get last value for the filter
+#'
+#' @param df (data.frame) containing the data. Needs to have at least the `year` and `type` columns.
+#' @param type_filter (character vector) vector of types to be filtered for.
+#'
 get_last_value <- function(df, type_filter = c("reported", "estimated")){
+  assert_columns(df, "type", "year")
+
   df %>%
     dplyr::filter(.data[["type"]] %in% type_filter) %>%
     dplyr::filter(.data[["year"]] == max(.data[["year"]]))
 }
 
+#' Get last value for the filter in default scenario
+#'
+#' @param df (data.frame) containing the data. Needs to have at least the `year`, `scenario_col` and `type` columns.
+#' @inherit accelerate_alcohol
+#' @inheritParams recycle_data_scenario_single
+#' @inheritParams get_last_value
+#'
 get_last_year_default_scenario <- function(df, default_scenario, scenario_col = "scenario", type_filter = c("reported", "estimated")){
+  assert_columns(df, "type", "year", scenario_col)
+
   df %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::summarise(max_year = max(.data[["year"]])) %>%
     dplyr::pull(.data[["max_year"]])
 }
 
+#' Execute a scenario
+#'
+#' Simple wrapper around [rlang::exec] to pass `parameters` and `df` to `fn`
+#'
+#' @param df (data.frame) containing the data.
+#' @param fn function to be executed
+#' @param parameters parameters to be passed to `fn`
+#'
 exec_scenario <- function(df, fn, parameters){
   rlang::exec(
     fn,
@@ -382,6 +411,13 @@ exec_scenario <- function(df, fn, parameters){
     dplyr::distinct()
 }
 
+#' Infills scenarios with `values` when `cols` are missing values.
+#'
+#' @param df (data.frame) containing the data
+#' @inheritParams recycle_data_scenario_single
+#' @param cols (list) of columns to be infilled
+#' @param values (list) of values to infill with.
+#'
 fill_cols_scenario <- function(df,
                                scenario_col = "scenario",
                                cols = list("type",
@@ -389,13 +425,15 @@ fill_cols_scenario <- function(df,
                                         "use_dash",
                                         "use_calc"),
                                values = list("projected",
-                                          glue::glue("WHO DDI interim infilling and projections, {format(Sys.Date(), '%B %Y')}"),
+                                          glue::glue("WHO DDI interim infilling
+                                            and projections,
+                                            {format(Sys.Date(), '%B %Y')}"),
                                           TRUE,
                                           TRUE)){
 
   assert_same_length(cols, values)
 
-  values <- setNames(values, cols) %>%
+  values <- stats::setNames(values, cols) %>%
     purrr::discard(!unlist(cols) %in% names(df))
 
   if(length(values) > 0 ){

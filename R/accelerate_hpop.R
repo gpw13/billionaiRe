@@ -421,8 +421,8 @@ accelerate_hpop_sanitation <- function(df,
                                   scenario_quantile,
                                   params) %>%
     dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]]) %>%
-    dplyr::group_by(iso3) %>%
-    dplyr::arrange(iso3, year) %>%
+    dplyr::group_by("iso3") %>%
+    dplyr::arrange("iso3", "year") %>%
     tidyr::fill("_temp_ind", .direction = "down") %>%
     dplyr::mutate("ind":= .data[["_temp_ind"]]) %>%
     dplyr::select(-"_temp_ind")
