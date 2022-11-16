@@ -20,11 +20,72 @@ accelerate_target_anc4 <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),
                                    ...) {
 
+  this_ind <- ind_ids["anc4"]
+
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
-                sdg_anc4,
-                params)
+  params_without_data_bau <- get_right_parameters(params, scenario_bau)
+
+  params_with_data_bau <- params_without_data_bau %>%
+    set_parameters(scenario_name = "with_data_bau")
+
+  params_with_data_fixed_target <- get_right_parameters(params, scenario_fixed_target) %>%
+    set_parameters(scenario_name = "with_data_fixed_target",
+                   target_value = 95,
+                   target_year = 2030)
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  df_without_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) <= 1)
+
+  df_with_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] == "reported", na.rm = TRUE) > 1) %>%
+    dplyr::ungroup()
+
+  if (nrow(df_with_data) > 0) {
+    df_with_data_bau <- exec_scenario(df_with_data,
+                                      scenario_bau,
+                                      params_with_data_bau) %>%
+      dplyr::filter(.data[[scenario_col]] == "with_data_bau")
+
+    df_with_data_default <- df_with_data %>%
+      dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+    df_with_data_fixed_target <- exec_scenario(df_with_data_default,
+                                               scenario_fixed_target,
+                                               params_with_data_fixed_target)%>%
+      dplyr::filter(.data[[scenario_col]] == "with_data_fixed_target")
+
+    params_scenario_best_of_linear_fixed <- get_right_parameters(params, scenario_best_of) %>%
+      set_parameters(
+        scenario_names = c("with_data_fixed_target", "with_data_bau"))
+
+    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_fixed_target,
+                                                 df_with_data_bau) %>%
+      exec_scenario(scenario_best_of,
+                    params_scenario_best_of_linear_fixed)%>%
+      dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
+  } else {
+    df_with_data_accelerated <- tibble::tibble()
+  }
+
+  if (nrow(df_without_data) > 0) {
+    df_without_data_accelerated <- exec_scenario(df_without_data,
+                                                 scenario_bau,
+                                                 params_without_data_bau) %>%
+      dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+  } else {
+    df_without_data_accelerated <- tibble::tibble()
+  }
+
+  df %>%
+    dplyr::bind_rows(df_without_data_accelerated, df_with_data_accelerated)
+
 }
 
 #' Accelerate art to 90.25 by 2025
@@ -46,77 +107,11 @@ accelerate_target_art <- function(df,
                                   bau_scenario = "default",
                                   scenario_name = "acceleration_target",
                                   ...) {
-  this_ind <- ind_ids["art"]
-
   params <- get_dots_and_call_parameters(...)
 
-  params_with_data_fixed_target <- get_right_parameters(params, scenario_fixed_target) %>%
-    set_parameters(
-      target_value = 90.25,
-      scenario_name = "fixed_target",
-      target_year = 2025,
-      upper_limit = 95
-    )
-
-  params_without_data_bau <- get_right_parameters(params, scenario_bau)
-
-  params_with_data_bau <- params_without_data_bau %>%
-    set_parameters(
-      scenario_name = "business_as_usual"
-    )
-
-  df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind)
-
-  df_with_data <- df_this_ind %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= start_year) > 1) %>%
-    dplyr::ungroup()
-
-  df_without_data <- df_this_ind %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= start_year) <= 1) %>%
-    dplyr::ungroup()
-
-  if (nrow(df_without_data) > 0) {
-
-    df_without_data_accelerated <- exec_scenario(df_without_data,
-                                                 scenario_bau,
-                                                 params_without_data_bau) %>%
-      dplyr::filter(.data[[scenario_col]] == scenario_name)
-
-  } else {
-    df_without_data_accelerated <- tibble::tibble()
-  }
-
-  if (nrow(df_with_data) > 0) {
-
-    df_with_data_bau <- exec_scenario(df_with_data,
-                                      scenario_bau,
-                                      params_with_data_bau) %>%
-      dplyr::filter(.data[[scenario_col]] == "business_as_usual")
-
-    df_with_data_default <- df_with_data %>%
-      dplyr::filter(.data[[scenario_col]] == default_scenario)
-
-    df_with_data_fixed_target <- exec_scenario(df_with_data_default,
-                                               scenario_fixed_target,
-                                               params_with_data_fixed_target) %>%
-      dplyr::filter(.data[[scenario_col]] == "fixed_target")
-
-    params_scenario_best_of <- get_right_parameters(params, scenario_best_of) %>%
-      set_parameters(scenario_names = c("business_as_usual", "fixed_target"))
-
-    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau, df_with_data_fixed_target) %>%
-      exec_scenario(scenario_best_of,
-                    params_scenario_best_of) %>%
-      dplyr::filter(.data[[scenario_col]] == "acceleration_target")
-  } else {
-    df_with_data_accelerated <- tibble::tibble()
-  }
-
-  df %>%
-    dplyr::bind_rows(df_with_data_accelerated, df_without_data_accelerated)
+  exec_scenario(df,
+                accelerate_art,
+                params)
 }
 
 #' Accelerate beds to 18 by 2025
@@ -140,11 +135,81 @@ accelerate_target_beds <- function(df,
                                    scenario_name = "acceleration_target",
                                    ...) {
 
+  this_ind <- ind_ids["beds"]
+
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
-                sdg_beds,
-                params)
+  params_no_scenario_bau <- set_parameters(
+    get_right_parameters(params, scenario_bau),
+    avoid_worstening = TRUE,
+    upper_limit = Inf,
+    scenario_name = scenario_name
+  )
+
+  params_with_scenario_bau <- get_right_parameters(params, scenario_bau) %>%
+    set_parameters(scenario_name = "with_scenario_bau",
+                   upper_limit = Inf)
+
+  params_with_scenario_target <- get_right_parameters(params, scenario_fixed_target) %>%
+    set_parameters(target_value = 18,
+                   scenario_name = "fixed_target",
+                   target_year = 2025,
+                   upper_limit = 18)
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  df_with_scenario <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
+    dplyr::ungroup()
+
+  df_no_scenario <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(!any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
+    dplyr::ungroup()
+
+  if (nrow(df_no_scenario) > 0) {
+
+    df_no_scenario_accelerated <- exec_scenario(df_no_scenario,
+                                                scenario_bau,
+                                                params_no_scenario_bau)%>%
+      dplyr::filter(.data[[scenario_col]] == scenario_name)
+  } else {
+    df_no_scenario_accelerated <- tibble::tibble()
+  }
+
+  if (nrow(df_with_scenario) > 0) {
+
+    df_with_scenario_bau <- exec_scenario(df_with_scenario,
+                                          scenario_bau,
+                                          params_with_scenario_bau) %>%
+      dplyr::filter(.data[[scenario_col]] == "with_scenario_bau")
+
+    df_with_scenario_default <- df_with_scenario %>%
+      dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+    df_with_scenario_fixed <- exec_scenario(df_with_scenario_default,
+                                            scenario_fixed_target,
+                                            params_with_scenario_target) %>%
+      dplyr::filter(.data[[scenario_col]] == "fixed_target")
+
+    params_scenario_best_of <- get_right_parameters(params, scenario_best_of) %>%
+      set_parameters(scenario_names = c("with_scenario_bau", "fixed_target"))
+
+    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_fixed)
+
+    df_with_scenario_accelerated <- exec_scenario(df_with_scenario_accelerated,
+                                                  scenario_best_of,
+                                                  params_scenario_best_of) %>%
+      dplyr::filter(.data[[scenario_col]] == scenario_name)
+
+  } else {
+    df_with_scenario_accelerated <- tibble::tibble()
+  }
+
+  df %>%
+    dplyr::bind_rows(df_no_scenario_accelerated, df_with_scenario_accelerated)
 }
 
 #' Accelerate bp
@@ -342,9 +407,7 @@ accelerate_target_tb <- function(df,
 
 #' Accelerate uhc_sanitation
 #'
-#' Accelerate uhc_sanitation by encouraging the country to reach the mean (or upper
-#' threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
-#' and upper limits of 0 and 99, respectively, are also imposed on the results.
+#' Accelerate uhc_sanitation by targeting to reach 95% by 2030.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams recycle_data
@@ -356,14 +419,24 @@ accelerate_target_uhc_sanitation <- function(df,
 
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
-                sdg_uhc_sanitation,
+  this_ind <- ind_ids["uhc_sanitation"]
+
+  params <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_fixed_target) %>%
+    set_parameters(target_year = 2030,
+                   target_value = 95)
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  exec_scenario(df_this_ind,
+                scenario_fixed_target,
                 params)
 }
 # @Alice, there are no countries without data
 # @Alice, why is scenario_bau called twice for withdata_df?
 # @Alice, need explanation on following comments:
-# NB cannot take hpop outputs because the imputed data (45 coutnries) is removed for hpop tobacco
+# NB cannot take hpop outputs because the imputed data (45 countries) is removed for hpop tobacco
 # Is the input for this function hpop_tobacco, instead of uhc_tobacco due to the missing data for UHC?
 
 #' Accelerate uhc_tobacco

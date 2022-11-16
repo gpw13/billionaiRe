@@ -121,9 +121,12 @@ get_baseline_value <- function(value, year, baseline_year) {
 
 #' Calcualte Average annual rate of change
 #'
-#' Calculates annual average rate of change (AARC or AROC) with the compounded
+#' Calculates annual average rate of change (AARC or AROC) *with* the compounded
 #' formula:
 #' ((`end_value` / `baseline_value`))^(1/(`end_year` - `baseline_year`)) - 1
+#'
+#' To forecast change the baseline value:
+#' `baseline_value` * ((1 + `aroc`)^(`current_year` - `start_year`))
 #'
 #' @param baseline_year year where the AARC starts
 #' @param baseline_value value at start_year
@@ -142,6 +145,29 @@ calculate_aarc <- function(baseline_year,
   # }
 }
 
+#' Calculate Average rate of change
+#'
+#' Calculates Average rate of change (AARC or AROC) *without* the compounded
+#' formula:
+#' (`end_value` / `baseline_value`)/(`end_year` - `baseline_year`)
+#'
+#' This formula provides an absolute value change and not a proportional one
+#' like `calculate_aarc`. To forecast change it should be add to the baseline
+#' value:
+#' `baseline_value` + (`aroc`*(`current_year` - `start_year`))
+#'
+#' @param baseline_year year where the AARC starts
+#' @param baseline_value value at start_year
+#' @param end_year year where the AARC ends
+#' @param end_value value at end_year
+#'
+#' @return numeric with AARC
+calculate_aroc <- function(baseline_year,
+                           baseline_value,
+                           end_year,
+                           end_value) {
+  (end_value - baseline_value)/(end_year - baseline_year)
+}
 
 #' Get the latest AARC for data frame
 #'
@@ -386,7 +412,7 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
 #' @inheritParams get_last_value
 #'
 get_last_year_default_scenario <- function(df, default_scenario, scenario_col = "scenario", type_filter = c("reported", "estimated")){
-  assert_columns(df, "type", "year", scenario_col)
+  assert_columns(df, "year", scenario_col)
 
   df %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%

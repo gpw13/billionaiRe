@@ -9,7 +9,7 @@ fill_cols_scenario(
   scenario_col = "scenario",
   cols = list("type", "source", "use_dash", "use_calc"),
   values = list("projected",
-    glue::glue("WHO DDI interim infilling and projections,\\n                                                     {format(Sys.Date(), '\%B \%Y')}"),
+    glue::glue("WHO DDI interim infilling\\n                                            and projections,\\n                                            {format(Sys.Date(), '\%B \%Y')}"),
     TRUE, TRUE)
 )
 }

@@ -19,7 +19,11 @@ calculate_aarc(baseline_year, baseline_value, end_year, end_value)
 numeric with AARC
 }
 \description{
-Calculates annual average rate of change (AARC or AROC) with the compounded
+Calculates annual average rate of change (AARC or AROC) \emph{with} the compounded
 formula:
 ((\code{end_value} / \code{baseline_value}))^(1/(\code{end_year} - \code{baseline_year})) - 1
+}
+\details{
+To forecast change the baseline value:
+\code{baseline_value} * ((1 + \code{aroc})^(\code{current_year} - \code{start_year}))
 }

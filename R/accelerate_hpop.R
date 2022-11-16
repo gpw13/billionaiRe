@@ -407,8 +407,7 @@ accelerate_hpop_sanitation <- function(df,
       n = 5,
       quantile_year = 2019,
       baseline_quantile_year = 2018,
-      upper_limit = 99,
-
+      upper_limit = 99
     )
 
   df_this_ind <- df %>%

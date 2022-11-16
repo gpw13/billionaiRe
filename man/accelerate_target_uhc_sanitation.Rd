@@ -22,9 +22,7 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate uhc_sanitation by encouraging the country to reach the mean (or upper
-threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
-and upper limits of 0 and 99, respectively, are also imposed on the results.
+Accelerate uhc_sanitation by targeting to reach 95\% by 2030.
 }
 \details{
 Runs:
