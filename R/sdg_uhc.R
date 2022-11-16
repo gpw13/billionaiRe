@@ -154,10 +154,15 @@ sdg_doctors <- function(df,
                         ...) {
   params <- get_dots_and_call_parameters(...)
 
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(target_value = 154.74,
+                   target_year = 2030,
+                   upper_limit = 10000,
+                   scenario_function = "scenario_fixed_target")
+
   exec_scenario(df,
-                accelerate_doctors,
-                params
-  )
+                scenario_with_values,
+                params)
 }
 
 #' Accelerate nurses to SDG target
@@ -173,7 +178,7 @@ sdg_nurses <- function(df,
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
-                accelerate_nurses,
+                sdg_doctors,
                 params
   )
 }
@@ -195,13 +200,12 @@ sdg_hwf <- function(df,
                     bau_scenario = "historical",
                     ...) {
 
-  params <- get_dots_and_call_parameters(...) %>%
-    get_right_parameters(scenario_bau) %>%
-    set_parameters(upper_limit = 10000)
+  params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
-                scenario_bau,
-                params)
+                sdg_doctors,
+                params
+  )
 }
 
 #' Accelerate dtp3 to SDG target

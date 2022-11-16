@@ -123,11 +123,9 @@ testthat::test_that("sdg_bp returns accurate values:", {
 testthat::test_that(paste0("sdg_doctors returns accurate values:"), {
   ind <- "doctors"
 
-  # Doctors returns BAU in all cases
-  testthat::expect_equal(get_value(60:80, ind, "reported"), 80)
+  testthat::expect_equal(get_value(60:80, ind, "reported"), 154.74)
 
-  # Doctors returns BAU in all cases
-  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 30)
+  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 154.74)
 })
 
 # nurses ----------------------------
@@ -135,11 +133,9 @@ testthat::test_that(paste0("sdg_doctors returns accurate values:"), {
 testthat::test_that(paste0("sdg_nurses returns accurate values:"), {
   ind <- "nurses"
 
-  # Nurses returns BAU in all cases
-  testthat::expect_equal(get_value(60:80, ind, "reported"), 80)
+  testthat::expect_equal(get_value(60:80, ind, "reported"), 154.74)
 
-  # Nurses returns BAU in all cases
-  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 30)
+  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 154.74)
 })
 
 # hwf ----------------------------
@@ -147,9 +143,9 @@ testthat::test_that(paste0("sdg_nurses returns accurate values:"), {
 testthat::test_that(paste0("sdg_hwf returns accurate values:"), {
   ind <- "hwf"
 
-  testthat::expect_equal(get_value(60:80, ind, "reported"), 80)
+  testthat::expect_equal(get_value(60:80, ind, "reported"), 154.74)
 
-  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 30)
+  testthat::expect_equal(get_value(10:30, ind, "reported", end_year = 2030), 154.74)
 
 })
 
