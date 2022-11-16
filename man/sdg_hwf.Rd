@@ -40,7 +40,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate hwf by returning to business as usual, as there are no globally agreed target.
+Accelerate \code{hwf} by returning to business as usual, as there are no globally
+agreed target.
 }
 \details{
 Runs:

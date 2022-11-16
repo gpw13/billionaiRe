@@ -25,7 +25,8 @@ testthat::test_that("espar returns appropriate values", {
         55, 47, 60, 40, 40, 30, 40, 20, 20, 80, 100, 100, 100, 100, 90, 100, 80, 40, 73, 40, 100, 80, 40, 40, 40, 40, 80, 40, 40, 40, 40, 40
       ),
       type = "reported",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
 
   df_accelerated <- accelerate_espar(df,
@@ -75,7 +76,8 @@ basic_hep_test <- function(ind) {
       year = 2010:2030,
       ind = ind,
       iso3 = "testalia",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
 
     df_add_indicator <- add_scenario_indicator(df,
@@ -117,7 +119,8 @@ testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
   hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "cholera_campaign")],
-                  scenario == "default")
+                  scenario == "default") %>%
+    dplyr::mutate(source = NA_character_)
 
   calculated_test_data <- add_scenario(hep_test_df,
                                        "accelerate",
@@ -150,7 +153,8 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
     year = 2010:2030,
     ind = "measles_routine",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20, aroc_type = "percent_change", baseline_year = 2013) %>%
@@ -210,7 +214,8 @@ testthat::test_that("accelerate_meningitis_campaign returns accurate results:", 
   hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "meningitis_campaign")],
-                  scenario == "default")
+                  scenario == "default") %>%
+    dplyr::mutate(source = NA_character_)
 
   calculated_test_data <- add_scenario(hep_test_df, "accelerate", bau_scenario = "default")
 
@@ -233,7 +238,8 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
     ind = "meningitis_routine",
     iso3 = "testalia",
     scenario = c(rep("default", 12), rep("historical", 9)),
-    type = c(rep("reported", 12), rep("projected", 9))
+    type = c(rep("reported", 12), rep("projected", 9)),
+    source = NA_character_
   )
 
   fixed_target_2025 <- df %>%
@@ -255,7 +261,8 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
   test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     dplyr::filter(scenario != "default") %>%
     make_default_scenario(billion = "hep") %>%
-    dplyr::filter(scenario == "default")
+    dplyr::filter(scenario == "default") %>%
+    dplyr::mutate(source = NA_character_)
 
   df_add_scenario_indicator <- add_scenario_indicator(test_data,
                                                       "accelerate",
@@ -311,7 +318,8 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
     year = 2010:2030,
     ind = "polio_routine",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20,
@@ -371,7 +379,8 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
 })
 
 testthat::test_that("accelerate_yellow_fever_campaigns returns accurate results:", {
-  hep_test_df <- load_misc_data("scenarios/yellow_fever_campaign/test_data_campaign_yellow_fever.parquet")
+  hep_test_df <- load_misc_data("scenarios/yellow_fever_campaign/test_data_campaign_yellow_fever.parquet") %>%
+    dplyr::mutate(source = NA_character_)
 
   calculated_test_data <- add_scenario(hep_test_df, "accelerate", bau_scenario = "default")
 
@@ -396,7 +405,8 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
     year = 2010:2030,
     ind = "yellow_fever_routine",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20,
@@ -463,7 +473,8 @@ testthat::test_that("acceleration can be run on all hep indicators:", {
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep") &
                     !.data[["ind"]] %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "espar")],
-                  scenario == "default")
+                  scenario == "default") %>%
+    dplyr::mutate(source = NA_character_)
 
   testthat::expect_error(add_scenario(hep_test_df, "accelerate", bau_scenario = "default"), NA)
 
@@ -491,7 +502,8 @@ testthat::test_that("acceleration can be run on all hep indicators:", {
         55, 47, 60, 40, 40, 30, 40, 20, 20, 80, 100, 100, 100, 100, 90, 100, 80, 40, 73, 40, 100, 80, 40, 40, 40, 40, 80, 40, 40, 40, 40, 40
       ),
       type = "reported",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
   testthat::expect_error(add_scenario(df_espar,
                                       scenario_function = "accelerate",

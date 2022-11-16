@@ -17,7 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate tb by using a \strong{fixed target of 90 by 2025}.
+Accelerate \code{pneumo} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

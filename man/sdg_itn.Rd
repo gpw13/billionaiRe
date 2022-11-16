@@ -17,8 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate itn by taking the best of business as usual and a \strong{fixed target of
-80 by 2030}.
+Accelerate \code{itn} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

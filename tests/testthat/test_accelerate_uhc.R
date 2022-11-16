@@ -5,7 +5,8 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia", start_s
     ind = ind,
     type = type,
     iso3 = iso3,
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   ) %>%
     dplyr::mutate(scenario = dplyr::case_when(
       start_scenario_last_default & year > 2021 ~ "historical",
@@ -180,7 +181,8 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     ind = ind,
     type = "reported",
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   ) %>%
     add_scenario_indicator("accelerate", ind, bau_scenario = "default", start_scenario_last_default = FALSE) %>%
     dplyr::filter(scenario == "acceleration")
@@ -209,7 +211,8 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
     ind = ind,
     type = "reported",
     iso3 = unlist(purrr::map(c("testalia", "testistan", "testina"), rep, 21)),
-    scenario = rep(c(rep("default", 12), rep("historical", 9)),3)
+    scenario = rep(c(rep("default", 12), rep("historical", 9)),3),
+    source = NA_character_
   ) %>%
     add_scenario_indicator("accelerate", ind, bau_scenario = "historical", start_scenario_last_default = TRUE) %>%
     dplyr::filter(scenario == "acceleration")
@@ -415,7 +418,8 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
     dplyr::mutate(scenario = dplyr::case_when(
       .data[["scenario"]] == "default" ~ "pre_covid_trajectory",
       TRUE ~ .data[["scenario"]]
-    )) %>%
+    ),
+    source = NA_character_) %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
     make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(
@@ -435,6 +439,7 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
                              scenario == "default" & year > 2021 ~ FALSE,
                              TRUE ~ TRUE
                            )) %>%
+                           dplyr::mutate(source = NA_character_) %>%
                            add_scenario("accelerate",
                                         bau_scenario = "pre_covid_trajectory",
                                         start_scenario_last_default = TRUE,

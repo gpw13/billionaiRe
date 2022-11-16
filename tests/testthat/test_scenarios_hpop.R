@@ -5,7 +5,8 @@ test_hpop_scenarios <- function(ind) {
       year = 2010:2030,
       ind = ind,
       iso3 = "testalia",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
 
     df_add_indicator <- add_scenario_indicator(df,
@@ -48,7 +49,8 @@ test_hpop_scenarios <- function(ind) {
       year = 2010:2030,
       ind = ind,
       iso3 = "testalia",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
 
     df_add_indicator_fixed_target <- add_scenario_indicator(df_small,
@@ -77,7 +79,8 @@ purrr::walk(hpop_ind, ~ test_hpop_scenarios(.x))
 
 testthat::test_that("add_scenarios runs properly on hpop_df", {
   hpop_halt_rise <- hpop_df %>%
-    dplyr::mutate(scenario = "default") %>%
+    dplyr::mutate(scenario = "default",
+                  source = NA_character_) %>%
     add_scenario("halt_rise", baseline_year = 2018, start_scenario_last_default = FALSE) %>%
     dplyr::arrange(iso3, ind, year)
 
@@ -87,6 +90,7 @@ testthat::test_that("add_scenarios runs properly on hpop_df", {
     dplyr::select(-scenario, -year, -type)
 
   hpop_2018 <- hpop_df %>%
+    dplyr::mutate(source = glue::glue("WHO DDI interim infilling and projections,{format(Sys.Date(), '%B %Y')}")) %>%
     dplyr::filter(year == 2018) %>%
     dplyr::arrange(iso3, ind, year) %>%
     dplyr::select(-year, -type)

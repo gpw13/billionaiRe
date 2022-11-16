@@ -46,13 +46,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate beds by first dividing countries into two groups:
-\itemize{
-\item For countries with 18 or more beds for all years after 2018, business
-as usual is returned.
-\item For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-18 beds is targeted by 2025
-}
+Accelerate \code{beds} by aiming at 18 by 2030 if values are below 18. Otherwise,
+business as usual.
 }
 \details{
 Runs:

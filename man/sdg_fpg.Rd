@@ -17,7 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fpg by halting the rise to 2010 value.
+Accelerate \code{fpg} by aiming at 0 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

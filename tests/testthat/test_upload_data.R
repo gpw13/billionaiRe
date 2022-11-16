@@ -37,7 +37,8 @@ testthat::test_that("upload_billion_data works as expected", {
     data_type = "wrangled_data",
     billion = "uhc",
     ind_code = "dtp3",
-    version = tstamp, na_rm = TRUE,
+    version = tstamp,
+    na_rm = TRUE,
     experiment = "unit_tests",
     data_source = "whdh",
     silent = TRUE

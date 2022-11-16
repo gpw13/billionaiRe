@@ -451,9 +451,7 @@ fill_cols_scenario <- function(df,
                                         "use_dash",
                                         "use_calc"),
                                values = list("projected",
-                                          glue::glue("WHO DDI interim infilling
-                                            and projections,
-                                            {format(Sys.Date(), '%B %Y')}"),
+                                          NULL,
                                           TRUE,
                                           TRUE)){
 
@@ -461,6 +459,11 @@ fill_cols_scenario <- function(df,
 
   values <- stats::setNames(values, cols) %>%
     purrr::discard(!unlist(cols) %in% names(df))
+
+  if(is.null(values[["source"]])){
+    month_year <- format(Sys.Date(), '%B %Y')
+    values[["source"]] <- glue::glue("WHO DDI interim infilling and projections,{month_year}")
+  }
 
   if(length(values) > 0 ){
     for(i in 1:length(values)){

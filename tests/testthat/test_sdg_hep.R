@@ -5,7 +5,8 @@ test_sdg_hep <- function(ind) {
       year = 2010:2030,
       ind = ind,
       iso3 = "testalia",
-      scenario = "default"
+      scenario = "default",
+      source = NA_character_
     )
 
     df_add_indicator <- add_scenario_indicator(df,

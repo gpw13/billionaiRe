@@ -241,3 +241,74 @@ scenario_bau <- function(df,
   df %>%
     dplyr::bind_rows(bau)
 }
+
+scenario_with_values <- function(df,
+                                 scenario_function,
+                                 type_filter = c("reported", "estimated"),
+                                 only_reported_estimated = FALSE,
+                                 value_col = "value",
+                                 start_year = 2018,
+                                 end_year = 2025,
+                                 scenario_name = scenario_function,
+                                 scenario_col = "scenario",
+                                 avoid_worstening = FALSE,
+                                 trim = TRUE,
+                                 small_is_best = FALSE,
+                                 keep_better_values = TRUE,
+                                 upper_limit = 100,
+                                 lower_limit = 0,
+                                 trim_years = TRUE,
+                                 ind_ids = billion_ind_codes("all"),
+                                 bau_scenario = "historical",
+                                 default_scenario = "default",
+                                 ...){
+
+  indicator <- unique(df[["ind"]]) %>%
+    stringr::str_remove_all(paste0(c("espar[0-9]{2}_[0-9]{2}$", "espar[0-9]{2}$"), collapse = "|")) %>%
+    unique()
+
+  params <- get_dots_and_call_parameters(...)
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == indicator)
+
+  df_without_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] %in% type_filter, na.rm = TRUE) <= 1)
+
+  df_with_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] %in% type_filter, na.rm = TRUE) > 1) %>%
+    dplyr::ungroup()
+
+  if (nrow(df_with_data) > 0) {
+
+    scenario_fn <- get(as.character(scenario_function), mode = "function")
+
+    params_fn <- get_right_parameters(params, scenario_fn)
+
+    df_with_data_fn <-  exec_scenario(df_with_data,
+                                 scenario_fn,
+                                 params_fn)%>%
+      dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
+  } else {
+    df_with_data_fn <- tibble::tibble()
+  }
+
+  if (nrow(df_without_data) > 0) {
+
+    params_bau <- get_right_parameters(params, scenario_bau)
+
+    df_without_data_fn <- exec_scenario(df_without_data,
+                                                 scenario_bau,
+                                                 params_bau) %>%
+      dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+  } else {
+    df_without_data_fn <- tibble::tibble()
+  }
+
+  df %>%
+    dplyr::bind_rows(df_without_data_fn, df_with_data_fn)
+
+}

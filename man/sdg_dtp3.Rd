@@ -17,15 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate dtp3 using a customised version of scenario_fixed_target with the
-following peculiarities:
-\itemize{
-\item baseline_year = 2019;
-\item the 2020 value is kept identical to the 2019 (baseline) value;
-\item the target_year is 2030; and
-\item the scenario is then a straight line to the target_value and target_year
-\item the target values for each country are provided by the technical program.
-}
+Accelerate \code{dtp3} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

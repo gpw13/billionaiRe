@@ -19,13 +19,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate art by first dividing countries into those with reported data and
-those without.
-\itemize{
-\item For countries without reported data, business as usual is returned.
-\item For countries with reported data, the best of business as usual and \strong{fixed
-target of 90.25\% by 2025} is chosen.
-}
+Accelerate \code{art} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

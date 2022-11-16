@@ -29,7 +29,8 @@ df <- tibble::tibble(
   year = 2010:2030,
   ind = "adult_obese",
   iso3 = "testalia",
-  scenario = "default"
+  scenario = "default",
+  source = NA_character_
 )
 
 test_scenario_function(df, "halt_rise", 80, baseline_year = 2010, scenario_name = "halt_rise")

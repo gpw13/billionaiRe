@@ -5,7 +5,8 @@ get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia") {
     ind = ind,
     type = type,
     iso3 = iso3,
-    scenario = "default"
+    scenario = "default",
+    source = NA_character_
   ) %>%
     add_scenario_indicator("accelerate_target", ind, bau_scenario = "default", start_scenario_last_default = FALSE) %>%
     dplyr::filter(scenario == "acceleration_target", year == 2025) %>%
@@ -233,7 +234,8 @@ testthat::test_that("accelerate_target can be run on all UHC indicator:", {
     dplyr::mutate(scenario = dplyr::case_when(
       .data[["scenario"]] == "default" ~ "pre_covid_trajectory",
       TRUE ~ .data[["scenario"]]
-    )) %>%
+    ),
+    source = NA_character_) %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc")) %>%
     make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(

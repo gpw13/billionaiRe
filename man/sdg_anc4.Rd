@@ -9,7 +9,7 @@ sdg_anc4(
   scenario_col = "scenario",
   default_scenario = "default",
   bau_scenario = "historical",
-  scenario_name = "acceleration_target",
+  scenario_name = "sdg",
   ind_ids = billion_ind_codes("uhc"),
   end_year = 2030,
   ...
@@ -43,6 +43,6 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario} is
 set to \code{acceleration}
 }
 \description{
-Accelerate \code{anc4} by aiming at \strong{fixed target of 95\% by 2030} for countries
-with at least 2 reported values. For others, it is business as usual.
+Accelerate \code{anc4} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
