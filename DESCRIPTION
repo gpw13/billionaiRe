@@ -21,7 +21,6 @@ Imports:
     arrow,
     cli,
     dplyr,
-    furrr,
     glue,
     lubridate,
     magrittr,
@@ -30,7 +29,6 @@ Imports:
     purrr,
     readr,
     readxl,
-    retry,
     rlang,
     scales,
     stringr,
@@ -39,28 +37,28 @@ Imports:
     tidyselect,
     waldo,
     whoville (>= 0.1.7),
-    zoo
+    zoo,
+    furrr,
+    retry
 Suggests: 
     cellranger,
     DiagrammeR,
-    ghost,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
     usethis,
-    whdh (>= 0.1.0.0000),
     wppdistro (>= 0.2.0),
-    xmart4 (>= 0.2.2)
-VignetteBuilder: 
-    knitr
+    xmart4 (>= 0.2.2),
+    whdh (>= 0.1.0.0000)
 Remotes: 
-    gpw13/ghost
     gpw13/whoville,
     gpw13/xmart4,
-    WorldHealthOrganization/whdh,
-    WorldHealthOrganization/wppdistro
-Config/testthat/edition: 3
+    WorldHealthOrganization/wppdistro,
+    WorldHealthOrganization/whdh
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+Config/testthat/edition: 3
