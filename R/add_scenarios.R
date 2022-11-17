@@ -74,7 +74,11 @@ add_scenario <- function(df,
                                                ))]
 
   if(default_scenario %in% unique(df[[scenario_col]])){
-    last_year_default_scenario <- get_last_year_default_scenario(df, default_scenario, scenario_col)
+    last_year_default_scenario <- get_last_year_default_scenario(df,
+                                                                 indicator = NULL,
+                                                                 default_scenario = default_scenario,
+                                                                 scenario_col = scenario_col,
+                                                                 start_year = start_year)
   }else{
     last_year_default_scenario <- end_year
   }
@@ -128,6 +132,8 @@ add_scenario <- function(df,
 #' generate the `default_scenario`
 #' @param start_scenario_last_default (Boolean) if `TRUE`, then the last year with values
 #' in the `default_scenario` is the starting point of the scenario, and not `start_year`.
+#' @param expend_bau (Boolean)if `TRUE`, then `make_default_scenario` is used to
+#' expend `bau_scenario` to the start of the `default_scenario`.
 #' @param ... additional parameters to be passed to the add_scenario_indicator
 #' function (e.g. `add_scenario_adult_obese`).
 #'
@@ -159,11 +165,13 @@ add_scenario_indicator <- function(df,
                                      "return_previous_trajectory"
                                    ),
                                    indicator,
+                                   start_year = 2018,
                                    ind_ids = billion_ind_codes("all"),
                                    scenario_col = "scenario",
                                    default_scenario = "default",
                                    bau_scenario = "historical",
                                    make_default = FALSE,
+                                   expend_bau = TRUE,
                                    start_scenario_last_default = TRUE,
                                    ...) {
 
@@ -239,25 +247,62 @@ add_scenario_indicator <- function(df,
 
   params <- set_parameters(params,
                            scenario_name = scenario_name)
-
   if(make_default){
 
     params_make_default <- get_right_parameters(params, make_default_scenario) %>%
-      set_parameters(end_year = get_last_year_default_scenario(df, default_scenario, scenario_col))
+      set_parameters(end_year = get_last_year_default_scenario(this_ind_df,
+                                                               indicator,
+                                                               default_scenario = default_scenario,
+                                                               scenario_col = scenario_col,
+                                                               start_year = start_year),
+                     billion = get_ind_billion(indicator)
+                     )
 
-    df <- exec_scenario(df,
+    this_ind_df <- exec_scenario(this_ind_df,
                         make_default_scenario,
                         params_make_default)
   }
 
-  if(start_scenario_last_default){
-    params <- set_parameters(params,
-                             start_year = get_last_year_default_scenario(df, default_scenario, scenario_col))
+  if(expend_bau){
+
+    params_expend_bau <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = get_last_year_default_scenario(this_ind_df,
+                                                               indicator,
+                                                               default_scenario = bau_scenario,
+                                                               scenario_col = scenario_col,
+                                                               start_year = start_year),
+                     start_year = get_last_year_default_scenario(this_ind_df,
+                                                                 indicator,
+                                                                 default_scenario = default_scenario,
+                                                                 scenario_col = scenario_col,
+                                                                 start_year = start_year),
+                     scenario = params[["bau_scenario"]],
+                     billion = get_ind_billion(indicator)
+                     )
+
+    this_ind_df <- exec_scenario(this_ind_df,
+                        make_default_scenario,
+                        params_expend_bau)
   }
 
-  exec_scenario(this_ind_df,
+  if(start_scenario_last_default){
+    params <- set_parameters(params,
+                             start_year = get_last_year_default_scenario(this_ind_df,
+                                                                         indicator,
+                                                                         default_scenario = default_scenario,
+                                                                         scenario_col = scenario_col,
+                                                                         start_year = start_year))
+  }
+
+  df_scenario <- exec_scenario(this_ind_df,
                 scenario_fn,
                 params) %>%
     fill_cols_scenario(scenario_col = scenario_col)
+
+  if(expend_bau){
+    df_scenario <- df_scenario %>%
+      dplyr::filter(dplyr::if_else(.data[[scenario_col]] == params[["bau_scenario"]] & .data[["recycled"]], FALSE, TRUE))
+  }
+  return(df_scenario)
 }
 

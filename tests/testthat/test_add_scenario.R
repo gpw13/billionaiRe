@@ -30,7 +30,8 @@ df <- tibble::tibble(
   ind = "adult_obese",
   iso3 = "testalia",
   scenario = "default",
-  source = NA_character_
+  source = NA_character_,
+  type = ifelse(.data[["year"]] <= 2021, "reported", "projected")
 )
 
 test_scenario_function(df, "halt_rise", 80, baseline_year = 2010, scenario_name = "halt_rise")

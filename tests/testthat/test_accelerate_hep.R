@@ -45,7 +45,8 @@ testthat::test_that("espar returns appropriate values", {
                                              indicator = "espar",
                                              scenario_function = "accelerate",
                                              baseline_year = 2018,
-                                             bau_scenario = "default"
+                                             bau_scenario = "default",
+                                             expend_bau = FALSE
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -58,7 +59,8 @@ testthat::test_that("espar returns appropriate values", {
   df_add_scenario <- add_scenario(df,
                                   scenario_function = "accelerate",
                                   baseline_year = 2018,
-                                  bau_scenario = "default"
+                                  bau_scenario = "default",
+                                  expend_bau = FALSE
   )
 
   df_add_scenario_2025 <- df_add_scenario %>%
@@ -85,7 +87,8 @@ basic_hep_test <- function(ind) {
                                                scenario_function = "accelerate",
                                                baseline_year = 2018,
                                                bau_scenario = "default",
-                                               start_scenario_last_default = FALSE
+                                               start_scenario_last_default = FALSE,
+                                               expend_bau = FALSE
     )
 
     df_add_indicator_2025 <- df_add_indicator %>%
@@ -102,7 +105,8 @@ basic_hep_test <- function(ind) {
                                                scenario_function = "accelerate",
                                                baseline_year = 2018,
                                                bau_scenario = "default",
-                                               start_scenario_last_default = FALSE
+                                               start_scenario_last_default = FALSE,
+                                               expend_bau = FALSE
     )
 
     df_add_indicator_2025 <- df_add_indicator %>%
@@ -154,7 +158,8 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
     ind = "measles_routine",
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = "reported"
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20, aroc_type = "percent_change", baseline_year = 2013) %>%
@@ -206,7 +211,7 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_scenario_indicator_2021_2025, 75.448758)
+  testthat::expect_equal(df_add_scenario_indicator_2021_2025, 75.53902, tolerance = 5)
 
 })
 
@@ -319,7 +324,8 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
     ind = "polio_routine",
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = "reported"
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20,
@@ -406,7 +412,8 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
     ind = "yellow_fever_routine",
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = "reported"
   )
 
   aroc_2025 <- scenario_aroc(df, percent_change = 20,

@@ -411,13 +411,31 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
 #' @inheritParams recycle_data_scenario_single
 #' @inheritParams get_last_value
 #'
-get_last_year_default_scenario <- function(df, default_scenario, scenario_col = "scenario", type_filter = c("reported", "estimated")){
-  assert_columns(df, "year", scenario_col)
+get_last_year_default_scenario <- function(df,
+                                           indicator,
+                                           start_year = 2018,
+                                           default_scenario = "default",
+                                           scenario_col = "scenario",
+                                           type_filter = c("reported", "estimated")){
+  assert_columns(df, "year", scenario_col, "ind", "type")
 
-  df %>%
-    dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
-    dplyr::summarise(max_year = max(.data[["year"]])) %>%
+  if(!is.null(indicator)){
+    df <- df %>%
+      dplyr::filter(.data[["ind"]] == indicator)
+  }
+
+  df_filtered <- df %>%
+    dplyr::filter(.data[[scenario_col]] == default_scenario,
+                  .data[["type"]] %in% type_filter)
+
+  if(nrow(df_filtered) >0){
+    df_filtered %>%
+      dplyr::summarise(max_year = max(.data[["year"]], na.rm = T)) %>%
     dplyr::pull(.data[["max_year"]])
+  }else{
+    start_year
+  }
+
 }
 
 #' Execute a scenario
@@ -447,13 +465,13 @@ exec_scenario <- function(df, fn, parameters){
 fill_cols_scenario <- function(df,
                                scenario_col = "scenario",
                                cols = list("type",
-                                        "source",
-                                        "use_dash",
-                                        "use_calc"),
+                                           "source",
+                                           "use_dash",
+                                           "use_calc"),
                                values = list("projected",
-                                          NULL,
-                                          TRUE,
-                                          TRUE)){
+                                             NULL,
+                                             TRUE,
+                                             TRUE)){
 
   assert_same_length(cols, values)
 
@@ -471,9 +489,9 @@ fill_cols_scenario <- function(df,
       col <- names(values)[i]
       df <- df %>%
         dplyr::mutate("{col}" := dplyr::case_when(
-        is.na(.data[[col]]) ~ values[[i]],
-        TRUE ~ .data[[col]])
-      )
+          is.na(.data[[col]]) ~ values[[i]],
+          TRUE ~ .data[[col]])
+        )
     }
   }
   return(df)
