@@ -128,7 +128,8 @@ testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
 
   calculated_test_data <- add_scenario(hep_test_df,
                                        "accelerate",
-                                       bau_scenario = "default")
+                                       bau_scenario = "default",
+                                       expend_bau = FALSE)
 
   testthat::expect_equal(nrow(calculated_test_data), 238)
 
@@ -222,7 +223,11 @@ testthat::test_that("accelerate_meningitis_campaign returns accurate results:", 
                   scenario == "default") %>%
     dplyr::mutate(source = NA_character_)
 
-  calculated_test_data <- add_scenario(hep_test_df, "accelerate", bau_scenario = "default")
+  calculated_test_data <- add_scenario(hep_test_df,
+                                       "accelerate",
+                                       bau_scenario = "default",
+                                       make_default = FALSE,
+                                       expend_bau = FALSE)
 
   testthat::expect_equal(nrow(calculated_test_data), 6)
 
@@ -273,7 +278,9 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
                                                       "accelerate",
                                                       "meningitis_routine",
                                                       bau_scenario = "default",
-                                                      start_scenario_last_default = FALSE)
+                                                      start_scenario_last_default = FALSE,
+                                                      make_default = FALSE,
+                                                      expend_bau = FALSE)
 
   df_add_scenario_indicator_2025 <- df_add_scenario_indicator %>%
     dplyr::filter(year == 2025, scenario == "acceleration") %>%
@@ -483,7 +490,7 @@ testthat::test_that("acceleration can be run on all hep indicators:", {
                   scenario == "default") %>%
     dplyr::mutate(source = NA_character_)
 
-  testthat::expect_error(add_scenario(hep_test_df, "accelerate", bau_scenario = "default"), NA)
+  testthat::expect_error(add_scenario(hep_test_df, "accelerate", bau_scenario = "default", make_default = FALSE, expend_bau = FALSE), NA)
 
   df_espar <- tidyr::expand_grid(
     iso3 = c("AFG", "BGD", "PAK", "BRN", "CHE", "POL", "SWE", "VUT"),
@@ -514,6 +521,8 @@ testthat::test_that("acceleration can be run on all hep indicators:", {
     )
   testthat::expect_error(add_scenario(df_espar,
                                       scenario_function = "accelerate",
-                                      bau_scenario = "default"
-  ), NA)
+                                      bau_scenario = "default",
+                                      make_default = FALSE,
+                                      expend_bau = FALSE),
+                         NA)
 })

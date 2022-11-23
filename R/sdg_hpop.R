@@ -129,6 +129,9 @@ sdg_devontrack <- function(df,
                            ind_ids = billion_ind_codes("hpop"),
                            end_year = 2025,
                            scenario_col = "scenario",
+                           start_year = 2018,
+                           value_col = "value",
+                           default_scenario = "default",
                            ...) {
 
   assert_columns(df, scenario_col, "ind")
@@ -425,9 +428,8 @@ sdg_overweight <- function(df,
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
-                accelerate_child_viol,
+                sdg_fh,
                 params)
-
 }
 
 #' Accelerate pm25 to SDG target

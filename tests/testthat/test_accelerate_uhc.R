@@ -429,6 +429,7 @@ testthat::test_that("accelerate can be run on all UHC indicator:", {
     )
 
   testthat::expect_error(add_scenario(classic_test_df, "accelerate", bau_scenario = "default",
+                                      expend_bau = FALSE,
                                       start_scenario_last_default = FALSE), NA)
 
 

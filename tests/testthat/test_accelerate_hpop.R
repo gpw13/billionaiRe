@@ -11,7 +11,8 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -76,7 +77,8 @@ testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -128,7 +130,8 @@ testthat::test_that(paste0("accelerate_child_obese returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -180,7 +183,8 @@ testthat::test_that(paste0("accelerate_child_viol returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -230,7 +234,8 @@ testthat::test_that(paste0("accelerate_devontrack returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -282,7 +287,8 @@ testthat::test_that(paste0("accelerate_fuel returns accurate values:"), {
     ind = ind,
     iso3 = c(rep("AFG", 21), rep("FIN", 21), rep("COD", 21)),
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -332,7 +338,8 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -356,7 +363,8 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -379,7 +387,8 @@ testthat::test_that(paste0("accelerate_hpop_sanitation, accelerate_hpop_sanitati
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -481,7 +490,8 @@ testthat::test_that(paste0("accelerate_ipv returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -533,7 +543,8 @@ testthat::test_that(paste0("accelerate_overweight returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -584,7 +595,8 @@ testthat::test_that(paste0("accelerate_pm25 returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -634,7 +646,8 @@ testthat::test_that(paste0("accelerate_road returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -684,7 +697,8 @@ testthat::test_that(paste0("accelerate_stunting returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -735,7 +749,8 @@ testthat::test_that(paste0("accelerate_suicide returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -785,7 +800,8 @@ testthat::test_that(paste0("accelerate_transfats returns accurate values:"), {
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -888,7 +904,8 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -920,7 +937,9 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
                                              scenario_function = "accelerate",
                                              quantile_year = 2010,
                                              bau_scenario = "default",
-                                             start_scenario_last_default = FALSE
+                                             start_scenario_last_default = FALSE,
+                                             make_default = FALSE,
+                                             expend_bau = FALSE
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -937,7 +956,8 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,
@@ -1009,7 +1029,9 @@ testthat::test_that("acceleration can be run on all hpop indicators:", {
       make_default_scenario(billion = "hpop", default_scenario = "pre_covid_trajectory") %>%
       dplyr::filter(scenario == "default") %>%
       add_scenario("accelerate", bau_scenario = "default",
-                   start_scenario_last_default = FALSE),
+                   start_scenario_last_default = FALSE,
+                   make_default = FALSE,
+                   expend_bau = FALSE),
     NA
   )
 
@@ -1021,7 +1043,8 @@ testthat::test_that("acceleration can be run on all hpop indicators:", {
                    start_scenario_last_default = TRUE,
                    make_default = TRUE,
                    default_scenario = "default",
-                   billion = "hpop"),
+                   billion = "hpop",
+                   expend_bau = FALSE),
     NA
   )
 })

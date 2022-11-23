@@ -5,6 +5,7 @@ test_scenario_function <- function(df, scenario_function, expected_value, scenar
       scenario_function = scenario_function,
       scenario_name = scenario_name,
       start_scenario_last_default = FALSE,
+      expend_bau = FALSE,
       ...
     )
     df_adult_obese_halt_rise_2025 <- df_add_indicator %>%
@@ -17,6 +18,7 @@ test_scenario_function <- function(df, scenario_function, expected_value, scenar
       scenario_function = scenario_function,
       scenario_name = scenario_name,
       start_scenario_last_default = FALSE,
+      expend_bau = FALSE,
       ...
     )
 

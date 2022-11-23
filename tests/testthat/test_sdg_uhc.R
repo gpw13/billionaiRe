@@ -254,6 +254,6 @@ testthat::test_that("sdg can be run on all UHC indicator:", {
     make_default_scenario(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(scenario == "default")
 
-  testthat::expect_error(add_scenario(uhc_test_df, "sdg", bau_scenario = "default", start_scenario_last_default = FALSE), NA)
+  testthat::expect_error(add_scenario(uhc_test_df, "sdg", bau_scenario = "default", start_scenario_last_default = FALSE,
+                                      expend_bau = FALSE), NA)
 })
-

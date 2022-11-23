@@ -6,14 +6,17 @@ test_hpop_scenarios <- function(ind) {
       ind = ind,
       iso3 = "testalia",
       scenario = "default",
-      source = NA_character_
+      source = NA_character_,
+      type = dplyr::if_else(year <= 2021, "reported", "projected")
     )
 
     df_add_indicator <- add_scenario_indicator(df,
       indicator = ind,
       baseline_year = 2010,
       scenario_function = "halt_rise",
-      start_scenario_last_default = FALSE
+      start_scenario_last_default = FALSE,
+      make_default = FALSE,
+      expend_bau = FALSE
     )
 
     df_add_indicator_halt_rise_2025 <- df_add_indicator %>%
@@ -33,7 +36,9 @@ test_hpop_scenarios <- function(ind) {
       scenario_name = "90_2025",
       target_value = 90,
       start_scenario_last_default = FALSE,
-      small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
+      small_is_best = TRUE, # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
+      make_default = FALSE,
+      expend_bau = FALSE
     )
 
     df_add_indicator_90_2025_2025 <- df_add_indicator_fixed_target %>%
@@ -60,7 +65,9 @@ test_hpop_scenarios <- function(ind) {
       scenario_name = "30_2025",
       target_value = 30,
       start_scenario_last_default = FALSE,
-      small_is_best = TRUE # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
+      small_is_best = TRUE, # Test that is replaced by get_ind_metadata(ind, "small_is_best") value in add_scenario_indicator
+      make_default = FALSE,
+      expend_bau = FALSE
     )
 
     df_add_indicator_30_2025_2025 <- df_add_indicator_fixed_target %>%
@@ -81,7 +88,11 @@ testthat::test_that("add_scenarios runs properly on hpop_df", {
   hpop_halt_rise <- hpop_df %>%
     dplyr::mutate(scenario = "default",
                   source = NA_character_) %>%
-    add_scenario("halt_rise", baseline_year = 2018, start_scenario_last_default = FALSE) %>%
+    add_scenario("halt_rise",
+                 baseline_year = 2018,
+                 start_scenario_last_default = FALSE,
+                 make_default = FALSE,
+                 expend_bau = FALSE) %>%
     dplyr::arrange(iso3, ind, year)
 
   hpop_halt_rise_2023 <- hpop_halt_rise %>%
