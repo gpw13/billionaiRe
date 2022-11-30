@@ -40,13 +40,13 @@ testthat::test_that(paste0("accelerate_target_anc4 returns accurate values:"), {
 testthat::test_that(paste0("accelerate_target_art returns accurate values:"), {
   ind <- "art"
 
-  # Fixed target value of 90.25 in 2025 is better than bau (75)
+  # Fixed target value of 95 in 2025 is better than bau (75)
   testthat::expect_equal(
     get_2025_value(60:80, ind, "reported"),
-    get_fixed_target(90.25, 68, 2019, 2025)
+    get_fixed_target(95, 68, 2019, 2025)
   )
 
-  # Fixed target value of 90.25 in 2025 is not better than bau (95), with
+  # Fixed target value of 95 in 2025 is not better than bau (95), with
   testthat::expect_equal(
     get_2025_value(80:100, ind, "reported"),
     95

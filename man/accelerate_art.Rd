@@ -50,7 +50,7 @@ those without.
 \itemize{
 \item For countries without reported data, business as usual is returned.
 \item For countries with reported data, the best of business as usual and \strong{fixed
-target of 90.25\% by 2025} is chosen.
+target of 95\% by 2025} is chosen.
 }
 }
 \details{

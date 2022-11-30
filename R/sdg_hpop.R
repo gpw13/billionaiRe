@@ -31,9 +31,6 @@ sdg_adult_obese <- function(df,
 #' halt downwards trend from 2018, and -10 percent from 2010.
 #'
 #' Runs:
-#'
-#'  - `scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)`,
-#'  - `scenario_bau(df, small_is_best = TRUE,...)`, and
 #'  - `scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)`
 #'
 #' Then picks the best result between the three scenarios.

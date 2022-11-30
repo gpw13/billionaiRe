@@ -21,6 +21,7 @@ Imports:
     arrow,
     cli,
     dplyr,
+    furrr,
     glue,
     lubridate,
     magrittr,
@@ -29,6 +30,7 @@ Imports:
     purrr,
     readr,
     readxl,
+    retry,
     rlang,
     scales,
     stringr,
@@ -37,9 +39,7 @@ Imports:
     tidyselect,
     waldo,
     whoville (>= 0.1.7),
-    zoo,
-    furrr,
-    retry
+    zoo
 Suggests: 
     cellranger,
     DiagrammeR,

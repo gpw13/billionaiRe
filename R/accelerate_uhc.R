@@ -106,7 +106,7 @@ accelerate_anc4 <- function(df,
 #' those without.
 #' - For countries without reported data, business as usual is returned.
 #' - For countries with reported data, the best of business as usual and **fixed
-#'  target of 90.25% by 2025** is chosen.
+#'  target of 95% by 2025** is chosen.
 #'
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
@@ -132,7 +132,7 @@ accelerate_art <- function(df,
 
   params_with_data_fixed_target <- get_right_parameters(params, scenario_fixed_target) %>%
     set_parameters(
-      target_value = 90.25,
+      target_value = 95,
       scenario_name = "fixed_target",
       target_year = 2025,
       upper_limit = 95
