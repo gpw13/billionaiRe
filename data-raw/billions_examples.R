@@ -210,3 +210,24 @@ whdh::upload_to_data_lake(
   source_path = test_data_calculated_output_path,
   destination_path = test_data_destination_path_notimestamp
 )
+
+test_data_unofficial_20221114 <- load_billion_data("projected_data",
+                                                   version = "2022-11-24",
+                                                   experiment = "unofficial")
+
+test_data_calculated_file_name <- "test_data_2022-11-24T12-07-52.parquet"
+
+test_data_output_path <- glue::glue("data-raw/{test_data_calculated_file_name}")
+
+arrow::write_parquet(test_data_unofficial_20221114,
+                     test_data_output_path)
+
+test_data_unofficial_destination_path <- glue::glue("3B/Bronze/misc_data/test_data/test_data/{test_data_calculated_file_name}")
+
+whdh::upload_to_data_lake(
+  data_lake_name = get_data_lake_name(),
+  source_path = test_data_output_path,
+  container = "dropzone",
+  destination_path = test_data_unofficial_destination_path
+)
+

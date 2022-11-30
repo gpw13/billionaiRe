@@ -36,13 +36,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate wasting by picking AROC by 3\% by 2030.
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)}
-}
-
-Then picks the best result between the three scenarios.
+Accelerate wasting by aiming at 0\% by 2030.
 }

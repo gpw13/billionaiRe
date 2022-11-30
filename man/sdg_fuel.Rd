@@ -30,16 +30,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fuel by keeping business as usual for high income countries
-(HIC) (according to the World Bank), and by aiming at the best rate of change
-between 2013 and 2015 in the region for Lower-middle income countries (LMC),
-Low-income countries (LIC), High-income countries(HIC), and for unclassified
-countries.
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_bau(df, small_is_best = FALSE,...)} for HIC,
-\item \code{scenario_best_in_region(df, target_year = 2018, baseline_year = 2013, small_is_best = FALSE,...)} for other income groups.
-}
+Accelerate devontrack by targeting 100 by 2030.
 }

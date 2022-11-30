@@ -8,9 +8,9 @@ add_scenario(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg",
+    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg", "benchmarking",
     "covid_rapid_return", "covid_delayed_return", "covid_sustained_disruption",
-    "return_previous_trajectory"),
+    "return_previous_trajectory", "top_n_iso3"),
   ind_ids = billion_ind_codes("all"),
   scenario_col = "scenario",
   start_year = 2018,
@@ -42,10 +42,12 @@ of the following:
 \item \code{accelerate_target}: calls indicator accelerate function to specified
 targets.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
+\item \code{benchmarking}: calls benchmarking scenarios.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
 \item \code{covid_delayed_return} calls \code{\link{scenario_covid_delayed_return}}
 \item \code{covid_sustained_disruption} calls \code{\link{scenario_covid_sustained_disruption}}
 \item \code{return_previous_trajectory} calls \code{\link{scenario_return_previous_trajectory}}
+\item \code{top_n_iso3} calls \code{\link{scenario_top_n_iso3}}
 }}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.

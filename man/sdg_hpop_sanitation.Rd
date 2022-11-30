@@ -36,7 +36,7 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate hpop_sanitation by aiming at 95\% by 20230
+Accelerate hpop_sanitation by aiming at 100\% by 20230
 }
 \details{
 Runs:

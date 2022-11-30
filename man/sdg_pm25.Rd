@@ -30,8 +30,7 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate pm25 by picking the best value between business as usual, and
-linear change of -2\% * 2018 \code{value} per year.
+Accelerate pm25 aiming at 5\% by 2030.
 }
 \details{
 Runs:

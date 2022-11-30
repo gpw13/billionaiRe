@@ -124,6 +124,7 @@ sdg_child_viol <- function(df,
 #'
 #' @inherit accelerate_adult_obese
 #' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_child_viol
 #'
 sdg_devontrack <- function(df,
                            ind_ids = billion_ind_codes("hpop"),

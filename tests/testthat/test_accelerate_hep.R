@@ -45,8 +45,7 @@ testthat::test_that("espar returns appropriate values", {
                                              indicator = "espar",
                                              scenario_function = "accelerate",
                                              baseline_year = 2018,
-                                             bau_scenario = "default",
-                                             expend_bau = FALSE
+                                             bau_scenario = "default"
   )
 
   df_add_indicator_2025 <- df_add_indicator %>%
@@ -59,8 +58,7 @@ testthat::test_that("espar returns appropriate values", {
   df_add_scenario <- add_scenario(df,
                                   scenario_function = "accelerate",
                                   baseline_year = 2018,
-                                  bau_scenario = "default",
-                                  expend_bau = FALSE
+                                  bau_scenario = "default"
   )
 
   df_add_scenario_2025 <- df_add_scenario %>%

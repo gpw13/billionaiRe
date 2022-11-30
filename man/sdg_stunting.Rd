@@ -33,16 +33,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate stunting by picking the best results between business as usual,
-halt downwards trend, and AROC of -50\% change between 2012 and 2030.
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_bau(df, small_is_best = TRUE,...)},
-\item \code{scenario_aroc(df, aroc_type = "percent_change", percent_change = -50, baseline_year = 2012, target_year = 2030, small_is_best = TRUE, ...)}
-\item \code{scenario_halt_rise(df, small_is_best = TRUE,...)}
-}
-
-Then picks the best result between the three scenarios.
+Accelerate stunting by aiming at 0\% by 2030.
 }

@@ -8,15 +8,17 @@ add_scenario_indicator(
   df,
   scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
     "linear_change_col", "quantile", "best_in_region", "fixed_target",
-    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg",
+    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg", "benchmarking",
     "covid_rapid_return", "covid_sustained_disruption", "covid_delayed_return",
-    "covid_never_return", "return_previous_trajectory"),
+    "covid_never_return", "return_previous_trajectory", "top_n_iso3"),
   indicator,
+  start_year = 2018,
   ind_ids = billion_ind_codes("all"),
   scenario_col = "scenario",
   default_scenario = "default",
   bau_scenario = "historical",
   make_default = FALSE,
+  expend_bau = FALSE,
   start_scenario_last_default = TRUE,
   ...
 )
@@ -42,13 +44,17 @@ of the following:
 \item \code{accelerate_target}: calls indicator accelerate function to specified
 targets.
 \item \code{sdg}: calls Sustainable Development Goals (SDG) acceleration function.
+\item \code{benchmarking}: calls benchmarking scenarios.
 \item \code{covid_rapid_return} calls \code{\link{scenario_covid_rapid_return}}
 \item \code{covid_delayed_return} calls \code{\link{scenario_covid_delayed_return}}
 \item \code{covid_sustained_disruption} calls \code{\link{scenario_covid_sustained_disruption}}
 \item \code{return_previous_trajectory} calls \code{\link{scenario_return_previous_trajectory}}
+\item \code{top_n_iso3} calls \code{\link{scenario_top_n_iso3}}
 }}
 
 \item{indicator}{name of indicator to be passed to \code{scenario_function}}
+
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
@@ -65,6 +71,9 @@ Default is \code{historical}.}
 
 \item{make_default}{(Boolean) if \code{TRUE}, then \code{make_default_scenario} is used to
 generate the \code{default_scenario}}
+
+\item{expend_bau}{(Boolean)if \code{TRUE}, then \code{make_default_scenario} is used to
+expend \code{bau_scenario} to the start of the \code{default_scenario}.}
 
 \item{start_scenario_last_default}{(Boolean) if \code{TRUE}, then the last year with values
 in the \code{default_scenario} is the starting point of the scenario, and not \code{start_year}.}

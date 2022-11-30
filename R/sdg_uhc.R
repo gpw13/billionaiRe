@@ -272,15 +272,23 @@ sdg_fp <- function(df,
 #' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
+#' @inheritParams accelerate_child_viol
 #'
 sdg_fpg <- function(df,
+                    start_year = 2018,
+                    scenario_name = "sdg",
+                    scenario_col = "scenario",
                     ...) {
 
   params <- get_dots_and_call_parameters(...)
 
-  exec_scenario(df,
+  df_scenario <- exec_scenario(df,
                 sdg_fh,
-                params)
+                params) %>%
+    dplyr::filter(.data[[scenario_col]] == scenario_name,
+                  .data[["year"]] >= start_year)
+
+  dplyr::bind_rows(df, df_scenario)
 }
 
 #' Accelerate itn to SDG target
