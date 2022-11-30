@@ -48,19 +48,19 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     usethis,
+    whdh (>= 0.1.0.0000),
     wppdistro (>= 0.2.0),
-    xmart4 (>= 0.2.2),
-    whdh (>= 0.1.0.0000)
-Remotes:
+    xmart4 (>= 0.2.2)
+VignetteBuilder: 
+    knitr
+Remotes: 
     gpw13/ghost
     gpw13/whoville,
     gpw13/xmart4,
-    WorldHealthOrganization/wppdistro,
-    WorldHealthOrganization/whdh
-VignetteBuilder: 
-    knitr
+    WorldHealthOrganization/whdh,
+    WorldHealthOrganization/wppdistro
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
-Config/testthat/edition: 3
