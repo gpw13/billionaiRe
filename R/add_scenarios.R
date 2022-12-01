@@ -303,17 +303,23 @@ add_scenario_indicator <- function(df,
                                params) %>%
     fill_cols_scenario(scenario_col = scenario_col)
 
+  unique_final_scenario_names <- unique(df_scenario[[scenario_col]])
+
+  base_scenarios <- c(
+    "routine",
+    "covid_shock",
+    "reference_infilling"
+  )
+
+  final_scenario_names <- unique_final_scenario_names[!unique_final_scenario_names %in% c(base_scenarios, default_scenario, bau_scenario)]
+
+  df_scenario <- df_scenario %>%
+    dplyr::filter(dplyr::case_when(
+      .data[[scenario_col]] %in% final_scenario_names & .data[["year"]] < start_year ~ FALSE,
+      TRUE ~ TRUE
+    ))
+
   if("recycled" %in% names(df_scenario)){
-    unique_final_scenario_names <- unique(df_scenario[[scenario_col]])
-
-    base_scenarios <- c(
-      "routine",
-      "covid_shock",
-      "reference_infilling"
-    )
-
-    final_scenario_names <- unique_final_scenario_names[!unique_final_scenario_names %in% c(base_scenarios, default_scenario, bau_scenario)]
-
     df_scenario <- df_scenario %>%
       dplyr::mutate(recycled = dplyr::case_when(
         .data[[scenario_col]] %in% final_scenario_names ~ FALSE,
