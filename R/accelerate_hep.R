@@ -990,6 +990,8 @@ accelerate_yellow_fever_campaign <- function(df,
   df_accelerated <- exec_scenario(df_accelerated,
                                   trim_values,
                                   params)
+
+  dplyr::bind_rows(df, df_accelerated)
 }
 
 #' Accelerate yellow_fever_routine

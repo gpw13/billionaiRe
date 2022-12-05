@@ -223,9 +223,10 @@ add_scenario_indicator <- function(df,
 
       if(stringr::str_detect(this_ind, "_campaign")){
 
-        this_ind_df <- exec_scenario(this_ind_df,
-                                     transform_hep_data,
-                                     params)
+        this_ind_df <- this_ind_df %>%
+          dplyr::filter(.data[[scenario_col]] %in% c(default_scenario, bau_scenario)) %>%
+          exec_scenario(transform_hep_data,
+                        params)
 
         params <- set_parameters(params, value_col = "transform_value")
       }
