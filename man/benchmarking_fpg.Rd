@@ -4,21 +4,13 @@
 \alias{benchmarking_fpg}
 \title{Accelerate fpg to benchmarking scenario}
 \usage{
-benchmarking_fpg(
-  df,
-  start_year = 2018,
-  scenario_name = "benchmarking",
-  scenario_col = "scenario",
-  ...
-)
+benchmarking_fpg(df, start_year = 2018, scenario_col = "scenario", ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
 \item{start_year}{Year from which the acceleration scenario begins, inclusive.}
-
-\item{scenario_name}{name of scenario}
 
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}

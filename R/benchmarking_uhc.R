@@ -10,7 +10,7 @@
 #' set to `acceleration`
 #'
 benchmarking_anc4 <- function(df,
-                     ...) {
+                              ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -26,10 +26,10 @@ benchmarking_anc4 <- function(df,
 
   params_expanded <- purrr::pmap(params_benchmarking, set_parameters, parameters = params)
 
-  df_exec <- purrr::map_dfr(params_expanded,
-                             exec_scenario,
-                             df = df,
-                             fn = scenario_top_n_iso3)
+  purrr::map_dfr(params_expanded,
+                 exec_scenario,
+                 df = df,
+                 fn = scenario_top_n_iso3)
 }
 
 #' Accelerate art to benchmarking scenario
@@ -38,7 +38,7 @@ benchmarking_anc4 <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #'
 benchmarking_art <- function(df,
-                    ...) {
+                             ...) {
 
   params <- get_dots_and_call_parameters(...)
   exec_scenario(df,
@@ -53,7 +53,7 @@ benchmarking_art <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_beds <- function(df,
-                     ...) {
+                              ...) {
   params <- get_dots_and_call_parameters(...)
   exec_scenario(df,
                 benchmarking_anc4,
@@ -71,7 +71,7 @@ benchmarking_beds <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_bp <- function(df,
-                   ...) {
+                            ...) {
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
@@ -86,7 +86,7 @@ benchmarking_bp <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_doctors <- function(df,
-                        ...) {
+                                 ...) {
   params <- get_dots_and_call_parameters(...)
 
   params <- get_dots_and_call_parameters(...) %>%
@@ -105,7 +105,7 @@ benchmarking_doctors <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_nurses <- function(df,
-                       ...) {
+                                ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -122,7 +122,7 @@ benchmarking_nurses <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_hwf <- function(df,
-                    ...) {
+                             ...) {
 
   params <- get_dots_and_call_parameters(...) %>%
     set_parameters(baseline_year = 2012,
@@ -141,7 +141,7 @@ benchmarking_hwf <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_dtp3 <- function(df,
-                     ...) {
+                              ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -156,7 +156,7 @@ benchmarking_dtp3 <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_fh <- function(df,
-                   ...) {
+                            ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -172,7 +172,7 @@ benchmarking_fh <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_fp <- function(df,
-                   ...) {
+                            ...) {
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
@@ -186,20 +186,16 @@ benchmarking_fp <- function(df,
 #' @inheritParams accelerate_child_viol
 #'
 benchmarking_fpg <- function(df,
-                    start_year = 2018,
-                    scenario_name = "benchmarking",
-                    scenario_col = "scenario",
-                    ...) {
+                             start_year = 2018,
+                             scenario_col = "scenario",
+                             ...) {
 
   params <- get_dots_and_call_parameters(...)
 
-  df_scenario <- exec_scenario(df,
-                               benchmarking_anc4,
-                               params) %>%
-    dplyr::filter(.data[[scenario_col]] == scenario_name,
-                  .data[["year"]] >= start_year)
+  exec_scenario(df,
+                benchmarking_anc4,
+                params)
 
-  dplyr::bind_rows(df, df_scenario)
 }
 
 #' Accelerate itn to benchmarking scenarios
@@ -207,7 +203,7 @@ benchmarking_fpg <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_itn <- function(df,
-                    ...) {
+                             ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -222,7 +218,7 @@ benchmarking_itn <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_pneumo <- function(df,
-                       ...) {
+                                ...) {
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
@@ -235,7 +231,7 @@ benchmarking_pneumo <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_tb <- function(df,
-                   ...) {
+                            ...) {
   params <- get_dots_and_call_parameters(...)
 
   exec_scenario(df,
@@ -248,7 +244,7 @@ benchmarking_tb <- function(df,
 #' @inherit accelerate_anc4
 #'
 benchmarking_uhc_sanitation <- function(df,
-                               ...) {
+                                        ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -264,7 +260,7 @@ benchmarking_uhc_sanitation <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_uhc_tobacco <- function(df,
-                            ...) {
+                                     ...) {
 
   params <- get_dots_and_call_parameters(...)
 
@@ -280,7 +276,7 @@ benchmarking_uhc_tobacco <- function(df,
 #' @inheritParams transform_hpop_data
 #'
 benchmarking_espar <- function(df,
-                                     ...) {
+                               ...) {
 
   params <- get_dots_and_call_parameters(...)
 

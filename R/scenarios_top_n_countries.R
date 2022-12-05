@@ -24,6 +24,9 @@
 #' @param prop proportion of countries to be selected. See `dplyr::slice_max()`
 #' for details.
 #' @param aroc_end_year (integer) year identifying the end of the AROC interval.
+#' @param no_data_no_scenario (Boolean) if TRUE, then no scenario at all is generated
+#' when there is less than 2 reported/estimated values between `baseline_year`
+#' and `aroc_end_year`
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -51,6 +54,7 @@ scenario_top_n_iso3 <- function(df,
                                 ind_ids = billion_ind_codes("all"),
                                 bau_scenario = "historical",
                                 default_scenario = "default",
+                                no_data_no_scenario = FALSE,
                                 ...){
 
   if(use_prop){
@@ -165,7 +169,7 @@ scenario_top_n_iso3 <- function(df,
     df_with_data_aroc <- tibble::tibble()
   }
 
-  if (nrow(df_without_data) > 0) {
+  if (nrow(df_without_data) > 0 & !no_data_no_scenario) {
 
     params_bau <- get_dots_and_call_parameters(...) %>%
       get_right_parameters(scenario_bau)

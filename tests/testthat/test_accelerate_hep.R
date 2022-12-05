@@ -117,8 +117,10 @@ basic_hep_test <- function(ind) {
 
 purrr::walk(c("respond", "notify", "detect", "detect_respond"), basic_hep_test)
 
+test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
+
 testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
-  hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+  hep_test_df <- test_data %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "cholera_campaign")],
                   scenario == "default") %>%
@@ -215,7 +217,7 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
 })
 
 testthat::test_that("accelerate_meningitis_campaign returns accurate results:", {
-  hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+  hep_test_df <- test_data %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "meningitis_campaign")],
                   scenario == "default") %>%
@@ -266,7 +268,7 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
 
   testthat::expect_equal(df_add_scenario_2025, fixed_target_2025)
 
-  test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+  test_data <- test_data %>%
     dplyr::filter(scenario != "default") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(scenario == "default") %>%
@@ -480,7 +482,7 @@ testthat::test_that("accelerate_yellow_fever_routine returns accurate results:",
 })
 
 testthat::test_that("acceleration can be run on all hep indicators:", {
-  hep_test_df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
+  hep_test_df <- test_data %>%
     dplyr::filter(scenario != "default") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(ind %in% billion_ind_codes("hep") &

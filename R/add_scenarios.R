@@ -228,9 +228,11 @@ add_scenario_indicator <- function(df,
                                      params)
 
         params <- set_parameters(params, value_col = "transform_value")
-        this_ind_df <- this_ind_df %>%
-          transform_hep_data(scenario_col = scenario_col,)
       }
+    }else if(scenario_function == "benchmarking" & get_ind_billion(this_ind) %in% c("hep", "hpop")){
+      scenario_fn <- get(glue::glue("{scenario_function}_anc4"), mode = "function")
+
+      params <- set_parameters(params, no_data_no_scenario = TRUE)
     }else{
       scenario_fn <- get(glue::glue("{scenario_function}_{this_ind}"), mode = "function")
     }
@@ -300,8 +302,9 @@ add_scenario_indicator <- function(df,
 
   df_scenario <- exec_scenario(this_ind_df,
                                scenario_fn,
-                               params) %>%
-    fill_cols_scenario(scenario_col = scenario_col)
+                               params)
+
+  df_scenario <- fill_cols_scenario(df_scenario, scenario_col = scenario_col)
 
   unique_final_scenario_names <- unique(df_scenario[[scenario_col]])
 

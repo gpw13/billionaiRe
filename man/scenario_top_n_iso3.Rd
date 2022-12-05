@@ -27,6 +27,7 @@ scenario_top_n_iso3(
   ind_ids = billion_ind_codes("all"),
   bau_scenario = "historical",
   default_scenario = "default",
+  no_data_no_scenario = FALSE,
   ...
 )
 }
@@ -96,6 +97,10 @@ be supplied as a named vector where the names correspond to the output of
 Default is \code{historical}.}
 
 \item{default_scenario}{name of the default scenario to be used.}
+
+\item{no_data_no_scenario}{(Boolean) if TRUE, then no scenario at all is generated
+when there is less than 2 reported/estimated values between \code{baseline_year}
+and \code{aroc_end_year}}
 
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }
