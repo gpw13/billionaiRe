@@ -251,7 +251,7 @@ accelerate_beds <- function(df,
   iso3_with_scenario <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::filter(any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
+    dplyr::filter(any((.data[[value_col]] < 18 & .data[["year"]] >= 2018))) %>%
     dplyr::ungroup() %>%
     dplyr::pull(.data[["iso3"]]) %>%
     unique()
@@ -813,8 +813,7 @@ accelerate_pneumo <- function(df,
     set_parameters(linear_value = 3,
                    target_year = 2025,
                    scenario_name = "3_percent_change",
-                   upper_limit = 90,
-                   baseline_year = 2018
+                   upper_limit = 90
     )
 
   df_this_ind <- df %>%

@@ -77,7 +77,8 @@ basic_hep_test <- function(ind) {
       ind = ind,
       iso3 = "testalia",
       scenario = "default",
-      source = NA_character_
+      source = NA_character_,
+      type = dplyr::if_else(year > 2021, "projected", "reported")
     )
 
     df_add_indicator <- add_scenario_indicator(df,
@@ -131,7 +132,7 @@ testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
                                        bau_scenario = "default",
                                        expend_bau = FALSE)
 
-  testthat::expect_equal(nrow(calculated_test_data), 238)
+  testthat::expect_equal(nrow(calculated_test_data), 200)
 
   num_bgd_2025 <- calculated_test_data %>%
     dplyr::filter(
@@ -226,6 +227,7 @@ testthat::test_that("accelerate_meningitis_campaign returns accurate results:", 
   calculated_test_data <- add_scenario(hep_test_df,
                                        "accelerate",
                                        bau_scenario = "default",
+                                       start_scenario_last_default = FALSE,
                                        make_default = FALSE,
                                        expend_bau = FALSE)
 

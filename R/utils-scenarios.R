@@ -131,12 +131,36 @@ get_baseline_value <- function(value, year, baseline_year) {
 get_last_type_baseline_value <- function(value, year, type, baseline_year, type_filter = c("reported", "estimated")) {
   assert_same_length(value, year, type)
 
-  vec <- year[type %in% type_filter & year <= baseline_year]
+  years <- year[type %in% type_filter & year <= baseline_year]
 
-  max_year <- max(vec)
+  values <- value[type %in% type_filter & year <= baseline_year]
 
-  value[year == max_year]
+  max_year <- max(years)
+
+  values[years == max_year]
 }
+
+#' Get last type baseline value
+#'
+#' @param value vector of values
+#' @param year vector of years. Must be the same length as `value`
+#' @param baseline_year Year integer at which to get the baseline_value
+#' @param type vector of types. Must be the same length as `value`
+#' @inheritParams get_last_value
+#'
+#' @noRd
+get_last_type_baseline_scenario_value <- function(value, year, type, scenario_col, scenario, baseline_year, type_filter = c("reported", "estimated")) {
+  assert_same_length(value, year, type)
+
+  years <- year[type %in% type_filter & year <= baseline_year & scenario_col == scenario]
+
+  values <- value[type %in% type_filter & year <= baseline_year & scenario_col == scenario]
+
+  max_year <- max(years)
+
+  values[years == max_year]
+}
+
 
 #' Get last type baseline value in interval
 #'

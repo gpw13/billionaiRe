@@ -50,7 +50,6 @@ testthat::test_that(paste0("accelerate_anc4 returns accurate values:"), {
     get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
     get_fixed_target(95, 71,2021, 2030)
   )
-
 })
 
 # art ----------------------------

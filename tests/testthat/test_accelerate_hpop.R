@@ -61,12 +61,10 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
   testthat::expect_equal(df_add_indicator_2025, 60)
 
   df_add_indicator_2018 <- df_add_indicator %>%
-    dplyr::filter(scenario == "acceleration", year == 2021) %>%
+    dplyr::filter(scenario == "acceleration", year == 2022) %>%
     dplyr::pull(value)
 
-
   testthat::expect_equal(df_add_indicator_2018, 71)
-
 })
 
 testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
@@ -118,8 +116,6 @@ testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_indicator_2025, 54)
-
-
 })
 
 testthat::test_that(paste0("accelerate_child_obese returns accurate values:"), {

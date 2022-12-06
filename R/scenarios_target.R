@@ -55,14 +55,16 @@ scenario_fixed_target <- function(df,
     dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(.data[["ind"]], .data[["iso3"]]) %>%
-    dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value_col]], .data[["year"]], !!baseline_year)) %>%
+    dplyr::mutate(
+      "baseline_year_" := get_last_type_baseline_year(.data[["year"]], .data[["type"]], !!baseline_year, type_filter = c("reported", "estimated", "projected", "imputed")),
+      "baseline_value_" := get_baseline_value(.data[[value_col]], .data[["year"]], .data[["baseline_year_"]])) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       "baseline_value_" := dplyr::case_when(
         is.na(.data[["baseline_value_"]]) ~ as.numeric(0),
         TRUE ~ as.numeric(.data[["baseline_value_"]])
       ),
-      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], baseline_year, target_year, .data[["baseline_value_"]]),
+      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], .data[["baseline_year_"]], target_year, .data[["baseline_value_"]]),
       !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value_")) %>%
