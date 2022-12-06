@@ -195,7 +195,7 @@ scenario_bau <- function(df,
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col)) %>%
       dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
-      dplyr::mutate(start_value = .data[[value_col]][.data[["year"]] == start_year & .data[[scenario_col]] == default_scenario])%>%
+      dplyr::mutate(start_value = get_last_type_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]], start_year, type_filter = c("reported", "estimated", "imputed", "projected")))%>%
       dplyr::filter(.data[[scenario_col]] == bau_scenario) %>%
       dplyr::mutate(
         last_year = max(.data[["year"]][!is.na(.data[[value_col]])], na.rm = TRUE),

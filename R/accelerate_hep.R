@@ -63,9 +63,9 @@ accelerate_espar <- function(df,
     dplyr::group_by(.data[["iso3"]]) %>%
     tidyr::pivot_wider(names_from = "year", names_prefix = "value_", values_from = tidyselect::all_of(value_col)) %>%
     dplyr::mutate(baseline = dplyr::case_when(
-      !is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & (is.na(.data[[glue::glue("{value_col}_{start_year}")]]) | .data[[glue::glue("{value_col}_{last_year_reported - 1}")]] > .data[[glue::glue("{value_col}_{start_year}")]]) ~ as.integer(last_year_reported - 1),
-      is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & is.na(.data[[glue::glue("{value_col}_{start_year}")]]) & !is.na(.data[[glue::glue("{value_col}_{last_year_reported}")]]) ~ as.integer(last_year_reported),
-      TRUE ~ as.integer(start_year)
+      !is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & (is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) | .data[[glue::glue("{value_col}_{last_year_reported - 1}")]] > .data[[glue::glue("{value_col}_{start_year - 1}")]]) ~ as.integer(last_year_reported - 1),
+      is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) & !is.na(.data[[glue::glue("{value_col}_{last_year_reported}")]]) ~ as.integer(last_year_reported),
+      TRUE ~ as.integer(start_year-1)
     )) %>%
     dplyr::select("iso3", "baseline")
 

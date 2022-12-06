@@ -813,7 +813,8 @@ accelerate_pneumo <- function(df,
     set_parameters(linear_value = 3,
                    target_year = 2025,
                    scenario_name = "3_percent_change",
-                   upper_limit = 90
+                   upper_limit = 90,
+                   baseline_year = 2018
     )
 
   df_this_ind <- df %>%
