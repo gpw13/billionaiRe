@@ -56,5 +56,5 @@ Runs:
 \item \code{scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)}
 }
 
-Then picks the best result between the three scenarios.
+Then picks the best result between the two scenarios.
 }

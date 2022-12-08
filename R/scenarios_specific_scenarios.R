@@ -195,30 +195,29 @@ scenario_bau <- function(df,
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col)) %>%
       dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
-      dplyr::mutate(start_value = get_last_type_baseline_scenario_value(.data[[value_col]],
-                                                                        .data[["year"]],
-                                                                        .data[["type"]],
-                                                                        .data[[scenario_col]],
-                                                                        default_scenario,
-                                                                        start_year,
-                                                                        type_filter = c("reported", "estimated", "imputed", "projected")))%>%
+      dplyr::mutate(start_value = get_baseline_value(.data[[value_col]],
+                                                     .data[["year"]],
+                                                     .data[["type"]],
+                                                     .data[[scenario_col]],
+                                                     default_scenario,
+                                                     baseline_year = start_year,
+                                                     type_filter = c("all")))%>%
       dplyr::filter(.data[[scenario_col]] == bau_scenario) %>%
       dplyr::mutate(
         last_year = max(.data[["year"]][!is.na(.data[[value_col]])], na.rm = TRUE),
         last_value = .data[[value_col]][.data[["year"]] == .data[["last_year"]]],
-        baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year),
         "{value_col}" := dplyr::case_when(
           !is.na(.data[["start_value"]]) & .data[["year"]] == start_year ~ .data[["start_value"]],
           is.na(.data[[value_col]]) & .data[["year"]] > .data[["last_year"]] ~ .data[["last_value"]],
           TRUE ~ .data[[value_col]]
         ),
         "{value_col}" := dplyr::case_when(
-          avoid_worstening & small_is_best & .data[[value_col]] > baseline_value ~ baseline_value,
-          avoid_worstening & !small_is_best & .data[[value_col]] < baseline_value ~ baseline_value,
+          avoid_worstening & small_is_best & .data[[value_col]] > start_value ~ start_value,
+          avoid_worstening & !small_is_best & .data[[value_col]] < start_value ~ start_value,
           TRUE ~ .data[[value_col]]
         )
       ) %>%
-      dplyr::select(-c("last_value", "last_year", "baseline_value", "start_value"))
+      dplyr::select(-c("last_value", "last_year", "start_value"))
   }else{
     scenario_df <- scenario_df %>%
       dplyr::full_join(full_years, by = c("year", "iso3", "ind", scenario_col))
@@ -242,7 +241,11 @@ scenario_bau <- function(df,
       trim_years = trim_years,
       start_year = start_year,
       end_year = end_year
-    )
+    ) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      !is.na(.data[["type"]]) ~ .data[["type"]],
+      TRUE ~ "projected"
+    ))
 
   df %>%
     dplyr::bind_rows(bau)
@@ -294,8 +297,8 @@ scenario_with_values <- function(df,
     params_fn <- get_right_parameters(params, scenario_fn)
 
     df_with_data_fn <-  exec_scenario(df_with_data,
-                                 scenario_fn,
-                                 params_fn)%>%
+                                      scenario_fn,
+                                      params_fn)%>%
       dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
 
   } else {
@@ -307,8 +310,8 @@ scenario_with_values <- function(df,
     params_bau <- get_right_parameters(params, scenario_bau)
 
     df_without_data_fn <- exec_scenario(df_without_data,
-                                                 scenario_bau,
-                                                 params_bau) %>%
+                                        scenario_bau,
+                                        params_bau) %>%
       dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
   } else {
     df_without_data_fn <- tibble::tibble()

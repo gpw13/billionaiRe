@@ -108,114 +108,279 @@ get_goal <- function(value, year, start_year, perc_change) {
   value[year == start_year] * (100 + perc_change) / 100
 }
 
-#' Get baseline value
+#' Get last value from baseline
 #'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
+#' @param value (character vector) of values
+#' @param year (character vector) of years. Must be the same length as `value`
 #' @param baseline_year Year integer at which to get the baseline_value
-#'
-#' @noRd
-get_baseline_value <- function(value, year, baseline_year) {
-  value[year == baseline_year]
-}
+#' @param type (character vector) of types. Must be the same length as `value`
+#' @param scenario_col (character vector) of scenarios. Must be the same length as `value`
+#' @param scenario name of scenario in which to look for the baseline value
+#' @param type_filter (character vector) vector of types to be filtered for.
+#' @param direction direction in which the last value should be found. `before`
+#' (default) looks in years before `baseline_year`, while `after` looks in years
+#' following `baseline_year`.
+#' @param na_rm (Boolean) indicating if NA should be removed (default) from `type_filter`
+#' or not.
+get_baseline_value <- function(value,
+                               year,
+                               type,
+                               scenario_col = NULL,
+                               scenario = NULL,
+                               baseline_year,
+                               type_filter = c("all", "reported", "estimated", "projected", "imputed"),
+                               direction = c("before", "after"),
+                               na_rm = TRUE) {
 
-#' Get last type baseline value
-#'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
-#' @param baseline_year Year integer at which to get the baseline_value
-#' @param type vector of types. Must be the same length as `value`
-#' @inheritParams get_last_value
-#'
-#' @noRd
-get_last_type_baseline_value <- function(value, year, type, baseline_year, type_filter = c("reported", "estimated")) {
+  direction <- rlang::arg_match(direction)
+  type_filter <- rlang::arg_match(type_filter, multiple = TRUE)
+
+  if("all" %in% type_filter){
+    type_filter <- c("reported", "estimated", "projected", "imputed")
+  }
+
+  if(!na_rm){
+    type_filter <- c(type_filter, NA)
+  }
+
   assert_same_length(value, year, type)
 
-  years <- year[type %in% type_filter & year <= baseline_year]
+  if(!is.null(scenario_col) & !is.null(scenario)){
+    year <- year[scenario_col == scenario]
+    value <- value[scenario_col == scenario]
+    type <- type[scenario_col == scenario ]
+    assert_same_length(value, year, type)
+  }
 
-  values <- value[type %in% type_filter & year <= baseline_year]
+  if(direction == "before"){
+    years <- year[type %in% type_filter & year <= baseline_year]
 
-  max_year <- max(years)
+    values <- value[type %in% type_filter & year <= baseline_year]
+    if(length(years>0)){
+      this_year <- max(years)
+    }else{
+      return(NA_integer_)
+    }
+  }else{
+    years <- year[type %in% type_filter & year >= baseline_year]
 
-  values[years == max_year]
+    values <- value[type %in% type_filter & year >= baseline_year]
+
+    if(length(years>0)){
+      this_year <- min(years)
+    }else{
+      return(NA_integer_)
+    }
+  }
+
+  values[years == this_year]
 }
 
-#' Get last type baseline value
+#' Get last year from baseline
 #'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
-#' @param baseline_year Year integer at which to get the baseline_value
-#' @param type vector of types. Must be the same length as `value`
-#' @inheritParams get_last_value
-#'
-#' @noRd
-get_last_type_baseline_scenario_value <- function(value, year, type, scenario_col, scenario, baseline_year, type_filter = c("reported", "estimated")) {
-  assert_same_length(value, year, type)
+#' @inherit get_baseline_value
+get_baseline_year <- function(year,
+                              type,
+                              scenario_col = NULL,
+                              scenario = NULL,
+                              baseline_year,
+                              type_filter = c("all", "reported", "estimated", "projected", "imputed"),
+                              direction = c("before", "after"),
+                              na_rm = TRUE) {
 
-  years <- year[type %in% type_filter & year <= baseline_year & scenario_col == scenario]
+  direction <- rlang::arg_match(direction)
+  type_filter <- rlang::arg_match(type_filter, multiple = TRUE)
 
-  values <- value[type %in% type_filter & year <= baseline_year & scenario_col == scenario]
+  if("all" %in% type_filter){
+    type_filter <- c("reported", "estimated", "projected", "imputed")
+  }
 
-  max_year <- max(years)
+  if(!na_rm){
+    type_filter <- c(type_filter, NA)
+  }
 
-  values[years == max_year]
-}
-
-
-#' Get last type baseline value in interval
-#'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
-#' @param baseline_year Year integer at which to get the baseline_value
-#' @param type vector of types. Must be the same length as `value`
-#' @inheritParams get_last_value
-#'
-#' @noRd
-get_first_type_interval_value <- function(value, year, type, start_year, end_year, type_filter = c("reported", "estimated")) {
-  assert_same_length(value, year, type)
-
-  vec <- year[type %in% type_filter & year <= end_year & year >= start_year]
-
-  min_year <- min(vec)
-
-  value[year == min_year]
-}
-
-#' Get last type baseline value in interval
-#'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
-#' @param baseline_year Year integer at which to get the baseline_value
-#' @param type vector of types. Must be the same length as `value`
-#' @inheritParams get_last_value
-#'
-#' @noRd
-get_first_type_interval_year <- function(year, type, start_year, end_year, type_filter = c("reported", "estimated")) {
   assert_same_length(year, type)
 
-  vec <- year[type %in% type_filter & year <= end_year & year >= start_year]
+  if(!is.null(scenario_col) & !is.null(scenario)){
+    year <- year[scenario_col == scenario]
+    type <- type[scenario_col == scenario ]
+    assert_same_length(year, type)
+  }
 
-  min_year <- min(vec)
+  if(direction == "before"){
+    years <- year[type %in% type_filter & year <= baseline_year]
+    if(length(years>0)){
+      this_year <- max(years)
+    }else{
+      return(NA_integer_)
+    }
+  }else{
+    years <- year[type %in% type_filter & year >= baseline_year]
+
+    if(length(years>0)){
+      this_year <- min(years)
+    }else{
+      return(NA_integer_)
+    }
+  }
+
+  years[years == this_year]
+
 }
 
-#' Get last type baseline year
+#' Get last value in interval
 #'
-#' @param value vector of values
-#' @param year vector of years. Must be the same length as `value`
-#' @param baseline_year Year integer at which to get the baseline_value
-#' @param type vector of types. Must be the same length as `value`
-#' @inheritParams get_last_value
-#'
+#' @inheritParams get_baseline_value
 #'
 #' @noRd
-get_last_type_baseline_year <- function(year, type, baseline_year, type_filter = c("reported", "estimated")) {
+get_last_interval_value <- function(value,
+                                    year,
+                                    type,
+                                    scenario_col = NULL,
+                                    scenario = NULL,
+                                    start_year,
+                                    end_year,
+                                    type_filter = c("all", "reported", "estimated", "projected", "imputed"),
+                                    direction = c("before", "after"),
+                                    na_rm = TRUE) {
+  direction <- rlang::arg_match(direction)
+  type_filter <- rlang::arg_match(type_filter, multiple = TRUE)
+
+  if("all" %in% type_filter){
+    type_filter <- c("reported", "estimated", "projected", "imputed")
+  }
+
+  if(!na_rm){
+    type_filter <- c(type_filter, NA)
+  }
+
+  assert_same_length(value, year, type)
+
+  if(!is.null(scenario_col) & !is.null(scenario)){
+    year <- year[scenario_col == scenario]
+    value <- value[scenario_col == scenario]
+    type <- type[scenario_col == scenario ]
+    assert_same_length(value, year, type)
+  }
+
+  years <- year[type %in% type_filter & year >= start_year & year <= end_year]
+  values <- value[type %in% type_filter & year >= start_year & year <= end_year]
+
+  if(direction == "before"){
+    if(length(years>0)){
+      this_year <- min(years)
+    }else{
+      return(NA_integer_)
+    }
+  }else{
+    if(length(years>0)){
+      this_year <- max(years)
+    }else{
+      return(NA_integer_)
+    }
+  }
+
+  values[years == this_year]
+}
+
+#' Get last year in interval
+#'
+#' @inheritParams get_baseline_value
+#'
+#' @noRd
+get_last_interval_year <- function(year,
+                                    type,
+                                    scenario_col = NULL,
+                                    scenario = NULL,
+                                    start_year,
+                                    end_year,
+                                    type_filter = c("all", "reported", "estimated", "projected", "imputed"),
+                                    direction = c("before", "after"),
+                                    na_rm = TRUE) {
+  direction <- rlang::arg_match(direction)
+  type_filter <- rlang::arg_match(type_filter, multiple = TRUE)
+
+  if("all" %in% type_filter){
+    type_filter <- c("reported", "estimated", "projected", "imputed")
+  }
+
+  if(!na_rm){
+    type_filter <- c(type_filter, NA)
+  }
+
   assert_same_length(year, type)
 
-  # df <- data.frame(year, type)
+  if(!is.null(scenario_col) & !is.null(scenario)){
+    year <- year[scenario_col == scenario]
+    type <- type[scenario_col == scenario ]
+    assert_same_length(year, type)
+  }
 
-  vec <- year[type %in% type_filter & year <= baseline_year]
+  years <- year[type %in% type_filter & year >= start_year & year <= end_year]
 
-  max(vec)
+  if(direction == "before"){
+    if(length(years>0)){
+      this_year <- min(years)
+    }else{
+      return(NA_integer_)
+    }
+  }else{
+    if(length(years>0)){
+      this_year <- max(years)
+    }else{
+      return(NA_integer_)
+    }
+  }
+
+  years[years == this_year]
+}
+
+#' Get last value for the filter
+#'
+#' @param df (data.frame) containing the data. Needs to have at least the `year` and `type` columns.
+#' @param type_filter (character vector) vector of types to be filtered for.
+#'
+get_last_value <- function(df, type_filter = c("reported", "estimated")){
+  assert_columns(df, "type", "year")
+
+  df %>%
+    dplyr::filter(.data[["type"]] %in% type_filter) %>%
+    dplyr::filter(.data[["year"]] == max(.data[["year"]]))
+}
+
+#' Get last value for the filter in default scenario
+#'
+#' @param df (data.frame) containing the data. Needs to have at least the `year`, `scenario_col` and `type` columns.
+#' @inherit accelerate_alcohol
+#' @param indicator (character) identifying the indicator for which to get the last year of `type_filter` data.
+#' @inheritParams recycle_data_scenario_single
+#' @inheritParams get_last_value
+#'
+get_last_year_scenario <- function(df,
+                                   indicator,
+                                   start_year = 2018,
+                                   scenario = "default",
+                                   scenario_col = "scenario",
+                                   type_filter = c("reported", "estimated")){
+  assert_columns(df, "year", scenario_col, "ind", "type")
+
+  if(!is.null(indicator)){
+    df <- df %>%
+      dplyr::filter(.data[["ind"]] == !!indicator)
+  }
+
+  df_filtered <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!scenario,
+                  .data[["type"]] %in% !!type_filter)
+
+  if(nrow(df_filtered) >0){
+    df_filtered %>%
+      dplyr::summarise(max_year = max(.data[["year"]], na.rm = T)) %>%
+      dplyr::pull(.data[["max_year"]])
+  }else{
+    start_year
+  }
+
 }
 
 #' Calcualte Average annual rate of change
@@ -488,54 +653,6 @@ remove_unwanted_scenarios <- function(df,
   } else {
     df
   }
-}
-
-#' Get last value for the filter
-#'
-#' @param df (data.frame) containing the data. Needs to have at least the `year` and `type` columns.
-#' @param type_filter (character vector) vector of types to be filtered for.
-#'
-get_last_value <- function(df, type_filter = c("reported", "estimated")){
-  assert_columns(df, "type", "year")
-
-  df %>%
-    dplyr::filter(.data[["type"]] %in% type_filter) %>%
-    dplyr::filter(.data[["year"]] == max(.data[["year"]]))
-}
-
-#' Get last value for the filter in default scenario
-#'
-#' @param df (data.frame) containing the data. Needs to have at least the `year`, `scenario_col` and `type` columns.
-#' @inherit accelerate_alcohol
-#' @param indicator (character) identifying the indicator for which to get the last year of `type_filter` data.
-#' @inheritParams recycle_data_scenario_single
-#' @inheritParams get_last_value
-#'
-get_last_year_scenario <- function(df,
-                                   indicator,
-                                   start_year = 2018,
-                                   scenario = "default",
-                                   scenario_col = "scenario",
-                                   type_filter = c("reported", "estimated")){
-  assert_columns(df, "year", scenario_col, "ind", "type")
-
-  if(!is.null(indicator)){
-    df <- df %>%
-      dplyr::filter(.data[["ind"]] == !!indicator)
-  }
-
-  df_filtered <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!scenario,
-                  .data[["type"]] %in% !!type_filter)
-
-  if(nrow(df_filtered) >0){
-    df_filtered %>%
-      dplyr::summarise(max_year = max(.data[["year"]], na.rm = T)) %>%
-      dplyr::pull(.data[["max_year"]])
-  }else{
-    start_year
-  }
-
 }
 
 #' Execute a scenario

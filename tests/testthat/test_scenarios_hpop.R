@@ -55,7 +55,8 @@ test_hpop_scenarios <- function(ind) {
       ind = ind,
       iso3 = "testalia",
       scenario = "default",
-      source = NA_character_
+      source = NA_character_,
+      type = dplyr::if_else(year <= 2021, "reported", "projected")
     )
 
     df_add_indicator_fixed_target <- add_scenario_indicator(df_small,
@@ -87,7 +88,8 @@ purrr::walk(hpop_ind, ~ test_hpop_scenarios(.x))
 testthat::test_that("add_scenarios runs properly on hpop_df", {
   hpop_halt_rise <- hpop_df %>%
     dplyr::mutate(scenario = "default",
-                  source = NA_character_) %>%
+                  source = NA_character_,
+                  type = stringr::str_to_lower(type)) %>%
     add_scenario("halt_rise",
                  baseline_year = 2018,
                  start_scenario_last_default = FALSE,

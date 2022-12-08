@@ -138,7 +138,11 @@ testthat::test_that("scenario_bau returns accurate values", {
     year = rep(2010:2030, 3),
     ind = "water",
     iso3 = "testalia",
-    scenario = c(rep("a", 21), rep("b", 21), rep("c", 21))
+    scenario = c(rep("a", 21), rep("b", 21), rep("c", 21)),
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
   )
 
   df_scenario_bau <- scenario_bau(df,

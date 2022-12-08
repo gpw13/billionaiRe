@@ -1,11 +1,19 @@
-testthat::test_that("scenario_aroc latest produces accurate results with positive AROC", {
-  df <- tibble::tibble(
-    value = 80:100,
-    year = 2010:2030,
+get_df <- function(values = 80:100, years = 2010:2030){
+  tibble::tibble(
+    value = values,
+    year = years,
     ind = "water",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
   )
+}
+
+testthat::test_that("scenario_aroc latest produces accurate results with positive AROC", {
+  df <- get_df()
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest")
 
@@ -34,13 +42,8 @@ testthat::test_that("scenario_aroc latest produces accurate results with positiv
 })
 
 testthat::test_that("scenario_aroc latest produces accurate results with negative AROC", {
-  df <- tibble::tibble(
-    value = 100:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+
+  df <- get_df(100:80)
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest")
 
@@ -70,13 +73,7 @@ testthat::test_that("scenario_aroc latest produces accurate results with negativ
 
 
 testthat::test_that("scenario_aroc target produces accurate results with positive AROC", {
-  df <- tibble::tibble(
-    value = 60:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(60:80)
 
   df_aroc_target <- scenario_aroc(df, aroc_type = "target", target_value = 99, target_year = 2025)
 
@@ -90,13 +87,7 @@ testthat::test_that("scenario_aroc target produces accurate results with positiv
 })
 
 testthat::test_that("scenario_aroc target produces accurate results with negative AROC", {
-  df <- tibble::tibble(
-    value = 60:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(60:80)
 
   df_aroc_target <- scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2025, small_is_best = TRUE)
 
@@ -110,13 +101,7 @@ testthat::test_that("scenario_aroc target produces accurate results with negativ
 })
 
 testthat::test_that("scenario_aroc percent_change produces accurate results with positive percent_change", {
-  df <- tibble::tibble(
-    value = 60:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(60:80)
 
   df_aroc_percent_change <- scenario_aroc(df, aroc_type = "percent_change", percent_change = 3, target_year = 2025, small_is_best = TRUE)
 
@@ -126,13 +111,7 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
 })
 
 testthat::test_that("scenario_aroc percent_change produces accurate results with negative percent_change", {
-  df <- tibble::tibble(
-    value = 60:80,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(60:80)
 
   df_aroc_percent_change <- scenario_aroc(df, aroc_type = "percent_change", percent_change = -3, target_year = 2025, small_is_best = TRUE)
 
@@ -148,13 +127,9 @@ testthat::test_that("scenario_aroc percent_change produces accurate results with
 })
 
 testthat::test_that("scenario_aroc produces accurate results with limit_aroc_direction positive", {
-  df <- tibble::tibble(
-    value = seq(60, 70, length.out = length(2017:2027)),
-    year = 2017:2027,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+
+  df <- get_df(seq(60, 70, length.out = length(2017:2027)),
+               years = 2017:2027)
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest", limit_aroc_direction = "positive", small_is_best = TRUE)
 
@@ -189,13 +164,9 @@ testthat::test_that("scenario_aroc produces accurate results with limit_aroc_dir
 })
 
 testthat::test_that("scenario_aroc produces accurate results with limit_aroc_direction positive", {
-  df <- tibble::tibble(
-    value = seq(80, 60, length.out = length(2017:2027)),
-    year = 2017:2027,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+
+  df <- get_df(seq(80, 60, length.out = length(2017:2027)),
+               years = 2017:2027)
 
   df_aroc_latest <- scenario_aroc(df, aroc_type = "latest", limit_aroc_direction = "negative")
 

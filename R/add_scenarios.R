@@ -338,3 +338,4 @@ add_scenario_indicator <- function(df,
   return(df_scenario)
 }
 
+

@@ -56,8 +56,12 @@ scenario_fixed_target <- function(df,
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(.data[["ind"]], .data[["iso3"]]) %>%
     dplyr::mutate(
-      "baseline_year_" := get_last_type_baseline_year(.data[["year"]], .data[["type"]], !!baseline_year, type_filter = c("reported", "estimated", "projected", "imputed")),
-      "baseline_value_" := get_baseline_value(.data[[value_col]], .data[["year"]], .data[["baseline_year_"]])) %>%
+      "baseline_year_" := get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = !!baseline_year, type_filter = c("reported", "estimated", "imputed", "projected")),
+      "baseline_value_" := get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              baseline_year = .data[["baseline_year_"]],
+                                              type_filter = c("all"))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       "baseline_value_" := dplyr::case_when(
@@ -67,7 +71,7 @@ scenario_fixed_target <- function(df,
       scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], .data[["baseline_year_"]], target_year, .data[["baseline_value_"]]),
       !!sym(scenario_col) := scenario_name
     ) %>%
-    dplyr::select(-c("baseline_value_")) %>%
+    dplyr::select(-c("baseline_value_", "baseline_year_")) %>%
     trim_values(
       col = "scenario_value",
       value_col = value_col,
@@ -79,7 +83,11 @@ scenario_fixed_target <- function(df,
       trim_years = trim_years,
       start_year = start_year,
       end_year = end_year
-    )
+    ) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      !is.na(.data[["type"]]) ~ .data[["type"]],
+      TRUE ~ "projected"
+    ))
 
   df %>%
     dplyr::bind_rows(scenario_df)
@@ -220,7 +228,13 @@ scenario_halt_rise <- function(df,
 
   target_df <- df %>%
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
-    dplyr::mutate(target = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year)) %>%
+    dplyr::mutate(target = get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              .data[[scenario_col]],
+                                              default_scenario,
+                                              baseline_year,
+                                              type_filter = c("all"))) %>%
     dplyr::ungroup()
 
   scenario_fixed_target_col(target_df,

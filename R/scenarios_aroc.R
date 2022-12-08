@@ -84,8 +84,8 @@ scenario_aroc <- function(df,
     assert_ind_start_end_year(scenario_df, value_col, baseline_year - 1, baseline_year, unique(scenario_df[["ind"]]))
 
     aroc <- get_latest_aarc(scenario_df,
-      baseline_year = baseline_year,
-      value_col = value_col
+                            baseline_year = baseline_year,
+                            value_col = value_col
     )
   } else if (aroc_type == "target") {
     if (is.null(target_value)) {
@@ -94,10 +94,10 @@ scenario_aroc <- function(df,
     assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, unique(scenario_df[["ind"]]))
     assert_numeric(target_value)
     aroc <- get_target_aarc(scenario_df,
-      target_value,
-      baseline_year = baseline_year,
-      target_year = target_year,
-      value_col = value_col)
+                            target_value,
+                            baseline_year = baseline_year,
+                            target_year = target_year,
+                            value_col = value_col)
   } else if (aroc_type == "percent_change") {
     if (is.null(percent_change)) {
       stop("percent_change must be provided for percent_change AROC to be calculated. It was NULL.")
@@ -105,10 +105,10 @@ scenario_aroc <- function(df,
     assert_numeric(target_value)
     assert_ind_start_end_year(scenario_df, value_col, baseline_year, end_year = baseline_year, unique(scenario_df[["ind"]]))
     aroc <- get_percent_change_aarc(scenario_df,
-      percent_change,
-      baseline_year,
-      target_year,
-      value_col = value_col
+                                    percent_change,
+                                    baseline_year,
+                                    target_year,
+                                    value_col = value_col
     )
   }
 
@@ -124,18 +124,30 @@ scenario_aroc <- function(df,
 
   aroc_df <- scenario_df %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
-    dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year)) %>%
+    dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]],
+                                                                         .data[["year"]],
+                                                                         .data[["type"]],
+                                                                         .data[[scenario_col]],
+                                                                         default_scenario,
+                                                                         start_year,
+                                                                         type_filter = c("all")),
+                  baseline_year = get_baseline_year(.data[["year"]],
+                                                                       .data[["type"]],
+                                                                       .data[[scenario_col]],
+                                                                       default_scenario,
+                                                                       start_year,
+                                                                       type_filter = c("all"))) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(aroc, by = c("iso3", "ind")) %>%
     dplyr::mutate(
       scenario_value = dplyr::case_when(
-        .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
-        .data[["year"]] > start_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[["year"]] - start_year)),
+        # .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
+        .data[["year"]] >= start_year ~ .data[["baseline_value"]] * ((1 + .data[["aroc"]])^(.data[["year"]] - .data[["baseline_year"]])),
         TRUE ~ NA_real_
       ),
       !!sym(scenario_col) := scenario_name
     ) %>%
-    dplyr::select(-c("baseline_value", "aroc")) %>%
+    dplyr::select(-c("baseline_value","baseline_value", "aroc")) %>%
     trim_values(
       col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,

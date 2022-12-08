@@ -64,7 +64,7 @@ testthat::test_that(paste0("accelerate_adult_obese returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2022) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2018, 71)
+  testthat::expect_equal(df_add_indicator_2018, 68.25)
 })
 
 testthat::test_that(paste0("accelerate_alcohol returns accurate values:"), {
@@ -880,14 +880,13 @@ testthat::test_that(paste0("accelerate_wasting returns accurate values:"), {
                                              indicator = ind,
                                              scenario_function = "accelerate",
                                              bau_scenario = "default",
-                                             start_scenario_last_default = TRUE
-  )
+                                             start_scenario_last_default = TRUE)
 
   df_add_indicator_2025 <- df_add_indicator %>%
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 71 * ((1 - 0.2964125)^(2025 - 2021)), tolerance = 1e-05)
+  testthat::expect_equal(df_add_indicator_2025, 71 * ((1 - 0.3266624)^(2025 - 2022)), tolerance = 1e-05)
 
 })
 
@@ -925,7 +924,8 @@ testthat::test_that(paste0("accelerate_water, water_urban and water_rural return
     ind = ind,
     iso3 = "testalia",
     scenario = "default",
-    source = NA_character_
+    source = NA_character_,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   df_add_indicator <- add_scenario_indicator(df,

@@ -190,32 +190,10 @@ accelerate_child_viol <- function(df,
     dplyr::filter(.data[["ind"]] == this_ind,
                   .data[[scenario_col]] == default_scenario)
 
-  full_df <- tidyr::expand_grid(
-    "iso3" := unique(df_this_ind[["iso3"]]),
-    "year" := start_year,
-    "ind" := this_ind,
-    "{scenario_col}" := unique(df_this_ind[[scenario_col]])
-  )
-
-  latest_values <- df_this_ind %>%
-    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
-    dplyr::filter(.data[["year"]] <= start_year) %>%
-    dplyr::filter(max(.data[["year"]]) == .data[["year"]]) %>%
-    dplyr::mutate(latest_value = .data[[value_col]]) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(tidyselect::all_of(c("iso3", "ind", scenario_col, "latest_value")))
-
-  df_this_ind <- df_this_ind %>%
-    dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
-    dplyr::left_join(latest_values, by = c("iso3", "ind", scenario_col)) %>%
-    dplyr::mutate(
-      !!sym(value_col) := dplyr::case_when(
-        is.na(.data[[value_col]]) ~ .data[["latest_value"]],
-        TRUE ~ .data[[value_col]]
-      )
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(-"latest_value")
+  df_this_ind_with_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] %in% c("reported", "estimated"), na.rm = TRUE) > 1,
+                  .data[[scenario_col]] == default_scenario)
 
   params <- get_dots_and_call_parameters(...) %>%
     set_parameters(
@@ -224,10 +202,15 @@ accelerate_child_viol <- function(df,
     ) %>%
     get_right_parameters(scenario_fixed_target)
 
-  df_accelerated <- exec_scenario(df_this_ind,
-                scenario_fixed_target,
-                params) %>%
-    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+  if(nrow(df_this_ind_with_data) > 0){
+
+    df_accelerated <- exec_scenario(df_this_ind_with_data,
+                                    scenario_fixed_target,
+                                    params) %>%
+      dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+  }else{
+    df_accelerated <- df_this_ind_with_data
+  }
 
   dplyr::bind_rows(df, df_accelerated)
 }
@@ -260,32 +243,10 @@ accelerate_devontrack <- function(df,
     dplyr::filter(.data[["ind"]] == this_ind,
                   .data[[scenario_col]] == default_scenario)
 
-  full_df <- tidyr::expand_grid(
-    "iso3" := unique(df_this_ind[["iso3"]]),
-    "year" := start_year,
-    "ind" := this_ind,
-    "{scenario_col}" := unique(df_this_ind[[scenario_col]])
-  )
-
-  latest_values <- df_this_ind %>%
-    dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", scenario_col)))) %>%
-    dplyr::filter(.data[["year"]] <= start_year) %>%
-    dplyr::filter(max(.data[["year"]]) == .data[["year"]]) %>%
-    dplyr::mutate(latest_value = .data[[value_col]]) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(tidyselect::all_of(c("iso3", "ind", scenario_col, "latest_value")))
-
-  df_this_ind <- df_this_ind %>%
-    dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
-    dplyr::left_join(latest_values, by = c("iso3", "ind", scenario_col)) %>%
-    dplyr::mutate(
-      !!sym(value_col) := dplyr::case_when(
-        is.na(.data[[value_col]]) ~ .data[["latest_value"]],
-        TRUE ~ .data[[value_col]]
-      )
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(-"latest_value")
+  df_this_ind_with_data <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(sum(.data[["type"]] %in% c("reported", "estimated"), na.rm = TRUE) > 1,
+                  .data[[scenario_col]] == default_scenario)
 
   params <- get_dots_and_call_parameters(...) %>%
     set_parameters(
@@ -295,10 +256,15 @@ accelerate_devontrack <- function(df,
     ) %>%
     get_right_parameters(scenario_fixed_target)
 
-  df_accelerated <- exec_scenario(df_this_ind,
-                scenario_fixed_target,
-                params) %>%
-    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+  if(nrow(df_this_ind_with_data) > 0){
+
+    df_accelerated <- exec_scenario(df_this_ind_with_data,
+                                    scenario_fixed_target,
+                                    params) %>%
+      dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+  }else{
+    df_accelerated <- df_this_ind_with_data
+  }
 
   dplyr::bind_rows(df, df_accelerated)
 }
@@ -526,7 +492,21 @@ accelerate_hpop_tobacco <- function(df,
     dplyr::group_by(.data[["iso3"]]) %>%
     dplyr::mutate(
       has_estimates = any(.data[["type"]] %in% c("estimated", "reported")),
-      baseline_value = .data[[value_col]][.data[["year"]] == start_year],
+      baseline_value = get_baseline_value(
+        .data[[value_col]],
+        .data[["year"]],
+        .data[["type"]],
+        .data[[scenario_col]],
+        default_scenario,
+        start_year,
+        type_filter = c("all")),
+      baseline_year = get_baseline_year(
+        .data[["year"]],
+        .data[["type"]],
+        .data[[scenario_col]],
+        default_scenario,
+        start_year,
+        type_filter = c("all")),
       old_baseline_value = .data[[value_col]][.data[["year"]] == 2010]
     ) %>%
     dplyr::ungroup() %>%
@@ -534,12 +514,12 @@ accelerate_hpop_tobacco <- function(df,
       goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
       "{scenario_col}" := "-30_2020",
       scenario_value = dplyr::if_else(
-        .data[["year"]] >= start_year & .data[["year"]] <= 2025 & .data[["has_estimates"]],
-        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
+        .data[["year"]] >= .data[["baseline_year"]] & .data[["year"]] <= 2025 & .data[["has_estimates"]],
+        .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - .data[["baseline_year"]]) / (end_year - .data[["baseline_year"]]),
         NA_real_
       ),
       "type_" := dplyr::if_else(
-        is.na(.data[["type"]]) & .data[["year"]] >= start_year,
+        is.na(.data[["type"]]) & .data[["year"]] >= .data[["baseline_year"]],
         "projected",
         .data[["type"]])
     ) %>%
@@ -547,6 +527,7 @@ accelerate_hpop_tobacco <- function(df,
     trim_values(
       col = "scenario_value",
       trim = TRUE,
+      start_year = start_year,
       small_is_best = params[["small_is_best"]],
       keep_better_values = FALSE,
       upper_limit = 100,
@@ -1070,7 +1051,7 @@ accelerate_transfats <- function(df,
 #'  - `scenario_halt_rise(df, small_is_best = TRUE,...)`
 #'  - `scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)`
 #'
-#' Then picks the best result between the three scenarios.
+#' Then picks the best result between the two scenarios.
 #'
 #' @inherit accelerate_adult_obese
 #' @inheritParams scenario_fixed_target

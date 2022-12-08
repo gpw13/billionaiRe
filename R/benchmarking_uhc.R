@@ -19,9 +19,9 @@ benchmarking_anc4 <- function(df,
                   wb_ig = whoville::iso3_to_regions(.data[["iso3"]], "wb_ig"))
 
   params_benchmarking <- list(
-    prop = list(NULL, .1, .25, .25, .1),
-    use_prop = c(FALSE, rep(TRUE,4)),
-    group_col = list(NULL, "region", NULL, "wb_ig", "wb_ig")
+    prop = c(rep(.2, 3)),
+    use_prop = c(rep(TRUE, 3)),
+    group_col = list(NULL, "region", "wb_ig")
   )
 
   params_expanded <- purrr::pmap(params_benchmarking, set_parameters, parameters = params)

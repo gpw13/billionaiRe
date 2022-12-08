@@ -744,7 +744,7 @@ accelerate_meningitis_routine <- function(df,
 
   target_df <- this_ind_df %>%
     dplyr::filter(
-      .data[["year"]] == get_last_type_baseline_year(.data[["year"]], .data[["type"]], start_year, type_filter = c("reported", "imputed", "projected", "estimated"))
+      .data[["year"]] == get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = start_year, type_filter = c("reported", "imputed", "projected", "estimated"))
     ) %>%
     dplyr::mutate(
       target_col = dplyr::case_when(

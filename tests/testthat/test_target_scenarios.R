@@ -4,7 +4,8 @@ testthat::test_that("scenario_fixed_percent returns accurate values:", {
     year = 2010:2030,
     ind = "test",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   target_value <- 99
@@ -79,7 +80,8 @@ testthat::test_that("scenario_fixed_percent is vectorized on target_value:", {
     ind = "test",
     iso3 = "testalia",
     scenario = "default",
-    target = target_value
+    target = target_value,
+    type = dplyr::if_else(year <= 2021, "reported", "projected")
   )
 
   value_col <- "value"

@@ -100,10 +100,14 @@ scenario_top_n_iso3 <- function(df,
       dplyr::filter(.data[["type"]] %in% c("estimated", "reported")) %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(c(scenario_col, "iso3", "ind")))) %>%
       dplyr::mutate(
-        baseline_year = get_first_type_interval_year(.data[["year"]], .data[["type"]], baseline_year, aroc_end_year),
-        baseline_value = get_first_type_interval_value(.data[[value_col]], .data[["year"]], .data[["type"]], baseline_year, aroc_end_year),
-        aroc_end_value = get_last_type_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]], aroc_end_year),
-        aroc_end_year = get_last_type_baseline_year(.data[["year"]], .data[["type"]], aroc_end_year),
+        baseline_year = get_last_interval_year(.data[["year"]], .data[["type"]], start_year = baseline_year, end_year = aroc_end_year),
+        baseline_value = get_last_interval_value(.data[[value_col]],
+                                                 .data[["year"]],
+                                                 .data[["type"]],
+                                                 start_year = baseline_year, end_year = aroc_end_year,
+                                                 type_filter = c("reported", "estimated")),
+        aroc_end_value = get_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]], baseline_year = aroc_end_year),
+        aroc_end_year = get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = aroc_end_year, type_filter = c("reported", "estimated")),
         aroc = calculate_aroc(.data[["baseline_year"]],.data[["baseline_value"]], end_year = .data[["aroc_end_year"]], .data[["aroc_end_value"]])
       ) %>%
       dplyr::ungroup() %>%
@@ -149,7 +153,12 @@ scenario_top_n_iso3 <- function(df,
     df_with_data_aroc <- df_with_data %>%
       dplyr::left_join(max_aroc, by = c(scenario_col, "ind", group_col)) %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", group_col)))) %>%
-      dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], start_year)) %>%
+      dplyr::mutate(baseline_value = get_baseline_value(
+        .data[[value_col]],
+        .data[["year"]],
+        .data[["type"]],
+        baseline_year = start_year,
+        type_filter = c("all", "reported", "estimated", "projected", "imputed"))) %>%
       dplyr::mutate(
         scenario_value = dplyr::case_when(
           .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),

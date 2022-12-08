@@ -34,13 +34,12 @@ get_avg_aroc_top_n <- function(df, n = 10, prop = NULL, start_year = 2018, end_y
     dplyr::filter(scenario == "default") %>%
     dplyr::group_by(iso3) %>%
     dplyr::mutate(
-      baseline_year = get_first_type_interval_year(.data[["year"]], .data[["type"]], 2013, 2018),
-      baseline_value = get_first_type_interval_value(.data[["value"]], .data[["year"]], .data[["type"]], 2013, 2018),
-      aroc_end_value = get_last_type_baseline_value(.data[["value"]], .data[["year"]], .data[["type"]], 2018),
-      aroc_end_year = get_last_type_baseline_year(.data[["year"]], .data[["type"]], 2018),
-      aroc = calculate_aroc(.data[["baseline_year"]],.data[["baseline_value"]], end_year = .data[["aroc_end_year"]], .data[["aroc_end_value"]]),
-                  aroc =   (aroc_end_value - baseline_value)/(aroc_end_year - baseline_year),
-                  region = whoville::iso3_to_regions(iso3)) %>%
+      baseline_year = get_last_interval_year(.data[["year"]], .data[["type"]], start_year = 2013, end_year = 2018, type_filter = c("reported", "estimated")),
+      baseline_value = get_last_interval_value(.data[["value"]], .data[["year"]], .data[["type"]], start_year = 2013, end_year = 2018, type_filter = c("reported", "estimated")),
+      aroc_end_value = get_baseline_value(.data[["value"]], .data[["year"]], .data[["type"]], baseline_year = 2018, type_filter = c("reported", "estimated")),
+      aroc_end_year = get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = 2018, type_filter = c("reported", "estimated")),
+      aroc =   (aroc_end_value - baseline_value)/(aroc_end_year - baseline_year),
+      region = whoville::iso3_to_regions(iso3)) %>%
     dplyr::select(iso3, ind, aroc, region) %>%
     dplyr::distinct() %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(c("ind", grp_by))))

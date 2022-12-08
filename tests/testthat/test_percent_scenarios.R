@@ -1,11 +1,19 @@
-testthat::test_that("scenario_percent_baseline gets corrects with position change.", {
-  df <- tibble::tibble(
-    value = 50:70,
-    year = 2010:2030,
+get_df <- function(values = 80:100, years = 2010:2030){
+  tibble::tibble(
+    value = values,
+    year = years,
     ind = "water",
     iso3 = "testalia",
-    scenario = "default"
+    scenario = "default",
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
   )
+}
+
+testthat::test_that("scenario_percent_baseline gets corrects with position change.", {
+  df <- get_df(50:70)
 
   percent_change <- 40
 
@@ -58,13 +66,7 @@ testthat::test_that("scenario_percent_baseline gets corrects with position chang
 })
 
 testthat::test_that("scenario_percent_baseline gets corrects with negative change.", {
-  df <- tibble::tibble(
-    value = 50:70,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(50:70)
 
   percent_change <- -40
 
@@ -117,13 +119,7 @@ testthat::test_that("scenario_percent_baseline gets corrects with negative chang
 })
 
 testthat::test_that("scenario_percent_baseline sets correct limits.", {
-  df <- tibble::tibble(
-    value = 20:40,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(20:40)
 
   percent_change <- -180
 
@@ -178,13 +174,7 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
 
   testthat::expect_equal(df_scenario_neg_setting_limits_explicitely_2025, 0)
 
-  df <- tibble::tibble(
-    value = 80:100,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(80:100)
 
   percent_change <- 180
 
@@ -234,13 +224,7 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
 })
 
 testthat::test_that("scenario_halt_rise returns correct results:", {
-  df <- tibble::tibble(
-    value = 80:100,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(80:100)
 
   baseline_year <- 2010
   target_year <- 2030
@@ -276,7 +260,6 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
 
   testthat::expect_equal(df_scenario_halt_rise, df_test_halt_rise)
 
-
   df_scenario_halt_rise_2018 <- df %>%
     dplyr::filter(year %in% c(2010, 2018)) %>%
     scenario_halt_rise(
@@ -295,13 +278,7 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
 })
 
 testthat::test_that("scenario_linear_change provides accurate results:", {
-  df <- tibble::tibble(
-    value = 80:100,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default"
-  )
+  df <- get_df(80:100)
 
   df_test <- df %>%
     dplyr::filter(year >= 2018, year <= 2025) %>%
@@ -335,14 +312,8 @@ testthat::test_that("scenario_linear_change provides accurate results:", {
 })
 
 testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
-  df <- tibble::tibble(
-    value = 80:100,
-    year = 2010:2030,
-    ind = "water",
-    iso3 = "testalia",
-    scenario = "default",
-    linear_value = 1
-  )
+  df <- get_df(80:100) %>%
+    dplyr::mutate(linear_value = 1)
 
   df_test <- df %>%
     dplyr::filter(year >= 2018, year <= 2025) %>%

@@ -1,4 +1,3 @@
-library(purrr)
 
 testthat::test_that("espar returns appropriate values", {
   df <- tidyr::expand_grid(
@@ -270,13 +269,13 @@ testthat::test_that("accelerate_meningitis_routine returns accurate results:", {
 
   testthat::expect_equal(df_add_scenario_2025, fixed_target_2025)
 
-  test_data <- test_data %>%
+  test_data_df <- test_data %>%
     dplyr::filter(scenario != "default") %>%
     make_default_scenario(billion = "hep") %>%
     dplyr::filter(scenario == "default") %>%
     dplyr::mutate(source = NA_character_)
 
-  df_add_scenario_indicator <- add_scenario_indicator(test_data,
+  df_add_scenario_indicator <- add_scenario_indicator(test_data_df,
                                                       "accelerate",
                                                       "meningitis_routine",
                                                       bau_scenario = "default",
@@ -387,7 +386,6 @@ testthat::test_that("accelerate_polio_routine returns accurate results:", {
                              baseline_year = 2015) %>%
     dplyr::filter(year == 2025, scenario != "default") %>%
     dplyr::pull(value)
-
 
   testthat::expect_equal(df_add_scenario_indicator_2021_2025, aroc_2021_2025)
 
