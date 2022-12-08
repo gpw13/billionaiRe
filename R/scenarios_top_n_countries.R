@@ -161,8 +161,7 @@ scenario_top_n_iso3 <- function(df,
         type_filter = c("all", "reported", "estimated", "projected", "imputed"))) %>%
       dplyr::mutate(
         scenario_value = dplyr::case_when(
-          .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
-          .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
+          .data[["year"]] >= start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
           TRUE ~ NA_real_
         ),
         !!sym(scenario_col) := scenario_name
