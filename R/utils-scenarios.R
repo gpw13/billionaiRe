@@ -16,8 +16,10 @@
 #' than `col` will be kept.
 #' @param upper_limit upper limit at which the indicator should be caped.
 #' @param lower_limit lower_limit limit at which the indicator should be caped.
-#' @param trim_years logical to indicate if years before `start_year` and after
-#' `end_year` should be removed
+#' @param trim_years logical to indicate if years before `start_year_trim` and after
+#' `end_year_trim` should be removed
+#' @param start_year_trim (integer) year to start trimming from.
+#' @param end_year_trim (integer) year to end trimming.
 #'
 #' @return trimed data frame, removing the `col` column, and putting the trimmed
 #' values in `value_col`
@@ -32,8 +34,8 @@ trim_values <- function(df,
                         upper_limit = 100,
                         lower_limit = 0,
                         trim_years = TRUE,
-                        start_year = 2018,
-                        end_year = 2025) {
+                        start_year_trim = 2018,
+                        end_year_trim = 2025) {
 
   assert_columns(df, value_col, col)
 
@@ -61,7 +63,7 @@ trim_values <- function(df,
         )
       ) %>%
       dplyr::select(-tidyselect::all_of(c("better_value", col))) %>%
-      trim_years(trim_years, start_year, end_year)
+      trim_years(trim_years, start_year_trim, end_year_trim)
   } else {
     return(df)
   }
@@ -361,7 +363,7 @@ get_last_year_scenario <- function(df,
                                    start_year = 2018,
                                    scenario = "default",
                                    scenario_col = "scenario",
-                                   type_filter = c("reported", "estimated")){
+                                   type_filter = c("reported", "estimated", "projected", "estimated")){
   assert_columns(df, "year", scenario_col, "ind", "type")
 
   if(!is.null(indicator)){

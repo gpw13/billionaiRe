@@ -36,6 +36,8 @@ scenario_fixed_target <- function(df,
                                   upper_limit = 100,
                                   lower_limit = 0,
                                   trim_years = TRUE,
+                                  start_year_trim = start_year,
+                                  end_year_trim = end_year,
                                   ind_ids = billion_ind_codes("all"),
                                   default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -81,8 +83,8 @@ scenario_fixed_target <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
     dplyr::mutate(type = dplyr::case_when(
       !is.na(.data[["type"]]) ~ .data[["type"]],
@@ -154,6 +156,8 @@ scenario_fixed_target_col <- function(df,
                                       upper_limit = 100,
                                       lower_limit = 0,
                                       trim_years = TRUE,
+                                      start_year_trim = start_year,
+                                      end_year_trim = end_year,
                                       ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
   full_years_df <- tidyr::expand_grid(
@@ -188,6 +192,8 @@ scenario_fixed_target_col <- function(df,
     upper_limit = upper_limit,
     lower_limit = lower_limit,
     trim_years = trim_years,
+    start_year_trim = start_year_trim,
+    end_year_trim = end_year_trim,
     ind_ids = ind_ids,
     default_scenario = default_scenario
   ) %>%

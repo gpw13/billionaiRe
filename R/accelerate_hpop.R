@@ -454,12 +454,14 @@ accelerate_hpop_sanitation_urban <- function(df,
 #'
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#' @inheritParams trim_values
 #'
 accelerate_hpop_tobacco <- function(df,
                                     ind_ids = billion_ind_codes("hpop"),
                                     scenario_col = "scenario",
                                     value_col = "value",
                                     start_year = 2018,
+                                    start_year_trim = start_year + 1,
                                     end_year = 2025,
                                     default_scenario = "default",
                                     bau_scenario = "historical",
@@ -527,7 +529,7 @@ accelerate_hpop_tobacco <- function(df,
     trim_values(
       col = "scenario_value",
       trim = TRUE,
-      start_year = start_year,
+      start_year_trim = start_year_trim,
       small_is_best = params[["small_is_best"]],
       keep_better_values = FALSE,
       upper_limit = 100,

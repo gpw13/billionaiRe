@@ -19,6 +19,8 @@ scenario_bau(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   ind_ids = billion_ind_codes("all"),
   bau_scenario = "historical",
   default_scenario = "default"
@@ -65,8 +67,12 @@ the limit if \code{percent_change} is positive, and 0 if negative.}
 Can take any of "guess", or 0 to 100. \code{guess} (default) will take 0 as the
 limit if \code{percent_change} is positive, and 100 if negative.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

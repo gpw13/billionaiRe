@@ -24,10 +24,14 @@ scenario_top_n_iso3(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   ind_ids = billion_ind_codes("all"),
   bau_scenario = "historical",
   default_scenario = "default",
   no_data_no_scenario = FALSE,
+  is_aroc_last_n_years = FALSE,
+  aroc_last_n_years = 5,
   ...
 )
 }
@@ -85,8 +89,12 @@ the limit if \code{percent_change} is positive, and 0 if negative.}
 Can take any of "guess", or 0 to 100. \code{guess} (default) will take 0 as the
 limit if \code{percent_change} is positive, and 100 if negative.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
@@ -101,6 +109,13 @@ Default is \code{historical}.}
 \item{no_data_no_scenario}{(Boolean) if TRUE, then no scenario at all is generated
 when there is less than 2 reported/estimated values between \code{baseline_year}
 and \code{aroc_end_year}}
+
+\item{is_aroc_last_n_years}{(Boolean) identifying if the AROC interval should
+be based on the last \code{aroc_last_n_years} since the last \code{reported} or
+\code{estimated} value before \code{end_year}.}
+
+\item{aroc_last_n_years}{(integer) number of years after the last \code{reported}
+or \code{estimated} value to start the AROC interval.}
 
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }

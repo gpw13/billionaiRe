@@ -59,6 +59,8 @@ scenario_aroc <- function(df,
                           trim = TRUE,
                           small_is_best = FALSE,
                           keep_better_values = TRUE,
+                          start_year_trim = start_year,
+                          end_year_trim = end_year,
                           upper_limit = 100,
                           lower_limit = 0,
                           trim_years = TRUE,
@@ -151,7 +153,7 @@ scenario_aroc <- function(df,
     trim_values(
       col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,
-      lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
+      lower_limit = lower_limit, trim_years = trim_years, start_year_trim = start_year_trim, end_year_trim = end_year_trim
     )
 
   df %>%

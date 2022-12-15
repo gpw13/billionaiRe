@@ -20,6 +20,8 @@ scenario_linear_change(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default"
 )
@@ -65,8 +67,12 @@ calculation. If \code{value_col} is already higher before calculation it will be
 \item{lower_limit}{numeric indicating the lower bound of the data after
 calculation. If \code{value_col} is already lower before calculation it will be kept}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

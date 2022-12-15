@@ -10,6 +10,8 @@ sdg_hpop_tobacco(
   scenario_col = "scenario",
   start_year = 2018,
   end_year = 2025,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   default_scenario = "default",
   value_col = "value",
   ...
@@ -30,6 +32,10 @@ calculating contributions on data in long format rather than wide format.}
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{default_scenario}{name of the default scenario.}
 

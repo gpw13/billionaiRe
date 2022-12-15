@@ -15,8 +15,8 @@ trim_values(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
-  start_year = 2018,
-  end_year = 2025
+  start_year_trim = 2018,
+  end_year_trim = 2025
 )
 }
 \arguments{
@@ -48,12 +48,12 @@ than \code{col} will be kept.}
 
 \item{lower_limit}{lower_limit limit at which the indicator should be caped.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
 
-\item{start_year}{Start year for scenario, defaults to 2018.}
+\item{start_year_trim}{(integer) year to start trimming from.}
 
-\item{end_year}{End year for scenario, defaults to 2025}
+\item{end_year_trim}{(integer) year to end trimming.}
 }
 \value{
 trimed data frame, removing the \code{col} column, and putting the trimmed

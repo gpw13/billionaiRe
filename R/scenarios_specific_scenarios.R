@@ -31,6 +31,8 @@ scenario_best_of <- function(df,
                              upper_limit = 100,
                              lower_limit = 0,
                              trim_years = TRUE,
+                             start_year_trim = start_year,
+                             end_year_trim = end_year,
                              ind_ids = billion_ind_codes("all")) {
 
   this_ind <- unique(df[["ind"]])
@@ -113,8 +115,8 @@ scenario_best_of <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
     dplyr::mutate(!!sym(scenario_col) := scenario_name)
 
@@ -160,6 +162,8 @@ scenario_bau <- function(df,
                          upper_limit = 100,
                          lower_limit = 0,
                          trim_years = TRUE,
+                         start_year_trim = start_year,
+                         end_year_trim = end_year,
                          ind_ids = billion_ind_codes("all"),
                          bau_scenario = "historical",
                          default_scenario = "default") {
@@ -239,9 +243,8 @@ scenario_bau <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
-    ) %>%
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim) %>%
     dplyr::mutate(type = dplyr::case_when(
       !is.na(.data[["type"]]) ~ .data[["type"]],
       TRUE ~ "projected"

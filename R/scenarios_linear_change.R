@@ -41,6 +41,8 @@ scenario_linear_change <- function(df,
                                    upper_limit = 100,
                                    lower_limit = 0,
                                    trim_years = TRUE,
+                                   start_year_trim = start_year,
+                                   end_year_trim = end_year,
                                    ind_ids = billion_ind_codes("all"),
                                    default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -78,8 +80,8 @@ scenario_linear_change <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
     dplyr::select(-c("baseline_value", "baseline_year")) %>%
     dplyr::mutate(type = dplyr::case_when(
@@ -117,6 +119,8 @@ scenario_linear_change_col <- function(df,
                                        upper_limit = 100,
                                        lower_limit = 0,
                                        trim_years = TRUE,
+                                       start_year_trim = start_year,
+                                       end_year_trim = end_year,
                                        ind_ids = billion_ind_codes("all"),
                                        default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -174,8 +178,8 @@ scenario_linear_change_col <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
     dplyr::select(- tidyselect::all_of(c("baseline_value","baseline_year", linear_value_col))) %>%
     dplyr::mutate(type = dplyr::case_when(

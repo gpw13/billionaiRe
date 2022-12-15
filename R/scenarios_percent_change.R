@@ -56,6 +56,8 @@ scenario_percent_baseline <- function(df,
                                       upper_limit = "guess",
                                       lower_limit = "guess",
                                       trim_years = TRUE,
+                                      start_year_trim = start_year,
+                                      end_year_trim = end_year,
                                       ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -119,8 +121,8 @@ scenario_percent_baseline <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = TRUE,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
     dplyr::select(-c("_goal_value", "_baseline_value", "_baseline_year"))
 

@@ -10,6 +10,7 @@ accelerate_hpop_tobacco(
   scenario_col = "scenario",
   value_col = "value",
   start_year = 2018,
+  start_year_trim = start_year + 1,
   end_year = 2025,
   default_scenario = "default",
   bau_scenario = "historical",
@@ -32,6 +33,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{value_col}{Name of the column containing indicator value in \code{df}.}
 
 \item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 

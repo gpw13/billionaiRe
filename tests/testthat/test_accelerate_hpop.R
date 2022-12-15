@@ -886,7 +886,7 @@ testthat::test_that(paste0("accelerate_wasting returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 71 * ((1 - 0.3266624)^(2025 - 2022)), tolerance = 1e-05)
+  testthat::expect_equal(df_add_indicator_2025, 71 * ((1 - 0.2964125)^(2025 - 2021)), tolerance = 1e-05)
 
 })
 
@@ -1013,7 +1013,7 @@ testthat::test_that("acceleration can be run on all hpop indicators:", {
                                        bau_scenario = "default",
                                        start_scenario_last_default = FALSE)
 
-  testthat::expect_equal(nrow(calculated_test_data), 493)
+  testthat::expect_equal(nrow(calculated_test_data), 492)
 
   test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     dplyr::mutate(source = NA_character_)

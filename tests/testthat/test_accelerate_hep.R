@@ -213,7 +213,6 @@ testthat::test_that("accelerate_measles_routine returns accurate results:", {
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_scenario_indicator_2021_2025, 75.53902, tolerance = 5)
-
 })
 
 testthat::test_that("accelerate_meningitis_campaign returns accurate results:", {

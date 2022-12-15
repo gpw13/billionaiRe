@@ -324,11 +324,15 @@ sdg_hpop_sanitation_urban <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hep_data
+#' @inheritParams trim_values
+
 sdg_hpop_tobacco <- function(df,
                              ind_ids = billion_ind_codes("hpop"),
                              scenario_col = "scenario",
                              start_year = 2018,
                              end_year = 2025,
+                             start_year_trim = start_year,
+                             end_year_trim = end_year,
                              default_scenario = "default",
                              value_col = "value",
                              ...) {
@@ -386,8 +390,8 @@ sdg_hpop_tobacco <- function(df,
       upper_limit = 100,
       lower_limit = 0,
       trim_years = TRUE,
-      end_year = end_year,
-      start_year = start_year
+      end_year_trim = end_year_trim,
+      start_year_trim = start_year_trim
     )
 
   df %>%

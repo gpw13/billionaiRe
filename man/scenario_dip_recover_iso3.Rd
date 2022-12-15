@@ -23,6 +23,8 @@ scenario_dip_recover_iso3(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   ind_ids = billion_ind_codes("all"),
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y")),
   default_scenario = "default"
@@ -34,7 +36,7 @@ country, year, and indicator.}
 
 \item{iso3}{(character) ISO3 code of country to scenario}
 
-\item{start_year}{Start year for scenario, defaults to 2018.}
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{dip_year}{(integer) year where the dip appends}
 
@@ -52,7 +54,7 @@ and \code{dip_year} is used to calculate
 
 \item{aroc_start_year}{(integer) year}
 
-\item{end_year}{End year for scenario, defaults to 2025}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
@@ -78,8 +80,12 @@ than \code{col} will be kept.}
 
 \item{lower_limit}{lower_limit limit at which the indicator should be caped.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must
