@@ -264,6 +264,8 @@ scenario_dip_recover_iso3_ind <- function(df,
                                           upper_limit = 100,
                                           lower_limit = 0,
                                           trim_years = TRUE,
+                                          start_year_trim = start_year,
+                                          end_year_trim = end_year,
                                           source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y"))){
   ind_df <- df %>%
     dplyr::filter(.data[["ind"]] == !! ind,
@@ -292,7 +294,9 @@ scenario_dip_recover_iso3_ind <- function(df,
         trim_years = trim_years,
         small_is_best = small_is_best,
         ind_ids = ind_ids,
-        bau_scenario = default_scenario
+        bau_scenario = default_scenario,
+        start_year_trim = start_year_trim,
+        end_year_trim = end_year_trim
       ) %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario_name) %>%
       dplyr::mutate(

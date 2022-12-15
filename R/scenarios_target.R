@@ -227,6 +227,8 @@ scenario_halt_rise <- function(df,
                                keep_better_values = FALSE,
                                small_is_best = FALSE,
                                trim_years = TRUE,
+                               start_year_trim = start_year,
+                               end_year_trim = end_year,
                                ind_ids = billion_ind_codes("all"),
                                default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -258,6 +260,8 @@ scenario_halt_rise <- function(df,
                             upper_limit = upper_limit,
                             lower_limit = lower_limit,
                             trim_years = trim_years,
+                            start_year_trim = start_year_trim,
+                            end_year_trim = end_year_trim,
                             ind_ids = ind_ids,
                             default_scenario = default_scenario) %>%
     dplyr::select(-"target")

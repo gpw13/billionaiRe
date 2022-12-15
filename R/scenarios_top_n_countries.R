@@ -198,18 +198,16 @@ scenario_top_n_iso3 <- function(df,
     df_with_data_aroc <- df_with_data %>%
       dplyr::left_join(max_aroc, by = c(scenario_col, "ind", group_col)) %>%
       dplyr::group_by(dplyr::across(dplyr::all_of(c("iso3", "ind", group_col)))) %>%
-      dplyr::mutate(baseline_value = get_baseline_value(
-        .data[[value_col]],
-        .data[["year"]],
-        .data[["type"]],
-        baseline_year = start_year,
-        type_filter = c("all", "reported", "estimated", "projected", "imputed"))) %>%
-      dplyr::mutate(
-        scenario_value = dplyr::case_when(
-          .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
-          TRUE ~ NA_real_
-        ),
-        !!sym(scenario_col) := scenario_name
+      dplyr::mutate(baseline_value = get_baseline_value(.data[[value_col]],
+                                                        .data[["year"]],
+                                                        .data[["type"]],
+                                                        baseline_year = start_year,
+                                                        type_filter = c("all", "reported", "estimated", "projected", "imputed")),
+                    scenario_value = dplyr::case_when(
+                      .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
+                      TRUE ~ NA_real_
+                    ),
+                    !!sym(scenario_col) := scenario_name
       ) %>%
       dplyr::select(-c("baseline_value", "aroc")) %>%
       trim_values(

@@ -48,7 +48,9 @@ recycle_data <- function(df,
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
                          ind_ids = NULL,
-                         trim_years = TRUE) {
+                         trim_years = TRUE,
+                         start_year_trim = start_year,
+                         end_year_trim = end_year) {
   assert_columns(df, "iso3", "ind", "year",value_col, scenario_col, "type")
   assert_unique_rows(df, scenario_col = scenario_col, ind_ids)
 
@@ -76,7 +78,9 @@ recycle_data <- function(df,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids,
-      trim_years = trim_years
+      trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     )
   )
 }
@@ -131,7 +135,10 @@ recycle_data_scenario_single <- function(df,
                                          include_projection = TRUE,
                                          recycle_campaigns = TRUE,
                                          ind_ids = NULL,
-                                         trim_years = FALSE) {
+                                         trim_years = FALSE,
+                                         start_year_trim = start_year,
+                                         end_year_trim = end_year
+) {
   assert_columns(df, scenario_col, value_col, "iso3", "ind", "year", "type")
   assert_unique_rows(df, scenario_col = scenario_col, ind_ids)
 
@@ -245,7 +252,7 @@ recycle_data_scenario_single <- function(df,
 
     if (trim_years) {
       not_in_scenario <- not_in_scenario %>%
-        trim_years(trim_years, start_year, end_year)
+        trim_years(trim_years, start_year_trim, end_year_trim)
     }
 
     scenario_df_final <- scenario_df %>%
@@ -327,7 +334,9 @@ make_default_scenario <- function(df,
                                   include_projection = TRUE,
                                   recycle_campaigns = TRUE,
                                   ind_ids = NULL,
-                                  trim_years = FALSE) {
+                                  trim_years = FALSE,
+                                  start_year_trim = start_year,
+                                  end_year_trim = end_year) {
   assert_columns(df, "iso3", "ind", value_col, "year", scenario_col, "type")
   assert_unique_rows(df, scenario_col, ind_ids)
 
@@ -363,7 +372,9 @@ make_default_scenario <- function(df,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids[[.x]],
-      trim_years = trim_years
+      trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     )
   ) %>%
     dplyr::bind_rows(df) %>%
