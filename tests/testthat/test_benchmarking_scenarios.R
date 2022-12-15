@@ -6,7 +6,8 @@ testthat::test_that("benchmarking scenarios can be applied to all indicators", {
     add_scenario("benchmarking",
                  default_scenario = "bau_2019_then_flat",
                  bau_scenario = "pre_covid_bau",
-                 make_default = TRUE)
+                 make_default = TRUE,
+                 start_scenario_last_default = TRUE)
 
   testthat::expect_error(benchmarked_df, NA)
 

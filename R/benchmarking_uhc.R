@@ -21,7 +21,9 @@ benchmarking_anc4 <- function(df,
   params_benchmarking <- list(
     prop = c(rep(.2, 3)),
     use_prop = c(rep(TRUE, 3)),
-    group_col = list(NULL, "region", "wb_ig")
+    group_col = list(NULL, "region", "wb_ig"),
+    is_aroc_last_n_years = TRUE,
+    aroc_last_n_years = 5
   )
 
   params_expanded <- purrr::pmap(params_benchmarking, set_parameters, parameters = params)

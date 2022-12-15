@@ -10,7 +10,7 @@ get_last_year_scenario(
   start_year = 2018,
   scenario = "default",
   scenario_col = "scenario",
-  type_filter = c("reported", "estimated")
+  type_filter = c("reported", "estimated", "projected", "estimated")
 )
 }
 \arguments{

@@ -71,7 +71,7 @@ get_avg_aroc_top_n <- function(df, n = 10, prop = NULL, start_year = 2018, end_y
         year >= 2018 ~ glue::glue("top_{n}_aroc"),
         TRUE ~ as.character(scenario)),
       value = dplyr::case_when(
-        year > 2018 ~ .data[["value"]][.data[["year"]] == 2018] + (.data[["aroc"]]*(.data[["year"]] - 2018)),
+        year >= 2018 ~ .data[["value"]][.data[["year"]] == 2018] + (.data[["aroc"]]*(.data[["year"]] - 2018)),
         TRUE ~ as.numeric(value)),
       value = dplyr::if_else(value > 100, 100, value)
     ) %>%

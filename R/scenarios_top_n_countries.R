@@ -27,6 +27,11 @@
 #' @param no_data_no_scenario (Boolean) if TRUE, then no scenario at all is generated
 #' when there is less than 2 reported/estimated values between `baseline_year`
 #' and `aroc_end_year`
+#' @param is_aroc_last_n_years (Boolean) identifying if the AROC interval should
+#' be based on the last `aroc_last_n_years` since the last `reported` or
+#' `estimated` value before `end_year`.
+#' @param aroc_last_n_years (integer) number of years after the last `reported`
+#' or `estimated` value to start the AROC interval.
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -51,10 +56,14 @@ scenario_top_n_iso3 <- function(df,
                                 upper_limit = 100,
                                 lower_limit = 0,
                                 trim_years = TRUE,
+                                start_year_trim = start_year,
+                                end_year_trim = end_year,
                                 ind_ids = billion_ind_codes("all"),
                                 bau_scenario = "historical",
                                 default_scenario = "default",
                                 no_data_no_scenario = FALSE,
+                                is_aroc_last_n_years = FALSE,
+                                aroc_last_n_years = 5,
                                 ...){
 
   if(use_prop){
@@ -96,18 +105,54 @@ scenario_top_n_iso3 <- function(df,
     dplyr::filter(.data[[scenario_col]] %in% c(!!default_scenario, !!bau_scenario))
 
   if(nrow(df_with_data)>0){
-    df_aroc <- df_with_data %>%
-      dplyr::filter(.data[["type"]] %in% c("estimated", "reported")) %>%
-      dplyr::group_by(dplyr::across(dplyr::all_of(c(scenario_col, "iso3", "ind")))) %>%
+    if(is_aroc_last_n_years){
+      df_aroc <- df_with_data %>%
+        dplyr::filter(.data[["type"]] %in% c("estimated", "reported")) %>%
+        dplyr::group_by(dplyr::across(dplyr::all_of(c(scenario_col, "iso3", "ind")))) %>%
+        dplyr::mutate(
+          aroc_end_year = get_baseline_year(.data[["year"]],
+                                            .data[["type"]],
+                                            .data[[scenario_col]],
+                                            scenario = default_scenario,
+                                            baseline_year = end_year,
+                                            type_filter = c("reported", "estimated")),
+          aroc_end_value = get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              .data[[scenario_col]],
+                                              scenario = default_scenario,
+                                              baseline_year = end_year,
+                                              type_filter = c("reported", "estimated")),
+          baseline_year = get_baseline_year(.data[["year"]],
+                                            .data[["type"]],
+                                            baseline_year = .data[["aroc_end_year"]] - 5,
+                                            type_filter = c("reported", "estimated"),
+                                            direction = "after"),
+          baseline_value = get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              baseline_year = .data[["aroc_end_year"]] - 5,
+                                              type_filter = c("reported", "estimated"),
+                                              direction = "after")
+        )
+    }else{
+      df_aroc <- df_with_data %>%
+        dplyr::filter(.data[["type"]] %in% c("estimated", "reported")) %>%
+        dplyr::group_by(dplyr::across(dplyr::all_of(c(scenario_col, "iso3", "ind")))) %>%
+        dplyr::mutate(
+          baseline_year = get_last_interval_year(.data[["year"]], .data[["type"]], start_year = !!baseline_year, end_year = !!aroc_end_year),
+          baseline_value = get_last_interval_value(.data[[value_col]],
+                                                   .data[["year"]],
+                                                   .data[["type"]],
+                                                   start_year = !!baseline_year, end_year = !!aroc_end_year,
+                                                   type_filter = c("reported", "estimated")),
+          aroc_end_value = get_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]], baseline_year = !!aroc_end_year),
+          aroc_end_year = get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = aroc_end_year, type_filter = c("reported", "estimated"))
+        )
+    }
+
+    df_aroc <- df_aroc %>%
       dplyr::mutate(
-        baseline_year = get_last_interval_year(.data[["year"]], .data[["type"]], start_year = !!baseline_year, end_year = !!aroc_end_year),
-        baseline_value = get_last_interval_value(.data[[value_col]],
-                                                 .data[["year"]],
-                                                 .data[["type"]],
-                                                 start_year = !!baseline_year, end_year = !!aroc_end_year,
-                                                 type_filter = c("reported", "estimated")),
-        aroc_end_value = get_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]], baseline_year = !!aroc_end_year),
-        aroc_end_year = get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = aroc_end_year, type_filter = c("reported", "estimated")),
         aroc = calculate_aroc(.data[["baseline_year"]],.data[["baseline_value"]], end_year = .data[["aroc_end_year"]], .data[["aroc_end_value"]])
       ) %>%
       dplyr::ungroup() %>%
@@ -161,7 +206,7 @@ scenario_top_n_iso3 <- function(df,
         type_filter = c("all", "reported", "estimated", "projected", "imputed"))) %>%
       dplyr::mutate(
         scenario_value = dplyr::case_when(
-          .data[["year"]] >= start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
+          .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[["aroc"]]*(.data[["year"]] - start_year)),
           TRUE ~ NA_real_
         ),
         !!sym(scenario_col) := scenario_name
@@ -170,7 +215,7 @@ scenario_top_n_iso3 <- function(df,
       trim_values(
         col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
         keep_better_values = keep_better_values, upper_limit = upper_limit,
-        lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
+        lower_limit = lower_limit, trim_years = trim_years, start_year_trim = start_year_trim, end_year_trim = end_year_trim
       ) %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario_name)
   }else{
