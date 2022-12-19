@@ -56,7 +56,9 @@ benchmarking_art <- function(df,
 #'
 benchmarking_beds <- function(df,
                               ...) {
-  params <- get_dots_and_call_parameters(...)
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(upper_limit = 10000)
+
   exec_scenario(df,
                 benchmarking_anc4,
                 params)
