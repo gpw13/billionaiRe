@@ -20,6 +20,8 @@ scenario_best_in_region(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   default_scenario = "default"
 )
 }
@@ -71,6 +73,10 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
 \code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{default_scenario}{name of the default scenario to be used.}
 }

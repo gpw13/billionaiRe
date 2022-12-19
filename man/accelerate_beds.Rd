@@ -47,8 +47,9 @@ Accelerate beds by first dividing countries into two groups:
 \item For countries with 18 or more beds for all years after 2018, business
 as usual is returned.
 \item For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-the best of business as usual and a \strong{linear change of 0.36 per year up to 2025},
-with an upper limit of 18, is returned.
+the best of business as usual and a \strong{applying the AROC of the top 10
+performing countries with at least 4 reported/estimated values}, with an
+upper limit of 18, is returned.
 }
 }
 \details{

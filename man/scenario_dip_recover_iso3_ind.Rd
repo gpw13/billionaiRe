@@ -28,6 +28,8 @@ scenario_dip_recover_iso3_ind(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y"))
 )
 }
@@ -100,6 +102,10 @@ than \code{col} will be kept.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 }

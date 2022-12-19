@@ -1,7 +1,7 @@
 get_2025_value <- function(values = 60:80, ind, type, iso3 = "testalia", start_scenario_last_default = FALSE) {
   tibble::tibble(
     value = values,
-    year = 2010:2030,
+    year = rep(2010:2030, length(unique(iso3))),
     ind = ind,
     type = type,
     iso3 = iso3,
@@ -36,11 +36,11 @@ get_linear_change <- function(linear_value, baseline_value = 68, baseline_year =
 testthat::test_that(paste0("accelerate_anc4 returns accurate values:"), {
   ind <- "anc4"
 
-  # fixed target, 95 by 2030 = 83.75 & linear change of 2.6/yr to 2025 = 86.2
-  # bau (75) so final value is 86.2 from fixed target.
+  # fixed target, 95 by 2030 = 83.75 & linear change of 1/yr to 2025 = 75
+  # bau (75) so final value is 75 from linear change.
   testthat::expect_equal(
     get_2025_value(60:80, ind, "reported"),
-    68 + 2.6*(2025-2018)
+    get_linear_change(1,68, 2018, 2030)
   )
 
   # No reported data, so bau result is returned
@@ -48,7 +48,51 @@ testthat::test_that(paste0("accelerate_anc4 returns accurate values:"), {
 
   testthat::expect_equal(
     get_2025_value(60:80, ind, "reported", start_scenario_last_default = TRUE),
-    get_fixed_target(95, 71,2021, 2030)
+    get_linear_change(0, 71,2021, 2025)
+  )
+
+  test_df <- tibble::tibble(
+    value = rep(c(20:40, 40:60, 60:80,
+                  seq(1, 60, length.out = 21),
+                  seq(1, 100, length.out = 21),
+                  seq(30, 60, length.out = 21),
+                  seq(50, 90, length.out = 21),
+                  seq(20, 70, length.out = 21),
+                  seq(10, 50, length.out = 21),
+                  seq(1, 10, length.out = 21)
+    ),2),
+    year = rep(2010:2030, 20),
+    ind = ind,
+    type = "reported",
+    iso3 = unlist(purrr::map(c(whoville::who_member_states()[1:20]), rep, 21)),
+    scenario = rep(c(rep("default", 12), rep("historical", 9)),20),
+    source = NA_character_
+  )
+
+  arocs <- test_df %>%
+    dplyr::filter(type == "reported") %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(
+      baseline_value = .data[["value"]][.data[["year"]] == 2013],
+      end_value = .data[["value"]][.data[["year"]] == 2018],
+      aroc = calculate_aroc(2013, .data[["baseline_value"]], 2018, .data[["end_value"]])) %>%
+    dplyr::select(iso3, aroc) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup()
+
+  top_10_aroc_avg <- arocs %>%
+    dplyr::slice_max(aroc, n = 10) %>%
+    dplyr::summarise(max_aroc = mean(aroc)) %>%
+    dplyr::pull(max_aroc)
+
+  df_acceleration <- test_df %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "historical", start_scenario_last_default = TRUE) %>%
+    dplyr::filter(scenario == "acceleration")
+
+  testthat::expect_equal(
+    dplyr::filter(df_acceleration, iso3 == "PRT", year == 2025) %>%
+      dplyr::pull(value),
+    get_linear_change(0.45, 5.95,2021, 2025)
   )
 })
 
@@ -86,19 +130,19 @@ testthat::test_that(paste0("accelerate_beds returns accurate values:"), {
   # Beds is > 18 for all years after 2018, so bau is returned
   testthat::expect_equal(get_2025_value(60:80, ind, "reported"), 75)
 
-  # Beds < 18 so linear change of 0.36/yr
+  # Beds < 18 so linear change of 0.25/yr
   testthat::expect_equal(
     get_2025_value(seq(from = 5, by = 0.25, length.out = 21), ind, "reported"),
-    get_linear_change(0.36, 7.0)
+    get_linear_change(0.25, 7.0)
   )
 
-  # Beds in 2018 (= 17) < 18 so linear change of 0.36/yr but exceeds 18 by 2025
+  # Beds in 2018 (= 17) < 18 so linear change of 0.25/yr but exceeds 18 by 2025
   # so scenario_linear_change is capped at 18. BAU of 18.75 is better, so BAU is returned.
   testthat::expect_equal(get_2025_value(seq(from = 15, by = 0.25, length.out = 21), ind, "reported"), 18.75)
 
   testthat::expect_equal(
     get_2025_value(seq(from = 5, by = 0.25, length.out = 21), ind, "reported", start_scenario_last_default = TRUE),
-    get_linear_change(0.36, 7.75, 2021)
+    get_linear_change(0.25, 7.75, 2021)
   )
 
 })
@@ -188,7 +232,7 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
   # testalia is less than 2018 global median so linear change of 4.54/yr from 2018 to 2025
   testthat::expect_equal(
     dplyr::filter(df_acceleration, iso3 == "testalia", year == 2025) %>% dplyr::pull(value),
-    get_linear_change(4.54, 28)
+    get_linear_change(1, 28)
   )
 
   # testistan is equal to 2018 global median so BAU is returned
@@ -219,7 +263,51 @@ testthat::test_that(paste0("accelerate_hwf returns accurate values:"), {
   testthat::expect_equal(
     dplyr::filter(df_acceleration, iso3 == "testalia", year == 2025) %>%
       dplyr::pull(value),
-    get_linear_change(4.54, 31, 2021)
+    get_linear_change(1, 31, 2021)
+  )
+
+  test_df <- tibble::tibble(
+    value = c(20:40, 40:60, 60:80,
+              seq(1, 60, length.out = 21),
+              seq(1, 100, length.out = 21),
+              seq(30, 60, length.out = 21),
+              seq(50, 90, length.out = 21),
+              seq(20, 70, length.out = 21),
+              seq(10, 50, length.out = 21),
+              seq(1, 10, length.out = 21)
+    ),
+    year = rep(2010:2030, 10),
+    ind = ind,
+    type = "reported",
+    iso3 = unlist(purrr::map(c(whoville::who_member_states()[1:10]), rep, 21)),
+    scenario = rep(c(rep("default", 12), rep("historical", 9)),10),
+    source = NA_character_
+  )
+
+  arocs <- test_df %>%
+    dplyr::filter(type == "reported") %>%
+    dplyr::group_by(iso3) %>%
+    dplyr::mutate(
+      baseline_value = .data[["value"]][.data[["year"]] == 2013],
+      end_value = .data[["value"]][.data[["year"]] == 2018],
+      aroc = calculate_aroc(2013, .data[["baseline_value"]], 2018, .data[["end_value"]])) %>%
+    dplyr::select(iso3, aroc) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup()
+
+  top_5_aroc_avg <- arocs %>%
+    dplyr::slice_max(aroc, n = 5) %>%
+    dplyr::summarise(max_aroc = mean(aroc)) %>%
+    dplyr::pull(max_aroc)
+
+  df_acceleration <- test_df %>%
+    add_scenario_indicator("accelerate", ind, bau_scenario = "historical", start_scenario_last_default = TRUE) %>%
+    dplyr::filter(scenario == "acceleration")
+
+  testthat::expect_equal(
+    dplyr::filter(df_acceleration, iso3 == "PRT", year == 2025) %>%
+      dplyr::pull(value),
+    get_linear_change(top_5_aroc_avg, 5.95, 2021)
   )
 
 })

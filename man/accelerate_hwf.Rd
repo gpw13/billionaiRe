@@ -50,8 +50,8 @@ Accelerate hwf by first dividing countries into two groups:
 \itemize{
 \item For countries with a 2018 value greater than or equal to the 2018 global median,
 business as usual is returned.
-\item For countries with a 2018 value less than the 2018 global median, a \strong{linear change
-of 4.54 per year from 2018 to 2025} is returned.
+\item For countries with a 2018 value less than the 2018 global median, the
+average of the top 5 rate of change within all countries.
 }
 }
 \details{

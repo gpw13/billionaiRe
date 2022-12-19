@@ -32,6 +32,7 @@ scenario_top_n_iso3(
   no_data_no_scenario = FALSE,
   is_aroc_last_n_years = FALSE,
   aroc_last_n_years = 5,
+  min_n_reported_estimated = 2,
   ...
 )
 }
@@ -116,6 +117,9 @@ be based on the last \code{aroc_last_n_years} since the last \code{reported} or
 
 \item{aroc_last_n_years}{(integer) number of years after the last \code{reported}
 or \code{estimated} value to start the AROC interval.}
+
+\item{min_n_reported_estimated}{(integer) minimum number of \code{value_col}
+points \code{reported} or \code{estimated} in the AROC interval.s}
 
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }

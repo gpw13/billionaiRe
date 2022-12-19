@@ -32,6 +32,8 @@
 #' `estimated` value before `end_year`.
 #' @param aroc_last_n_years (integer) number of years after the last `reported`
 #' or `estimated` value to start the AROC interval.
+#' @param min_n_reported_estimated (integer) minimum number of `value_col`
+#' points `reported` or `estimated` in the AROC interval.s
 #' @inherit scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
@@ -64,16 +66,18 @@ scenario_top_n_iso3 <- function(df,
                                 no_data_no_scenario = FALSE,
                                 is_aroc_last_n_years = FALSE,
                                 aroc_last_n_years = 5,
+                                min_n_reported_estimated = 2,
                                 ...){
 
   if(use_prop){
     n <- glue::glue("{prop*100}_percent")
   }
-
-  if(is.null(group_col)){
-    scenario_name <- glue::glue("top_{n}_aroc")
-  }else{
-    scenario_name <- glue::glue("top_{n}_{group_col}_aroc")
+  if(length(scenario_name)==0){
+    if(is.null(group_col)){
+      scenario_name <- glue::glue("top_{n}_aroc")
+    }else{
+      scenario_name <- glue::glue("top_{n}_{group_col}_aroc")
+    }
   }
 
   full_years_df <- tidyr::expand_grid(
@@ -96,13 +100,13 @@ scenario_top_n_iso3 <- function(df,
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
     dplyr::filter(.data[[scenario_col]] == !!default_scenario) %>%
     dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] >= 2000 & .data[["year"]] <= !!start_year) > 1) %>%
-    dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] %in% c(!!baseline_year:!!aroc_end_year)) > 1) %>%
+    dplyr::filter(sum(.data[["type"]] %in% c("estimated", "reported") & .data[["year"]] %in% c(!!baseline_year:!!aroc_end_year)) >= !!min_n_reported_estimated) %>%
     dplyr::ungroup() %>%
     dplyr::filter(.data[[scenario_col]] == !!default_scenario)
 
   df_without_data <- df_full_year %>%
-    dplyr::anti_join(df_with_data, by = c("iso3", "year", "ind")) %>%
-    dplyr::filter(.data[[scenario_col]] %in% c(!!default_scenario, !!bau_scenario))
+    dplyr::filter(.data[[scenario_col]] %in% c(!!default_scenario, !!bau_scenario),
+                  !.data[["iso3"]] %in% unique(df_with_data[["iso3"]]))
 
   if(nrow(df_with_data)>0){
     if(is_aroc_last_n_years){

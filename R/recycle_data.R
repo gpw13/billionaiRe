@@ -32,6 +32,7 @@
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
+#' @inheritParams trim_values
 #'
 #' @return Data frame in long format.
 #' @export
@@ -119,6 +120,7 @@ recycle_data <- function(df,
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
+#' @inheritParams trim_values
 #'
 #' @return Data frame in long format.
 recycle_data_scenario_single <- function(df,
@@ -313,6 +315,7 @@ recycle_data_scenario_single <- function(df,
 #'
 #' @inherit transform_hpop_data
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams trim_values
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams recycle_data_scenario_single
 #' @param scenario name of scenario to recycle for. Defaults to "default".

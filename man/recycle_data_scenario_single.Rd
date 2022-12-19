@@ -19,7 +19,9 @@ recycle_data_scenario_single(
   include_projection = TRUE,
   recycle_campaigns = TRUE,
   ind_ids = NULL,
-  trim_years = FALSE
+  trim_years = FALSE,
+  start_year_trim = start_year,
+  end_year_trim = end_year
 )
 }
 \arguments{
@@ -57,6 +59,10 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 }
 \value{
 Data frame in long format.

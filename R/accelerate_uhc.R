@@ -5,10 +5,11 @@
 #' - For countries without reported data, the acceleration scenario_col is the same
 #' as business as usual.
 #' - For countries with reported data, scenarios with both a **fixed target of 95%
-#' by 2030** and a **linear change of 2.6 per year till 2025** are tried, with the easiest
-#' to achieve of the two selected. The selected scenario is then compared against
-#' the business as usual scenario for reported data, and the best of the two chosen
-#' as the acceleration scenario.
+#' by 2030** and a **applying the AROC of the top 10 performing countries with at
+#' least 4 reported/estimated values** are tried, with the easiest to achieve of
+#' the two selected. The selected scenario is then compared against the business
+#' as usual scenario for reported data, and the best of the two chosen as the
+#' acceleration scenario.
 #'
 #' @inherit accelerate_alcohol
 #'
@@ -36,9 +37,10 @@ accelerate_anc4 <- function(df,
                    target_value = 95,
                    target_year = 2030)
 
-  params_with_data_linear <- get_right_parameters(params, scenario_linear_change) %>%
-    set_parameters(scenario_name = "with_data_linear",
-                   linear_value = 2.6)
+  params_with_data_top10AROC <- get_right_parameters(params, scenario_top_n_iso3) %>%
+    set_parameters(scenario_name = "top10AROC",
+                   n = 10,
+                   min_n_reported_estimated = 4)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -66,22 +68,35 @@ accelerate_anc4 <- function(df,
                                                params_with_data_fixed_target)%>%
       dplyr::filter(.data[[scenario_col]] == "with_data_fixed_target")
 
-    df_with_data_linear <- exec_scenario(df_with_data_default,
-                                         scenario_linear_change,
-                                         params_with_data_linear) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_data_linear")
+    df_with_data_top10aroc <- exec_scenario(df_with_data,
+                                            scenario_top_n_iso3,
+                                            params_with_data_top10AROC) %>%
+      dplyr::filter(.data[[scenario_col]] == "top10AROC")
 
     params_scenario_best_of_linear_fixed <- get_right_parameters(params, scenario_best_of) %>%
       set_parameters(
-        scenario_names = c("with_data_fixed_target", "with_data_linear", "with_data_bau"),
-        scenario_name = "acceleration")
+        scenario_names = c("with_data_fixed_target", "top10AROC"),
+        scenario_name = "best_linear_fixed",
+        small_is_best = !params[["small_is_best"]])
 
-    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_fixed_target,
-                                                 df_with_data_linear,
-                                                 df_with_data_bau) %>%
+    df_with_data_best_of_target_top10 <- dplyr::bind_rows(df_with_data_fixed_target,
+                                                          df_with_data_top10aroc) %>%
       exec_scenario(scenario_best_of,
                     params_scenario_best_of_linear_fixed)%>%
+      dplyr::filter(.data[[scenario_col]] == params_scenario_best_of_linear_fixed[["scenario_name"]])
+
+    params_scenario_best_of <- get_right_parameters(params, scenario_best_of) %>%
+      set_parameters(
+        scenario_names = c("best_linear_fixed", "with_data_bau"),
+        scenario_name = "acceleration",
+        small_is_best = !params[["small_is_best"]])
+
+    df_with_data_accelerated <- dplyr::bind_rows(df_with_data_bau,
+                                                 df_with_data_best_of_target_top10) %>%
+      exec_scenario(scenario_best_of,
+                    params_scenario_best_of)%>%
       dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
 
   } else {
     df_with_data_accelerated <- tibble::tibble()
@@ -205,8 +220,9 @@ accelerate_art <- function(df,
 #' - For countries with 18 or more beds for all years after 2018, business
 #' as usual is returned.
 #' - For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-#' the best of business as usual and a **linear change of 0.36 per year up to 2025**,
-#' with an upper limit of 18, is returned.
+#' the best of business as usual and a **applying the AROC of the top 10
+#' performing countries with at least 4 reported/estimated values**, with an
+#' upper limit of 18, is returned.
 #'
 #' @inherit accelerate_alcohol
 #' @inheritParams accelerate_child_viol
@@ -240,10 +256,10 @@ accelerate_beds <- function(df,
       scenario_name = "with_scenario_bau",
       upper_limit = Inf)
 
-  params_with_scenario_linear <- get_right_parameters(params, scenario_linear_change) %>%
-    set_parameters(scenario_name = "with_scenario_linear",
-                   linear_value = 0.36,
-                   upper_limit = 18)
+  params_with_data_top10AROC <- get_right_parameters(params, scenario_top_n_iso3) %>%
+    set_parameters(scenario_name = "top10AROC",
+                   n = 10,
+                   min_n_reported_estimated = 4)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -282,15 +298,16 @@ accelerate_beds <- function(df,
     df_with_scenario_default <- df_with_scenario %>%
       dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-    df_with_scenario_linear <- exec_scenario(df_with_scenario_default,
-                                             scenario_linear_change,
-                                             params_with_scenario_linear) %>%
-      dplyr::filter(.data[[scenario_col]] == "with_scenario_linear")
+    df_with_scenario_top10 <- exec_scenario(df_with_scenario,
+                                            scenario_top_n_iso3,
+                                            params_with_data_top10AROC) %>%
+      dplyr::filter(.data[[scenario_col]] == "top10AROC")
 
     params_scenario_best_of <- get_right_parameters(params, scenario_best_of) %>%
-      set_parameters(scenario_names = c("with_scenario_bau", "with_scenario_linear"))
+      set_parameters(scenario_names = c("with_scenario_bau", "top10AROC"))
 
-    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau, df_with_scenario_linear)
+    df_with_scenario_accelerated <- dplyr::bind_rows(df_with_scenario_bau,
+                                                     df_with_scenario_top10)
 
     df_with_scenario_accelerated <- exec_scenario(df_with_scenario_accelerated,
                                                   scenario_best_of,
@@ -417,8 +434,8 @@ accelerate_nurses <- function(df,
 #' Accelerate hwf by first dividing countries into two groups:
 #' - For countries with a 2018 value greater than or equal to the 2018 global median,
 #' business as usual is returned.
-#' - For countries with a 2018 value less than the 2018 global median, a **linear change
-#' of 4.54 per year from 2018 to 2025** is returned.
+#' - For countries with a 2018 value less than the 2018 global median, the
+#' average of the top 5 rate of change within all countries.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
@@ -438,8 +455,8 @@ accelerate_hwf <- function(df,
   params <- get_dots_and_call_parameters(...) %>%
     set_parameters(upper_limit = 10000)
 
-  params_with_scenario_linear <- get_right_parameters(params, scenario_linear_change) %>%
-    set_parameters(linear_value = 4.54)
+  params_with_scenario_top_5 <- get_right_parameters(params, scenario_top_n_iso3) %>%
+    set_parameters(n = 5)
 
   params_no_scenario_bau <- get_right_parameters(params, scenario_bau)
 
@@ -460,13 +477,12 @@ accelerate_hwf <- function(df,
 
   if (nrow(df_with_scenario) > 0) {
 
-    df_with_scenario_default <- df_with_scenario %>%
-      dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-    df_with_scenario_accelerated <- exec_scenario(df_with_scenario_default,
-                                                  scenario_linear_change,
-                                                  params_with_scenario_linear) %>%
-      dplyr::filter(.data[[scenario_col]] == scenario_name)
+    df_with_scenario_accelerated <- exec_scenario(df_this_ind,
+                                                  scenario_top_n_iso3,
+                                                  params_with_scenario_top_5) %>%
+      dplyr::filter(.data[[scenario_col]] == scenario_name,
+                    .data[["iso3"]] %in% unique(df_with_scenario[["iso3"]]))
   } else {
     df_with_scenario_accelerated <- tibble::tibble()
   }
@@ -482,7 +498,8 @@ accelerate_hwf <- function(df,
   }
 
   df %>%
-    dplyr::bind_rows(df_with_scenario_accelerated, df_no_scenario_accelerated)
+    dplyr::bind_rows(df_with_scenario_accelerated, df_no_scenario_accelerated) %>%
+    dplyr::select(-"glob_med")
 }
 
 #' Accelerate dtp3
@@ -953,7 +970,7 @@ accelerate_uhc_sanitation <- function(df,
                    trim = TRUE,
                    lower_limit = 0,
                    upper_limit = 99
-                   )
+    )
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind,
