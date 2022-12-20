@@ -24,6 +24,7 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
+      TESTTHAT_CPUS: num_cpus=$(nproc)
       R_KEEP_PKG_SOURCE: yes
       GITHUB_PAT: ${{ secrets.PAT_GITHUB}}
       EXECUTION_MODE: "interactive"
