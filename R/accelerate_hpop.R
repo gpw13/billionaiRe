@@ -1048,7 +1048,7 @@ accelerate_transfats <- function(df,
                                                   type_filter = c("all")),
                   scenario_value = dplyr::case_when(
                     .data[["year"]] > start_year ~ 100.0,
-                    TRUE ~ .data[["last_value"]]
+                    TRUE ~ as.numeric(.data[["last_value"]])
                   ),
                   "{scenario_col}" := params[["scenario_name"]]) %>%
     trim_values(

@@ -218,7 +218,8 @@ testthat::test_that(paste0("accelerate_child_viol returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 28.3333333)
+  testthat::expect_equal(df_add_indicator_2025,
+                         get_fixed_target(0, 68, 2021, 2030))
 
 })
 
@@ -270,7 +271,8 @@ testthat::test_that(paste0("accelerate_devontrack returns accurate values:"), {
     dplyr::filter(scenario == "acceleration", year == 2025) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(df_add_indicator_2025, 75)
+  testthat::expect_equal(df_add_indicator_2025,
+                         get_fixed_target(80, 68, 2021, 2030))
 
 })
 
@@ -791,7 +793,7 @@ testthat::test_that(paste0("accelerate_transfats returns accurate values:"), {
   ind <- "transfats"
 
   df <- tibble::tibble(
-    value = 60:80,
+    value = rep(0, 21),
     year = 2010:2030,
     ind = ind,
     iso3 = "testalia",
@@ -1006,14 +1008,15 @@ testthat::test_that("acceleration can be run on all hpop indicators:", {
     ),
     source = NA_character_
   ) %>%
-    tidyr::expand_grid(ind = billion_ind_codes("hpop", include_subindicators = FALSE))
+    tidyr::expand_grid(ind = billion_ind_codes("hpop", include_subindicators = FALSE)) %>%
+    dplyr::mutate(value = dplyr::if_else(.data[["ind"]] == "transfats", 100L, value))
 
   calculated_test_data <- add_scenario(hpop_test_df,
                                        "accelerate",
                                        bau_scenario = "default",
                                        start_scenario_last_default = FALSE)
 
-  testthat::expect_equal(nrow(calculated_test_data), 492)
+  testthat::expect_equal(nrow(calculated_test_data), 491)
 
   test_data <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>%
     dplyr::mutate(source = NA_character_)

@@ -231,14 +231,14 @@ testthat::test_that("accelerate_meningitis_campaign returns accurate results:", 
 
   testthat::expect_equal(nrow(calculated_test_data), 6)
 
-  num_BDI_2025 <- calculated_test_data %>%
+  num_BDI_2018 <- calculated_test_data %>%
     dplyr::filter(
       year == 2018, scenario == "acceleration",
       iso3 == "BDI", ind == "meningitis_campaign_num"
     ) %>%
     dplyr::pull(value)
 
-  testthat::expect_equal(num_BDI_2025, 7968553)
+  testthat::expect_equal(num_BDI_2018, 7968553)
 })
 
 testthat::test_that("accelerate_meningitis_routine returns accurate results:", {

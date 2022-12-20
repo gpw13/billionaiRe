@@ -362,7 +362,7 @@ sdg_hpop_tobacco <- function(df,
       goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
       "{scenario_col}" := params[["scenario_name"]],
       scenario_value = dplyr::case_when(
-        .data[[value_col]][.data[["year"]] == start_year] <= .data[["goalend"]] ~ .data[[value_col]][.data[["year"]] == start_year],
+        .data[[value_col]][.data[["year"]] == start_year] <= .data[["goalend"]] ~ as.numeric(.data[[value_col]][.data[["year"]] == start_year]),
         .data[["year"]] >= start_year & .data[["year"]] <= end_year & .data[["has_estimates"]] ~
         .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
         TRUE ~ NA_real_

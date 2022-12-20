@@ -324,7 +324,7 @@ add_scenario_indicator <- function(df,
 
   df_scenario <- df_scenario %>%
     dplyr::filter(dplyr::case_when(
-      .data[[scenario_col]] %in% final_scenario_names & .data[["year"]] <= params[["start_year"]] ~ FALSE,
+      .data[[scenario_col]] %in% final_scenario_names & .data[["year"]] < params[["start_year"]] ~ FALSE,
       TRUE ~ TRUE
     ))
 
