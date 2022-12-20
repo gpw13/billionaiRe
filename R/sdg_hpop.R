@@ -305,20 +305,11 @@ sdg_hpop_sanitation_urban <- function(df,
 
 #' Accelerate hpop_tobacco to SDG target
 #'
-#' Accelerate hpop_tobacco by picking the best value between business as usual,
-#' halt the rise in 2018, or a custom version of scenario_percent_baseline. The
-#' custom `scenario_percent_baseline` is taking similar parameters to
-#' `scenario_percent_baseline`'s `percent_change` = -30, `baseline_year` = 2010,
-#' but values are added to the `start_year` value, rather than the `baseline_year`
-#' values.
-#'
-#' Runs:
-#'
-#'  - custom scenario_percent_baseline (see above).
-#'  - `scenario_bau(df, small_is_best = TRUE,...)`
-#'  - `scenario_halt_rise(df, baseline_year= 2018, small_is_best = TRUE,...)`
-#'
-#' Then picks the best result between the three scenarios.
+#' Accelerate hpop_tobacco by running a custom version of
+#' scenario_percent_baseline. The custom `scenario_percent_baseline` is
+#' taking similar parameters to `scenario_percent_baseline`'s
+#' `percent_change` = -30, `baseline_year` = 2010, but values are added to the
+#' `start_year` value, rather than the `baseline_year` values.
 #'
 #' @inherit accelerate_adult_obese
 #' @inheritParams transform_hpop_data
@@ -367,14 +358,14 @@ sdg_hpop_tobacco <- function(df,
       baseline_value = .data[[value_col]][.data[["year"]] == start_year],
       old_baseline_value = .data[[value_col]][.data[["year"]] == 2010]
     ) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate(
       goalend = .data[["old_baseline_value"]] + ((.data[["old_baseline_value"]] * (100 - 30) / 100) - .data[["old_baseline_value"]]) * (end_year - 2010) / (end_year - 2010),
       "{scenario_col}" := params[["scenario_name"]],
-      scenario_value = dplyr::if_else(
-        .data[["year"]] >= start_year & .data[["year"]] <= end_year & .data[["has_estimates"]],
+      scenario_value = dplyr::case_when(
+        .data[[value_col]][.data[["year"]] == start_year] <= .data[["goalend"]] ~ .data[[value_col]][.data[["year"]] == start_year],
+        .data[["year"]] >= start_year & .data[["year"]] <= end_year & .data[["has_estimates"]] ~
         .data[["baseline_value"]] + (.data[["goalend"]] - .data[["baseline_value"]]) * (.data[["year"]] - start_year) / (end_year - start_year),
-        NA_real_
+        TRUE ~ NA_real_
       ),
       "type_" := dplyr::if_else(
         is.na(.data[["type"]]) & .data[["year"]] >= start_year,

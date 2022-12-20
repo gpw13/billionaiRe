@@ -21,7 +21,8 @@ recycle_data_scenario_single(
   ind_ids = NULL,
   trim_years = FALSE,
   start_year_trim = start_year,
-  end_year_trim = end_year
+  end_year_trim = end_year,
+  assert_data_calculations = TRUE
 )
 }
 \arguments{
@@ -63,6 +64,10 @@ be supplied as a named vector where the names correspond to the output of
 \item{start_year_trim}{(integer) year to start trimming from.}
 
 \item{end_year_trim}{(integer) year to end trimming.}
+
+\item{assert_data_calculations}{Boolean if true then output data frame will
+be tested to see if it contains the minimal required data to run the
+calculations.}
 }
 \value{
 Data frame in long format.

@@ -555,11 +555,9 @@ accelerate_dtp3 <- function(df,
     dplyr::left_join(df_target_values, by = "iso3") %>%
     dplyr::mutate(
       "{scenario_name}" := dplyr::case_when(
-        .data[["year"]] > start_year & .data[["year"]] <= 2020 ~ as.numeric(.data[["baseline_value"]]),
-        .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
+        .data[["year"]] > start_year & .data[["year"]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
           as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[["year"]] - baseline_year - 1) / (target_year - baseline_year - 1)),
-        .data[["year"]] >= baseline_year + 1 & .data[["year"]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
-        .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
+        .data[["year"]] > start_year & .data[["year"]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
         TRUE ~ NA_real_
       )
     ) %>%
@@ -1020,7 +1018,8 @@ accelerate_uhc_tobacco <- function(df,
   params_without_data_bau <- get_right_parameters(params, scenario_bau)
 
   params_with_data_bau <- get_right_parameters(params, scenario_bau) %>%
-    set_parameters(value_col = "crude")
+    set_parameters(value_col = "crude",
+                   scenario_name = "with_data_bau")
 
   params_with_data_perc_baseline <- get_right_parameters(params, scenario_percent_baseline) %>%
     set_parameters(

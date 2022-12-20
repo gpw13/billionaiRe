@@ -34,8 +34,8 @@ accelerate_adult_obese <- function(df,
   )
 
   df_accelerated <- exec_scenario(df_this_ind,
-                scenario_halt_rise,
-                params) %>%
+                                  scenario_halt_rise,
+                                  params) %>%
     dplyr::filter(.data[[scenario_col]] %in% params["scenario_name"])
 
   dplyr::bind_rows(df, df_accelerated)
@@ -1008,19 +1008,24 @@ accelerate_suicide <- function(df,
 #'
 #' Accelerate transfats by targeting 100 by 2025.
 #'
-#' Runs:
-#'
-#'  - `scenario_fixed_target(df, target_value = 100, target_year = 2025, small_is_best = TRUE,...)`,
-#'
 #' @inherit accelerate_alcohol
+#'
+#' @inheritParams trim_values
+#' @inheritParams accelerate_child_viol
 #'
 accelerate_transfats <- function(df,
                                  ind_ids = billion_ind_codes("hpop"),
                                  scenario_col = "scenario",
                                  default_scenario = "default",
                                  scenario_name = "acceleration",
+                                 start_year = 2018,
+                                 start_year_trim = start_year + 1,
+                                 end_year = 2025,
+                                 value_col = "value",
                                  ...) {
   this_ind <- ind_ids["transfats"]
+
+  params <- get_dots_and_call_parameters(...)
 
   df_this_ind <- df %>%
     dplyr::filter(.data[["ind"]] == this_ind)
@@ -1028,16 +1033,35 @@ accelerate_transfats <- function(df,
   df_this_ind_default <- df_this_ind %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario)
 
-  params <- get_dots_and_call_parameters()
+  full_df <- tidyr::expand_grid(
+    "iso3" := unique(df_this_ind_default[["iso3"]]),
+    "year" := start_year:end_year,
+    "ind" := this_ind,
+    "{scenario_col}" := unique(df_this_ind_default[[scenario_col]])
+  )
 
-  params_target <- get_right_parameters(params, scenario_fixed_target) %>%
-    set_parameters(target_value = 100,
-                   target_year = 2025)
+  df_accelerated <- df_this_ind_default %>%
+    dplyr::full_join(full_df, by = c("iso3", "year", "ind", scenario_col)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
+    dplyr::mutate(last_value = get_baseline_value(.data[[value_col]], .data[["year"]], .data[["type"]],
+                                                  baseline_year = 2018,
+                                                  type_filter = c("all")),
+                  scenario_value = dplyr::case_when(
+                    .data[["year"]] > start_year ~ 100.0,
+                    TRUE ~ .data[["last_value"]]
+                  ),
+                  "{scenario_col}" := params[["scenario_name"]]) %>%
+    trim_values(
+      col = "scenario_value",
+      trim = TRUE,
+      start_year_trim = start_year_trim,
+      small_is_best = params[["small_is_best"]],
+      keep_better_values = FALSE,
+      upper_limit = 100,
+      lower_limit = 0,
+      trim_years = TRUE
+    )
 
-  df_accelerated <- exec_scenario(df_this_ind_default,
-                scenario_fixed_target,
-                params_target) %>%
-    dplyr::filter(.data[[scenario_col]] %in% params_target[["scenario_name"]])
 
   dplyr::bind_rows(df, df_accelerated)
 

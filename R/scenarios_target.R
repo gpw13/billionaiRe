@@ -70,7 +70,7 @@ scenario_fixed_target <- function(df,
         is.na(.data[["baseline_value_"]]) ~ as.numeric(0),
         TRUE ~ as.numeric(.data[["baseline_value_"]])
       ),
-      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], .data[["baseline_year_"]], target_year, .data[["baseline_value_"]]),
+      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], start_year, target_year, .data[["baseline_value_"]]),
       !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value_", "baseline_year_")) %>%

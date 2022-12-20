@@ -23,7 +23,10 @@ benchmarking_anc4 <- function(df,
     use_prop = c(rep(TRUE, 3)),
     group_col = list(NULL, "region", "wb_ig"),
     is_aroc_last_n_years = TRUE,
-    aroc_last_n_years = 5
+    aroc_last_n_years = 5,
+    scenario_name = list("top_20_percent_aroc",
+                         "top_20_percent_region_aroc",
+                         "top_20_percent_wb_ig_aroc")
   )
 
   params_expanded <- purrr::pmap(params_benchmarking, set_parameters, parameters = params)
