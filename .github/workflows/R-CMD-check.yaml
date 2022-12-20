@@ -24,7 +24,6 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
-      TESTTHAT_CPUS: num_cpus=$(nproc)
       R_KEEP_PKG_SOURCE: yes
       GITHUB_PAT: ${{ secrets.PAT_GITHUB}}
       EXECUTION_MODE: "interactive"
@@ -34,7 +33,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up Pandoc
         uses: r-lib/actions/setup-pandoc@v2
       - name: Set up R
@@ -48,5 +46,13 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      - name: Set environment variables
+        run: |
+          num_cpus=$(nproc)
+          echo "::set-env name=NUM_CPUS::$num_cpus"
+        shell: bash
+      - name: Set number of CPUs to TESTTHAT_CPUS
+        env:
+          TESTTHAT_CPUS: ${{ env.NUM_CPUS }}
       - name: Check Package
         uses: r-lib/actions/check-r-package@v2
