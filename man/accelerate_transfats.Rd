@@ -33,6 +33,8 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{scenario_name}{name of scenario}
 
+\item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
 \item{start_year_trim}{(integer) year to start trimming from.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
