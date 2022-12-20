@@ -46,13 +46,5 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      - name: Set environment variables
-        run: |
-          num_cpus=$(nproc)
-          echo "::set-env name=NUM_CPUS::$num_cpus"
-        shell: bash
-      - name: Set number of CPUs to TESTTHAT_CPUS
-        env:
-          TESTTHAT_CPUS: ${{ env.NUM_CPUS }}
       - name: Check Package
         uses: r-lib/actions/check-r-package@v2
