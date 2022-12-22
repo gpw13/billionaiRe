@@ -131,7 +131,7 @@ testthat::test_that("accelerate_cholera_campaign returns accurate results:", {
                                        bau_scenario = "default",
                                        expend_bau = FALSE)
 
-  testthat::expect_equal(nrow(calculated_test_data), 200)
+  testthat::expect_equal(nrow(calculated_test_data), 238)
 
   num_bgd_2025 <- calculated_test_data %>%
     dplyr::filter(
