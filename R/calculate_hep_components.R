@@ -131,7 +131,7 @@ prevent_calculations <- function(df,
     max_value = c(rep(Inf, 13), 100)
   )
 
-  purrr::pmap_dfr(args,
+  furrr::future_pmap_dfr(args,
     pathogen_calc,
     df = df,
     transform_value_col = transform_value_col,

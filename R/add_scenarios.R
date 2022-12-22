@@ -303,7 +303,7 @@ add_scenario_indicator <- function(df,
                                                                       indicator,
                                                                       scenario = default_scenario,
                                                                       scenario_col = scenario_col,
-                                                                      start_year = start_year)+1)
+                                                                      start_year = start_year))
   }
 
   df_scenario <- exec_scenario(this_ind_df,
