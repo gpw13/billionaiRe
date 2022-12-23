@@ -138,6 +138,14 @@ accelerate_espar <- function(df,
       .data[["ind"]] == "espar",
       .data[["year"]] >= baseline_year
     ) %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::mutate(last_reported_value = get_baseline_value(.data[[value_col]],
+                                                           .data[["year"]],
+                                                           .data[["type"]],
+                                                           .data[[scenario_col]],
+                                                           default_scenario,
+                                                           last_year_reported
+                                                           )) %>%
     dplyr::left_join(espar_target, by = c("iso3", "ind"))
 
   params_target_col <- get_right_parameters(params, scenario_fixed_target_col) %>%
@@ -157,7 +165,11 @@ accelerate_espar <- function(df,
     ) %>%
     dplyr::filter(.data[[scenario_col]] == scenario_name) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-c("baseline", "target"))
+    dplyr::mutate("{value_col}" := dplyr::case_when(
+      .data[["year"]] == last_year_reported ~ .data[["last_reported_value"]],
+      TRUE ~ .data[[value_col]]
+    )) %>%
+    dplyr::select(-c("baseline", "target", "last_reported_value"))
 
   df %>%
     dplyr::bind_rows(df_accelerated)

@@ -163,7 +163,7 @@ scenario_linear_change_col <- function(df,
         baseline_year,
         type_filter = c("all")),
       scenario_value = dplyr::case_when(
-        .data[["year"]] >= baseline_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[["year"]] - baseline_year))
+        .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[["year"]] - baseline_year)),
       ),
       !!sym(scenario_col) := scenario_name
     ) %>%
