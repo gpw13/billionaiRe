@@ -558,6 +558,7 @@ accelerate_dtp3 <- function(df,
         .data[["year"]] > start_year & .data[["year"]] <= target_year & .data[["baseline_value"]] < .data[["target"]] ~
           as.numeric(.data[["baseline_value"]] + (.data[["target"]] - .data[["baseline_value"]]) * (.data[["year"]] - baseline_year - 1) / (target_year - baseline_year - 1)),
         .data[["year"]] > start_year & .data[["year"]] <= target_year & .data[["baseline_value"]] >= .data[["target"]] ~ as.numeric(.data[["baseline_value"]]),
+        .data[["year"]] == start_year ~ as.numeric(.data[[value_col]]),
         TRUE ~ NA_real_
       )
     ) %>%
