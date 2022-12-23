@@ -274,7 +274,6 @@ testthat::test_that("scenario_halt_rise returns correct results:", {
     dplyr::filter(scenario == scenario_name)
 
   testthat::expect_equal(df_scenario_halt_rise_2018, df_test_halt_rise)
-
 })
 
 testthat::test_that("scenario_linear_change provides accurate results:", {
@@ -316,7 +315,7 @@ testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
     dplyr::mutate(linear_value = 1)
 
   df_test <- df %>%
-    dplyr::filter(year > 2018, year <= 2025) %>%
+    dplyr::filter(year >= 2018, year <= 2025) %>%
     dplyr::mutate(scenario = "linear_change")
 
   df_scenario_linear_percent_change <- scenario_linear_change(df, linear_value = df[["linear_value"]]) %>%
@@ -340,6 +339,7 @@ testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
     dplyr::filter(scenario == "linear_change", year > 2018)
 
   df_test <- df_test %>%
+    dplyr::filter(year > 2018) %>%
     dplyr::select(-"linear_value")
 
   testthat::expect_equal(df_scenario_linear_change_col, df_test)
