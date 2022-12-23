@@ -316,7 +316,7 @@ testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
     dplyr::mutate(linear_value = 1)
 
   df_test <- df %>%
-    dplyr::filter(year >= 2018, year <= 2025) %>%
+    dplyr::filter(year > 2018, year <= 2025) %>%
     dplyr::mutate(scenario = "linear_change")
 
   df_scenario_linear_percent_change <- scenario_linear_change(df, linear_value = df[["linear_value"]]) %>%
@@ -337,7 +337,7 @@ testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
   df_scenario_linear_change_col <- df %>%
     scenario_linear_change_col(linear_value_col = "linear_value") %>%
     dplyr::select(-"linear_value") %>%
-    dplyr::filter(scenario == "linear_change")
+    dplyr::filter(scenario == "linear_change", year > 2018)
 
   df_test <- df_test %>%
     dplyr::select(-"linear_value")
@@ -348,7 +348,7 @@ testthat::test_that("scenario_linear_change in vectorized on linear_value:", {
     dplyr::filter(year <= 2018) %>%
     scenario_linear_change_col(linear_value_col = "linear_value") %>%
     dplyr::select(-"linear_value") %>%
-    dplyr::filter(scenario == "linear_change")
+    dplyr::filter(scenario == "linear_change", year > 2018)
 
   testthat::expect_equal(df_scenario_linear_change_col_2018, df_test)
 })
