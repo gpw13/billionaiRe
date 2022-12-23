@@ -182,6 +182,7 @@ testthat::test_that("scenario_percent_baseline sets correct limits.", {
     dplyr::mutate(!!sym(scenario) := scenario_name,
                   value = seq(80, 80 + 80 * percent_change / 100, length.out = length(baseline_year:target_year)),
                   value = dplyr::case_when(
+                    year == start_year ~ 88,
                     value >= 100 ~ 100,
                     TRUE ~ value
                   )

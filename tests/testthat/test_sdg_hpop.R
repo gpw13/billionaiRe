@@ -287,6 +287,17 @@ testthat::test_that(paste0("sdg_road returns accurate values:"), {
     dplyr::pull(value)
 
   testthat::expect_equal(df_add_indicator_2025, 69 + ((70 / 2) - 70) / (2030 - 2020) * (2025 - 2020))
+
+  df <- df %>%
+    dplyr::filter(year <= 2021)
+
+  df_add_indicator <- add_scenario_indicator(df,
+                                             indicator = ind,
+                                             scenario_function = "sdg",
+                                             start_scenario_last_default = TRUE,
+                                             bau_scenario = "default"
+  )
+
 })
 
 testthat::test_that(paste0("sdg_stunting returns accurate values:"), {
