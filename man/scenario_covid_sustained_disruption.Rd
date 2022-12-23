@@ -23,7 +23,7 @@ scenario_covid_sustained_disruption(
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
 
-\item{start_year}{Start year for scenario, defaults to 2018.}
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
 \item{covid_year}{(integer) year where the values are impacted by COVID.}
 
@@ -32,7 +32,7 @@ country, year, and indicator.}
 \item{progressive_recovery}{(logical) TRUE if the recovery after COVID-19
 should be progressive.}
 
-\item{end_year}{End year for scenario, defaults to 2025}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}

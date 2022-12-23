@@ -32,6 +32,7 @@
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
+#' @inheritParams trim_values
 #'
 #' @return Data frame in long format.
 #' @export
@@ -48,7 +49,9 @@ recycle_data <- function(df,
                          include_projection = TRUE,
                          recycle_campaigns = TRUE,
                          ind_ids = NULL,
-                         trim_years = TRUE) {
+                         trim_years = TRUE,
+                         start_year_trim = start_year,
+                         end_year_trim = end_year) {
   assert_columns(df, "iso3", "ind", "year",value_col, scenario_col, "type")
   assert_unique_rows(df, scenario_col = scenario_col, ind_ids)
 
@@ -76,7 +79,9 @@ recycle_data <- function(df,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids,
-      trim_years = trim_years
+      trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     )
   )
 }
@@ -110,11 +115,15 @@ recycle_data <- function(df,
 #' @param scenario_covid_shock name of the scenario with the COVID-19 shock years.
 #' @param include_projection Boolean to include or not projections in recycling
 #' @param recycle_campaigns Boolean to include or not campaigns in recycling
+#' @param assert_data_calculations Boolean if true then output data frame will
+#' be tested to see if it contains the minimal required data to run the
+#' calculations.
 #'
 #' @inherit transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
+#' @inheritParams trim_values
 #'
 #' @return Data frame in long format.
 recycle_data_scenario_single <- function(df,
@@ -131,7 +140,11 @@ recycle_data_scenario_single <- function(df,
                                          include_projection = TRUE,
                                          recycle_campaigns = TRUE,
                                          ind_ids = NULL,
-                                         trim_years = FALSE) {
+                                         trim_years = FALSE,
+                                         start_year_trim = start_year,
+                                         end_year_trim = end_year,
+                                         assert_data_calculations = TRUE
+) {
   assert_columns(df, scenario_col, value_col, "iso3", "ind", "year", "type")
   assert_unique_rows(df, scenario_col = scenario_col, ind_ids)
 
@@ -182,23 +195,23 @@ recycle_data_scenario_single <- function(df,
     dplyr::filter(.data[[scenario_col]] == !!scenario)
 
   default_not_in_scenario <- dplyr::anti_join(default_df, scenario_df,
-    by = c("iso3", "ind", "year")
+                                              by = c("iso3", "ind", "year")
   )
 
   reported_not_in_scenario <- dplyr::anti_join(reported_estimated_df, scenario_df,
-    by = c("iso3", "ind", "year")
+                                               by = c("iso3", "ind", "year")
   )
 
   reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
-    by = c("iso3", "ind", "year")
+                                              by = c("iso3", "ind", "year")
   )
 
   covid_shock_not_in_scenario <- dplyr::anti_join(covid_shock_df, scenario_df,
-    by = c("iso3", "ind", "year")
+                                                  by = c("iso3", "ind", "year")
   )
 
   covid_shock_not_in_default <- dplyr::anti_join(covid_shock_not_in_scenario, default_not_in_scenario,
-    by = c("iso3", "ind", "year")
+                                                 by = c("iso3", "ind", "year")
   )
 
   reference_infilling_not_in_scenario <- dplyr::anti_join(
@@ -207,7 +220,7 @@ recycle_data_scenario_single <- function(df,
   )
 
   reference_infilling_not_in_default <- dplyr::anti_join(reference_infilling_not_in_scenario, default_not_in_scenario,
-    by = c("iso3", "ind", "year")
+                                                         by = c("iso3", "ind", "year")
   )
 
   reference_infilling_not_in_covid_shock <- dplyr::anti_join(
@@ -240,12 +253,12 @@ recycle_data_scenario_single <- function(df,
 
     not_in_scenario_no_campaigns <- not_in_scenario %>%
       dplyr::anti_join(not_in_scenario_campaigns,
-        by = c("iso3", "ind", "year")
+                       by = c("iso3", "ind", "year")
       )
 
     if (trim_years) {
       not_in_scenario <- not_in_scenario %>%
-        trim_years(trim_years, start_year, end_year)
+        trim_years(trim_years, start_year_trim, end_year_trim)
     }
 
     scenario_df_final <- scenario_df %>%
@@ -273,28 +286,31 @@ recycle_data_scenario_single <- function(df,
       dplyr::filter(.data[["ind"]] %in% ind_ids)
   }
 
-  if (billion == "hpop") {
-    assert_data_calculation_hpop(scenario_df_final,
-      value_col = value_col,
-      scenario_col = scenario_col
-    )
-  } else if (billion == "uhc") {
-    assert_data_calculation_uhc(scenario_df_final,
-      value_col = value_col,
-      scenario_col = scenario_col,
-      start_year = start_year,
-      end_year = end_year,
-      ind_ids = ind_ids
-    )
-  } else {
-    assert_data_calculation_hep(scenario_df_final,
-      value_col = value_col,
-      scenario_col = scenario_col,
-      start_year = start_year,
-      end_year = end_year,
-      ind_ids = ind_ids
-    )
+  if(assert_data_calculations){
+    if (billion == "hpop") {
+      assert_data_calculation_hpop(scenario_df_final,
+                                   value_col = value_col,
+                                   scenario_col = scenario_col
+      )
+    } else if (billion == "uhc") {
+      assert_data_calculation_uhc(scenario_df_final,
+                                  value_col = value_col,
+                                  scenario_col = scenario_col,
+                                  start_year = start_year,
+                                  end_year = end_year,
+                                  ind_ids = ind_ids
+      )
+    } else {
+      assert_data_calculation_hep(scenario_df_final,
+                                  value_col = value_col,
+                                  scenario_col = scenario_col,
+                                  start_year = start_year,
+                                  end_year = end_year,
+                                  ind_ids = ind_ids
+      )
+    }
   }
+
 
   return(scenario_df_final)
 }
@@ -306,6 +322,7 @@ recycle_data_scenario_single <- function(df,
 #'
 #' @inherit transform_hpop_data
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams trim_values
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams recycle_data_scenario_single
 #' @param scenario name of scenario to recycle for. Defaults to "default".
@@ -327,7 +344,10 @@ make_default_scenario <- function(df,
                                   include_projection = TRUE,
                                   recycle_campaigns = TRUE,
                                   ind_ids = NULL,
-                                  trim_years = FALSE) {
+                                  trim_years = FALSE,
+                                  start_year_trim = start_year,
+                                  end_year_trim = end_year,
+                                  assert_data_calculations = TRUE) {
   assert_columns(df, "iso3", "ind", value_col, "year", scenario_col, "type")
   assert_unique_rows(df, scenario_col, ind_ids)
 
@@ -343,10 +363,8 @@ make_default_scenario <- function(df,
     billion <- c("hep", "hpop", "uhc")
   }
 
-  if (is.null(ind_ids)) {
-    ind_ids <- purrr::map(billion, billion_ind_codes) %>%
-      stats::setNames(billion)
-  }
+  ind_ids <- purrr::map(billion, billion_ind_codes) %>%
+    stats::setNames(billion)
 
   purrr::map_dfr(
     billion,
@@ -365,7 +383,10 @@ make_default_scenario <- function(df,
       include_projection = include_projection,
       recycle_campaigns = recycle_campaigns,
       ind_ids = ind_ids[[.x]],
-      trim_years = trim_years
+      trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim,
+      assert_data_calculations = assert_data_calculations
     )
   ) %>%
     dplyr::bind_rows(df) %>%

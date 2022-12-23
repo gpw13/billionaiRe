@@ -30,15 +30,5 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate overweight by picking the best value between business as usual and
-AROC of 3 by 2030.
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}
-\item \code{scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)}
-}
-
-Then picks the best result between the two scenarios.
+Accelerate overweight by targeting 0 by 2030.
 }

@@ -36,6 +36,8 @@ scenario_fixed_target <- function(df,
                                   upper_limit = 100,
                                   lower_limit = 0,
                                   trim_years = TRUE,
+                                  start_year_trim = start_year,
+                                  end_year_trim = end_year,
                                   ind_ids = billion_ind_codes("all"),
                                   default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -55,17 +57,23 @@ scenario_fixed_target <- function(df,
     dplyr::full_join(full_years_df, by = c("year", "iso3", "ind", scenario_col)) %>%
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(.data[["ind"]], .data[["iso3"]]) %>%
-    dplyr::mutate("baseline_value_" := get_baseline_value(.data[[value_col]], .data[["year"]], !!baseline_year)) %>%
+    dplyr::mutate(
+      "baseline_year_" := get_baseline_year(.data[["year"]], .data[["type"]], baseline_year = !!baseline_year, type_filter = c("reported", "estimated", "imputed", "projected")),
+      "baseline_value_" := get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              baseline_year = .data[["baseline_year_"]],
+                                              type_filter = c("all"))) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       "baseline_value_" := dplyr::case_when(
         is.na(.data[["baseline_value_"]]) ~ as.numeric(0),
         TRUE ~ as.numeric(.data[["baseline_value_"]])
       ),
-      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], baseline_year, target_year, .data[["baseline_value_"]]),
+      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], start_year, target_year, .data[["baseline_value_"]]),
       !!sym(scenario_col) := scenario_name
     ) %>%
-    dplyr::select(-c("baseline_value_")) %>%
+    dplyr::select(-c("baseline_value_", "baseline_year_")) %>%
     trim_values(
       col = "scenario_value",
       value_col = value_col,
@@ -75,9 +83,13 @@ scenario_fixed_target <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
-    )
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
+    ) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      !is.na(.data[["type"]]) ~ .data[["type"]],
+      TRUE ~ "projected"
+    ))
 
   df %>%
     dplyr::bind_rows(scenario_df)
@@ -106,6 +118,7 @@ calculate_fixed_target <- function(target_value,
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value <= target_value ~
         as.numeric(baseline_value),
+      year > target_year ~ target_value,
       TRUE ~ NA_real_
     )
   } else {
@@ -114,6 +127,7 @@ calculate_fixed_target <- function(target_value,
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
       year >= baseline_year & year <= target_year & baseline_value >= target_value ~
         as.numeric(baseline_value),
+      year > target_year ~ target_value,
       TRUE ~ NA_real_
     )
   }
@@ -142,6 +156,8 @@ scenario_fixed_target_col <- function(df,
                                       upper_limit = 100,
                                       lower_limit = 0,
                                       trim_years = TRUE,
+                                      start_year_trim = start_year,
+                                      end_year_trim = end_year,
                                       ind_ids = billion_ind_codes("all"),
                                       default_scenario = "default") {
   full_years_df <- tidyr::expand_grid(
@@ -176,6 +192,8 @@ scenario_fixed_target_col <- function(df,
     upper_limit = upper_limit,
     lower_limit = lower_limit,
     trim_years = trim_years,
+    start_year_trim = start_year_trim,
+    end_year_trim = end_year_trim,
     ind_ids = ind_ids,
     default_scenario = default_scenario
   ) %>%
@@ -209,6 +227,8 @@ scenario_halt_rise <- function(df,
                                keep_better_values = FALSE,
                                small_is_best = FALSE,
                                trim_years = TRUE,
+                               start_year_trim = start_year,
+                               end_year_trim = end_year,
                                ind_ids = billion_ind_codes("all"),
                                default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -216,7 +236,13 @@ scenario_halt_rise <- function(df,
 
   target_df <- df %>%
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
-    dplyr::mutate(target = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year)) %>%
+    dplyr::mutate(target = get_baseline_value(.data[[value_col]],
+                                              .data[["year"]],
+                                              .data[["type"]],
+                                              .data[[scenario_col]],
+                                              default_scenario,
+                                              baseline_year,
+                                              type_filter = c("all"))) %>%
     dplyr::ungroup()
 
   scenario_fixed_target_col(target_df,
@@ -234,6 +260,8 @@ scenario_halt_rise <- function(df,
                             upper_limit = upper_limit,
                             lower_limit = lower_limit,
                             trim_years = trim_years,
+                            start_year_trim = start_year_trim,
+                            end_year_trim = end_year_trim,
                             ind_ids = ind_ids,
                             default_scenario = default_scenario) %>%
     dplyr::select(-"target")

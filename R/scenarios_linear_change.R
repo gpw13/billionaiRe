@@ -41,6 +41,8 @@ scenario_linear_change <- function(df,
                                    upper_limit = 100,
                                    lower_limit = 0,
                                    trim_years = TRUE,
+                                   start_year_trim = start_year,
+                                   end_year_trim = end_year,
                                    ind_ids = billion_ind_codes("all"),
                                    default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -61,9 +63,10 @@ scenario_linear_change <- function(df,
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
     dplyr::mutate(
-      baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year),
+      baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]],.data[["type"]], baseline_year = !!baseline_year, type_filter = c("all")),
+      baseline_year = get_baseline_year(.data[["year"]],.data[["type"]], baseline_year = !!baseline_year, type_filter = c("reported", "estimated", "projected", "imputed")),
       scenario_value = dplyr::case_when(
-        .data[["year"]] >= baseline_year ~ .data[["baseline_value"]] + (linear_value * (.data[["year"]] - baseline_year))
+        .data[["year"]] >= !!start_year ~ .data[["baseline_value"]] + (linear_value * (.data[["year"]] - .data[["baseline_year"]]))
       ),
       !!sym(scenario_col) := scenario_name
     ) %>%
@@ -77,10 +80,14 @@ scenario_linear_change <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
-    dplyr::select(-c("baseline_value"))
+    dplyr::select(-c("baseline_value", "baseline_year")) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      !is.na(.data[["type"]]) ~ .data[["type"]],
+      TRUE ~ "projected"
+    ))
 
   df %>%
     dplyr::bind_rows(scenario_linear_change)
@@ -112,6 +119,8 @@ scenario_linear_change_col <- function(df,
                                        upper_limit = 100,
                                        lower_limit = 0,
                                        trim_years = TRUE,
+                                       start_year_trim = start_year,
+                                       end_year_trim = end_year,
                                        ind_ids = billion_ind_codes("all"),
                                        default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
@@ -138,9 +147,23 @@ scenario_linear_change_col <- function(df,
     dplyr::filter(.data[[scenario_col]] == default_scenario) %>%
     dplyr::group_by(dplyr::across(dplyr::any_of(c("iso3", "ind")))) %>%
     dplyr::mutate(
-      baseline_value = get_baseline_value(.data[[value_col]], .data[["year"]], baseline_year),
+      baseline_value = get_baseline_value(
+        .data[[value_col]],
+        .data[["year"]],
+        .data[["type"]],
+        .data[[scenario_col]],
+        default_scenario,
+        baseline_year,
+        type_filter = c("all")),
+      baseline_year = get_baseline_year(
+        .data[["year"]],
+        .data[["type"]],
+        .data[[scenario_col]],
+        default_scenario,
+        baseline_year,
+        type_filter = c("all")),
       scenario_value = dplyr::case_when(
-        .data[["year"]] >= baseline_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[["year"]] - baseline_year))
+        .data[["year"]] > start_year ~ .data[["baseline_value"]] + (.data[[linear_value_col]] * (.data[["year"]] - baseline_year)),
       ),
       !!sym(scenario_col) := scenario_name
     ) %>%
@@ -155,10 +178,14 @@ scenario_linear_change_col <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
-      start_year = start_year,
-      end_year = end_year
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim
     ) %>%
-    dplyr::select(-c("baseline_value"))
+    dplyr::select(- tidyselect::all_of(c("baseline_value","baseline_year", linear_value_col))) %>%
+    dplyr::mutate(type = dplyr::case_when(
+      !is.na(.data[["type"]]) ~ .data[["type"]],
+      TRUE ~ "projected"
+    ))
 
   df %>%
     dplyr::bind_rows(scenario_linear_change_col_df)

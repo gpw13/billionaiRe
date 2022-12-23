@@ -28,7 +28,7 @@ transform_uhc_data <- function(df,
   transform_value_col <- glue::glue(transform_glue)
 
   params <- list(...)
-  params_assert_data_calculations <- get_right_params(params, assert_data_calculation_uhc)
+  params_assert_data_calculations <- get_right_parameters(params, assert_data_calculation_uhc)
 
   if (!is.null(params_assert_data_calculations)) {
     do.call(
@@ -46,7 +46,7 @@ transform_uhc_data <- function(df,
   }
 
   if (recycle) {
-    params_recycle <- get_right_params(params, recycle_data)
+    params_recycle <- get_right_parameters(params, recycle_data)
 
     df <- do.call(
       recycle_data,
@@ -96,8 +96,7 @@ transform_uhc_single <- function(df,
     df,
     !!sym(transform_value_col) := dplyr::case_when(
       is.na(.data[[value_col]]) ~ .data[[transform_value_col]],
-      .data[["ind"]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "itn")] ~ trim_transforms(.data[[value_col]]),
-      .data[["ind"]] == ind_ids["bp"] ~ transform_bp(.data[[value_col]]),
+      .data[["ind"]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "itn", "bp")] ~ trim_transforms(.data[[value_col]]),
       .data[["ind"]] == ind_ids["fpg"] ~ transform_glucose(.data[[value_col]]),
       .data[["ind"]] == ind_ids["beds"] ~ transform_hosp_beds(.data[[value_col]]),
       .data[["ind"]] %in% ind_ids[c("uhc_tobacco", "fh")] ~ transform_inversion(.data[[value_col]]),
@@ -154,9 +153,8 @@ untransform_uhc_single <- function(df,
   df %>%
     dplyr::mutate(!!sym(value_col) := dplyr::case_when(
       is.na(.data[[transform_value_col]]) ~ .data[[value_col]],
-      .data[[ind_col]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn")] ~ .data[[transform_value_col]],
+      .data[[ind_col]] %in% ind_ids[c("fp", "anc4", "dtp3", "pneumo", "tb", "art", "uhc_sanitation", "espar", "fh", "itn", "bp")] ~ .data[[transform_value_col]],
       .data[[ind_col]] %in% ind_ids["uhc_tobacco"] ~ transform_inversion(.data[[value_col]]),
-      .data[[ind_col]] == ind_ids["bp"] ~ untransform_bp(.data[[transform_value_col]]),
       .data[[ind_col]] == ind_ids["fpg"] ~ untransform_glucose(.data[[transform_value_col]]),
       .data[[ind_col]] == ind_ids["beds"] ~ untransform_hosp_beds(.data[[transform_value_col]]),
       .data[[ind_col]] == ind_ids["hwf"] ~ untransform_hwf(.data[[transform_value_col]]),

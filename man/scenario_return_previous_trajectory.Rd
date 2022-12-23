@@ -21,6 +21,8 @@ scenario_return_previous_trajectory(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   source = sprintf("WHO DDI, \%s", format(Sys.Date(), "\%B \%Y"))
 )
 }
@@ -32,9 +34,9 @@ country, year, and indicator.}
 
 \item{recovery_year}{(integer) year from which the AROC will be applied}
 
-\item{start_year}{Start year for scenario, defaults to 2018.}
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
-\item{end_year}{End year for scenario, defaults to 2025}
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
@@ -65,6 +67,10 @@ than \code{col} will be kept.}
 
 \item{trim_years}{logical to indicate if years before \code{start_year} and after
 \code{end_year} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 }

@@ -4,11 +4,37 @@
 \alias{sdg_anc4}
 \title{Accelerate anc4 to SDG target}
 \usage{
-sdg_anc4(df, ...)
+sdg_anc4(
+  df,
+  scenario_col = "scenario",
+  default_scenario = "default",
+  bau_scenario = "historical",
+  scenario_name = "sdg",
+  ind_ids = billion_ind_codes("uhc"),
+  end_year = 2030,
+  ...
+)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
+
+\item{scenario_col}{Column name of column with scenario identifiers. Useful for
+calculating contributions on data in long format rather than wide format.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
+
+\item{scenario_name}{name of scenario}
+
+\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
+Although separate indicator codes can be used than the standard, they must
+be supplied as a named vector where the names correspond to the output of
+\code{billion_ind_codes()}.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -17,15 +43,6 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario} is
 set to \code{acceleration}
 }
 \description{
-Accelerate anc4 by first dividing countries into those with reported data and
-those without.
-\itemize{
-\item For countries without reported data, the acceleration scenario is the same
-as business as usual.
-\item For countries with reported data, scenarios with both a \strong{fixed target of 95\%
-by 2030} and a \strong{linear change of 2.6 per year till 2025} are tried, with the easiest
-to achieve of the two selected. The selected scenario is then compared against
-the business as usual scenario for reported data, and the best of the two chosen
-as the acceleration scenario.
-}
+Accelerate \code{anc4} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }

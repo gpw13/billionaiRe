@@ -484,11 +484,7 @@ assert_x_in_y <- function(x, y) {
 #'   comparison
 assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   # Extract just the names of the ... arguments
-  arg_names <- sys.call()
-  end_idx <- length(arg_names) - 2
-  arg_names <- arg_names[2:end_idx]
-
-  args <- list(...)
+  args <- rlang::dots_list(..., .named = TRUE)
 
   # Ensure that the input has at least two vectors for comparison
   assert_min_length(args, 2)
@@ -511,14 +507,12 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
       args <- args[sapply(args, length) != 1]
     }
   }
-
-  cond <- purrr::map(args, length) %>%
-    purrr::reduce(`==`)
+  cond <- all(lengths(args) == length(args[[1]]))
 
   if (!cond) {
     stop(sprintf(
       "%s must have the same length.",
-      paste(arg_names, collapse = ", ")
+      paste(names(args), collapse = ", ")
     ),
     call. = FALSE
     )

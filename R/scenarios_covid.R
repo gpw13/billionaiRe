@@ -88,7 +88,7 @@ scenario_covid_never_return <- function(df,
                                         ...) {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
 
-  params <- get_right_params(rlang::list2(...), scenario_dip_recover_iso3)
+  params <- get_right_parameters(rlang::list2(...), scenario_dip_recover_iso3)
 
   rlang::exec(scenario_dip_recover,
     df = df,
@@ -142,7 +142,7 @@ scenario_covid_delayed_return <- function(df,
                                         ...){
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
 
-  params <- get_right_params(list(...), scenario_dip_recover_iso3)
+  params <- get_right_parameters(list(...), scenario_dip_recover_iso3)
 
   rlang::exec(scenario_dip_recover,
     df = df,
@@ -203,7 +203,7 @@ scenario_covid_sustained_disruption <- function(df,
                                           ...){
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
 
-  params <- get_right_params(rlang::list2(...), scenario_dip_recover_iso3)
+  params <- get_right_parameters(rlang::list2(...), scenario_dip_recover_iso3)
 
   rlang::exec(scenario_dip_recover,
     df = df,

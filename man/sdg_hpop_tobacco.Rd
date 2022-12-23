@@ -10,6 +10,10 @@ sdg_hpop_tobacco(
   scenario_col = "scenario",
   start_year = 2018,
   end_year = 2025,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
+  default_scenario = "default",
+  value_col = "value",
   ...
 )
 }
@@ -29,6 +33,14 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
+
+\item{default_scenario}{name of the default scenario.}
+
+\item{value_col}{Column name of column with indicator values.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -36,20 +48,9 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate hpop_tobacco by picking the best value between business as usual,
-halt the rise in 2018, or a custom version of scenario_percent_baseline. The
-custom \code{scenario_percent_baseline} is taking similar parameters to
-\code{scenario_percent_baseline}'s \code{percent_change} = -30, \code{baseline_year} = 2010,
-but values are added to the \code{start_year} value, rather than the \code{baseline_year}
-values.
-}
-\details{
-Runs:
-\itemize{
-\item custom scenario_percent_baseline (see above).
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}
-\item \code{scenario_halt_rise(df, baseline_year= 2018, small_is_best = TRUE,...)}
-}
-
-Then picks the best result between the three scenarios.
+Accelerate hpop_tobacco by running a custom version of
+scenario_percent_baseline. The custom \code{scenario_percent_baseline} is
+taking similar parameters to \code{scenario_percent_baseline}'s
+\code{percent_change} = -30, \code{baseline_year} = 2010, but values are added to the
+\code{start_year} value, rather than the \code{baseline_year} values.
 }

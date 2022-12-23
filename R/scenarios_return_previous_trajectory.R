@@ -29,6 +29,8 @@ scenario_return_previous_trajectory <- function(df,
                                                 upper_limit = 100,
                                                 lower_limit = 0,
                                                 trim_years = TRUE,
+                                                start_year_trim = start_year,
+                                                end_year_trim = end_year,
                                                 source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y"))){
 
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col, "type")
@@ -62,7 +64,8 @@ scenario_return_previous_trajectory <- function(df,
     trim_values(
       col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,
-      lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
+      lower_limit = lower_limit, trim_years = trim_years,
+      start_year_trim = start_year_trim, end_year_trim = end_year_trim
     ) %>%
     dplyr::select(-"last_shock_year", - "last_shock_value")
 

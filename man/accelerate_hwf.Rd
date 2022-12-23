@@ -12,6 +12,7 @@ accelerate_hwf(
   start_year = 2018,
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -36,6 +37,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
 
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -47,8 +50,8 @@ Accelerate hwf by first dividing countries into two groups:
 \itemize{
 \item For countries with a 2018 value greater than or equal to the 2018 global median,
 business as usual is returned.
-\item For countries with a 2018 value less than the 2018 global median, a \strong{linear change
-of 4.54 per year from 2018 to 2025} is returned.
+\item For countries with a 2018 value less than the 2018 global median, the
+average of the top 5 rate of change within all countries.
 }
 }
 \details{

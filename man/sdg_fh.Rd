@@ -4,31 +4,11 @@
 \alias{sdg_fh}
 \title{Accelerate fh to SDG target}
 \usage{
-sdg_fh(
-  df,
-  ind_ids = billion_ind_codes("uhc"),
-  scenario_col = "scenario",
-  default_scenario = "default",
-  bau_scenario = "historical",
-  ...
-)
+sdg_fh(df, ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
-
-\item{default_scenario}{name of the default scenario.}
-
-\item{bau_scenario}{name of scenario to be used for business as usual.
-Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -37,8 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate fh by taking the best of business as usual and halting upward trends
-in the data to the 2018 value.
+Accelerate \code{fh} by aiming at 0 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

@@ -1,75 +1,58 @@
 #' Accelerate anc4 to SDG target
 #'
-#' Accelerate anc4 by first dividing countries into those with reported data and
-#' those without.
-#' - For countries without reported data, the acceleration scenario is the same
-#' as business as usual.
-#' - For countries with reported data, scenarios with both a **fixed target of 95%
-#' by 2030** and a **linear change of 2.6 per year till 2025** are tried, with the easiest
-#' to achieve of the two selected. The selected scenario is then compared against
-#' the business as usual scenario for reported data, and the best of the two chosen
-#' as the acceleration scenario.
+#' Accelerate `anc4` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_uhc_billion
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario` is
 #' set to `acceleration`
 #'
 sdg_anc4 <- function(df,
+                     scenario_col = "scenario",
+                     default_scenario = "default",
+                     bau_scenario = "historical",
+                     scenario_name = "sdg",
+                     ind_ids = billion_ind_codes("uhc"),
+                     end_year = 2030,
                      ...) {
-  df %>%
-    sdg_hpop_sanitation(
-      ind_ids = c("hpop_sanitation" = "anc4"),
-      ...
-    )
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(target_value = 100,
+                   target_year = 2030,
+                   scenario_function = "scenario_fixed_target")
+
+  exec_scenario(df,
+                scenario_with_values,
+                params)
 }
 
 #' Accelerate art to SDG target
 #'
-#' Accelerate art by first dividing countries into those with reported data and
-#' those without.
-#' - For countries without reported data, business as usual is returned.
-#' - For countries with reported data, the best of business as usual and **fixed
-#'  target of 90.25% by 2025** is chosen.
+#' Accelerate `art` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #'
 sdg_art <- function(df,
-                    scenario_col = "scenario",
-                    ind_ids = billion_ind_codes("uhc"),
-                    bau_scenario = "historical",
+                    end_year = 2030,
                     ...) {
 
-  assert_columns(df, scenario_col)
-
-  this_ind <- ind_ids["art"]
-
-
-  accelerate_art(
-    df = df,
-    ind_ids = this_ind,
-    scenario_col = scenario_col,
-    bau_scenario = bau_scenario,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  params <- get_dots_and_call_parameters(...)
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 #' Accelerate beds to SDG target
 #'
-#' Accelerate beds by first dividing countries into two groups:
-#' - For countries with 18 or more beds for all years after 2018, business
-#' as usual is returned.
-#' - For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-#' the best of business as usual and a **linear change of 0.36 per year up to 2025**,
-#' with an upper limit of 18, is returned.
+#' Accelerate `beds` by aiming at 18 by 2030 if values are below 18. Otherwise,
+#' business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
@@ -78,53 +61,87 @@ sdg_art <- function(df,
 sdg_beds <- function(df,
                      ind_ids = billion_ind_codes("uhc"),
                      scenario_col = "scenario",
+                     value_col = "value",
+                     start_year = 2018,
+                     default_scenario = "default",
+                     bau_scenario = "historical",
+                     scenario_name = "sdg",
                      ...) {
-
-  assert_columns(df, scenario_col)
 
   this_ind <- ind_ids["beds"]
 
-  accelerate_beds(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  params <- get_dots_and_call_parameters(...)
+
+  params_no_scenario_bau <- set_parameters(
+    get_right_parameters(params, scenario_bau),
+    avoid_worstening = TRUE,
+    upper_limit = Inf,
+    scenario_name = scenario_name
+  )
+
+  params_with_scenario_target <- get_right_parameters(params, scenario_fixed_target) %>%
+    set_parameters(target_value = 18,
+                   target_year = 2030,
+                   upper_limit = 18)
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind)
+
+  df_with_scenario <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
+    dplyr::ungroup()
+
+  df_no_scenario <- df_this_ind %>%
+    dplyr::group_by(.data[["iso3"]]) %>%
+    dplyr::filter(!any((.data[[value_col]] < 18 & .data[["year"]] >= start_year))) %>%
+    dplyr::ungroup()
+
+  if (nrow(df_no_scenario) > 0) {
+
+    df_no_scenario <- exec_scenario(df_no_scenario,
+                                                scenario_bau,
+                                                params_no_scenario_bau)%>%
+      dplyr::filter(.data[[scenario_col]] == scenario_name)
+  } else {
+    df_no_scenario <- tibble::tibble()
+  }
+
+  if (nrow(df_with_scenario) > 0) {
+
+
+    df_with_scenario_default <- df_with_scenario %>%
+      dplyr::filter(.data[[scenario_col]] == default_scenario)
+
+    df_with_scenario_fixed <- exec_scenario(df_with_scenario_default,
+                                            scenario_fixed_target,
+                                            params_with_scenario_target) %>%
+      dplyr::filter(.data[[scenario_col]] == params[["scenario_name"]])
+
+  } else {
+    df_with_scenario_fixed <- tibble::tibble()
+  }
+
+  df %>%
+    dplyr::bind_rows(df_no_scenario, df_with_scenario_fixed)
 }
 
 #' Accelerate bp to SDG target
 #'
-#' Accelerate bp by taking the best of business as usual and a **decrease of 25% from
-#' 2010 to 2025**. These scenarios are run on the crude bp values, which
-#' are then converted back to their age-standardised equivalents using an approximation.
+#' Accelerate `bp` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
 sdg_bp <- function(df,
-                   ind_ids = billion_ind_codes("uhc"),
-                   scenario_col = "scenario",
-                   start_year = 2018,
-                   end_year = 2025,
                    ...) {
+  params <- get_dots_and_call_parameters(...)
 
-  assert_columns(df, scenario_col)
-
-  this_ind <- ind_ids["bp"]
-
-  accelerate_bp(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 #' Accelerate doctors to SDG target
@@ -134,28 +151,18 @@ sdg_bp <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_doctors <- function(df,
-                        ind_ids = billion_ind_codes("uhc"),
-                        scenario_col = "scenario",
-                        default_scenario = "default",
-                        bau_scenario = "historical",
                         ...) {
+  params <- get_dots_and_call_parameters(...)
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(target_value = 154.74,
+                   target_year = 2030,
+                   upper_limit = 10000,
+                   scenario_function = "scenario_fixed_target")
 
-  this_ind <- ind_ids["doctors"]
-
-  accelerate_doctors(
-    df = df,
-    ind_ids = this_ind,
-    scenario_col = scenario_col,
-    default_scenario = default_scenario,
-    bau_scenario = bau_scenario,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                scenario_with_values,
+                params)
 }
 
 #' Accelerate nurses to SDG target
@@ -166,37 +173,20 @@ sdg_doctors <- function(df,
 #' @inherit accelerate_anc4
 #'
 sdg_nurses <- function(df,
-                       ind_ids = billion_ind_codes("uhc"),
-                       scenario_col = "scenario",
-                       default_scenario = "default",
-                       bau_scenario = "historical",
                        ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["nurses"]
-
-  accelerate_nurses(
-    df = df,
-    ind_ids = this_ind,
-    scenario_col = scenario_col,
-    default_scenario = default_scenario,
-    bau_scenario = bau_scenario,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_doctors,
+                params
+  )
 }
 
 #' Accelerate hwf to SDG target
 #'
-#' Accelerate hwf by first dividing countries into two groups:
-#' - For countries with a 2018 value greater than or equal to the 2018 global median,
-#' business as usual is returned.
-#' - For countries with a 2018 value less than the 2018 global median, a **linear change
-#' of 4.54 per year from 2018 to 2025** is returned.
+#' Accelerate `hwf` by returning to business as usual, as there are no globally
+#' agreed target.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
@@ -210,272 +200,169 @@ sdg_hwf <- function(df,
                     bau_scenario = "historical",
                     ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["hwf"]
-
-  accelerate_hwf(
-    df = df,
-    ind_ids = this_ind,
-    default_scenario = default_scenario,
-    bau_scenario = bau_scenario,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_doctors,
+                params
+  )
 }
 
 #' Accelerate dtp3 to SDG target
 #'
-#' Accelerate dtp3 using a customised version of scenario_fixed_target with the
-#' following peculiarities:
-#' - baseline_year = 2019;
-#' - the 2020 value is kept identical to the 2019 (baseline) value;
-#' - the target_year is 2030; and
-#' - the scenario is then a straight line to the target_value and target_year
-#' - the target values for each country are provided by the technical program.
+#' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
 sdg_dtp3 <- function(df,
-                     ind_ids = billion_ind_codes("uhc"),
-                     scenario_col = "scenario",
-                     start_year = 2018,
-                     end_year = 2025,
                      ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["dtp3"]
-
-  accelerate_dtp3(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 
 #' Accelerate fh to SDG target
 #'
-#' Accelerate fh by taking the best of business as usual and halting upward trends
-#' in the data to the 2018 value.
+#' Accelerate `fh` by aiming at 0 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #'
 sdg_fh <- function(df,
-                   ind_ids = billion_ind_codes("uhc"),
-                   scenario_col = "scenario",
-                   default_scenario = "default",
-                   bau_scenario = "historical",
                    ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(target_value = 0,
+                   target_year = 2030,
+                   scenario_function = "scenario_fixed_target")
 
-  this_ind <- ind_ids["fh"]
-
-  accelerate_fh(
-    df = df,
-    ind_ids = this_ind,
-    default_scenario = default_scenario,
-    bau_scenario = bau_scenario,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                scenario_with_values,
+                params)
 }
 
 #' Accelerate fp to SDG target
 #'
-#' Accelerate fp by dividing the countries into two groups:
-#' - For BRN, CYP, FSM, ISL, LUX, and SYC, return business as usual.
-#' - For all other countries, take the best of business as usual and the quantile
-#' target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
-#' value in 2018).
+#' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
 sdg_fp <- function(df,
-                   ind_ids = billion_ind_codes("uhc"),
-                   scenario_col = "scenario",
                    ...) {
+  params <- get_dots_and_call_parameters(...)
 
-  assert_columns(df, scenario_col)
-
-  this_ind <- ind_ids["fp"]
-
-  accelerate_fp(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 #' Accelerate fpg to SDG target
 #'
-#' Accelerate fpg using the business as usual scenario.
+#' Accelerate `fpg` by aiming at 0 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
+#' @inheritParams accelerate_child_viol
 #'
 sdg_fpg <- function(df,
-                    ind_ids = billion_ind_codes("uhc"),
+                    start_year = 2018,
+                    scenario_name = "sdg",
                     scenario_col = "scenario",
                     ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["fpg"]
+  df_scenario <- exec_scenario(df,
+                sdg_fh,
+                params) %>%
+    dplyr::filter(.data[[scenario_col]] == scenario_name,
+                  .data[["year"]] >= start_year)
 
-  accelerate_fpg(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  dplyr::bind_rows(df, df_scenario)
 }
 
 #' Accelerate itn to SDG target
 #'
-#' Accelerate itn by taking the best of business as usual and a **fixed target of
-#' 80 by 2030**.
+#' Accelerate `itn` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #'
 sdg_itn <- function(df,
-                    ind_ids = billion_ind_codes("uhc"),
-                    scenario_col = "scenario",
                     ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["itn"]
-
-  accelerate_itn(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 
 #' Accelerate pneumo to SDG target
 #'
-#' Accelerate pneumo by taking the best of business as usual and a **fixed target
-#' of 90 by 2025**.
+#' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #'
 sdg_pneumo <- function(df,
-                       ind_ids = billion_ind_codes("uhc"),
-                       scenario_col = "scenario",
                        ...) {
+  params <- get_dots_and_call_parameters(...)
 
-  assert_columns(df, scenario_col)
-
-  this_ind <- ind_ids["pneumo"]
-
-  accelerate_pneumo(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 #' Accelerate tb to SDG target
 #'
-#' Accelerate tb by using a **fixed target of 90 by 2025**.
+#' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #'
 sdg_tb <- function(df,
-                   ind_ids = billion_ind_codes("uhc"),
-                   scenario_col = "scenario",
                    ...) {
+  params <- get_dots_and_call_parameters(...)
 
-  assert_columns(df, scenario_col)
-
-  this_ind <- ind_ids["tb"]
-
-  accelerate_tb(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
 
 #' Accelerate uhc_sanitation to SDG target
 #'
-#' Accelerate uhc_sanitation by encouraging the country to reach the mean (or upper
-#' threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
-#' and upper limits of 0 and 99, respectively, are also imposed on the results.
+#' Accelerate `uhc_sanitation` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #'
 sdg_uhc_sanitation <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
-                               scenario_col = "scenario",
                                ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["uhc_sanitation"]
-
-  accelerate_uhc_sanitation(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_anc4,
+                params)
 }
-# @Alice, there are no countries without data
-# @Alice, why is scenario_bau called twice for withdata_df?
-# @Alice, need explanation on following comments:
-# NB cannot take hpop outputs because the imputed data (45 coutnries) is removed for hpop tobacco
-# Is the input for this function hpop_tobacco, instead of uhc_tobacco due to the missing data for UHC?
 
 #' Accelerate uhc_tobacco to SDG target
 #'
-#' Accelerate uhc_tobacco by first dividing countries into two groups:
-#' - For countries without any routine (i.e., estimated) data, business as usual
-#' is returned
-#' - For countries with routine (i.e., estimated) data, the best of business as
-#' usual and a **percent decrease of 30% between 2010 and 2025** is returned. Both
-#' scenarios are run on the **crude tobacco usage** values, which are then converted
-#' to their age-standardised equivalents using an approximation.
+#' Accelerate `uhc_tobacco` by aiming at 100 by 2030 if there are 2 values or more
+#' reported. Otherwise, business as usual.
 #'
 #' @inherit accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
@@ -486,17 +373,9 @@ sdg_uhc_tobacco <- function(df,
                             scenario_col = "scenario",
                             ...) {
 
-  assert_columns(df, scenario_col)
+  params <- get_dots_and_call_parameters(...)
 
-  this_ind <- ind_ids["uhc_tobacco"]
-
-  accelerate_uhc_tobacco(
-    df = df,
-    ind_ids = this_ind,
-    ...
-  ) %>%
-    dplyr::mutate("{scenario_col}" := dplyr::case_when(
-      .data[[scenario_col]] == "acceleration" ~ "sdg",
-      TRUE ~ as.character(.data[[scenario_col]])
-    ))
+  exec_scenario(df,
+                sdg_fh,
+                params)
 }

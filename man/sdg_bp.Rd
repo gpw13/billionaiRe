@@ -4,30 +4,11 @@
 \alias{sdg_bp}
 \title{Accelerate bp to SDG target}
 \usage{
-sdg_bp(
-  df,
-  ind_ids = billion_ind_codes("uhc"),
-  scenario_col = "scenario",
-  start_year = 2018,
-  end_year = 2025,
-  ...
-)
+sdg_bp(df, ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
 country, year, and indicator.}
-
-\item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
-Although separate indicator codes can be used than the standard, they must
-be supplied as a named vector where the names correspond to the output of
-\code{billion_ind_codes()}.}
-
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
-
-\item{start_year}{Base year for contribution calculation, defaults to 2018.}
-
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -36,9 +17,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate bp by taking the best of business as usual and a \strong{decrease of 25\% from
-2010 to 2025}. These scenarios are run on the crude bp values, which
-are then converted back to their age-standardised equivalents using an approximation.
+Accelerate \code{bp} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

@@ -7,9 +7,9 @@
 accelerate_adult_obese(
   df,
   ind_ids = billion_ind_codes("hpop"),
-  end_year = 2025,
   scenario_col = "scenario",
   default_scenario = "default",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -22,12 +22,12 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
-
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

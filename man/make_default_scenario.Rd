@@ -19,7 +19,10 @@ make_default_scenario(
   include_projection = TRUE,
   recycle_campaigns = TRUE,
   ind_ids = NULL,
-  trim_years = FALSE
+  trim_years = FALSE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
+  assert_data_calculations = TRUE
 )
 }
 \arguments{
@@ -57,8 +60,16 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
+
+\item{assert_data_calculations}{Boolean if true then output data frame will
+be tested to see if it contains the minimal required data to run the
+calculations.}
 }
 \value{
 Data frame in long format.

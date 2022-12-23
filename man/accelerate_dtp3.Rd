@@ -12,6 +12,7 @@ accelerate_dtp3(
   start_year = 2018,
   end_year = 2025,
   default_scenario = "default",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -34,6 +35,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

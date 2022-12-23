@@ -30,15 +30,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate uhc_tobacco by first dividing countries into two groups:
-\itemize{
-\item For countries without any routine (i.e., estimated) data, business as usual
-is returned
-\item For countries with routine (i.e., estimated) data, the best of business as
-usual and a \strong{percent decrease of 30\% between 2010 and 2025} is returned. Both
-scenarios are run on the \strong{crude tobacco usage} values, which are then converted
-to their age-standardised equivalents using an approximation.
-}
+Accelerate \code{uhc_tobacco} by aiming at 100 by 2030 if there are 2 values or more
+reported. Otherwise, business as usual.
 }
 \details{
 Runs:

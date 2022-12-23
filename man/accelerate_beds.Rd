@@ -12,6 +12,7 @@ accelerate_beds(
   start_year = 2018,
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -36,6 +37,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
 
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \description{
@@ -44,8 +47,9 @@ Accelerate beds by first dividing countries into two groups:
 \item For countries with 18 or more beds for all years after 2018, business
 as usual is returned.
 \item For countries which have less than 18 beds for any of the years after 2018 (inclusive),
-the best of business as usual and a \strong{linear change of 0.36 per year up to 2025},
-with an upper limit of 18, is returned.
+the best of business as usual and a \strong{applying the AROC of the top 10
+performing countries with at least 4 reported/estimated values}, with an
+upper limit of 18, is returned.
 }
 }
 \details{

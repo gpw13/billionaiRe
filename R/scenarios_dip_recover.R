@@ -80,7 +80,7 @@ scenario_dip_recover <- function(df,
 
   unique_iso3 <- unique(df[["iso3"]])
 
-  params <- get_right_params(list(...), scenario_dip_recover_iso3)
+  params <- get_right_parameters(list(...), scenario_dip_recover_iso3)
 
   furrr::future_map_dfr(unique_iso3, ~ rlang::exec(scenario_dip_recover_iso3,
                                                    iso3 =  .x,
@@ -135,6 +135,8 @@ scenario_dip_recover_iso3 <- function(df,
                                       upper_limit = 100,
                                       lower_limit = 0,
                                       trim_years = TRUE,
+                                      start_year_trim = start_year,
+                                      end_year_trim = end_year,
                                       ind_ids = billion_ind_codes("all"),
                                       source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
                                       default_scenario = "default") {
@@ -210,7 +212,7 @@ scenario_dip_recover_iso3 <- function(df,
     trim_values(
       col = "scenario_value", value_col = value_col, trim = trim, small_is_best = small_is_best,
       keep_better_values = keep_better_values, upper_limit = upper_limit,
-      lower_limit = lower_limit, trim_years = trim_years, start_year = start_year, end_year = end_year
+      lower_limit = lower_limit, trim_years = trim_years, start_year_trim = start_year_trim, end_year_trim = end_year_trim
     )
 
   df %>%
@@ -262,6 +264,8 @@ scenario_dip_recover_iso3_ind <- function(df,
                                           upper_limit = 100,
                                           lower_limit = 0,
                                           trim_years = TRUE,
+                                          start_year_trim = start_year,
+                                          end_year_trim = end_year,
                                           source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y"))){
   ind_df <- df %>%
     dplyr::filter(.data[["ind"]] == !! ind,
@@ -290,7 +294,9 @@ scenario_dip_recover_iso3_ind <- function(df,
         trim_years = trim_years,
         small_is_best = small_is_best,
         ind_ids = ind_ids,
-        bau_scenario = default_scenario
+        bau_scenario = default_scenario,
+        start_year_trim = start_year_trim,
+        end_year_trim = end_year_trim
       ) %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario_name) %>%
       dplyr::mutate(

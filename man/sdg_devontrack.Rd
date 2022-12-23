@@ -9,6 +9,9 @@ sdg_devontrack(
   ind_ids = billion_ind_codes("hpop"),
   end_year = 2025,
   scenario_col = "scenario",
+  start_year = 2018,
+  value_col = "value",
+  default_scenario = "default",
   ...
 )
 }
@@ -26,6 +29,12 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{start_year}{Base year for contribution calculation, defaults to 2018.}
+
+\item{value_col}{Name of the column containing indicator value in \code{df}.}
+
+\item{default_scenario}{name of the default scenario.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -33,11 +42,11 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate devontrack by targeting 80 by 2030.
+Accelerate devontrack by targeting 100 by 2030.
 }
 \details{
 Runs:
 \itemize{
-\item \code{scenario_fixed_target(df, target_value = 80, target_year = 2030, small_is_best = FALSE,...)},
+\item \verb{scenario_fixed_target(df, target_value = <, target_year = 2030, small_is_best = FALSE,...)},
 }
 }

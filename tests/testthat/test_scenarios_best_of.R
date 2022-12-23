@@ -138,10 +138,16 @@ testthat::test_that("scenario_bau returns accurate values", {
     year = rep(2010:2030, 3),
     ind = "water",
     iso3 = "testalia",
-    scenario = c(rep("a", 21), rep("b", 21), rep("c", 21))
+    scenario = c(rep("a", 21), rep("b", 21), rep("c", 21)),
+    type = dplyr::case_when(
+      year <= 2018 ~ "estimated",
+      TRUE ~ "projected"
+    )
   )
 
-  df_scenario_bau <- scenario_bau(df, bau_scenario = "a") %>%
+  df_scenario_bau <- scenario_bau(df,
+                                  default_scenario = "a",
+                                  bau_scenario = "a") %>%
     dplyr::filter(scenario == "business_as_usual")
 
   df_test <- df %>%
@@ -155,7 +161,8 @@ testthat::test_that("scenario_bau returns accurate values", {
 
   df_scenario_bau <- df %>%
     dplyr::filter(year <= 2018) %>%
-    scenario_bau(bau_scenario = "a") %>%
+    scenario_bau(default_scenario = "a",
+                 bau_scenario = "a") %>%
     dplyr::filter(scenario == "business_as_usual")
 
   df_test_2018 <- df %>%
@@ -171,4 +178,26 @@ testthat::test_that("scenario_bau returns accurate values", {
     )
 
   testthat::expect_equal(df_scenario_bau, df_test_2018)
+
+  # scenario starts from last value in default_scenario
+
+  df_scenario_bau <- scenario_bau(df,
+                                  default_scenario = "a",
+                                  bau_scenario = "b") %>%
+    dplyr::filter(scenario == "business_as_usual")
+
+  df_scenario_bau_2018 <- df_scenario_bau %>%
+    dplyr::filter(year == 2018,
+                  scenario == "business_as_usual") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_bau_2018, 88)
+
+  df_scenario_bau_2025 <- df_scenario_bau %>%
+    dplyr::filter(year == 2025,
+                  scenario == "business_as_usual") %>%
+    dplyr::pull(value)
+
+  testthat::expect_equal(df_scenario_bau_2025, 25)
+
 })

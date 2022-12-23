@@ -10,8 +10,10 @@ accelerate_espar(
   ind_ids = billion_ind_codes("hep"),
   scenario_col = "scenario",
   start_year = 2018,
+  baseline_year = 2018,
   end_year = 2025,
   default_scenario = "default",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -31,9 +33,14 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{start_year}{Base year for contribution calculation, defaults to 2018.}
 
+\item{baseline_year}{Year from which the scenario is measured.
+Defaults to \code{start_year}}
+
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
@@ -45,4 +52,14 @@ set to \code{acceleration}
 Accelerate espar by aiming at the best value between the regional average
 (WHO regions) and the value last year of the last year with complete espar
 data (with categories and sub-categories).
+}
+\details{
+Runs:
+\itemize{
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+}
+
+Then picks the best result between the three scenarios.
 }

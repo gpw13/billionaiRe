@@ -9,6 +9,11 @@ accelerate_transfats(
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
   default_scenario = "default",
+  scenario_name = "acceleration",
+  start_year = 2018,
+  start_year_trim = start_year + 1,
+  end_year = 2025,
+  value_col = "value",
   ...
 )
 }
@@ -26,6 +31,17 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario.}
 
+\item{scenario_name}{name of scenario}
+
+\item{start_year}{Year from which the acceleration scenario begins, inclusive.}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+
+\item{value_col}{Column name of column with indicator values. This column will be
+used to return the results.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \description{
@@ -34,6 +50,10 @@ Accelerate transfats by targeting 100 by 2025.
 \details{
 Runs:
 \itemize{
-\item \code{scenario_fixed_target(df, target_value = 100, target_year = 2025, small_is_best = TRUE,...)},
+\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
+\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
+\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
 }
+
+Then picks the best result between the three scenarios.
 }

@@ -1,3 +1,13 @@
+# billionaiRe 0.8.0
+* Pass to version 0.8.0
+* Modify all existing scenarios handling to implement modification requested by DFI:
+  - scenarios now start by default from the last value in `default_scenario` instead of 2018
+  - acceleration scenarios that aimed at fixed targets based on top N countries are now calculated dynamically
+  - SDG scenarios now aim at the closest value to the SDG target rather than an alternative to acceleration. This makes the SDG scenarios more ambitious
+* Introduction of `add_populations` and `add_hep_populations` functions to retrieve accurate population for aggregation to higher dimensions
+* Introduction of `accelerate_target` scenarios, a variation on acceleration scenarios that aim at specific values whenever possible.
+* Introduction of benchmarking scenarios: `scenario_top_n_iso3` allows to pick the best performing countries for a specific group and have all countries aim at the rate of change.
+
 # billionaiRe 0.7.0
 * Pass to version 0.7.0 after removing of unused column parameters.
 * Remove `ind`, `year`, `iso3`, `type` and `source` from functions parameters

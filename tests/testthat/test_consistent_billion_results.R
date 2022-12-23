@@ -180,7 +180,7 @@ testthat::test_that("UHC complexe billion calculations with scenarios are consis
     recycle_data(billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     transform_uhc_data() %>%
     calculate_uhc_billion(scenario_col = "scenario") %>%
-    calculate_uhc_contribution(scenario_col = "scenario") %>%
+    calculate_uhc_contribution(scenario_col = "scenario", default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
     dplyr::filter(!is.na(transform_value)) %>%
     dplyr::select(iso3, scenario, ind, year, transform_value) %>%

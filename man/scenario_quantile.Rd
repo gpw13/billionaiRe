@@ -10,9 +10,9 @@ scenario_quantile(
   value_col = "value",
   start_year = 2018,
   end_year = 2025,
-  quantile_year = 2018,
-  baseline_quantile_year = 2013,
-  baseline_year = 2018,
+  quantile_year = start_year,
+  baseline_quantile_year = start_year - 5,
+  baseline_year = start_year,
   scenario_name = glue::glue("quantile_{n}"),
   scenario_col = "scenario",
   trim = TRUE,
@@ -21,6 +21,8 @@ scenario_quantile(
   upper_limit = 100,
   lower_limit = 0,
   trim_years = TRUE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
   ind_ids = billion_ind_codes("all"),
   default_scenario = "default"
 )
@@ -70,8 +72,12 @@ the limit if \code{percent_change} is positive, and 0 if negative.}
 Can take any of "guess", or 0 to 100. \code{guess} (default) will take 0 as the
 limit if \code{percent_change} is positive, and 100 if negative.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
+
+\item{start_year_trim}{(integer) year to start trimming from.}
+
+\item{end_year_trim}{(integer) year to end trimming.}
 
 \item{ind_ids}{Named vector of indicator codes for input indicators to the Billion.
 Although separate indicator codes can be used than the standard, they must

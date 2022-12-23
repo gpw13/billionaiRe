@@ -109,10 +109,14 @@ get_ind_metadata <- function(ind_codes,
   return(output)
 }
 
-#' Denotes which indicator a given indicator belongs to. For example, `get_ind_billion("alcohol")`
+#' Denotes which billion a given indicator belongs to
+#'
+#' For example, `get_ind_billion("alcohol")`
 #' returns "hpop". Note that espar currently returns only "hep".
 #'
-#' @noRd
+#' @param ind_code (character) string identifying the indicator to identify.
+#'
+#' @export
 get_ind_billion <- function(ind_code) {
   assert_type(ind_code, "character")
 

@@ -8,9 +8,11 @@ accelerate_wasting(
   df,
   ind_ids = billion_ind_codes("hpop"),
   end_year = 2025,
+  start_year = 2018,
   scenario_col = "scenario",
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -23,7 +25,9 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 
-\item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
+\item{end_year}{End year for scenario, defaults to 2025}
+
+\item{start_year}{Start year for scenario, defaults to 2018.}
 
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
@@ -33,6 +37,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
 
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -41,7 +47,7 @@ set to \code{acceleration}
 }
 \description{
 Accelerate wasting by picking the best results between halt downwards trend
-from 2018, and AROC by 3\% by 2030.
+from \code{start_year}, and AROC by 3\% by 2030.
 }
 \details{
 Runs:
@@ -50,5 +56,5 @@ Runs:
 \item \code{scenario_aroc(df, aroc_type = "target", target_value = 3, target_year = 2030, small_is_best = TRUE,...)}
 }
 
-Then picks the best result between the three scenarios.
+Then picks the best result between the two scenarios.
 }

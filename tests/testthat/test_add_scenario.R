@@ -3,6 +3,9 @@ test_scenario_function <- function(df, scenario_function, expected_value, scenar
     df_add_indicator <- add_scenario_indicator(df,
       indicator = "adult_obese",
       scenario_function = scenario_function,
+      scenario_name = scenario_name,
+      start_scenario_last_default = FALSE,
+      expend_bau = FALSE,
       ...
     )
     df_adult_obese_halt_rise_2025 <- df_add_indicator %>%
@@ -13,6 +16,9 @@ test_scenario_function <- function(df, scenario_function, expected_value, scenar
 
     df_add_scenario_hpop <- add_scenario(df,
       scenario_function = scenario_function,
+      scenario_name = scenario_name,
+      start_scenario_last_default = FALSE,
+      expend_bau = FALSE,
       ...
     )
 
@@ -25,7 +31,9 @@ df <- tibble::tibble(
   year = 2010:2030,
   ind = "adult_obese",
   iso3 = "testalia",
-  scenario = "default"
+  scenario = "default",
+  source = NA_character_,
+  type = ifelse(.data[["year"]] <= 2021, "reported", "projected")
 )
 
 test_scenario_function(df, "halt_rise", 80, baseline_year = 2010, scenario_name = "halt_rise")

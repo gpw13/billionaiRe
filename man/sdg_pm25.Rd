@@ -30,13 +30,11 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate pm25 by picking the best value between business as usual, and
-linear change of -2\% * 2018 \code{value} per year.
+Accelerate pm25 aiming at 5\% by 2030.
 }
 \details{
 Runs:
 \itemize{
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}
 \item \code{scenario_linear_change(df, linear_value = df$value[df$year == 2018] * -0.02, small_is_best = TRUE,...)}
 }
 

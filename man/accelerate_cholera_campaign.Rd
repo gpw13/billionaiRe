@@ -13,6 +13,7 @@ accelerate_cholera_campaign(
   ind_ids = billion_ind_codes("hep"),
   scenario_col = "scenario",
   default_scenario = "default",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -38,6 +39,8 @@ be supplied as a named vector where the names correspond to the output of
 calculating contributions on data in long format rather than wide format.}
 
 \item{default_scenario}{name of the default scenario to be used.}
+
+\item{scenario_name}{Name of the scenario. Defaults to scenario_{percent_change}_{baseline_year}}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

@@ -13,6 +13,7 @@ accelerate_meningitis_campaign(
   end_year = 2025,
   years_best_performance = 2015:2018,
   default_scenario = "default",
+  scenario_name = "scenario_name",
   ...
 )
 }
@@ -38,6 +39,8 @@ calculating contributions on data in long format rather than wide format.}
 best performance should be found.}
 
 \item{default_scenario}{name of the default scenario.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

@@ -10,6 +10,7 @@ accelerate_anc4(
   scenario_col = "scenario",
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -30,6 +31,8 @@ calculating contributions on data in long format rather than wide format.}
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
 
+\item{scenario_name}{name of scenario}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -43,10 +46,11 @@ those without.
 \item For countries without reported data, the acceleration scenario_col is the same
 as business as usual.
 \item For countries with reported data, scenarios with both a \strong{fixed target of 95\%
-by 2030} and a \strong{linear change of 2.6 per year till 2025} are tried, with the easiest
-to achieve of the two selected. The selected scenario is then compared against
-the business as usual scenario for reported data, and the best of the two chosen
-as the acceleration scenario.
+by 2030} and a \strong{applying the AROC of the top 10 performing countries with at
+least 4 reported/estimated values} are tried, with the easiest to achieve of
+the two selected. The selected scenario is then compared against the business
+as usual scenario for reported data, and the best of the two chosen as the
+acceleration scenario.
 }
 }
 \details{

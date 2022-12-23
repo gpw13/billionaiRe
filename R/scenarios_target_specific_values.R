@@ -22,9 +22,9 @@ scenario_quantile <- function(df,
                               value_col = "value",
                               start_year = 2018,
                               end_year = 2025,
-                              quantile_year = 2018,
-                              baseline_quantile_year = 2013,
-                              baseline_year = 2018,
+                              quantile_year = start_year,
+                              baseline_quantile_year = start_year-5,
+                              baseline_year = start_year,
                               scenario_name = glue::glue("quantile_{n}"),
                               scenario_col = "scenario",
                               trim = TRUE,
@@ -33,11 +33,13 @@ scenario_quantile <- function(df,
                               upper_limit = 100,
                               lower_limit = 0,
                               trim_years = TRUE,
+                              start_year_trim = start_year,
+                              end_year_trim = end_year,
                               ind_ids = billion_ind_codes("all"),
                               default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col, scenario_col)
   assert_unique_rows(df, scenario_col, ind_ids = ind_ids)
-  assert_ind_start_end_year(df, value_col, quantile_year, baseline_quantile_year, ind_ids = ind_ids[unique(df[["ind"]])])
+  assert_ind_start_end_year(df, value_col, quantile_year, baseline_quantile_year, ind_ids = unique(df[["ind"]]))
 
   quantile_df <- df %>%
     dplyr::group_by(.data[["ind"]]) %>%
@@ -84,6 +86,8 @@ scenario_quantile <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim,
       default_scenario = default_scenario
     ) %>%
     dplyr::select(-"qtarget")
@@ -120,6 +124,8 @@ scenario_best_in_region <- function(df,
                                     upper_limit = 100,
                                     lower_limit = 0,
                                     trim_years = TRUE,
+                                    start_year_trim = start_year,
+                                    end_year_trim = end_year,
                                     default_scenario = "default") {
   assert_columns(df, "year", "iso3", "ind", value_col)
   assert_unique_rows(df, ind_ids = ind_ids)
@@ -171,6 +177,8 @@ scenario_best_in_region <- function(df,
       upper_limit = upper_limit,
       lower_limit = lower_limit,
       trim_years = trim_years,
+      start_year_trim = start_year_trim,
+      end_year_trim = end_year_trim,
       default_scenario = default_scenario
     ) %>%
     dplyr::select(-c("rtarget"))

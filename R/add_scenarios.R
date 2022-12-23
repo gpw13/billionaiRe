@@ -18,14 +18,21 @@
 #' - `fixed_target_col`: calls \code{\link{scenario_fixed_target_col}}
 #' - `bau`: calls \code{\link{scenario_bau}}
 #' - `accelerate`: calls indicator accelerate function.
+#' - `accelerate_target`: calls indicator accelerate function to specified
+#'   targets.
 #' - `sdg`: calls Sustainable Development Goals (SDG) acceleration function.
+#' - `benchmarking`: calls benchmarking scenarios.
 #' - `covid_rapid_return` calls \code{\link{scenario_covid_rapid_return}}
 #' - `covid_delayed_return` calls \code{\link{scenario_covid_delayed_return}}
 #' - `covid_sustained_disruption` calls \code{\link{scenario_covid_sustained_disruption}}
 #' - `return_previous_trajectory` calls \code{\link{scenario_return_previous_trajectory}}
+#' - `top_n_iso3` calls \code{\link{scenario_top_n_iso3}}
 #' @param ... additional arguments passed to `add_scenario_indicator`
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
+#' @inheritParams add_scenario_indicator
+#' @inheritParams accelerate_alcohol
+#'
 #'
 #' @return data frame with additional rows with scenario values.
 #' @export
@@ -42,25 +49,64 @@ add_scenario <- function(df,
                            "fixed_target_col",
                            "bau",
                            "accelerate",
+                           "accelerate_target",
                            "sdg",
+                           "benchmarking",
                            "covid_rapid_return",
                            "covid_delayed_return",
                            "covid_sustained_disruption",
-                           "return_previous_trajectory"
-                         ),
+                           "return_previous_trajectory",
+                           "top_n_iso3"),
                          ind_ids = billion_ind_codes("all"),
+                         scenario_col = "scenario",
                          start_year = 2018,
                          end_year = 2025,
+                         default_scenario = "default",
+                         make_default = FALSE,
+                         start_scenario_last_default = TRUE,
                          ...) {
   assert_columns(df, "ind")
   scenario_function <- rlang::arg_match(scenario_function)
 
-  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids, paste0(c(
-    "espar[0-9].{0,3}",
-    "surviving_infants"
-  ),
-  collapse = "|"
-  ))]
+  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids,
+                                               paste0(c(
+                                                 "espar[0-9].{0,3}",
+                                                 "surviving_infants"
+                                               ),
+                                               collapse = "|"
+                                               ))]
+
+  if(default_scenario %in% unique(df[[scenario_col]])){
+    last_year_default_scenario <- get_last_year_scenario(df,
+                                                         indicator = NULL,
+                                                         scenario = default_scenario,
+                                                         scenario_col = scenario_col,
+                                                         start_year = start_year)
+  }else{
+    last_year_default_scenario <- end_year
+  }
+
+  params <- get_dots_and_call_parameters(...) %>%
+    set_parameters(scenario_function = scenario_function)
+
+  if(make_default){
+
+    params_make_default <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = last_year_default_scenario,
+                     scenario = default_scenario)
+
+    df <- exec_scenario(df,
+                        make_default_scenario,
+                        params_make_default)
+
+    params <- set_parameters(params,
+                             make_default = FALSE)
+  }
+
+  if(start_scenario_last_default){
+    params <- set_parameters(params,
+                             start_year = last_year_default_scenario)
+  }
 
   those_inds <- sub_set_inds[sub_set_inds %in% unique(df[["ind"]])]
 
@@ -71,12 +117,8 @@ add_scenario <- function(df,
     function(x) {
       rlang::exec("add_scenario_indicator",
                   df = df,
-                  scenario_function = scenario_function,
                   indicator = x,
-                  ind_ids = ind_ids,
-                  start_year = start_year,
-                  end_year = end_year,
-                  ...
+                  !!!params
       )
     }
   ) %>%
@@ -89,6 +131,12 @@ add_scenario <- function(df,
 #' indicator specified and adds the scenario.
 #'
 #' @param indicator name of indicator to be passed to `scenario_function`
+#' @param make_default (Boolean) if `TRUE`, then `make_default_scenario` is used to
+#' generate the `default_scenario`
+#' @param start_scenario_last_default (Boolean) if `TRUE`, then the last year with values
+#' in the `default_scenario` is the starting point of the scenario, and not `start_year`.
+#' @param expend_bau (Boolean)if `TRUE`, then `make_default_scenario` is used to
+#' expend `bau_scenario` to the start of the `default_scenario`.
 #' @param ... additional parameters to be passed to the add_scenario_indicator
 #' function (e.g. `add_scenario_adult_obese`).
 #'
@@ -111,20 +159,54 @@ add_scenario_indicator <- function(df,
                                      "fixed_target_col",
                                      "bau",
                                      "accelerate",
+                                     "accelerate_target",
                                      "sdg",
+                                     "benchmarking",
                                      "covid_rapid_return",
                                      "covid_sustained_disruption",
                                      "covid_delayed_return",
                                      "covid_never_return",
-                                     "return_previous_trajectory"
-                                   ),
+                                     "return_previous_trajectory",
+                                     "top_n_iso3"),
                                    indicator,
+                                   start_year = 2018,
                                    ind_ids = billion_ind_codes("all"),
                                    scenario_col = "scenario",
                                    default_scenario = "default",
                                    bau_scenario = "historical",
+                                   make_default = FALSE,
+                                   expend_bau = FALSE,
+                                   start_scenario_last_default = TRUE,
                                    ...) {
+
+  params <-   get_dots_and_call_parameters(...) %>%
+    set_parameters(
+      "small_is_best" = get_ind_metadata(indicator, "small_is_best")
+    )
+
   this_ind <- ind_ids[indicator]
+
+  if(stringr::str_detect(this_ind, "espar")){
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      "espar[0-9].{0,3}",
+      glue::glue("^{this_ind}$")
+    ),
+    collapse = "|"
+    ))]
+  }else {
+    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+      glue::glue("^{this_ind}$"),
+      glue::glue("^{this_ind}_num$"),
+      glue::glue("^{this_ind}_denom$"),
+      glue::glue("^{this_ind}_urban$"),
+      glue::glue("^{this_ind}_rural$")
+    ),
+    collapse = "|"
+    ))]
+  }
+
+  this_ind_df <- df %>%
+    dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
 
   if (!scenario_col %in% names(df)) {
     billionaiRe_add_columns(df, scenario_col, NA)
@@ -132,59 +214,133 @@ add_scenario_indicator <- function(df,
 
   scenario_function <- rlang::arg_match(scenario_function)
 
-  params <- list(...)
-  params["small_is_best"] <- get_ind_metadata(indicator, "small_is_best")
-  params["scenario_col"] <- scenario_col
-  params["default_scenario"] <- default_scenario
-  params["bau_scenario"] <- bau_scenario
+  if(scenario_function %in% c("accelerate", "sdg", "accelerate_target", "benchmarking")){
 
-  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-    "espar[0-9].{0,3}",
-    this_ind
-  ),
-  collapse = "|"
-  ))]
+    if (scenario_function == "sdg" & this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
 
-  this_ind_df <- df %>%
-    dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
+      scenario_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
+      params <- get_right_parameters(params, scenario_fn)
 
-  if (scenario_function == "accelerate") {
-    accelerate_fn <- get(as.character(paste0("accelerate_", this_ind)), mode = "function")
+      if(stringr::str_detect(this_ind, "_campaign")){
 
-    unique_scenarios <- unique(this_ind_df[[scenario_col]])
+        this_ind_df <- this_ind_df %>%
+          dplyr::filter(.data[[scenario_col]] %in% c(default_scenario, bau_scenario)) %>%
+          exec_scenario(transform_hep_data,
+                        params)
 
-    if(!default_scenario %in% unique_scenarios & !bau_scenario %in% unique_scenarios){
-      stop("For acceleration scenarios, `default_scenario` and `bau_scenario` must be present.")
+        params <- set_parameters(params, value_col = "transform_value")
+      }
+    }else if(scenario_function == "benchmarking" & get_ind_billion(this_ind) %in% c("hep", "hpop")){
+      scenario_fn <- get(glue::glue("{scenario_function}_anc4"), mode = "function")
+
+      params <- set_parameters(params, no_data_no_scenario = TRUE)
+    }else{
+      scenario_fn <- get(glue::glue("{scenario_function}_{this_ind}"), mode = "function")
     }
-
-    do.call(
-      accelerate_fn, c(list(df = this_ind_df), params)
-    ) %>%
-      dplyr::distinct()
-
-  } else if (scenario_function == "sdg") {
-    if (this_ind %in% ind_ids[billion_ind_codes("hep", include_subindicators = FALSE)]) {
-      sdg_fn <- get(as.character(paste0("scenario_bau")), mode = "function")
-      params["scenario_name"] <- "sdg"
-
-      params <- get_right_params(params, sdg_fn)
-
-    } else {
-      sdg_fn <- get(as.character(paste0("sdg_", this_ind)), mode = "function")
-    }
-
-    do.call(
-      sdg_fn, c(list(df = this_ind_df), params)
-    ) %>%
-      dplyr::distinct()
-  } else {
-    scenario_fn <- get(as.character(paste0("scenario_", scenario_function)), mode = "function")
-
-    params_function <- get_right_params(params, scenario_fn)
-
-    do.call(
-      scenario_fn, c(list(df = df), params_function)
-    ) %>%
-      dplyr::distinct()
+  }else{
+    scenario_fn <- get(glue::glue("scenario_{scenario_function}"), mode = "function")
+    params <- get_right_parameters(params, scenario_fn)
   }
+
+  if(!"scenario_name" %in% names(params)){
+    scenario_name <- switch(scenario_function,
+                            "accelerate" = "acceleration",
+                            "accelerate_target" = "acceleration_target",
+                            scenario_function
+    )
+  }else{
+    scenario_name <- params[["scenario_name"]]
+  }
+
+  params <- set_parameters(params,
+                           scenario_name = scenario_name)
+  if(make_default){
+
+    params_make_default <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = get_last_year_scenario(this_ind_df,
+                                                       indicator,
+                                                       scenario = default_scenario,
+                                                       scenario_col = scenario_col,
+                                                       start_year = start_year),
+                     billion = get_ind_billion(indicator)
+      )
+
+    this_ind_df <- exec_scenario(this_ind_df,
+                                 make_default_scenario,
+                                 params_make_default)
+  }
+
+  if(expend_bau){
+
+    params_expend_bau <- get_right_parameters(params, make_default_scenario) %>%
+      set_parameters(end_year = get_last_year_scenario(this_ind_df,
+                                                       indicator,
+                                                       scenario = bau_scenario,
+                                                       scenario_col = scenario_col,
+                                                       start_year = start_year),
+                     start_year = get_last_year_scenario(this_ind_df,
+                                                         indicator,
+                                                         scenario = default_scenario,
+                                                         scenario_col = scenario_col,
+                                                         start_year = start_year),
+                     scenario = params[["bau_scenario"]],
+                     billion = get_ind_billion(indicator)
+      )
+
+    this_ind_df <- exec_scenario(this_ind_df,
+                                 make_default_scenario,
+                                 params_expend_bau)
+  }
+
+  if(start_scenario_last_default){
+    params <- set_parameters(params,
+                             start_year = get_last_year_scenario(this_ind_df,
+                                                                 indicator,
+                                                                 scenario = default_scenario,
+                                                                 scenario_col = scenario_col,
+                                                                 start_year = start_year),
+                             start_year_trim = get_last_year_scenario(this_ind_df,
+                                                                      indicator,
+                                                                      scenario = default_scenario,
+                                                                      scenario_col = scenario_col,
+                                                                      start_year = start_year))
+  }
+
+  df_scenario <- exec_scenario(this_ind_df,
+                               scenario_fn,
+                               params)
+
+  df_scenario <- fill_cols_scenario(df_scenario, scenario_col = scenario_col)
+
+  unique_final_scenario_names <- unique(df_scenario[[scenario_col]])
+
+  base_scenarios <- c(
+    "routine",
+    "covid_shock",
+    "reference_infilling"
+  )
+
+  final_scenario_names <- unique_final_scenario_names[!unique_final_scenario_names %in% c(base_scenarios, default_scenario, bau_scenario)]
+
+  df_scenario <- df_scenario %>%
+    dplyr::filter(dplyr::case_when(
+      .data[[scenario_col]] %in% final_scenario_names & .data[["year"]] < params[["start_year"]] ~ FALSE,
+      TRUE ~ TRUE
+    ))
+
+  if("recycled" %in% names(df_scenario)){
+    df_scenario <- df_scenario %>%
+      dplyr::mutate(recycled = dplyr::case_when(
+        .data[[scenario_col]] %in% final_scenario_names ~ FALSE,
+        TRUE ~ .data[["recycled"]]
+      ))
+  }
+
+  if(expend_bau){
+    df_scenario <- df_scenario %>%
+      dplyr::filter(dplyr::if_else(.data[[scenario_col]] == params[["bau_scenario"]] & .data[["recycled"]], FALSE, TRUE))
+  }
+  return(df_scenario)
 }
+
+

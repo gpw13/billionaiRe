@@ -8,6 +8,7 @@ sdg_alcohol(
   df,
   ind_ids = billion_ind_codes("hpop"),
   scenario_col = "scenario",
+  default_scenario = "default",
   ...
 )
 }
@@ -23,6 +24,8 @@ be supplied as a named vector where the names correspond to the output of
 \item{scenario_col}{Column name of column with scenario identifiers. Useful for
 calculating contributions on data in long format rather than wide format.}
 
+\item{default_scenario}{name of the default scenario.}
+
 \item{...}{additional parameters to be passed to scenario function}
 }
 \value{
@@ -36,8 +39,6 @@ halt downwards trend from 2018, and -10 percent from 2010.
 \details{
 Runs:
 \itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
 \item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
 }
 

@@ -10,9 +10,11 @@ accelerate_hpop_tobacco(
   scenario_col = "scenario",
   value_col = "value",
   start_year = 2018,
+  start_year_trim = start_year + 1,
   end_year = 2025,
   default_scenario = "default",
   bau_scenario = "historical",
+  scenario_name = "acceleration",
   ...
 )
 }
@@ -32,12 +34,16 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{start_year}{Year from which the acceleration scenario begins, inclusive.}
 
+\item{start_year_trim}{(integer) year to start trimming from.}
+
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
 \item{default_scenario}{name of the default scenario.}
 
 \item{bau_scenario}{name of scenario to be used for business as usual.
 Default is \code{historical}.}
+
+\item{scenario_name}{name of scenario}
 
 \item{...}{additional parameters to be passed to scenario function}
 }

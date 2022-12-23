@@ -59,7 +59,8 @@ testthat::test_that("UHC calculations are consistent with exotic parametrized co
     recycle_data(value_col = "value_test", scenario_col = "scenario_test", billion = "uhc", default_scenario = "pre_covid_trajectory") %>%
     transform_uhc_data(value_col = "value_test") %>%
     calculate_uhc_billion(scenario_col = "scenario_test", value_col = "value_test", transform_value_col = "transform_value_test") %>%
-    calculate_uhc_contribution(scenario_col = "scenario_test", value_col = "value_test", transform_value_col = "transform_value_test") %>%
+    calculate_uhc_contribution(scenario_col = "scenario_test", value_col = "value_test", transform_value_col = "transform_value_test",
+                               default_scenario = "pre_covid_trajectory") %>%
     dplyr::filter(ind %in% billion_ind_codes("uhc", include_calculated = T)) %>%
     dplyr::filter(!is.na(transform_value_test)) %>%
     dplyr::select(iso3, scenario_test, ind, year, transform_value_test) %>%

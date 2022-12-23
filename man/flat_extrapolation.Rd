@@ -15,7 +15,7 @@ flat_extrapolation(
 )
 }
 \arguments{
-\item{df}{Data frame of model data.#'}
+\item{df}{Data frame of model data}
 
 \item{col}{Name of column to extrapolate/interpolate.}
 
