@@ -148,6 +148,54 @@
     <loc>/reference/accelerate_suicide.html</loc>
   </url>
   <url>
+    <loc>/reference/accelerate_target_anc4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_art.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_beds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_bp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_doctors.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_dtp3.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_fh.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_fp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_fpg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_hwf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_itn.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_nurses.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_pneumo.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_tb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_uhc_sanitation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/accelerate_target_uhc_tobacco.html</loc>
+  </url>
+  <url>
     <loc>/reference/accelerate_tb.html</loc>
   </url>
   <url>
@@ -178,10 +226,16 @@
     <loc>/reference/accelerate_yellow_fever_routine.html</loc>
   </url>
   <url>
+    <loc>/reference/add_hep_populations.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_hpop_populations.html</loc>
   </url>
   <url>
     <loc>/reference/add_missing_xmart_rows.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_populations.html</loc>
   </url>
   <url>
     <loc>/reference/add_scenario.html</loc>
@@ -292,6 +346,57 @@
     <loc>/reference/assert_years.html</loc>
   </url>
   <url>
+    <loc>/reference/benchmarking_anc4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_art.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_beds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_bp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_doctors.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_dtp3.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_espar.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_fh.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_fp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_fpg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_hwf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_itn.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_nurses.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_pneumo.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_tb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_uhc_sanitation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/benchmarking_uhc_tobacco.html</loc>
+  </url>
+  <url>
     <loc>/reference/billion_group_mean.html</loc>
   </url>
   <url>
@@ -302,6 +407,9 @@
   </url>
   <url>
     <loc>/reference/calculate_aarc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_aroc.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_contribution_sums.html</loc>
@@ -352,10 +460,16 @@
     <loc>/reference/country_shares.html</loc>
   </url>
   <url>
+    <loc>/reference/exec_scenario.html</loc>
+  </url>
+  <url>
     <loc>/reference/extrapolate_campaign_data.html</loc>
   </url>
   <url>
     <loc>/reference/extrapolate_campaign_vector.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fill_cols_scenario.html</loc>
   </url>
   <url>
     <loc>/reference/flat_extrapolation.html</loc>
@@ -367,13 +481,28 @@
     <loc>/reference/get_aarr.html</loc>
   </url>
   <url>
+    <loc>/reference/get_baseline_value.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_baseline_year.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_country_shares.html</loc>
   </url>
   <url>
     <loc>/reference/get_data_lake_name.html</loc>
   </url>
   <url>
+    <loc>/reference/get_ind_billion.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_ind_metadata.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_last_value.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_last_year_scenario.html</loc>
   </url>
   <url>
     <loc>/reference/get_latest_aarc.html</loc>
@@ -454,6 +583,9 @@
     <loc>/reference/remove_recycled_data.html</loc>
   </url>
   <url>
+    <loc>/reference/remove_unwanted_scenarios.html</loc>
+  </url>
+  <url>
     <loc>/reference/reverse_ind.html</loc>
   </url>
   <url>
@@ -518,6 +650,9 @@
   </url>
   <url>
     <loc>/reference/scenario_return_previous_trajectory.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scenario_top_n_iso3.html</loc>
   </url>
   <url>
     <loc>/reference/sdg_adult_obese.html</loc>
