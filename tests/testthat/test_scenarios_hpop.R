@@ -100,13 +100,17 @@ testthat::test_that("add_scenarios runs properly on hpop_df", {
   hpop_halt_rise_2023 <- hpop_halt_rise %>%
     dplyr::filter(scenario == "halt_rise", year == 2023) %>%
     dplyr::arrange(iso3, ind, year) %>%
-    dplyr::select(-scenario, -year, -type)
+    dplyr::select(-scenario, -year, -type) %>%
+    dplyr::ungroup() %>%
+    tibble::as_tibble()
 
   hpop_2018 <- hpop_df %>%
     dplyr::mutate(source = glue::glue("WHO DDI interim infilling and projections,{format(Sys.Date(), '%B %Y')}")) %>%
     dplyr::filter(year == 2018) %>%
     dplyr::arrange(iso3, ind, year) %>%
-    dplyr::select(-year, -type)
+    dplyr::select(-year, -type) %>%
+    dplyr::ungroup() %>%
+    tibble::as_tibble()
 
   testthat::expect_equal(hpop_halt_rise_2023, hpop_2018)
 })
