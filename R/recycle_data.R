@@ -3,8 +3,8 @@
 #' `recycle_data` recycles data between the scenarios present in `df` to reduce
 #' size of tables stored.
 #'
-#' This function wraps around `recycle_data_scenario_single` for all the
-#' scenarios present in the `scenario_col` column. `recycle_data_scenario_single `
+#' This function wraps around `recycle_data_scenario_single()` for all the
+#' scenarios present in the `scenario_col` column. recycle_data_scenario_single
 #' reuses values present in the specified  scenarios in `default_scenario`,
 #' `scenario_reported_estimated`, and `scenario_reference_infilling` for the specified scenarios.
 #'
@@ -28,7 +28,7 @@
 #' @param include_projection Boolean to include or not projections in recycling
 #' @param recycle_campaigns Boolean to include or not campaigns in recycling
 #'
-#' @inherit transform_hpop_data
+#' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
@@ -119,7 +119,7 @@ recycle_data <- function(df,
 #' be tested to see if it contains the minimal required data to run the
 #' calculations.
 #'
-#' @inherit transform_hpop_data
+#' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams trim_years
@@ -317,10 +317,10 @@ recycle_data_scenario_single <- function(df,
 
 #' Make a default scenario
 #'
-#' `make_default_scenario` wraps around `recycle_data_scenario_single` to create
+#' `make_default_scenario()` wraps around `recycle_data_scenario_single()` to create
 #'  a default scenario based on the parameters passed to the function.
 #'
-#' @inherit transform_hpop_data
+#' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams trim_values
 #' @inheritParams calculate_hpop_billion

@@ -123,13 +123,10 @@ points \code{reported} or \code{estimated} in the AROC interval.s}
 
 \item{...}{additional parameters to to pass to \code{recycle_data}}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_top_n_iso3} aims to reach the top \code{n} (or \code{prop}) performing countries
 Annual Rate of Change (AAROC) in \code{df} \code{default_scenario} (by \code{group_col}
-when provided). This is done by calculated the annual rate of change of all
+when provided). This is done by calculating the annual rate of change of all
 countries with at least two reported or estimated values between \code{baseline_year}
 and \code{aroc_end_year}. Then the values of the top \code{n} or top \code{prop} percent
 performing countries (in \code{group_col} if provided) are averaged out to have a

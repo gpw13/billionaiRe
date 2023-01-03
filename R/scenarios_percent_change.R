@@ -138,6 +138,8 @@ scenario_percent_baseline <- function(df,
 #' @param goal_value vector with the goal value to be used
 #' @param year (vector) vector of years
 #'
+#' @noRd
+#'
 calculate_percent_change_baseline <- function(baseline_value, goal_value, year, start_year, target_year, baseline_year) {
   dplyr::case_when(year > start_year & year <= target_year~
                      baseline_value + (goal_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),

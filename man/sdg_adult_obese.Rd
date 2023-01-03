@@ -36,3 +36,9 @@ Runs:
 \item \code{scenario_halt_rise(df, baseline_year = 2010, small_is_best = TRUE,...)}.
 }
 }
+\seealso{
+SDG scenarios
+\code{\link{sdg_alcohol}()},
+\code{\link{sdg_child_obese}()}
+}
+\concept{sdg}

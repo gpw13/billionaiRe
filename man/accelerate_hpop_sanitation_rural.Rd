@@ -15,9 +15,3 @@ country, year, and indicator.}
 \description{
 Accelerate hpop_sanitation_rural by aiming at best value in quintile.
 }
-\details{
-Runs:
-\itemize{
-\item \verb{scenario_quantile(df, n = 5, quantile_year = 2017, baseline_quantile_year = 2018, upper_limit = 99, lower_limit = 0 small_is_best = FALSE,...)}
-}
-}

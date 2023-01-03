@@ -1,0 +1,82 @@
+---
+title: "Basic scenarios"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic scenarios}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The basic scenarios are the building blocks the other scenarios use. They can also be used by themselves onto the data.
+
+Each of those scenarios have share parameters, but also have their own. See the individual documentation for each function to see the details.
+
+### Annual Rate of Change (AROC)
+
+`scenario_aroc()` use a general [compounded rate of change](https://en.wikipedia.org/wiki/Compound_annual_growth_rate) formula:
+$$\mathrm{AROC(year_{baseline}, year_{target})} = (Value(year_{target}) / Value(year_{baseline})) ^ (1 / (year_{target} -  year_{baseline})) - 1$$
+
+Three options are provided through the `aroc_type` parameter:
+
+- `target`: aims at a specific `target_value` by `target_year`
+- `latest`: takes the AROC between `baseline_year` and the previous year
+- `percent_change`: applies `percent_change` for the AROC from `baseline_year`.
+
+### Fixed targets
+
+`scenario_fixed_target()` allows to reach a target value from a baseline year by target year. It provides values for scenarios stated as "Reach XX% in INDICATOR by YEAR" or "Eliminate XX by YEAR".
+
+`scenario_fixed_target_col()` wraps around `scenario_fixed_target()` to provide targets from a column specified in `target_col` rather than a single value.
+
+`scenario_halt_rise()` is a special case of `scenario_fixed_target_col()` where each country aims at a value of a specific year.
+
+### Percentage change from baseline
+
+`scenario_percent_baseline()` allows to change a value by a fixed percentage to a provided year from a provided baseline year. It provides values for scenarios stated as "Reduce INDICATOR by XX% by YEAR"
+
+The `percent_change` parameter is understood as a percentage change, and not a percentage point change, as this is usually what intended by those formulations. If it is indeed the percentage change that is required, use `scenario_aroc()`. For instance, calculating the scenario "reduce the 2018 value (90%) by 30% by 2025", will results to a 2025 value of 63% and not 60%.
+
+### Linear change
+
+`scenario_linear_change()` to add a `linear_value` percentage point change to `baseline_value` from a `baseline_year`. It provides values for scenarios stated as "Increase INDICATOR by XX% points".
+
+`scenario_linear_change_col()` wraps around `scenario_linear_change()` to provide linear values from a column specified in `linear_value` rather than a single value.
+
+It differs from `scenario_aroc()` `percent_change` in two ways:
+
+- it is not compounded
+- it adds percentage points and not a percentage of values.
+
+### Benchmarking
+
+Those scenarios are compairing countries to find the best performing countries given different parameters.
+
+`scenario_quantile()` aims to reach the mean quantile average annual change (ARC) in which a country is at `quantile_year`. The target is based on the ARC between `quantile_year` and `baseline_quantile_year`. If ARC is under the mean of the quantile, it will aim at the mean, and at the higher limit of the quantile if above the mean.
+
+`scenario_best_in_region` aims to reach the mean regional average annual change in which a country is at `quantile_year`. The target is based on the ARC between `quantile_year` and `quantile_year` - 5. If ARC is under the mean of the region, it will aim at the mean, and at the best value of the quantile if above the mean. `small_is_best` can be used to indicate is lower value is best or not.
+
+`scenario_top_n_iso3()` aims to reach the top `n` (or `prop`) performing countries Annual Rate of Change (AAROC) (by `group_col` when provided). This is done by calculating the annual rate of change of all countries with at least two reported or estimated values between `baseline_year` and `aroc_end_year`. Then the values of the top `n` or top `prop` percent performing countries (in `group_col` if provided) are averaged out to have a single AROC at which all countries (by `group_col` if provided) will aim.
+
+### Compairing scenarios
+
+`scenario_best_of()` picks the best value between multiple scenarios specified `scenario_names`.
+
+`scenario_bau()` filters for values between `start_year` and `end_year` for `bau_scenario` and return those values. If values are missing for years between `start_year` and `end_year`, the latest available value will be imputed.
+
+### Helper function for scenarios
+
+In order to have clean scenarios, a series of parameters are passed to the functions to run properly:
+
+* `small_is_best()`: if TRUE, a lower value is considered as a better public health outcome (e.g. adult obesity)
+* `trim_values()`: if TRUE, values will be trimed around:
+    -   `keep_better_values`: if TRUE, if values before running the scenario are better than after, the original values will be kept.
+    -   `upper_limit`, `lower_limit`: if `trim` is TRUE, values above the upper_limit will have upper_limit and values below lower_limit will hasve lower_limit.
+    -   `trim_year`: if TRUE values before `start_year` and after `end_year` will be removed.
+

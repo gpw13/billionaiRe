@@ -17,22 +17,6 @@ country, year, and indicator.}
 
 \item{end_year}{End year for scenario, defaults to 2025}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
-This scenario allows to change a value by a fixed percentage to a provided year
-from a provided baseline year. It provides values for scenarios stated as
-"Reduce INDICATOR by XX\% by YEAR"
-}
-\details{
-The \code{percent_change} parameter is understood as a percentage change,
-and not a percentage point change, as this is usually what intended by those
-formulations. If it is indeed the percentage change that is required, please
-use \code{scenario_aroc}. For instance, to calculate the scenario "reduce the 2018
-value (90\%) by 30\% by 2025", will results to a 2025 value of 63\% and not 60\%.
-
-The returned scenario is a portion of the straight line drawn from the
-\code{baseline_year} value to the \code{target_year}. Only values for years between
-\code{start_year} and \code{end_year} will be returned.
+Trim values
 }

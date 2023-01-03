@@ -28,10 +28,6 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario} is
-set to \code{sdg}
-}
 \description{
 Accelerate alcohol by picking the best results between business as usual,
 halt downwards trend from 2018, and -10 percent from 2010.
@@ -44,3 +40,9 @@ Runs:
 
 Then picks the best result between the three scenarios.
 }
+\seealso{
+SDG scenarios
+\code{\link{sdg_adult_obese}()},
+\code{\link{sdg_child_obese}()}
+}
+\concept{sdg}

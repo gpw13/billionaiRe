@@ -47,13 +47,3 @@ target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
 value in 2018).
 }
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
-}
-
-Then picks the best result between the three scenarios.
-}

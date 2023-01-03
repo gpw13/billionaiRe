@@ -84,21 +84,8 @@ Default is \code{historical}.}
 
 \item{default_scenario}{name of the default scenario to be used.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_bau} filters for values between start_year and end_year for \code{bau_scenario} and
-returns values in value. If values are missing for years between \code{start_year} and \code{end_year},
+returns values in \code{value.} If values are missing for years between \code{start_year} and \code{end_year},
 the last available value will be imputed.
-}
-\details{
-The returned scenario is a portion of the straight line drawn from the
-\code{baseline_year} value to the \code{target_year}. Only values for years between
-\code{start_year} and \code{end_year} will be returned.
-
-If \code{value_col} has values that are higher or lower than the scenario values, then
-only \code{value_col} will be kept, depending on \code{small_is_best}. For instance,
-if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
-75 will be kept.
 }

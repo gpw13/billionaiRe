@@ -80,9 +80,6 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_best_of} picks the best value between multiple scenarios specified
 in \code{scenario_names}. \code{small_is_best} allows to pick if higher value or

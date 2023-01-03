@@ -6,7 +6,7 @@
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_uhc_billion
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration_target scenario binded to `df`. `scenario_name` is
@@ -96,7 +96,7 @@ accelerate_target_anc4 <- function(df,
 #' - For countries with reported data, the best of business as usual and **fixed
 #'  target of 90.25% by 2025** is chosen.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_art <- function(df,
@@ -122,7 +122,7 @@ accelerate_target_art <- function(df,
 #' - For countries which have less than 18 beds for any of the years after 2018 (inclusive),
 #' 18 beds is targeted by 2025
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_beds <- function(df,
@@ -216,7 +216,7 @@ accelerate_target_beds <- function(df,
 #'
 #' Accelerate bp by aiming at reaching 80% by 2030.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_bp <- function(df,
@@ -232,7 +232,7 @@ accelerate_target_bp <- function(df,
 #'
 #' Accelerate doctors using the business as usual scenario.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 accelerate_target_doctors <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
@@ -253,7 +253,7 @@ accelerate_target_doctors <- function(df,
 #' Accelerate nurses using the business as usual scenario.
 #'
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_target_nurses <- function(df,
                                      ...) {
@@ -268,7 +268,7 @@ accelerate_target_nurses <- function(df,
 #'
 #' Accelerate hwf by returning to business as usual, as there are no globally agreed target.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -292,7 +292,7 @@ accelerate_target_hwf <- function(df,
 #' - the scenario is then a straight line to the target_value and target_year
 #' - the target values for each country are provided by the technical program.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_dtp3 <- function(df,
@@ -311,7 +311,7 @@ accelerate_target_dtp3 <- function(df,
 #' Accelerate fh by taking the best of business as usual and halting upward trends
 #' in the data to the 2018 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_target_fh <- function(df,
                                  ...) {
@@ -326,7 +326,7 @@ accelerate_target_fh <- function(df,
 #'
 #' Accelerate fp by returning to business as usual, as there are no globally agreed target.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_fp <- function(df,
@@ -343,7 +343,7 @@ accelerate_target_fp <- function(df,
 #'
 #' Accelerate fpg by halting the rise to 2010 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_target_fpg <- function(df,
                                   ...) {
@@ -358,7 +358,7 @@ accelerate_target_fpg <- function(df,
 #' Accelerate itn by taking the best of business as usual and a **fixed target of
 #' 80 by 2030**.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 accelerate_target_itn <- function(df,
                                   ind_ids = billion_ind_codes("uhc"),
@@ -379,7 +379,7 @@ accelerate_target_itn <- function(df,
 #' of 90 by 2025** for countries with two or more data points since 2000. Otherwise,
 #' the business as usual scenario is used.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_target_pneumo <- function(df,
                                      ...) {
@@ -394,7 +394,7 @@ accelerate_target_pneumo <- function(df,
 #'
 #' Accelerate tb by using a **fixed target of 90 by 2025**.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_target_tb <- function(df,
                                  ...) {
@@ -409,7 +409,7 @@ accelerate_target_tb <- function(df,
 #'
 #' Accelerate uhc_sanitation by targeting to reach 95% by 2030.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams recycle_data
 #'
 accelerate_target_uhc_sanitation <- function(df,
@@ -449,7 +449,7 @@ accelerate_target_uhc_sanitation <- function(df,
 #' scenarios are run on the **crude tobacco usage** values, which are then converted
 #' to their age-standardised equivalents using an approximation.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_target_uhc_tobacco <- function(df,

@@ -8,7 +8,7 @@
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams recycle_data
 #' @inheritParams scenario_percent_baseline
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
@@ -215,7 +215,7 @@ accelerate_detect <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -239,7 +239,7 @@ accelerate_respond <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
@@ -260,7 +260,7 @@ accelerate_notify <- function(df,
 #'
 #' Accelerate detect_respond by taking the business as usual.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function

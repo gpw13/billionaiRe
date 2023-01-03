@@ -35,10 +35,6 @@ Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate road by picking the best results between business as usual, and
 -50 percent from 2020 to 2030.

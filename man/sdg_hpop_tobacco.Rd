@@ -43,10 +43,6 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate hpop_tobacco by running a custom version of
 scenario_percent_baseline. The custom \code{scenario_percent_baseline} is

@@ -3,12 +3,12 @@
 #' This scenario returns to the `scenario_previous_trajectory` after the last
 #' value of `scenario_shock`.
 #'
-#' @inherit scenario_dip_recover
+#' @inheritParams scenario_dip_recover
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams trim_values
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @inheritParams scenario_dip_recover_iso3
 #' @param scenario_shock (character) name of the scenario with the shock
 #' @param scenario_previous_trajectory (character) name of the scenario with the previous trajectories.

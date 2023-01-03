@@ -12,31 +12,6 @@ country, year, and indicator.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
-Accelerate anc4 by first dividing countries into those with reported data and
-those without.
-\itemize{
-\item For countries without reported data, the acceleration scenario_col is the same
-as business as usual.
-\item For countries with reported data, scenarios with both a \strong{fixed target of 95\%
-by 2030} and a \strong{applying the AROC of the top 10 performing countries with at
-least 4 reported/estimated values} are tried, with the easiest to achieve of
-the two selected. The selected scenario is then compared against the business
-as usual scenario for reported data, and the best of the two chosen as the
-acceleration scenario.
-}
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
-}
-
-Then picks the best result between the three scenarios.
+Accelerate fh to benchmarking scenario
 }

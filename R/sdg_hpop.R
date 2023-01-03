@@ -10,6 +10,8 @@
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario` is
 #' set to `sdg`
+#'
+#' @family sdg
 sdg_adult_obese <- function(df,
                             ind_ids = billion_ind_codes("hpop"),
                             scenario_col = "scenario",
@@ -35,9 +37,10 @@ sdg_adult_obese <- function(df,
 #'
 #' Then picks the best result between the three scenarios.
 #'
-#' @inherit sdg_adult_obese
+#' @inheritParams sdg_adult_obese
 #' @inheritParams accelerate_alcohol
 #'
+#' @family sdg
 sdg_alcohol <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
                         scenario_col = "scenario",
@@ -77,8 +80,10 @@ sdg_alcohol <- function(df,
 #'
 #' Accelerate child_obese by halting upwards trend in the data to the 2010 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
+#' @family sdg
+#' @family hpop
 sdg_child_obese <- function(df,
                             ...) {
 
@@ -98,7 +103,7 @@ sdg_child_obese <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 0, target_year = 2030, small_is_best = TRUE,...)`,
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_child_viol <- function(df,
                            ind_ids = billion_ind_codes("hpop"),
                            scenario_col = "scenario",
@@ -119,7 +124,7 @@ sdg_child_viol <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = <, target_year = 2030, small_is_best = FALSE,...)`,
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams accelerate_child_viol
 #'
@@ -187,7 +192,7 @@ sdg_devontrack <- function(df,
 #'
 #' Accelerate devontrack by targeting 100 by 2030.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #'
@@ -213,7 +218,7 @@ sdg_fuel <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 95,target_year = 2030, small_is_best = FALSE)`
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams calculate_hpop_contributions
 #'
 sdg_hpop_sanitation <- function(df,
@@ -275,7 +280,7 @@ sdg_hpop_sanitation <- function(df,
 #'
 #' Accelerate hpop_sanitation_rural by aiming at 95% by 20230
 #'
-#' @inherit accelerate_water
+#' @inheritParams accelerate_water
 sdg_hpop_sanitation_rural <- function(df,
                                       ...) {
 
@@ -291,7 +296,7 @@ sdg_hpop_sanitation_rural <- function(df,
 #'
 #' Accelerate hpop_sanitation_urban by aiming at 95% by 20230
 #'
-#' @inherit accelerate_water
+#' @inheritParams accelerate_water
 sdg_hpop_sanitation_urban <- function(df,
                                       ...) {
 
@@ -311,7 +316,7 @@ sdg_hpop_sanitation_urban <- function(df,
 #' `percent_change` = -30, `baseline_year` = 2010, but values are added to the
 #' `start_year` value, rather than the `baseline_year` values.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hep_data
@@ -397,7 +402,7 @@ sdg_hpop_tobacco <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 0, target_year = 2030, small_is_best = TRUE,...)`,
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #'
 sdg_ipv <- function(df,
                     scenario_col = "scenario",
@@ -413,7 +418,7 @@ sdg_ipv <- function(df,
 #'
 #' Accelerate overweight by targeting 0 by 2030.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_overweight <- function(df,
                            ind_ids = billion_ind_codes("hpop"),
                            scenario_col = "scenario",
@@ -435,7 +440,7 @@ sdg_overweight <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams accelerate_hpop_tobacco
 sdg_pm25 <- function(df,
                      ind_ids = billion_ind_codes("hpop"),
@@ -469,7 +474,7 @@ sdg_pm25 <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #'
 sdg_road <- function(df,
                      ind_ids = billion_ind_codes("hpop"),
@@ -492,7 +497,7 @@ sdg_road <- function(df,
 #'
 #' Accelerate stunting by aiming at 0% by 2030.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_stunting <- function(df,
                          ind_ids = billion_ind_codes("hpop"),
                          scenario_col = "scenario",
@@ -520,7 +525,7 @@ sdg_stunting <- function(df,
 #'
 #' Then picks the best result between the three scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_suicide <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
                         scenario_col = "scenario",
@@ -560,7 +565,7 @@ sdg_suicide <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 100, target_year = 2025, small_is_best = TRUE,...)`,
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #'
 sdg_transfats <- function(df,
                           ind_ids = billion_ind_codes("hpop"),
@@ -578,7 +583,7 @@ sdg_transfats <- function(df,
 #'
 #' Accelerate wasting by aiming at 0% by 2030.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams accelerate_child_viol
 sdg_wasting <- function(df,
                         ind_ids = billion_ind_codes("hpop"),
@@ -602,7 +607,7 @@ sdg_wasting <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 95,target_year = 2030, small_is_best = FALSE)`
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_water <- function(df,
                       ...) {
 
@@ -623,7 +628,7 @@ sdg_water <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 95,target_year = 2030, small_is_best = FALSE)`
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_water_rural <- function(df,
                             ...) {
   params <- get_dots_and_call_parameters(...) %>%
@@ -642,7 +647,7 @@ sdg_water_rural <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 95,target_year = 2030, small_is_best = FALSE)`
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 sdg_water_urban <- function(df,
                             ...) {
   params <- get_dots_and_call_parameters(...) %>%

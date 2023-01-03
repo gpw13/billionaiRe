@@ -36,7 +36,7 @@ sdg_anc4 <- function(df,
 #' Accelerate `art` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #'
 sdg_art <- function(df,
@@ -54,7 +54,7 @@ sdg_art <- function(df,
 #' Accelerate `beds` by aiming at 18 by 2030 if values are below 18. Otherwise,
 #' business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -131,7 +131,7 @@ sdg_beds <- function(df,
 #' Accelerate `bp` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -148,7 +148,7 @@ sdg_bp <- function(df,
 #'
 #' Accelerate doctors using the business as usual scenario.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_doctors <- function(df,
                         ...) {
@@ -170,7 +170,7 @@ sdg_doctors <- function(df,
 #' Accelerate nurses using the business as usual scenario.
 #'
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_nurses <- function(df,
                        ...) {
@@ -188,7 +188,7 @@ sdg_nurses <- function(df,
 #' Accelerate `hwf` by returning to business as usual, as there are no globally
 #' agreed target.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -213,7 +213,7 @@ sdg_hwf <- function(df,
 #' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -233,7 +233,7 @@ sdg_dtp3 <- function(df,
 #' Accelerate `fh` by aiming at 0 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_fh <- function(df,
                    ...) {
@@ -253,7 +253,7 @@ sdg_fh <- function(df,
 #' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -271,7 +271,7 @@ sdg_fp <- function(df,
 #' Accelerate `fpg` by aiming at 0 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams accelerate_child_viol
 #'
 sdg_fpg <- function(df,
@@ -296,7 +296,7 @@ sdg_fpg <- function(df,
 #' Accelerate `itn` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_itn <- function(df,
                     ...) {
@@ -314,7 +314,7 @@ sdg_itn <- function(df,
 #' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_pneumo <- function(df,
                        ...) {
@@ -330,7 +330,7 @@ sdg_pneumo <- function(df,
 #' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_tb <- function(df,
                    ...) {
@@ -346,7 +346,7 @@ sdg_tb <- function(df,
 #' Accelerate `uhc_sanitation` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 sdg_uhc_sanitation <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
@@ -364,7 +364,7 @@ sdg_uhc_sanitation <- function(df,
 #' Accelerate `uhc_tobacco` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'

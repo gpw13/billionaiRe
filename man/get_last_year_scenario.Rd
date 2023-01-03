@@ -28,16 +28,5 @@ calculating contributions on data in long format rather than wide format.}
 \item{type_filter}{(character vector) vector of types to be filtered for.}
 }
 \description{
-Accelerate alcohol by picking the best results between business as usual,
-halt downwards trend from 2018, and -10 percent from 2010.
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
-}
-
-Then picks the best result between the three scenarios.
+Get last value for the filter in default scenario
 }

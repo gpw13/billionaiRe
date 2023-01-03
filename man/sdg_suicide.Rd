@@ -28,10 +28,6 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate suicide by picking the best results between business as usual,
 halt downwards trend, and -33.333\% points between 2015 and 2030.

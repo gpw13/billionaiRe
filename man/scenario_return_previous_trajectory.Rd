@@ -74,32 +74,7 @@ than \code{col} will be kept.}
 
 \item{source}{Source to use if no unique source available for the calculation.}
 }
-\value{
-a data frame with scenario values in \code{value_col} with a \code{scenario} column.
-}
 \description{
 This scenario returns to the \code{scenario_previous_trajectory} after the last
 value of \code{scenario_shock}.
-}
-\details{
-Two types of AROC are supported:
-\itemize{
-\item \code{lastest_year}: the AROC is calculated the values between the \code{start_year} and the last \code{reported} or
-\code{estimated} value before \code{dip_year} is applied to the last reported value to
-\code{recovery_year} onward.
-\item \code{average_years_in_range}: all AROC between the \code{aroc_start_year} and the last \code{reported} or
-\code{estimated} value before \code{dip_year} are calculated. The average AROC for that period is then
-applied to the last reported value to \code{recovery_year} onward.
-}
-
-If there are missing values between \code{dip_year} and
-\code{recovery_year}, the last value from \code{dip_year} is carried forward. This
-applies only to countries where the indicator value for \code{dip_year} is
-\code{reported} or \code{estimated}. Otherwise, the value is carried with
-\code{scenario_bau}.
-
-If \code{progressive_recovery} is TRUE, then the recovery is
-spread between the years between \code{recovery_year} and \code{end_year}. For
-instance, if \code{recovery_year} is 2021 and \code{end_year} 2025, then 2021 will have 0\%
-of AROC, 2022 25\%, 2023 50\%, 2024 75\%, and 2025 100\%.
 }

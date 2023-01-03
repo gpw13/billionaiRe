@@ -71,16 +71,7 @@ be supplied as a named vector where the names correspond to the output of
 be tested to see if it contains the minimal required data to run the
 calculations.}
 }
-\value{
-Data frame in long format.
-}
 \description{
-\code{make_default_scenario} wraps around \code{recycle_data_scenario_single} to create
+\code{make_default_scenario()} wraps around \code{recycle_data_scenario_single()} to create
 a default scenario based on the parameters passed to the function.
-}
-\details{
-For more details on the HPOP Billion calculation process and how this function
-ties in with the rest, see the vignette:
-
-\href{../doc/hpop.html}{\code{vignette("hpop", package = "billionaiRe")}}
 }

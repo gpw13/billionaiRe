@@ -1,6 +1,6 @@
 #' Trim values
 #'
-#' @inherit scenario_percent_baseline
+#' @inheritParams scenario_percent_baseline
 #' @inheritParams scenario_fixed_target
 #' @param col column to trim values from. Will be removed before returning the
 #' data frame.
@@ -71,7 +71,7 @@ trim_values <- function(df,
 
 #' Trim values
 #'
-#' @inherit scenario_percent_baseline
+#' @inheritParams scenario_percent_baseline
 #' @inheritParams scenario_fixed_target
 #' @param trim_years logical to indicate if years before `start_year` and after
 #' `end_year` should be removed
@@ -180,7 +180,7 @@ get_baseline_value <- function(value,
 
 #' Get last year from baseline
 #'
-#' @inherit get_baseline_value
+#' @inheritParams get_baseline_value
 get_baseline_year <- function(year,
                               type,
                               scenario_col = NULL,
@@ -353,7 +353,7 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
 #' Get last value for the filter in default scenario
 #'
 #' @param df (data.frame) containing the data. Needs to have at least the `year`, `scenario_col` and `type` columns.
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @param indicator (character) identifying the indicator for which to get the last year of `type_filter` data.
 #' @inheritParams recycle_data_scenario_single
 #' @inheritParams get_last_value
@@ -638,7 +638,7 @@ simple_extrap <- function(x) {
 #'
 #' @param df (data.frame) containing the data. Needs to have at least the `scenario_col` column
 #' @param unwanted_scenarios character vector of scenarios to be remove
-#' @inherit recycle_data_scenario_single
+#' @inheritParams recycle_data_scenario_single
 remove_unwanted_scenarios <- function(df,
                                       scenario_col = "scenario",
                                       unwanted_scenarios) {

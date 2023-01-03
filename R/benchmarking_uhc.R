@@ -39,7 +39,7 @@ benchmarking_anc4 <- function(df,
 
 #' Accelerate art to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #'
 benchmarking_art <- function(df,
@@ -53,7 +53,7 @@ benchmarking_art <- function(df,
 
 #' Accelerate beds to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -73,7 +73,7 @@ benchmarking_beds <- function(df,
 #' Accelerate `bp` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -90,7 +90,7 @@ benchmarking_bp <- function(df,
 #'
 #' Accelerate doctors using the business as usual scenario.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_doctors <- function(df,
                                  ...) {
@@ -109,7 +109,7 @@ benchmarking_doctors <- function(df,
 #' Accelerate nurses using the business as usual scenario.
 #'
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_nurses <- function(df,
                                 ...) {
@@ -124,7 +124,7 @@ benchmarking_nurses <- function(df,
 
 #' Accelerate hwf to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -143,7 +143,7 @@ benchmarking_hwf <- function(df,
 
 #' Accelerate dtp3 to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -160,7 +160,7 @@ benchmarking_dtp3 <- function(df,
 
 #' Accelerate fh to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_fh <- function(df,
                             ...) {
@@ -174,7 +174,7 @@ benchmarking_fh <- function(df,
 
 #' Accelerate fp to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -189,7 +189,7 @@ benchmarking_fp <- function(df,
 
 #' Accelerate fpg to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams accelerate_child_viol
 #'
 benchmarking_fpg <- function(df,
@@ -207,7 +207,7 @@ benchmarking_fpg <- function(df,
 
 #' Accelerate itn to benchmarking scenarios
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_itn <- function(df,
                              ...) {
@@ -222,7 +222,7 @@ benchmarking_itn <- function(df,
 
 #' Accelerate pneumo to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_pneumo <- function(df,
                                 ...) {
@@ -235,7 +235,7 @@ benchmarking_pneumo <- function(df,
 
 #' Accelerate tb to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_tb <- function(df,
                             ...) {
@@ -248,7 +248,7 @@ benchmarking_tb <- function(df,
 
 #' Accelerate uhc_sanitation to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #'
 benchmarking_uhc_sanitation <- function(df,
                                         ...) {
@@ -262,7 +262,7 @@ benchmarking_uhc_sanitation <- function(df,
 
 #' Accelerate uhc_tobacco to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'
@@ -278,7 +278,7 @@ benchmarking_uhc_tobacco <- function(df,
 
 #' Accelerate espar to benchmarking scenario
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
 #'

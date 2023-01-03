@@ -49,9 +49,9 @@ Default is \code{historical}.}
 }
 \description{
 Accelerate hpop_tobacco by picking the best value between business as usual,
-halt the rise in 2018, or a custom version of scenario_percent_baseline. The
-custom \code{scenario_percent_baseline} is taking similar parameters to
-\code{scenario_percent_baseline}'s \code{percent_change} = -30, \code{baseline_year} = 2010,
+halt the rise in 2018, or a custom version of \code{scenario_percent_baseline()}. The
+custom function is taking similar parameters to
+\code{scenario_percent_baseline()}'s \code{percent_change} = -30, \code{baseline_year} = 2010,
 but values are added to the \code{start_year} value, rather than the \code{baseline_year}
 values.
 }
@@ -64,4 +64,7 @@ Runs:
 }
 
 Then picks the best result between the three scenarios.
+}
+\seealso{
+scenario_percent_baseline
 }

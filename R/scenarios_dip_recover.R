@@ -27,7 +27,7 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param dip_year (integer) year where the dip appends
 #' @param recovery_year (integer) year from which the AROC will be applied
 #' @param progressive_recovery (logical) TRUE if the recovery after dip
@@ -108,13 +108,13 @@ scenario_dip_recover <- function(df,
 #'
 #' Applies `scenario_dip_recover()` to a specific iso3.
 #'
-#' @inherit scenario_dip_recover
+#' @inheritParams scenario_dip_recover
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hep_components
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param iso3 (character) ISO3 code of country to scenario
 #'
 scenario_dip_recover_iso3 <- function(df,
@@ -225,12 +225,12 @@ scenario_dip_recover_iso3 <- function(df,
 #'
 #' Applies `scenario_dip_recover()` to a specific `ind` and `iso3` combination.
 #'
-#' @inherit scenario_dip_recover
+#' @inheritParams scenario_dip_recover
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams trim_values
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @inheritParams scenario_dip_recover_iso3
 #' @param ind (character) name of the indicator on which to calculate the
 #'    scenario

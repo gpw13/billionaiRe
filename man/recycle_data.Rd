@@ -70,8 +70,8 @@ Data frame in long format.
 size of tables stored.
 }
 \details{
-This function wraps around \code{recycle_data_scenario_single} for all the
-scenarios present in the \code{scenario_col} column. \code{recycle_data_scenario_single }
+This function wraps around \code{recycle_data_scenario_single()} for all the
+scenarios present in the \code{scenario_col} column. recycle_data_scenario_single
 reuses values present in the specified  scenarios in \code{default_scenario},
 \code{scenario_reported_estimated}, and \code{scenario_reference_infilling} for the specified scenarios.
 

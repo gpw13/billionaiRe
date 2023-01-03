@@ -12,7 +12,7 @@
 #' @param maximize_end_year (Boolean) if TRUE, the best scenario is
 #'    picked on the best value at `end_year`. Default to FALSE.
 #'
-#' @inherit scenario_fixed_target
+#' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 
@@ -135,14 +135,14 @@ get_best_equal_scenarios <- function(df,
 #' Scenario establish a business as usual scenario
 #'
 #' `scenario_bau` filters for values between start_year and end_year for `bau_scenario` and
-#' returns values in value. If values are missing for years between `start_year` and `end_year`,
+#' returns values in `value.` If values are missing for years between `start_year` and `end_year`,
 #' the last available value will be imputed.
 #'
 #' @param only_reported_estimated (logical) if TRUE only the last `reported` and `estimated`
 #'    values are imputed.
 #' @param avoid_worstening If TRUE, the value at `start_year` is kept if it is
 #' better (see `small_is_best`).
-#' @inherit scenario_fixed_target
+#' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data

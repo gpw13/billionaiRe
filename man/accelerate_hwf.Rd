@@ -41,10 +41,6 @@ Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate hwf by first dividing countries into two groups:
 \itemize{
@@ -53,14 +49,4 @@ business as usual is returned.
 \item For countries with a 2018 value less than the 2018 global median, the
 average of the top 5 rate of change within all countries.
 }
-}
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
-}
-
-Then picks the best result between the three scenarios.
 }

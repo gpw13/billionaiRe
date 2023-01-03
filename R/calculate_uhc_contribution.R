@@ -6,8 +6,8 @@
 #' scenarios if specified.
 #'
 #' @inherit calculate_uhc_billion return details params
-#' @inherit calculate_hpop_contributions params
-#' @inherit add_hpop_populations params
+#' @inheritParams calculate_hpop_contributions
+#' @inheritParams add_hpop_populations
 #' @inheritParams recycle_data_scenario_single
 #'
 #' @export

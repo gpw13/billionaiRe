@@ -14,7 +14,7 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2022.
 #' @param scenario name of scenario column to be created
@@ -66,7 +66,7 @@ scenario_covid_rapid_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2060.
 #' @param scenario_col name of scenario column to be created
@@ -120,7 +120,7 @@ scenario_covid_never_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2023.
 #' @param scenario_col name of scenario column to be created
@@ -178,7 +178,7 @@ scenario_covid_delayed_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param progressive_recovery (logical) TRUE if the recovery after COVID-19
 #' should be progressive.
 #' @param covid_year (integer) year where the values are impacted by COVID.

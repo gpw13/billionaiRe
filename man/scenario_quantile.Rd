@@ -86,9 +86,6 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{default_scenario}{name of the default scenario to be used.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_quantile} aims to reach the mean quantile average annual change
 (ARC) in which a country is at \code{quantile_year}. The target is based on the

@@ -200,6 +200,8 @@ get_whdh_path <- function(operation = c("download", "upload"),
 #' @return (character vector) a list of the indicators belonging to the given billion,
 #'   as used by the WHDH functions.
 #'
+#' @noRd
+#'
 get_valid_inds <- function(data_type, billion) {
   assert_type(data_type, "character")
   assert_type(billion, "character")
@@ -230,6 +232,10 @@ get_valid_inds <- function(data_type, billion) {
   valid_inds
 }
 
+#' Get WHDH data layer by data_type
+#'
+#' @inheritParams get_whdh_path
+#'
 #' @noRd
 get_data_layer <- function(data_type) {
   switch(data_type,

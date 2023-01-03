@@ -15,13 +15,3 @@ country, year, and indicator.}
 \description{
 Accelerate bp by aiming at reaching 80\% by 2030.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
-}
-
-Then picks the best result between the three scenarios.
-}

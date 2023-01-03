@@ -9,6 +9,8 @@
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
+#'
+#' @family hpop
 accelerate_adult_obese <- function(df,
                                    ind_ids = billion_ind_codes("hpop"),
                                    scenario_col = "scenario",
@@ -145,7 +147,7 @@ accelerate_alcohol <- function(df,
 #'
 #' Accelerate child_obese by halting upwards trend in the data to the 2010 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_child_obese <- function(df,
                                    ...) {
@@ -169,7 +171,7 @@ accelerate_child_obese <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 0, target_year = 2030, small_is_best = TRUE,...)`,
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @param start_year Year from which the acceleration scenario begins, inclusive.
 #' @param value_col Name of the column containing indicator value in `df`.
 #'
@@ -223,7 +225,7 @@ accelerate_child_viol <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 80, target_year = 2030, small_is_best = FALSE,...)`,
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_devontrack <- function(df,
@@ -282,7 +284,7 @@ accelerate_devontrack <- function(df,
 #'  - `scenario_bau(df, small_is_best = FALSE,...)` for HIC,
 #'  - `scenario_best_in_region(df, target_year = 2018, baseline_year = 2013, small_is_best = FALSE,...)` for other income groups.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_fuel <- function(df,
                             ind_ids = billion_ind_codes("hpop"),
@@ -355,7 +357,7 @@ accelerate_fuel <- function(df,
 #'
 #'  - `scenario_quantile(df, n = 5, quantile_year = 2019, baseline_quantile_year = 2018, upper_limit = 99, small_is_best = FALSE,...)`
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 accelerate_hpop_sanitation <- function(df,
                                        ind_ids = billion_ind_codes("hpop"),
                                        end_year = 2025,
@@ -400,7 +402,7 @@ accelerate_hpop_sanitation <- function(df,
 #'
 #' Accelerate hpop_sanitation_rural by aiming at best value in quintile.
 #'
-#' @inherit accelerate_water
+#' @inheritParams accelerate_water
 accelerate_hpop_sanitation_rural <- function(df,
                                              ...) {
 
@@ -420,7 +422,7 @@ accelerate_hpop_sanitation_rural <- function(df,
 #'
 #' Accelerate hpop_sanitation_urban by aiming at best value in quintile.
 #'
-#' @inherit accelerate_water
+#' @inheritParams accelerate_water
 accelerate_hpop_sanitation_urban <- function(df,
                                              ...) {
   params <- get_dots_and_call_parameters(...) %>%
@@ -438,9 +440,9 @@ accelerate_hpop_sanitation_urban <- function(df,
 #' Accelerate hpop_tobacco
 #'
 #' Accelerate hpop_tobacco by picking the best value between business as usual,
-#' halt the rise in 2018, or a custom version of scenario_percent_baseline. The
-#' custom `scenario_percent_baseline` is taking similar parameters to
-#' `scenario_percent_baseline`'s `percent_change` = -30, `baseline_year` = 2010,
+#' halt the rise in 2018, or a custom version of `scenario_percent_baseline()`. The
+#' custom function is taking similar parameters to
+#' `scenario_percent_baseline()`'s `percent_change` = -30, `baseline_year` = 2010,
 #' but values are added to the `start_year` value, rather than the `baseline_year`
 #' values.
 #'
@@ -452,9 +454,11 @@ accelerate_hpop_sanitation_urban <- function(df,
 #'
 #' Then picks the best result between the three scenarios.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #' @inheritParams trim_values
+#'
+#' @seealso scenario_percent_baseline
 #'
 accelerate_hpop_tobacco <- function(df,
                                     ind_ids = billion_ind_codes("hpop"),
@@ -586,7 +590,7 @@ accelerate_hpop_tobacco <- function(df,
 #'
 #'  - `scenario_fixed_target(df, target_value = 0, target_year = 2030, small_is_best = TRUE,...)`,
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 accelerate_ipv <- function(df,
                            ...) {
@@ -611,7 +615,7 @@ accelerate_ipv <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams accelerate_alcohol
 #'
 accelerate_overweight <- function(df,
@@ -678,7 +682,7 @@ accelerate_overweight <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
 accelerate_pm25 <- function(df,
@@ -760,7 +764,7 @@ accelerate_pm25 <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams recycle_data
 #' @inheritParams accelerate_alcohol
 #'
@@ -838,7 +842,7 @@ accelerate_road <- function(df,
 #'
 #' Then picks the best result between the three scenarios.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 accelerate_stunting <- function(df,
                                 ind_ids = billion_ind_codes("hpop"),
                                 scenario_col = "scenario",
@@ -927,7 +931,7 @@ accelerate_stunting <- function(df,
 #'
 #' Then picks the best result between the three scenarios.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 accelerate_suicide <- function(df,
                                ind_ids = billion_ind_codes("hpop"),
                                scenario_col = "scenario",
@@ -1008,7 +1012,7 @@ accelerate_suicide <- function(df,
 #'
 #' Accelerate transfats by targeting 100 by 2025.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 #' @inheritParams trim_values
 #' @inheritParams accelerate_child_viol
@@ -1079,7 +1083,7 @@ accelerate_transfats <- function(df,
 #'
 #' Then picks the best result between the two scenarios.
 #'
-#' @inherit accelerate_adult_obese
+#' @inheritParams accelerate_adult_obese
 #' @inheritParams scenario_fixed_target
 #' @inheritParams accelerate_alcohol
 #'
@@ -1174,7 +1178,7 @@ accelerate_wasting <- function(df,
 #'
 #'  - `scenario_quantile(df, n = 5, quantile_year = 2017, baseline_quantile_year = 2018, upper_limit = 99, lower_limit = 0 small_is_best = FALSE,...)`
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 accelerate_water <- function(df,
                              ind_ids = billion_ind_codes("hpop"),
                              scenario_col = "scenario",
@@ -1230,7 +1234,7 @@ accelerate_water <- function(df,
 #'
 #' Accelerate water_rural by aiming at best value in quintile.
 #'
-#' @inherit accelerate_water
+#' @inheritParams accelerate_water
 accelerate_water_rural <- function(df,
                                    ...) {
 
@@ -1246,7 +1250,7 @@ accelerate_water_rural <- function(df,
 #'
 #' Accelerate water_urban by aiming at best value in quintile.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 accelerate_water_urban <- function(df,
                                    ...) {
   params <- get_dots_and_call_parameters(...) %>%

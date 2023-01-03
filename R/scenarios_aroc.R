@@ -1,6 +1,6 @@
 #' Scenario to use the average annual rate of change
 #'
-#' `scenario_aroc` uses the annual rate of change (AROC) in different cases to
+#' `scenario_aroc()` uses the annual rate of change (AROC) in different cases to
 #' calculate the values of the scenario:
 #'
 #' * `target`: aims at a specific `target_value` by `target_year`
@@ -8,13 +8,13 @@
 #' * `percent_change`: applies `percent_change`  for the AROC from
 #' `baseline_year`.
 #'
-#' This function is different than `scenario_percent_baseline` or
-#' `scenario_linear_change` as it uses percentage difference and not
+#' This function is different than `scenario_percent_baseline()` or
+#' `scenario_linear_change()` as it uses percentage difference and not
 #' percentage points difference.
 #'
 #' AROC use a general [compounded rate of change](https://en.wikipedia.org/wiki/Compound_annual_growth_rate)
 #' formula:
-#' AROC(Value(year_n), Value(year_0)) = (Value(year_n) / Value(year_0)) ^ (1 / (year_n -  year_0)) - 1
+#' $\mathrm{AROC(y_{0}, y_{n})} = (Value(y_{n}) / Value(y_{0})) ^ (1 / (y_{n} -  y_{0})) - 1$
 #'
 #' `direction_limit_aroc` in combination with `limit_aroc` allows to limit the
 #' AROC to a value given a direction. This can be helpful to avoid extreme
@@ -38,7 +38,7 @@
 #' If `limit_aroc_direction` is `positive`, will take the maximum between
 #' `limit_aroc_value` and AROC. If `negative`, it will take the minimum between 0 and
 #' AROC. Defaults to 0. Ignored if `limit_aroc_direction` is NULL (default).
-#' @inherit scenario_percent_baseline
+#' @inheritParams scenario_percent_baseline
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data

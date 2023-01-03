@@ -41,10 +41,6 @@ Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate wasting by picking the best results between halt downwards trend
 from \code{start_year}, and AROC by 3\% by 2030.

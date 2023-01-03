@@ -38,10 +38,6 @@ Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate overweight by picking the best value between business as usual and
 AROC of 3 by 2030.

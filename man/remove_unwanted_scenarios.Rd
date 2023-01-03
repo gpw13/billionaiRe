@@ -13,27 +13,6 @@ remove_unwanted_scenarios(df, scenario_col = "scenario", unwanted_scenarios)
 
 \item{unwanted_scenarios}{character vector of scenarios to be remove}
 }
-\value{
-Data frame in long format.
-}
 \description{
-\code{recycle_data_scenario_single } reuses values present in the specified
-scenarios in \code{default_scenario}, \code{scenario_reported_estimated},
-\code{scenario_covid_shock} and \code{scenario_reference_infilling} for the specified
-scenarios.
-}
-\details{
-To do so, it looks at:
-\enumerate{
-\item values in \code{default_scenario} but not in the scenario specified
-\item values in \code{scenario_reported_estimated} or \code{scenario_covid_shock} but not
-in the scenario specified or \code{default_scenario}.
-\item values in \code{scenario_reference_infilling} but not in the scenario specified,
-\code{scenario_reported_estimated}, \code{scenario_covid_shock}, or
-\code{scenario_reference_infilling}
-}
-
-For more information see:
-
-\code{vignette("scenarios", package = "billionaiRe")}
+Remove unwanted scenarios from df
 }
