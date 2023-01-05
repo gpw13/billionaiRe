@@ -65,3 +65,10 @@ A data frame.
 \description{
 Load Billions indicator data from xMart
 }
+\seealso{
+Other access_data: 
+\code{\link{load_billion_data_legacy}()},
+\code{\link{load_billion_data_whdh}()},
+\code{\link{load_billion_data}()}
+}
+\concept{access_data}

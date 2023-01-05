@@ -33,3 +33,13 @@ Provides analysis codes required for input into the Triple Billion calculations.
 The named vector returned by the function is the default names assumed to be
 in any data frame passed to calculate Billions.
 }
+\seealso{
+Functions to access metadata
+\code{\link{convert_ind_codes}()},
+\code{\link{get_country_shares}()},
+\code{\link{get_ind_billion}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{get_sdi_ratio}()},
+\code{\link{indicator_df}}
+}
+\concept{metadata}

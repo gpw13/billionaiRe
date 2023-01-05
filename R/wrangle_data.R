@@ -21,6 +21,8 @@
 #'
 #' @return A data frame.
 #'
+#' @family whdh
+#'
 #' @export
 wrangle_gho_data <- function(df,
                              source = NULL,
@@ -115,6 +117,8 @@ wrangle_gho_data <- function(df,
 #' of redundant logic. This means that, eventually, users may do
 #' `gho_data(.) %>% unspool_gho_dim(.) %>% wrangle_gho_data(.)`
 #' @export
+#'
+#' @family whdh
 wrangle_gho_rural_urban_data <- function(df,
                                          source = NULL,
                                          type = NULL,
@@ -278,6 +282,8 @@ wrangle_gho_rural_urban_data <- function(df,
 #'     If `NULL`, the scenario is set to `NA_character`.
 #'
 #' @return A data frame.
+#'
+#' @family whdh
 #'
 #' @export
 wrangle_unsd_data <- function(df,

@@ -61,3 +61,17 @@ Using this function when working with the data lake is highly recommended as
 it ensures file paths abide by the established standards and directory structure
 for the data lake.
 }
+\seealso{
+Wrangle data functions
+\code{\link{add_missing_xmart_rows}()},
+\code{\link{get_data_lake_name}()},
+\code{\link{has_xmart_cols}()},
+\code{\link{save_gho_backup_to_whdh}()},
+\code{\link{save_wrangled_output}()},
+\code{\link{wrangle_gho_data}()},
+\code{\link{wrangle_gho_rural_urban_data}()},
+\code{\link{wrangle_unsd_data}()},
+\code{\link{xmart_col_types}()},
+\code{\link{xmart_cols}()}
+}
+\concept{whdh}

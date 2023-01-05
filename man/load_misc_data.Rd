@@ -23,3 +23,8 @@ WHDH data lake.
 It automatically selects between \code{readr::read_csv()}, \code{arrow::read_parquet()},
 and \code{readxl::read_excel()} based on the file extension.
 }
+\seealso{
+Functions to load data from data lake
+\code{\link{upload_billion_data}()}
+}
+\concept{load_data}

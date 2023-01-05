@@ -40,3 +40,4 @@ be supplied as a named vector where the names correspond to the output of
 \description{
 Calculate UHC Billion for one set of columns
 }
+\keyword{internal}

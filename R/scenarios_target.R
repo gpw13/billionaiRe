@@ -30,43 +30,10 @@
 #' @param default_scenario name of the default scenario to be used.
 #' @inheritParams trim_values
 #'
+#' @family fixed_target
+#'
 #' @rdname fixed_target
 #'
-#' @examples
-#' df <- tibble::tibble(
-#'   value = 60:80,
-#'   year = 2010:2030,
-#'   ind = "test",
-#'   iso3 = "testalia",
-#'   scenario = "default",
-#'   type = dplyr::if_else(year <= 2021, "reported", "projected")
-#'   )
-#'
-#' target_value <- 99
-#'
-#' df_fixed_percent <- scenario_fixed_target(df,
-#'                                           target_value = target_value,
-#'                                           baseline_year = 2018,
-#'                                           target_year = 2025,
-#'                                           scenario_name = glue::glue("{target_value}_{2025}"),
-#'                                           small_is_best = FALSE)
-#'
-#'
-#' df_target_col <- df %>%
-#'   dplyr::mutate(target = target_value) %>%
-#'   scenario_fixed_target_col(
-#'     target_col = "target",
-#'     baseline_year = 2018,
-#'     target_year = 2025,
-#'     scenario_name = glue::glue("{target_value}_{2025}"),
-#'     small_is_best = FALSE)
-#'
-#' df_scenario_halt_rise <- scenario_halt_rise(df,
-#'                                             baseline_year = 2010,
-#'                                             target_year = 2025,
-#'                                             scenario_name = glue::glue("{target_value}_{2025}"))
-#'
-
 scenario_fixed_target <- function(df,
                                   target_value,
                                   value_col = "value",

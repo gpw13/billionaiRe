@@ -29,3 +29,22 @@ calculating contributions on data in long format rather than wide format.}
 Accelerate \code{uhc_tobacco} by aiming at 100 by 2030 if there are 2 values or more
 reported. Otherwise, business as usual.
 }
+\seealso{
+UHC SDG scenarios
+\code{\link{sdg_anc4}()},
+\code{\link{sdg_art}()},
+\code{\link{sdg_beds}()},
+\code{\link{sdg_bp}()},
+\code{\link{sdg_doctors}()},
+\code{\link{sdg_dtp3}()},
+\code{\link{sdg_fh}()},
+\code{\link{sdg_fpg}()},
+\code{\link{sdg_fp}()},
+\code{\link{sdg_hwf}()},
+\code{\link{sdg_itn}()},
+\code{\link{sdg_nurses}()},
+\code{\link{sdg_pneumo}()},
+\code{\link{sdg_tb}()},
+\code{\link{sdg_uhc_sanitation}()}
+}
+\concept{uhc_sdg}

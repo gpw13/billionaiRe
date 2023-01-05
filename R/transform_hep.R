@@ -20,6 +20,8 @@
 #'
 #' @return Data frame in long format.
 #'
+#' @family hep
+#'
 #' @export
 transform_hep_data <- function(df,
                                scenario_col = NULL,
@@ -117,6 +119,12 @@ transform_hep_data <- function(df,
 #'
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_uhc_billion
+#'
+#' @family hep
+#' @family transform
+#'
+#' @keywords internal
+#'
 transform_prev_routine_data <- function(df,
                                         value_col,
                                         transform_value_col,
@@ -208,6 +216,11 @@ transform_prev_routine_data <- function(df,
 #'
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_uhc_billion
+#'
+#' @family hep
+#' @family transform
+#'
+#' @keywords internal
 transform_prev_cmpgn_data <- function(df,
                                       scenario_col,
                                       value_col,

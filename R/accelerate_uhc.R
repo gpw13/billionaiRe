@@ -16,6 +16,8 @@
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
 #'
+#' @family uhc_acceleration
+#'
 accelerate_anc4 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
                             scenario_col = "scenario",
@@ -126,6 +128,9 @@ accelerate_anc4 <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_art <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
@@ -227,6 +232,9 @@ accelerate_art <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_beds <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
                             scenario_col = "scenario",
@@ -324,12 +332,15 @@ accelerate_beds <- function(df,
 
 #' Accelerate bp
 #'
-#' Accelerate bp by aiming at reaching 80% by 2030.
+#' Accelerate bp by taking the best of aiming at reaching 80% by 2030 and
+#' business as usual.
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_bp <- function(df,
+#' @family uhc_acceleration
+#'
+ accelerate_bp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           value_col = "value",
                           scenario_col = "scenario",
@@ -386,6 +397,9 @@ accelerate_bp <- function(df,
 #'
 #' @inheritParams accelerate_anc4
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_doctors <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
                                scenario_col = "scenario",
@@ -412,6 +426,9 @@ accelerate_doctors <- function(df,
 #'
 #'
 #' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_nurses <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
@@ -440,6 +457,9 @@ accelerate_nurses <- function(df,
 #' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_hwf <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -515,6 +535,9 @@ accelerate_hwf <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_dtp3 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
                             scenario_col = "scenario",
@@ -580,6 +603,9 @@ accelerate_dtp3 <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_fh <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
@@ -638,6 +664,9 @@ accelerate_fh <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
@@ -736,6 +765,9 @@ accelerate_fp <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_fpg <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
                            scenario_col = "scenario",
@@ -752,6 +784,8 @@ accelerate_fpg <- function(df,
 #' 80 by 2030**.
 #'
 #' @inheritParams accelerate_anc4
+#'
+#' @family uhc_acceleration
 #'
 accelerate_itn <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -810,6 +844,9 @@ accelerate_itn <- function(df,
 #' the business as usual scenario is used.
 #'
 #' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
@@ -894,6 +931,9 @@ accelerate_pneumo <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_tb <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           scenario_col = "scenario",
@@ -953,6 +993,9 @@ accelerate_tb <- function(df,
 #' @inheritParams accelerate_anc4
 #' @inheritParams recycle_data
 #'
+#' @family uhc_acceleration
+#'
+#'
 accelerate_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
                                       scenario_col = "scenario",
@@ -1001,6 +1044,9 @@ accelerate_uhc_sanitation <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_uhc_tobacco <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),

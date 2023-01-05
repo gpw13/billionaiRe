@@ -23,3 +23,4 @@ for specific small WHO member states, this is not exported as an already created
 (and thus publicly available) table within the billionaiRe package, but instead
 dynamically generated each R session.
 }
+\keyword{internal}

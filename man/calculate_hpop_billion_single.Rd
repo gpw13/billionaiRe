@@ -29,3 +29,4 @@ calculating contributions on data in long format rather than wide format.}
 \description{
 Calculate the HPOP Billion for one column of change
 }
+\keyword{internal}

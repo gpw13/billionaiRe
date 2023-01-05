@@ -17,3 +17,22 @@ Accelerate pneumo by taking the best of business as usual and a \strong{fixed ta
 of 90 by 2025} for countries with two or more data points since 2000. Otherwise,
 the business as usual scenario is used.
 }
+\seealso{
+Target scenario
+\code{\link{accelerate_target_anc4}()},
+\code{\link{accelerate_target_art}()},
+\code{\link{accelerate_target_beds}()},
+\code{\link{accelerate_target_bp}()},
+\code{\link{accelerate_target_doctors}()},
+\code{\link{accelerate_target_dtp3}()},
+\code{\link{accelerate_target_fh}()},
+\code{\link{accelerate_target_fpg}()},
+\code{\link{accelerate_target_fp}()},
+\code{\link{accelerate_target_hwf}()},
+\code{\link{accelerate_target_itn}()},
+\code{\link{accelerate_target_nurses}()},
+\code{\link{accelerate_target_tb}()},
+\code{\link{accelerate_target_uhc_sanitation}()},
+\code{\link{accelerate_target_uhc_tobacco}()}
+}
+\concept{accelerate_target}

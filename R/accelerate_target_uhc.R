@@ -12,6 +12,8 @@
 #' @return data frame with acceleration_target scenario binded to `df`. `scenario_name` is
 #' set to `acceleration_target`
 #'
+#' @family accelerate_target
+#'
 accelerate_target_anc4 <- function(df,
                                    scenario_col = "scenario",
                                    default_scenario = "default",
@@ -99,6 +101,8 @@ accelerate_target_anc4 <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_art <- function(df,
                                   ind_ids = billion_ind_codes("uhc"),
                                   scenario_col = "scenario",
@@ -124,6 +128,8 @@ accelerate_target_art <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family accelerate_target
 #'
 accelerate_target_beds <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),
@@ -219,6 +225,8 @@ accelerate_target_beds <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_bp <- function(df,
                                  ...) {
   params <- get_dots_and_call_parameters(...)
@@ -233,6 +241,8 @@ accelerate_target_bp <- function(df,
 #' Accelerate doctors using the business as usual scenario.
 #'
 #' @inheritParams accelerate_anc4
+#'
+#' @family accelerate_target
 #'
 accelerate_target_doctors <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
@@ -255,6 +265,8 @@ accelerate_target_doctors <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_nurses <- function(df,
                                      ...) {
   params <- get_dots_and_call_parameters(...)
@@ -271,6 +283,8 @@ accelerate_target_nurses <- function(df,
 #' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family accelerate_target
 #'
 accelerate_target_hwf <- function(df,
                                   ...) {
@@ -295,6 +309,8 @@ accelerate_target_hwf <- function(df,
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_dtp3 <- function(df,
                                    ...) {
 
@@ -313,6 +329,8 @@ accelerate_target_dtp3 <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_fh <- function(df,
                                  ...) {
   params <- get_dots_and_call_parameters(...)
@@ -328,6 +346,8 @@ accelerate_target_fh <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family accelerate_target
 #'
 accelerate_target_fp <- function(df,
                                  ...) {
@@ -345,6 +365,8 @@ accelerate_target_fp <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_fpg <- function(df,
                                   ...) {
   params <- get_dots_and_call_parameters(...) %>%
@@ -359,6 +381,8 @@ accelerate_target_fpg <- function(df,
 #' 80 by 2030**.
 #'
 #' @inheritParams accelerate_anc4
+#'
+#' @family accelerate_target
 #'
 accelerate_target_itn <- function(df,
                                   ind_ids = billion_ind_codes("uhc"),
@@ -381,6 +405,8 @@ accelerate_target_itn <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #'
+#' @family accelerate_target
+#'
 accelerate_target_pneumo <- function(df,
                                      ...) {
   params <- get_dots_and_call_parameters(...)
@@ -395,6 +421,8 @@ accelerate_target_pneumo <- function(df,
 #' Accelerate tb by using a **fixed target of 90 by 2025**.
 #'
 #' @inheritParams accelerate_alcohol
+#'
+#' @family accelerate_target
 #'
 accelerate_target_tb <- function(df,
                                  ...) {
@@ -411,6 +439,8 @@ accelerate_target_tb <- function(df,
 #'
 #' @inheritParams accelerate_anc4
 #' @inheritParams recycle_data
+#'
+#' @family accelerate_target
 #'
 accelerate_target_uhc_sanitation <- function(df,
                                              ind_ids = billion_ind_codes("uhc"),
@@ -433,12 +463,6 @@ accelerate_target_uhc_sanitation <- function(df,
                 scenario_fixed_target,
                 params)
 }
-# @Alice, there are no countries without data
-# @Alice, why is scenario_bau called twice for withdata_df?
-# @Alice, need explanation on following comments:
-# NB cannot take hpop outputs because the imputed data (45 countries) is removed for hpop tobacco
-# Is the input for this function hpop_tobacco, instead of uhc_tobacco due to the missing data for UHC?
-
 #' Accelerate uhc_tobacco
 #'
 #' Accelerate uhc_tobacco by first dividing countries into two groups:
@@ -451,6 +475,8 @@ accelerate_target_uhc_sanitation <- function(df,
 #'
 #' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family accelerate_target
 #'
 accelerate_target_uhc_tobacco <- function(df,
                                           ind_ids = billion_ind_codes("uhc"),

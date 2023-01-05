@@ -14,3 +14,24 @@ get_last_value(df, type_filter = c("reported", "estimated"))
 \description{
 Get last value for the filter
 }
+\seealso{
+General scenario functions
+\code{\link{add_scenario}()},
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_year_scenario}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_percent_change_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{remove_unwanted_scenarios}()},
+\code{\link{trim_values}()},
+\code{\link{trim_years}()}
+}
+\concept{scenarios}
+\keyword{internal}

@@ -10,6 +10,8 @@
 #' @inheritParams add_hpop_populations
 #' @inheritParams recycle_data_scenario_single
 #'
+#' @family uhc
+#'
 #' @export
 calculate_uhc_contribution <- function(df,
                                        value_col = "value",

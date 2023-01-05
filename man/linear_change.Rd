@@ -127,3 +127,12 @@ compounded and it adds percentage points and not percentage of values.
 the bounds after calculations. If values were already exceeding the bounds
 before calculations, they are kept.
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_aroc}()},
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_percent_baseline}()}
+}
+\concept{basic_scenarios}
+\concept{linear_change}

@@ -19,6 +19,9 @@
 #'
 #' @return A data frame with the global sums for the relevant billion. Does not
 #'   include rows from the original data frame.
+#'
+#' @family aggregation
+#'
 #' @export
 calculate_contribution_sums <- function(df,
                                         billion = c("uhc", "hpop", "hep"),

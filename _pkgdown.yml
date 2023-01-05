@@ -2,3 +2,148 @@ url: ~
 template:
   bootstrap: 5
 
+articles:
+- title: Billions calculations
+  contents:
+  - hep
+  - hpop
+  - uhc
+- title: Scenarios
+  contents:
+  - scenarios
+  - ends_with("-scenarios")
+  - data-recycling
+
+reference:
+# Billions calculations
+- title: Calculations
+  desc: >
+    The package is built around a set of functions that calculate the Billions
+    for the three Billions separately.
+- subtitle: HEP
+  desc: >
+    Health Emergencies Protection (HEP): `vignette("hep", package = "billionaiRe")`
+  contents:
+  - has_concept(c("hep"))
+- subtitle: HPOP
+  desc: >
+    Healthier Populations (HPOP):`vignette("hpop", package = "billionaiRe")`
+  contents:
+  - has_concept(c("hpop"))
+- subtitle: UHC
+  desc: >
+      Universal Health Coverage (UHC): `vignette("uhc", package = "billionaiRe")`
+  contents:
+  - has_concept(c("uhc"))
+- subtitle: Populations
+  desc: >
+    Using the right populations for aggregation between countries can be tricky.
+    Those functions provide helper to add the appropriate populations in all
+    cases.
+  contents:
+  - has_concept(c("populations"))
+- subtitle: Aggregations
+  desc: >
+    Aggregating multiple countries values together requires special
+    considerations. Those functions provide helper.
+  contents:
+  - has_concept(c("aggregation"))
+
+# Scenarios
+- title: Acceleration scenarios
+  desc: >
+    Functions to generate acceleration scenarios values at indicator-level. See
+    `vignette("acceleration-scenarios", package = "billionaiRe")` for more
+    details.
+- subtitle: HEP
+  contents:
+  - has_concept(c("hep_acceleration"))
+- subtitle: HPOP
+  contents:
+  - has_concept(c("hpop_acceleration"))
+- subtitle: UHC
+  contents:
+  - has_concept(c("uhc_acceleration"))
+
+- title: Sustainable Development Goals (SDG) scenarios
+  desc: >
+    Functions to generate Sustainable Development Goals (SDG) scenarios values
+    at indicator-level. See `vignette("sdg-scenarios", package = "billionaiRe")`
+    for more details.
+- subtitle: HPOP
+  contents:
+  - has_concept(c("hpop_sdg"))
+- subtitle: UHC
+  contents:
+  - has_concept(c("uhc_sdg"))
+
+
+- title: Benchmarking scenario
+  contents:
+  - has_concept(c("benchmarking"))
+
+- title: Basic scenarios
+  desc: >
+    The basic scenarios are the building blocks of all other scenarios. See
+    `vignette("basic-scenarios", package = "billionaiRe")` for more
+    details.
+- subtitle: AROC scenario
+  contents:
+  - has_concept(c("aroc"))
+- subtitle: Linear change scenarios
+  contents:
+  - has_concept(c("linear_change"))
+- subtitle: Reach a fixed target
+  contents:
+  - has_concept(c("fixed_target"))
+- subtitle: Percent from baseline scenarios
+  contents:
+  - has_concept(c("percent_baseline"))
+- subtitle: Basic benchmarking scenarios
+  contents:
+  - has_concept(c("basic_benchmarking"))
+- subtitle: Compairing scenarios
+  contents:
+  - has_concept(c("comparing_scenario"))
+
+- title: Target scenarios
+  contents:
+  - has_concept(c("accelerate_target"))
+
+- title: Scenarios helper
+  desc: >
+    Helper functions used to generate scenarios. See
+    `vignette("scenarios", package = "billionaiRe")` for more details
+  contents:
+  - has_concept(c("scenarios"))
+
+- title: Populations
+  desc: >
+    Using the right populations for aggregation between countries can be tricky.
+    Those functions provide helper to add the appropriate populations in all
+    cases.
+  contents:
+  - has_concept(c("populations"))
+
+- title: WHDH interface
+- subtitle: Load data
+  contents:
+  - has_concept(c("access_data", "load_data"))
+- subtitle: Data Wrangling
+  contents:
+  - has_concept(c("whdh"))
+
+- title: Data recycling
+  desc: >
+    Functions to recycle the data and recombine it in different datasets into
+    single timeseries that then can be used in the calculations.
+    See `vignette("data-recycling", package = "billionaiRe")` for more
+    details
+  contents:
+  - has_concept(c("recycle_data"))
+
+- title: Metadata
+  desc: >
+    Functions to access the metadata.
+  contents:
+  - has_concept(c("metadata"))

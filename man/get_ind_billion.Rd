@@ -13,3 +13,13 @@ get_ind_billion(ind_code)
 For example, \code{get_ind_billion("alcohol")}
 returns "hpop". Note that espar currently returns only "hep".
 }
+\seealso{
+Functions to access metadata
+\code{\link{billion_ind_codes}()},
+\code{\link{convert_ind_codes}()},
+\code{\link{get_country_shares}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{get_sdi_ratio}()},
+\code{\link{indicator_df}}
+}
+\concept{metadata}

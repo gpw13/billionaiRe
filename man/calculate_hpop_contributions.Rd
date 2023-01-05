@@ -59,3 +59,15 @@ ties in with the rest, see the vignette:
 
 \href{../doc/hpop.html}{\code{vignette("hpop", package = "billionaiRe")}}
 }
+\seealso{
+Other hpop: 
+\code{\link{add_hpop_populations}()},
+\code{\link{calculate_hpop_billion_change}()},
+\code{\link{calculate_hpop_billion}()},
+\code{\link{hpop_df}},
+\code{\link{transform_hpop_data}()},
+\code{\link{transform_hpop_single}()},
+\code{\link{untransform_hpop_data}()},
+\code{\link{untransform_hpop_single}()}
+}
+\concept{hpop}

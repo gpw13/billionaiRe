@@ -38,3 +38,22 @@ Default is \code{historical}.}
 \description{
 Accelerate tb by using a \strong{fixed target of 90 by 2025}.
 }
+\seealso{
+UHC acceleration scenarios
+\code{\link{accelerate_anc4}()},
+\code{\link{accelerate_art}()},
+\code{\link{accelerate_beds}()},
+\code{\link{accelerate_bp}()},
+\code{\link{accelerate_doctors}()},
+\code{\link{accelerate_dtp3}()},
+\code{\link{accelerate_fh}()},
+\code{\link{accelerate_fpg}()},
+\code{\link{accelerate_fp}()},
+\code{\link{accelerate_hwf}()},
+\code{\link{accelerate_itn}()},
+\code{\link{accelerate_nurses}()},
+\code{\link{accelerate_pneumo}()},
+\code{\link{accelerate_uhc_sanitation}()},
+\code{\link{accelerate_uhc_tobacco}()}
+}
+\concept{uhc_acceleration}

@@ -2,6 +2,8 @@
 % Please edit documentation in R/recycle_data.R
 \name{recycle_data}
 \alias{recycle_data}
+\alias{recycle_data_scenario_single}
+\alias{make_default_scenario}
 \title{Recycle data between scenarios}
 \usage{
 recycle_data(
@@ -22,6 +24,48 @@ recycle_data(
   start_year_trim = start_year,
   end_year_trim = end_year
 )
+
+recycle_data_scenario_single(
+  df,
+  scenario,
+  billion = c("hep", "hpop", "uhc"),
+  value_col = "value",
+  start_year = 2018,
+  end_year = 2025,
+  scenario_col = "scenario",
+  default_scenario = "default",
+  scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
+  scenario_reference_infilling = "reference_infilling",
+  include_projection = TRUE,
+  recycle_campaigns = TRUE,
+  ind_ids = NULL,
+  trim_years = FALSE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
+  assert_data_calculations = TRUE
+)
+
+make_default_scenario(
+  df,
+  scenario = "default",
+  billion = c("all", "hep", "hpop", "uhc"),
+  value_col = "value",
+  start_year = 2018,
+  end_year = 2025,
+  scenario_col = "scenario",
+  default_scenario = "default",
+  scenario_reported_estimated = "routine",
+  scenario_covid_shock = "covid_shock",
+  scenario_reference_infilling = "reference_infilling",
+  include_projection = TRUE,
+  recycle_campaigns = TRUE,
+  ind_ids = NULL,
+  trim_years = FALSE,
+  start_year_trim = start_year,
+  end_year_trim = end_year,
+  assert_data_calculations = TRUE
+)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -35,8 +79,7 @@ country, year, and indicator.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
+\item{scenario_col}{Column name of column with scenario identifiers.}
 
 \item{default_scenario}{name of the default scenario.}
 
@@ -61,30 +104,44 @@ be supplied as a named vector where the names correspond to the output of
 \item{start_year_trim}{(integer) year to start trimming from.}
 
 \item{end_year_trim}{(integer) year to end trimming.}
-}
-\value{
-Data frame in long format.
+
+\item{scenario}{name of scenario to recycle for.}
+
+\item{assert_data_calculations}{Boolean if true then output data frame will
+be tested to see if it contains the minimal required data to run the
+calculations.}
 }
 \description{
-\code{recycle_data} recycles data between the scenarios present in \code{df} to reduce
-size of tables stored.
+\code{recycle_data()} recycles data between the scenarios present in \code{df} to reduce
+size of tables stored. The function wraps around
+\code{recycle_data_scenario_single()} for all the scenarios present in the
+\code{scenario_col} column.
 }
 \details{
-This function wraps around \code{recycle_data_scenario_single()} for all the
-scenarios present in the \code{scenario_col} column. recycle_data_scenario_single
-reuses values present in the specified  scenarios in \code{default_scenario},
-\code{scenario_reported_estimated}, and \code{scenario_reference_infilling} for the specified scenarios.
+\code{make_default_scenario()} wraps around \code{recycle_data_scenario_single()} to
+create a default scenario based on the parameters passed to the function.
+
+\code{recycle_data_scenario_single()} reuses values present in the specified
+scenarios in \code{default_scenario}, \code{scenario_reported_estimated},
+\code{scenario_covid_shock} and \code{scenario_reference_infilling} for the specified
+scenarios.
 
 To do so, it looks at:
 \enumerate{
 \item values in \code{default_scenario} but not in the scenario specified
-\item values in \code{scenario_reported_estimated} but not in the scenario specified
-or \code{scenario_reference_infilling}
+\item values in \code{scenario_reported_estimated} or \code{scenario_covid_shock} but not
+in the scenario specified or \code{default_scenario}.
 \item values in \code{scenario_reference_infilling} but not in the scenario specified,
-\code{scenario_reported_estimated} or \code{scenario_reference_infilling}
+\code{scenario_reported_estimated}, \code{scenario_covid_shock}, or
+\code{scenario_reference_infilling}
 }
 
 For more information see:
 
 \code{vignette("scenarios", package = "billionaiRe")}
 }
+\seealso{
+Functions to recycle the data
+\code{\link{remove_recycled_data}()}
+}
+\concept{recycle_data}

@@ -16,3 +16,22 @@ country, year, and indicator.}
 Accelerate fh by taking the best of business as usual and halting upward trends
 in the data to the 2018 value.
 }
+\seealso{
+Target scenario
+\code{\link{accelerate_target_anc4}()},
+\code{\link{accelerate_target_art}()},
+\code{\link{accelerate_target_beds}()},
+\code{\link{accelerate_target_bp}()},
+\code{\link{accelerate_target_doctors}()},
+\code{\link{accelerate_target_dtp3}()},
+\code{\link{accelerate_target_fpg}()},
+\code{\link{accelerate_target_fp}()},
+\code{\link{accelerate_target_hwf}()},
+\code{\link{accelerate_target_itn}()},
+\code{\link{accelerate_target_nurses}()},
+\code{\link{accelerate_target_pneumo}()},
+\code{\link{accelerate_target_tb}()},
+\code{\link{accelerate_target_uhc_sanitation}()},
+\code{\link{accelerate_target_uhc_tobacco}()}
+}
+\concept{accelerate_target}

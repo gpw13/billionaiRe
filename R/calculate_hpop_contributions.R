@@ -18,6 +18,9 @@
 #'     calculating contributions on data in long format rather than wide format.
 #'
 #' @inherit transform_hpop_data return details params
+#'
+#' @family hpop
+#'
 calculate_hpop_contributions <- function(df,
                                          start_year = 2018,
                                          end_year = 2019:2025,

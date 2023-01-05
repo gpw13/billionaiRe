@@ -1,8 +1,11 @@
 #' Add scenario to data frame
 #'
-#' `add_scenario` wraps around `add_scenario_indicator` to add the scenario
+#' `add_scenario()` wraps around `add_scenario_indicator()` to add the scenario
 #' specified in `scenario_function` to all the valid billionaiRe indicators
 #' present in `df`.
+#'
+#' `add_scenario_indicator()` gets the right `add_scenario_` function for the
+#' indicator specified and adds the scenario.
 #'
 #' @param scenario_function character identifier of scenario to use. Can be any
 #' of the following:
@@ -27,15 +30,31 @@
 #' - `covid_sustained_disruption` calls \code{\link{scenario_covid_sustained_disruption}}
 #' - `return_previous_trajectory` calls \code{\link{scenario_return_previous_trajectory}}
 #' - `top_n_iso3` calls \code{\link{scenario_top_n_iso3}}
-#' @param ... additional arguments passed to `add_scenario_indicator`
+#' @param ... additional arguments passed to `add_scenario_indicator()` or
+#' indicator level functions (e.g. `add_scenario_adult_obese()`)
+#' @param indicator name of indicator to be passed to `scenario_function`
+#' @param make_default (Boolean) if `TRUE`, then `make_default_scenario` is used to
+#' generate the `default_scenario`
+#' @param start_scenario_last_default (Boolean) if `TRUE`, then the last year with values
+#' in the `default_scenario` is the starting point of the scenario, and not `start_year`.
+#' @param expend_bau (Boolean)if `TRUE`, then `make_default_scenario` is used to
+#' expend `bau_scenario` to the start of the `default_scenario`.
+#' @param ... additional parameters to be passed to the add_scenario_indicator
+#' function (e.g. `add_scenario_adult_obese`).
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_billion
 #' @inheritParams add_scenario_indicator
 #' @inheritParams accelerate_alcohol
+#' @inheritParams scenario_fixed_target
 #'
+#' @rdname add_scenario
+#'
+#' @family scenarios
 #'
 #' @return data frame with additional rows with scenario values.
+#'
 #' @export
+#'
 add_scenario <- function(df,
                          scenario_function = c(
                            "aroc",
@@ -125,26 +144,7 @@ add_scenario <- function(df,
     dplyr::distinct()
 }
 
-#' Add scenario for a specific indicator
-#'
-#' `add_scenario_indicator` gets the right `add_scenario_` function for the
-#' indicator specified and adds the scenario.
-#'
-#' @param indicator name of indicator to be passed to `scenario_function`
-#' @param make_default (Boolean) if `TRUE`, then `make_default_scenario` is used to
-#' generate the `default_scenario`
-#' @param start_scenario_last_default (Boolean) if `TRUE`, then the last year with values
-#' in the `default_scenario` is the starting point of the scenario, and not `start_year`.
-#' @param expend_bau (Boolean)if `TRUE`, then `make_default_scenario` is used to
-#' expend `bau_scenario` to the start of the `default_scenario`.
-#' @param ... additional parameters to be passed to the add_scenario_indicator
-#' function (e.g. `add_scenario_adult_obese`).
-#'
-#' @inheritParams add_scenario
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_billion
-#' @inheritParams scenario_fixed_target
-#' @inheritParams accelerate_alcohol
+#' @rdname add_scenario
 #'
 add_scenario_indicator <- function(df,
                                    scenario_function = c(

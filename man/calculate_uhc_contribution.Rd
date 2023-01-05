@@ -75,3 +75,13 @@ ties in with the rest, see the vignette:
 
 \href{../doc/uhc.html}{\code{vignette("uhc", package = "billionaiRe")}}
 }
+\seealso{
+Other uhc: 
+\code{\link{calculate_uhc_billion}()},
+\code{\link{transform_uhc_data}()},
+\code{\link{transform_uhc_single}()},
+\code{\link{uhc_df}},
+\code{\link{untransform_uhc_data}()},
+\code{\link{untransform_uhc_single}()}
+}
+\concept{uhc}

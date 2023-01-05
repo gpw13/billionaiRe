@@ -55,3 +55,22 @@ scenarios are run on the \strong{crude tobacco usage} values, which are then con
 to their age-standardised equivalents using an approximation.
 }
 }
+\seealso{
+UHC acceleration scenarios
+\code{\link{accelerate_anc4}()},
+\code{\link{accelerate_art}()},
+\code{\link{accelerate_beds}()},
+\code{\link{accelerate_bp}()},
+\code{\link{accelerate_doctors}()},
+\code{\link{accelerate_dtp3}()},
+\code{\link{accelerate_fh}()},
+\code{\link{accelerate_fpg}()},
+\code{\link{accelerate_fp}()},
+\code{\link{accelerate_hwf}()},
+\code{\link{accelerate_itn}()},
+\code{\link{accelerate_nurses}()},
+\code{\link{accelerate_pneumo}()},
+\code{\link{accelerate_tb}()},
+\code{\link{accelerate_uhc_sanitation}()}
+}
+\concept{uhc_acceleration}

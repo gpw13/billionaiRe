@@ -14,6 +14,8 @@
 #'
 #' @inherit transform_hpop_data return params
 #'
+#' @family uhc
+#'
 #' @export
 transform_uhc_data <- function(df,
                                value_col = "value",
@@ -81,6 +83,10 @@ transform_uhc_data <- function(df,
 #' @param transform_value_col Column name of column(s) with transformed
 #'    indicator values
 #'
+#' @family uhc
+#'
+#' @keywords internal
+#'
 #' @return A single column data frame of transformed values.
 transform_uhc_single <- function(df,
                                  value_col,
@@ -120,6 +126,8 @@ transform_uhc_single <- function(df,
 #'
 #' @inherit untransform_hpop_data params return
 #'
+#' @family uhc
+#'
 #' @export
 untransform_uhc_data <- function(df,
                                  transform_value_col = "transform_value",
@@ -142,6 +150,10 @@ untransform_uhc_data <- function(df,
 #' on a single column.
 #'
 #' @inheritParams untransform_uhc_data
+#'
+#' @family uhc
+#'
+#' @keywords internal
 #'
 #' @return A single column data frame of transformed values.
 untransform_uhc_single <- function(df,

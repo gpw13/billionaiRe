@@ -15,6 +15,11 @@
 #' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#'
+#' @family basic_scenarios
+#' @family comparing_scenario
+#'
+#' @export
 
 scenario_best_of <- function(df,
                              scenario_names,
@@ -124,6 +129,9 @@ scenario_best_of <- function(df,
     dplyr::bind_rows(best_df)
 }
 
+#' @noRd
+#'
+#' @keywords internal
 get_best_equal_scenarios <- function(df,
                                      scenario_col = "scenario",
                                      value_col = "scenario_value") {
@@ -147,7 +155,11 @@ get_best_equal_scenarios <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
 #' @inheritParams accelerate_alcohol
-
+#'
+#' @family basic_scenarios
+#' @family comparing_scenario
+#'
+#' @export
 scenario_bau <- function(df,
                          only_reported_estimated = FALSE,
                          value_col = "value",
@@ -254,6 +266,7 @@ scenario_bau <- function(df,
     dplyr::bind_rows(bau)
 }
 
+#' @noRd
 scenario_with_values <- function(df,
                                  scenario_function,
                                  type_filter = c("reported", "estimated"),

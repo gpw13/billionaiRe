@@ -141,3 +141,4 @@ of 2 countries. So only the best performing will be kept.
 In this case, best performing is defined by the direction identified in
 \code{indicator_df} \code{small_is_best} column.
 }
+\concept{basic_benchmarking}

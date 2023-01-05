@@ -6,6 +6,8 @@
 #' @param billion Billion which we're checking for
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_ind_ids <- function(ind_ids, billion) {
   ind_check <- billion_ind_codes(billion)
   ind_check_nms <- all(ind_check %in% names(ind_ids))
@@ -25,6 +27,8 @@ assert_ind_ids <- function(ind_ids, billion) {
 #' @param end_year End year(s)
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_years <- function(start_year, end_year) {
   if (!all(start_year < end_year)) {
     stop("`end_year` must always be after `start_year`.",
@@ -39,6 +43,8 @@ assert_years <- function(start_year, end_year) {
 #' @param valid_exts (character vector) A list of the valid extensions.
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_fileext <- function(file_names, valid_exts) {
   # Check that file_names and valid_exts are character vectors
@@ -67,6 +73,8 @@ assert_fileext <- function(file_names, valid_exts) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_unique_vector <- function(x) {
   if (length(x) != length(unique(x))) {
     stop(sprintf("%s has duplicate elements", deparse(substitute(x))))
@@ -78,6 +86,8 @@ assert_unique_vector <- function(x) {
 #' @param x (string)
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_timestamp <- function(x) {
   if (!stringr::str_detect(x, "^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}$")) {
     stop(sprintf("%s is not a valid `yyyy-mm-ddTHH-MM-SS` formatted string", x))
@@ -92,6 +102,8 @@ assert_timestamp <- function(x) {
 #' @param ... Column names
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_columns <- function(df, ...) {
   columns <- c(...)
   bad_cols <- columns[!(columns %in% names(df))]
@@ -113,6 +125,8 @@ assert_columns <- function(df, ...) {
 #' of the column.
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_col_types <- function(df, expected) {
   assert_type(expected, "character")
@@ -148,6 +162,8 @@ assert_col_types <- function(df, expected) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_numeric <- function(df, ...) {
   args <- c(...)
   nums <- sapply(args, function(x) is.numeric(df[[x]]))
@@ -170,6 +186,7 @@ assert_numeric <- function(df, ...) {
 #'
 #' @noRd
 #'
+#' @keywords internal
 warning_col_missing_values <- function(df, col_name, how) {
   if (how == "any") {
     if (any(is.na(df[[col_name]]))) {
@@ -202,6 +219,7 @@ warning_col_missing_values <- function(df, col_name, how) {
 #'
 #' @noRd
 #'
+#' @keywords internal
 assert_unique_rows <- function(df,
                                scenario_col = NULL,
                                ind_ids) {
@@ -224,6 +242,8 @@ assert_unique_rows <- function(df,
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_distinct_rows <- function(df, key_cols) {
   assert_type(key_cols, "character")
 
@@ -243,6 +263,8 @@ assert_distinct_rows <- function(df, key_cols) {
 #' @param col_name string specifying the column to check
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_homogeneous_col <- function(df, col_name) {
   if (length(unique(df[[col_name]])) > 1) {
@@ -265,6 +287,8 @@ assert_homogeneous_col <- function(df, col_name) {
 #'   with the `col_name` column
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_col_paired_with <- function(df, col_name, pair_cols) {
   assert_string(col_name, 1)
   assert_type(pair_cols, "character")
@@ -296,6 +320,8 @@ assert_col_paired_with <- function(df, col_name, pair_cols) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_arg_exists <- function(x, error_template = "The %s argument is required and cannot be NA or NULL") {
   if (is.null(x) || is.na(x)) {
     stop(
@@ -314,6 +340,8 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 #' @param reverse Invert the test (i.e., the type of x is not)
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_type <- function(x, expected, reverse = FALSE) {
   stopifnot(typeof(expected) == "character", typeof(reverse) == "logical")
 
@@ -344,6 +372,8 @@ assert_type <- function(x, expected, reverse = FALSE) {
 #'     of `expected`.
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
   how <- rlang::arg_match(how)
   assert_type(expected, "character")
@@ -376,6 +406,8 @@ assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
 #' @param x an object
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_has_names <- function(x) {
   if (is.null(names(x))) {
     lab <- deparse(substitute(x))
@@ -388,6 +420,8 @@ assert_has_names <- function(x) {
 #' @param df Supposed data frame
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_df <- function(df) {
   assert_class(df, "data.frame")
 }
@@ -398,6 +432,8 @@ assert_df <- function(df) {
 #' @param n Length to test
 #'
 #' @noRd
+#'
+#' @keywords internal
 assert_string <- function(x, n) {
   if (!is.null(x)) {
     lx <- length(x)
@@ -418,6 +454,8 @@ assert_string <- function(x, n) {
 #' @param ... Character vectors to check
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_strings <- function(...) {
   arg_names <- sys.call()[-1]
@@ -453,6 +491,8 @@ assert_strings <- function(...) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_length <- function(x, n) {
   l <- length(x)
   if (l != n) {
@@ -468,6 +508,8 @@ assert_length <- function(x, n) {
 #' @param n (integer) the minimum allowed size of the vector
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_min_length <- function(x, n) {
   l <- length(x)
@@ -490,6 +532,8 @@ assert_min_length <- function(x, n) {
 #' @param msg_suffix (string) A string to be appended to the end of the error message
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_equals <- function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = NULL) {
   cond <- if (identical) identical(x, y) else x == y
@@ -523,6 +567,8 @@ assert_equals <- function(x, y, identical = FALSE, reverse = FALSE, msg_suffix =
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_x_in_y <- function(x, y) {
   cond <- x %in% y
   if (!all(cond)) {
@@ -545,6 +591,8 @@ assert_x_in_y <- function(x, y) {
 #'   comparison
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   # Extract just the names of the ... arguments
@@ -583,8 +631,6 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   }
 }
 
-# rapporteur --------------------------------------------------------------
-
 #' Asserts that provided ISO is valid
 #'
 #' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
@@ -593,6 +639,8 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
 #' @param iso3 Single ISO3 code
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_who_iso3 <- function(iso3) {
   assert_string(iso3, 1)
@@ -611,6 +659,8 @@ assert_who_iso3 <- function(iso3) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_list <- function(df) {
   if (!is.list(df)) {
     stop(sprintf(
@@ -627,6 +677,8 @@ assert_list <- function(df) {
 #' @param ... character vector of parameters to [openxlsx::createStyle()]
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_style_param <- function(...) {
   params <- list(...)
@@ -650,6 +702,8 @@ assert_style_param <- function(...) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 assert_in_list_or_null <- function(x, list) {
   if (!is.null(x)) {
     if (!x %in% list) {
@@ -669,6 +723,8 @@ assert_in_list_or_null <- function(x, list) {
 #' @inheritParams transform_hep_data
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") {
 
@@ -703,6 +759,8 @@ assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") 
 #' @inheritParams calculate_hpop_contributions
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_start_end_year <- function(df,
                                   value_col = "value",
@@ -752,6 +810,8 @@ assert_start_end_year <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_ind_start_end_year <- function(df,
                                       value_col = "value",
@@ -808,6 +868,8 @@ Missing values in:\n",
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 
 assert_vector_in_column <- function(df, vector, column) {
   unique_col_value <- unique(df[[column]])
@@ -831,6 +893,8 @@ assert_vector_in_column <- function(df, vector, column) {
 #'
 #' @noRd
 #'
+#' @keywords internal
+#'
 
 assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
   assert_vector_in_column(df, scenario, scenario_col)
@@ -846,6 +910,8 @@ assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
 #' @inheritParams transform_hpop_data
 #'
 #' @noRd
+#'
+#' @keywords internal
 #'
 assert_ind_ids_in_df <- function(df, ind_ids, by_iso3 = TRUE) {
   assert_columns(df, "ind")

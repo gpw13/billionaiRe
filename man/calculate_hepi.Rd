@@ -36,3 +36,4 @@ be supplied as a named vector where the names correspond to the output of
 Function to calculate HEPI as the average of DNR, Prepare, and Prevent.
 Used within \code{calculate_hep_components()}.
 }
+\keyword{internal}

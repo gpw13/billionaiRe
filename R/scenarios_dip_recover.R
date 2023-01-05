@@ -1,8 +1,12 @@
 #' Scenario dip and recover
 #'
-#' `scenario_dip_recover` creates a scenario where there is a rapid
+#' `scenario_dip_recover()` creates a scenario where there is a rapid
 #' return to the previous situation after a dip. The same annual rate of change (AROC) as
 #' before dip is applied from the `recovery_year`.
+#'
+#' `scenario_dip_recover_iso3()` applies `scenario_dip_recover()` to a specific iso3.
+#'
+#' `scenario_dip_recover_iso3_ind()` applies `scenario_dip_recover()` to a specific `ind` and `iso3` combination.
 #'
 #' Two types of AROC are supported:
 #'
@@ -24,17 +28,20 @@
 #' instance, if `recovery_year` is 2021 and `end_year` 2025, then 2021 will have 0%
 #' of AROC, 2022 25%, 2023 50%, 2024 75%, and 2025 100%.
 #'
-#' @inheritParams trim_values
-#' @inheritParams transform_hpop_data
-#' @inheritParams recycle_data
-#' @inheritParams scenario_aroc
+#'
+#' @param iso3 (character) ISO3 code of country to scenario
 #' @param dip_year (integer) year where the dip appends
 #' @param recovery_year (integer) year from which the AROC will be applied
 #' @param progressive_recovery (logical) TRUE if the recovery after dip
 #' should be progressive.
 #' @param scenario name of scenario column to be created
 #' @param scenario_name name of scenario
-#' @inheritParams calculate_hep_components
+#' @param ind (character) name of the indicator on which to calculate the
+#'    scenario
+#' @param baseline_year (integer) identify baseline year on which the AROC
+#'    should be calculated.
+#' @param last_year (integer) identify last year where values were `reported`
+#'    or `estimated` between `start_year` and `end_year`.
 #' @param ... additional parameters to be passed to
 #' `scenario_dip_recover_iso3()`
 #' @param aroc_type (character) name of the type of AROC to be used. Can be either:
@@ -43,7 +50,22 @@
 #'   - `average_years_in_range`:
 #' @param aroc_start_year (integer) year
 #'
+#' @inheritParams calculate_uhc_billion
+#' @inheritParams trim_values
+#' @inheritParams transform_hpop_data
+#' @inheritParams recycle_data
+#' @inheritParams scenario_aroc
+#' @inheritParams calculate_uhc_billion
+#' @inheritParams calculate_hep_components
+#'
 #' @return a data frame with scenario values in `value_col` with a `scenario` column.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
+#' @rdname scenario-dip-recover
+#'
 scenario_dip_recover <- function(df,
                                  start_year = 2018,
                                  dip_year = 2020,
@@ -104,18 +126,7 @@ scenario_dip_recover <- function(df,
     dplyr::distinct()
 }
 
-#' Scenario dip and recover to specific iso3
-#'
-#' Applies `scenario_dip_recover()` to a specific iso3.
-#'
-#' @inheritParams scenario_dip_recover
-#' @inheritParams trim_values
-#' @inheritParams transform_hpop_data
-#' @inheritParams recycle_data
-#' @inheritParams calculate_uhc_billion
-#' @inheritParams calculate_hep_components
-#' @inheritParams scenario_aroc
-#' @param iso3 (character) ISO3 code of country to scenario
+#' @rdname scenario-dip-recover
 #'
 scenario_dip_recover_iso3 <- function(df,
                                       iso3,
@@ -221,25 +232,7 @@ scenario_dip_recover_iso3 <- function(df,
 }
 
 
-#' Scenario dip and recover to specific `ind` and `iso3`
-#'
-#' Applies `scenario_dip_recover()` to a specific `ind` and `iso3` combination.
-#'
-#' @inheritParams scenario_dip_recover
-#' @inheritParams transform_hpop_data
-#' @inheritParams recycle_data
-#' @inheritParams calculate_uhc_billion
-#' @inheritParams trim_values
-#' @inheritParams scenario_aroc
-#' @inheritParams scenario_dip_recover_iso3
-#' @param ind (character) name of the indicator on which to calculate the
-#'    scenario
-#' @param iso3 (character) name of the ISO3 country code on which to calculate
-#'    the scenario
-#' @param baseline_year (integer) identify baseline year on which the AROC
-#'    should be calculated.
-#' @param last_year (integer) identify last year where values were `reported`
-#'    or `estimated` between `start_year` and `end_year`.
+#' @rdname scenario-dip-recover
 #'
 scenario_dip_recover_iso3_ind <- function(df,
                                           iso3,

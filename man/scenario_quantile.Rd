@@ -97,3 +97,10 @@ quantile if above the mean.
 Calculates the quantile target, then wraps around
 \code{scenario_linear_change_col} to aim at the target.
 }
+\seealso{
+Comparing scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_in_region}()},
+\code{\link{scenario_best_of}()}
+}
+\concept{comparing_scenario}

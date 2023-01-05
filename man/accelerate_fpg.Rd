@@ -28,3 +28,22 @@ calculating contributions on data in long format rather than wide format.}
 \description{
 Accelerate fpg by halting the rise to 2010 value.
 }
+\seealso{
+UHC acceleration scenarios
+\code{\link{accelerate_anc4}()},
+\code{\link{accelerate_art}()},
+\code{\link{accelerate_beds}()},
+\code{\link{accelerate_bp}()},
+\code{\link{accelerate_doctors}()},
+\code{\link{accelerate_dtp3}()},
+\code{\link{accelerate_fh}()},
+\code{\link{accelerate_fp}()},
+\code{\link{accelerate_hwf}()},
+\code{\link{accelerate_itn}()},
+\code{\link{accelerate_nurses}()},
+\code{\link{accelerate_pneumo}()},
+\code{\link{accelerate_tb}()},
+\code{\link{accelerate_uhc_sanitation}()},
+\code{\link{accelerate_uhc_tobacco}()}
+}
+\concept{uhc_acceleration}

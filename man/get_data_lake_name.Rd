@@ -12,3 +12,17 @@ A string. The name of the Triple Billions WHDH data lake.
 \description{
 Return the name of the 3B data lake
 }
+\seealso{
+Wrangle data functions
+\code{\link{add_missing_xmart_rows}()},
+\code{\link{get_whdh_path}()},
+\code{\link{has_xmart_cols}()},
+\code{\link{save_gho_backup_to_whdh}()},
+\code{\link{save_wrangled_output}()},
+\code{\link{wrangle_gho_data}()},
+\code{\link{wrangle_gho_rural_urban_data}()},
+\code{\link{wrangle_unsd_data}()},
+\code{\link{xmart_col_types}()},
+\code{\link{xmart_cols}()}
+}
+\concept{whdh}

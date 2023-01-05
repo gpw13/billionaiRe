@@ -49,7 +49,20 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate espar by aiming at the best value between the regional average
+@description
+}
+\details{
+\code{accelerate_espar()} accelerate espar by aiming at the best value between the regional average
 (WHO regions) and the value last year of the last year with complete espar
 data (with categories and sub-categories).
 }
+\seealso{
+HEP acceleration scenarios
+\code{\link{accelerate_cholera_campaign}()},
+\code{\link{accelerate_detect}()},
+\code{\link{accelerate_measles_routine}()},
+\code{\link{accelerate_meningitis_campaign}()},
+\code{\link{accelerate_polio_routine}()},
+\code{\link{accelerate_yellow_fever_campaign}()}
+}
+\concept{hep_acceleration}

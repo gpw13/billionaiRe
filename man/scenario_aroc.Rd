@@ -123,7 +123,7 @@ percentage points difference.
 
 AROC use a general \href{https://en.wikipedia.org/wiki/Compound_annual_growth_rate}{compounded rate of change}
 formula:
-$\mathrm{AROC(y_{0}, y_{n})} = (Value(y_{n}) / Value(y_{0})) ^ (1 / (y_{n} -  y_{0})) - 1$
+(Value(year_n) / Value(year_0)) ^ (1 / (year_n -  year_0)) - 1
 
 \code{direction_limit_aroc} in combination with \code{limit_aroc} allows to limit the
 AROC to a value given a direction. This can be helpful to avoid extreme
@@ -132,3 +132,12 @@ values if AROC is unknown before being passed to the function.If
 the calculated AROC and \code{limit_aroc}. If \code{negative}, it will be the maximum
 between AROC and
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_linear_change}()},
+\code{\link{scenario_percent_baseline}()}
+}
+\concept{aroc}
+\concept{basic_scenarios}

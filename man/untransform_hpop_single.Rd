@@ -24,9 +24,22 @@ be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 }
 \value{
-A single column data frame of transformed values.
+A single column data frame of transformed values.$
 }
 \description{
 This function is used within \code{\link[=untransform_hpop_data]{untransform_hpop_data()}} to generate transformed data
 on a single column.
 }
+\seealso{
+Other hpop: 
+\code{\link{add_hpop_populations}()},
+\code{\link{calculate_hpop_billion_change}()},
+\code{\link{calculate_hpop_billion}()},
+\code{\link{calculate_hpop_contributions}()},
+\code{\link{hpop_df}},
+\code{\link{transform_hpop_data}()},
+\code{\link{transform_hpop_single}()},
+\code{\link{untransform_hpop_data}()}
+}
+\concept{hpop}
+\keyword{internal}

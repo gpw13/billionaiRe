@@ -62,3 +62,10 @@ This function requires that the user have the \href{https://github.com/caldwells
 installed and setup to access the GPW13 mart. Details are available on the GitHub
 landing page linked above.
 }
+\seealso{
+Other access_data: 
+\code{\link{load_billion_data_whdh}()},
+\code{\link{load_billion_data_xmart}()},
+\code{\link{load_billion_data}()}
+}
+\concept{access_data}

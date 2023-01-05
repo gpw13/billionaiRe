@@ -5,7 +5,7 @@
 \alias{indicator_df}
 \title{Dataset of indicators used within the Billions calculations.}
 \format{
-A data frame with 111 rows and 20 variables:
+A data frame with 111 rows and 22 variables:
 \describe{
 \item{dashboard_id}{Dashboard ID used within the GPW13 xMart4 instance}
 \item{ind}{Code used in the analysis scripts within the billionaiRe package}
@@ -28,6 +28,8 @@ and "unproj_data" if projected by DDI}
 \item{small_is_best}{Logical, is a lower value is a better public health outcome.}
 \item{gho_query}{Query to be passed to ghost to retrieve the data}
 \item{data_source}{Name of the source of the data for a specific indicator.}
+\item{acceleration_scenario}{Definition of the acceleration scenario.}
+\item{sdg_scenario}{Definition of the acceleration scenario.}
 }
 }
 \usage{
@@ -37,4 +39,14 @@ indicator_df
 A dataset containing dashboard and analysis indicator codes and their uses within the GPW13
 Billions.
 }
+\seealso{
+Functions to access metadata
+\code{\link{billion_ind_codes}()},
+\code{\link{convert_ind_codes}()},
+\code{\link{get_country_shares}()},
+\code{\link{get_ind_billion}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{get_sdi_ratio}()}
+}
+\concept{metadata}
 \keyword{datasets}

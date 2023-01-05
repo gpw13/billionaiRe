@@ -26,3 +26,16 @@ A single column data frame of transformed values.
 This function is used within \code{\link[=transform_hpop_data]{transform_hpop_data()}} to generate transformed data
 on a single column.
 }
+\seealso{
+Other hpop: 
+\code{\link{add_hpop_populations}()},
+\code{\link{calculate_hpop_billion_change}()},
+\code{\link{calculate_hpop_billion}()},
+\code{\link{calculate_hpop_contributions}()},
+\code{\link{hpop_df}},
+\code{\link{transform_hpop_data}()},
+\code{\link{untransform_hpop_data}()},
+\code{\link{untransform_hpop_single}()}
+}
+\concept{hpop}
+\keyword{internal}

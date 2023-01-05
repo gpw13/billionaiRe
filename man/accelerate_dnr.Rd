@@ -2,7 +2,10 @@
 % Please edit documentation in R/accelerate_hep.R
 \name{accelerate_detect}
 \alias{accelerate_detect}
-\title{Accelerate detect}
+\alias{accelerate_respond}
+\alias{accelerate_notify}
+\alias{accelerate_detect_respond}
+\title{Accelerate Detect, Notify, Respond, and Detect and Respond}
 \usage{
 accelerate_detect(
   df,
@@ -12,6 +15,12 @@ accelerate_detect(
   scenario_name = "acceleration",
   ...
 )
+
+accelerate_respond(df, scenario_name = "acceleration", ...)
+
+accelerate_notify(df, scenario_name = "acceleration", ...)
+
+accelerate_detect_respond(df, scenario_name = "acceleration", ...)
 }
 \arguments{
 \item{df}{Data frame in long format, where 1 row corresponds to a specific
@@ -37,5 +46,17 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate detect by taking the business as usual.
+\code{accelerate_detect()}, \code{accelerate_respond()}, \code{accelerate_notify()}, and
+\code{accelerate_detect_respond()} accelerate by returning to business as usual
+values.
 }
+\seealso{
+HEP acceleration scenarios
+\code{\link{accelerate_cholera_campaign}()},
+\code{\link{accelerate_espar}()},
+\code{\link{accelerate_measles_routine}()},
+\code{\link{accelerate_meningitis_campaign}()},
+\code{\link{accelerate_polio_routine}()},
+\code{\link{accelerate_yellow_fever_campaign}()}
+}
+\concept{hep_acceleration}

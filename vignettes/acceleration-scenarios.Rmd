@@ -1,0 +1,38 @@
+---
+title: "Acceleration scenarios"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Acceleration scenarios}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Acceleration scenarios are version of the future that are ambitious yet achievable by countries. They were created in conjonction with WHO technical units.
+
+Many of the acceleration scenarios calculate multiple basic scenarios, and then compare them with the `scenario_best_of()` function to find the best results.
+
+This table shows a summary of the acceleration scenario by indicator:
+
+```{r show-acceleration-ind, echo=FALSE}
+library(billionaiRe)
+
+indicator_df %>% 
+  dplyr::mutate(Billion = dplyr::case_when(
+    ind == "espar" ~ "UHC and HEP",
+    TRUE ~ stringr::str_to_upper(get_ind_billion(ind))
+  )) %>% 
+  dplyr::filter(!calculated, !is.na(acceleration_scenario)) %>%
+  dplyr::select(Billion,
+                `Indicator Code` = ind,
+                `Indicator Name` = short_name,
+                `Scenario` = acceleration_scenario) %>% 
+  dplyr::arrange(Billion, `Indicator Code`) %>% 
+  knitr::kable("html")
+```

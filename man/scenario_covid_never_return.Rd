@@ -51,7 +51,7 @@ be supplied as a named vector where the names correspond to the output of
 a data frame with scenario values in \code{value_col} with a \code{scenario_col} column.
 }
 \description{
-\code{scenario_covid_rapid_return} creates a scenario where there is no
+\code{scenario_covid_rapid_return()} creates a scenario where there is no
 return to the pre-pandemic situation.
 }
 \details{
@@ -60,3 +60,13 @@ This applies only to countries where the indicator value for
 \code{covid_year} is \code{reported} or \code{estimated}. Otherwise, the value
 is carried with \code{scenario_bau}.
 }
+\seealso{
+COVID scenarios
+\code{\link{scenario_covid_delayed_return}()},
+\code{\link{scenario_covid_rapid_return}()},
+\code{\link{scenario_covid_sustained_disruption}()},
+\code{\link{scenario_dip_recover}()},
+\code{\link{scenario_return_previous_trajectory}()}
+}
+\concept{scenario_covid}
+\keyword{internal}

@@ -25,3 +25,17 @@ is missing any combinations of \code{c(iso3, ind, year)} found in xMart, it appe
 these rows to the data frame,with NA values for \verb{value, upper, lower, source, type}
 and \code{other_detail}.
 }
+\seealso{
+Wrangle data functions
+\code{\link{get_data_lake_name}()},
+\code{\link{get_whdh_path}()},
+\code{\link{has_xmart_cols}()},
+\code{\link{save_gho_backup_to_whdh}()},
+\code{\link{save_wrangled_output}()},
+\code{\link{wrangle_gho_data}()},
+\code{\link{wrangle_gho_rural_urban_data}()},
+\code{\link{wrangle_unsd_data}()},
+\code{\link{xmart_col_types}()},
+\code{\link{xmart_cols}()}
+}
+\concept{whdh}

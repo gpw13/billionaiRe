@@ -33,6 +33,9 @@
 #'
 #' @rdname linear_change
 #'
+#' @family basic_scenarios
+#' @family linear_change
+#'
 scenario_linear_change <- function(df,
                                    linear_value,
                                    value_col = "value",
@@ -103,7 +106,6 @@ scenario_linear_change <- function(df,
 #' @param linear_value_col name of column with linear values
 #'
 #' @rdname linear_change
-
 scenario_linear_change_col <- function(df,
                                        linear_value_col,
                                        value_col = "value",

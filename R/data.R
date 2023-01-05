@@ -26,7 +26,12 @@
 #'   \item{small_is_best}{Logical, is a lower value is a better public health outcome.}
 #'   \item{gho_query}{Query to be passed to ghost to retrieve the data}
 #'   \item{data_source}{Name of the source of the data for a specific indicator.}
+#'   \item{acceleration_scenario}{Definition of the acceleration scenario.}
+#'   \item{sdg_scenario}{Definition of the acceleration scenario.}
 #' }
+#'
+#' @family metadata
+#'
 "indicator_df"
 
 #' HPOP Billion population links
@@ -39,6 +44,8 @@
 #'   \item{ind}{HPOP indicator code.}
 #'   \item{pop_group}{Population group.}
 #' }
+#'
+#' @family populations
 "pop_links"
 
 #' Socio-Demographic Index data
@@ -50,6 +57,8 @@
 #'   \item{iso3}{Country ISO3 codes.}
 #'   \item{sdiratio}{SDI ratio.}
 #' }
+#'
+#' @keywords internal
 "sdi_ratio"
 
 #' HPOP generated example data
@@ -69,6 +78,8 @@
 #'   \item{value}{Raw indicator value.}
 #'   \item{type}{Data type.}
 #' }
+#'
+#' @family hpop
 "hpop_df"
 
 #' UHC example data
@@ -88,6 +99,8 @@
 #'   \item{value}{Raw indicator value.}
 #'   \item{type}{Data type.}
 #' }
+#'
+#' @family uhc
 "uhc_df"
 
 #' HEP generated example data
@@ -107,6 +120,8 @@
 #'   \item{value}{Raw indicator value.}
 #'   \item{type}{Data type.}
 #' }
+#'
+#' @family hep
 "hep_df"
 
 #' Country shares data
@@ -121,4 +136,7 @@
 #'   \item{share_n}{Share, in number of people.}
 #'   \item{share_perc}{Share, as percent of total projected population in 2023.}
 #' }
+#'
+#' @keywords internal
+
 "country_shares"

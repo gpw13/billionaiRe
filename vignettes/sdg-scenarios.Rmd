@@ -1,0 +1,37 @@
+---
+title: "SDG scenarios"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SDG scenarios}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Sustainable Development Goals (SDG) scenarios are setting the indicators of the Triple Billion on a trajectory to reach the targets set in the [Global indicator framework for the Sustainable Development Goals and targets of the 2030 Agenda for Sustainable Development](https://unstats.un.org/sdgs/indicators/Global%20Indicator%20Framework%20after%202022%20refinement_Eng.pdf).
+
+This results in setting ambitious trajectories for each indicator that is linked to an SDG target or to a relevant framework
+
+```{r show-sdg-ind, echo=FALSE}
+library(billionaiRe)
+
+indicator_df %>% 
+  dplyr::mutate(Billion = dplyr::case_when(
+    ind == "espar" ~ "UHC and HEP",
+    TRUE ~ stringr::str_to_upper(get_ind_billion(ind)))) %>% 
+  dplyr::filter(!calculated, !is.na(sdg),
+                stringr::str_detect(sdg, "^SDG|^WHA")) %>%
+  dplyr::select(Billion,
+                `Indicator Code` = ind,
+                `Indicator Name` = short_name,
+                `SDG/WHA code` = sdg,
+                `Scenario` = sdg_scenario) %>% 
+  dplyr::arrange(Billion, `Indicator Code`) %>% 
+  knitr::kable()
+```

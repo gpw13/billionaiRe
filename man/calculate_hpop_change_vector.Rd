@@ -16,3 +16,4 @@ calculate_hpop_change_vector(transform_value_col, year, start_year)
 \description{
 Calculate the change for vectors, used in \code{\link[=calculate_hpop_billion]{calculate_hpop_billion()}}
 }
+\keyword{internal}

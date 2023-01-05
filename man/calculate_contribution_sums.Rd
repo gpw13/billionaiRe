@@ -45,3 +45,4 @@ country already computed.
 In this example, we're calculating the global contributions for the HPOP
 billion for 2025.
 }
+\concept{aggregation}

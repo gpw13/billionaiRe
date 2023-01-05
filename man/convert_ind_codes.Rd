@@ -24,3 +24,13 @@ A character vector.
 \code{convert_ind_codes()} allows easy conversion of indicator codes from dashboard
 IDs, xMart IDs, and GHO codes.
 }
+\seealso{
+Functions to access metadata
+\code{\link{billion_ind_codes}()},
+\code{\link{get_country_shares}()},
+\code{\link{get_ind_billion}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{get_sdi_ratio}()},
+\code{\link{indicator_df}}
+}
+\concept{metadata}

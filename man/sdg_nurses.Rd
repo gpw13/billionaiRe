@@ -15,3 +15,22 @@ country, year, and indicator.}
 \description{
 Accelerate nurses using the business as usual scenario.
 }
+\seealso{
+UHC SDG scenarios
+\code{\link{sdg_anc4}()},
+\code{\link{sdg_art}()},
+\code{\link{sdg_beds}()},
+\code{\link{sdg_bp}()},
+\code{\link{sdg_doctors}()},
+\code{\link{sdg_dtp3}()},
+\code{\link{sdg_fh}()},
+\code{\link{sdg_fpg}()},
+\code{\link{sdg_fp}()},
+\code{\link{sdg_hwf}()},
+\code{\link{sdg_itn}()},
+\code{\link{sdg_pneumo}()},
+\code{\link{sdg_tb}()},
+\code{\link{sdg_uhc_sanitation}()},
+\code{\link{sdg_uhc_tobacco}()}
+}
+\concept{uhc_sdg}

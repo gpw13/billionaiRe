@@ -14,7 +14,7 @@
 #'
 #' AROC use a general [compounded rate of change](https://en.wikipedia.org/wiki/Compound_annual_growth_rate)
 #' formula:
-#' $\mathrm{AROC(y_{0}, y_{n})} = (Value(y_{n}) / Value(y_{0})) ^ (1 / (y_{n} -  y_{0})) - 1$
+#' (Value(year_n) / Value(year_0)) ^ (1 / (year_n -  year_0)) - 1
 #'
 #' `direction_limit_aroc` in combination with `limit_aroc` allows to limit the
 #' AROC to a value given a direction. This can be helpful to avoid extreme
@@ -42,6 +42,9 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
+#'
+#' @family basic_scenarios
+#' @family aroc
 #'
 scenario_aroc <- function(df,
                           value_col = "value",

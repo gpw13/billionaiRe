@@ -49,6 +49,8 @@
 #'
 #' @return A data frame.
 #'
+#' @family access_data
+#'
 #' @export
 #'
 load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
@@ -81,6 +83,8 @@ load_billion_data <- function(data_type = c("wrangled_data", "projected_data", "
 #' @param upload_retry_interval (integer) Amount of time in seconds to wait before retrying download WHDH. Defaults to `3`.
 #'
 #' @return A data frame.
+#'
+#' @family access_data
 #'
 load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                    billion = c("all", "hep", "hpop", "uhc"),
@@ -181,6 +185,8 @@ load_billion_data_whdh <- function(data_type = c("wrangled_data", "projected_dat
 #'
 #' @return A data frame.
 #'
+#' @family access_data
+#'
 load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_data", "final_data"),
                                     billion = c("all", "hep", "hpop", "uhc"),
                                     ind_codes = "all",
@@ -232,6 +238,8 @@ load_billion_data_xmart <- function(data_type = c("wrangled_data", "projected_da
 #'
 #' @return A data frame.
 #'
+#' @family access_data
+#'
 #' @export
 #'
 load_billion_data_legacy <- function(billion = c("hep", "hpop", "uhc", "all"),
@@ -263,6 +271,9 @@ load_billion_data_legacy <- function(billion = c("hep", "hpop", "uhc", "all"),
 }
 
 #' @noRd
+#'
+#' @keywords internal
+#'
 filter_billion_inds <- function(df, billion) {
   if (billion != "all") {
     inds <- billion_ind_codes(billion, include_covariates = TRUE, include_calculated = TRUE)
@@ -272,6 +283,9 @@ filter_billion_inds <- function(df, billion) {
 }
 
 #' @noRd
+#'
+#' @keywords internal
+#'
 filter_billion_date <- function(df, date_filter) {
   if (!is.null(date_filter)) {
     df <- dplyr::group_by(
@@ -296,6 +310,9 @@ filter_billion_date <- function(df, date_filter) {
 }
 
 #' @noRd
+#'
+#' @keywords internal
+#'
 filter_billion_na <- function(df, na_rm, cols = "value") {
   if (na_rm) {
     df <- df %>%
@@ -306,6 +323,9 @@ filter_billion_na <- function(df, na_rm, cols = "value") {
 }
 
 #' @noRd
+#'
+#' @keywords internal
+#'
 assert_date_filter <- function(fltr) {
   if (!is.null(fltr)) {
     if (fltr != "latest") {
@@ -319,6 +339,9 @@ assert_date_filter <- function(fltr) {
 }
 
 #' @noRd
+#'
+#' @keywords internal
+#'
 load_billion_table <- function(tbl, format, ...) {
   xmart4::xmart4_table(
     mart = "GPW13",
@@ -356,8 +379,12 @@ load_billion_table <- function(tbl, format, ...) {
 #' paths must end with an extension (e.g., .csv)
 #' @param ... Any additionally arguments to pass on to the appropriate `read_` function.
 #'
+#' @family load_data
+#'
 #' @return a data frame
+#'
 #' @export
+#'
 load_misc_data <- function(file_path, ...) {
   f <- tempfile()
 

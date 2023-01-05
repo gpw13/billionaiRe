@@ -17,6 +17,8 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #'
+#' @family comparing_scenario
+#'
 #' @export
 #'
 scenario_quantile <- function(df,
@@ -110,6 +112,8 @@ scenario_quantile <- function(df,
 #' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#'
+#' @family comparing_scenario
 #'
 #' @export
 

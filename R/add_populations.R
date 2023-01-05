@@ -18,6 +18,8 @@
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_hpop_change_vector
 #'
+#' @family populations
+#'
 #' @export
 add_populations <- function(df,
                             population = "population",

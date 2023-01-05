@@ -15,8 +15,11 @@
 #' @inherit transform_hpop_data return params
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams add_hpop_populations
+#'
 #' @param level_col Column name of column(s) with indicator levels. Should be same length
 #'     as `transform_value_col`.
+#'
+#' @family hep
 #'
 #' @export
 calculate_hep_billion <- function(df,
@@ -96,6 +99,9 @@ calculate_hep_billion <- function(df,
 #' Calculates HEP contribution for use in calculate_hep_billion
 #'
 #' @noRd
+#'
+#' @keywords internal
+#'
 calculate_hep_contribution_pct <- function(ind, year, start_year, value, level, ind_ids) {
   if (all(ind %in% ind_ids["detect_respond"])) {
     ifelse(level == 1,

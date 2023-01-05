@@ -24,6 +24,10 @@
 #' @return trimed data frame, removing the `col` column, and putting the trimmed
 #' values in `value_col`
 #'
+#' @family scenarios
+#'
+#' @keywords internal
+#'
 trim_values <- function(df,
                         col,
                         value_col = "value",
@@ -76,6 +80,10 @@ trim_values <- function(df,
 #' @param trim_years logical to indicate if years before `start_year` and after
 #' `end_year` should be removed
 #'
+#' @family scenarios
+#'
+#' @keywords internal
+#'
 trim_years <- function(df, trim_years, start_year, end_year) {
   if (trim_years) {
     df %>%
@@ -85,6 +93,7 @@ trim_years <- function(df, trim_years, start_year, end_year) {
   }
 }
 
+#' @noRd
 guess_limit <- function(percent_change,
                         limit,
                         limit_type = c("upper_limit", "lower_limit")) {
@@ -124,6 +133,10 @@ get_goal <- function(value, year, start_year, perc_change) {
 #' following `baseline_year`.
 #' @param na_rm (Boolean) indicating if NA should be removed (default) from `type_filter`
 #' or not.
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_baseline_value <- function(value,
                                year,
                                type,
@@ -181,6 +194,10 @@ get_baseline_value <- function(value,
 #' Get last year from baseline
 #'
 #' @inheritParams get_baseline_value
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_baseline_year <- function(year,
                               type,
                               scenario_col = NULL,
@@ -342,6 +359,9 @@ get_last_interval_year <- function(year,
 #' @param df (data.frame) containing the data. Needs to have at least the `year` and `type` columns.
 #' @param type_filter (character vector) vector of types to be filtered for.
 #'
+#' @family scenarios
+#'
+#' @keywords internal
 get_last_value <- function(df, type_filter = c("reported", "estimated")){
   assert_columns(df, "type", "year")
 
@@ -358,6 +378,9 @@ get_last_value <- function(df, type_filter = c("reported", "estimated")){
 #' @inheritParams recycle_data_scenario_single
 #' @inheritParams get_last_value
 #'
+#' @family scenarios
+#'
+#' @keywords internal
 get_last_year_scenario <- function(df,
                                    indicator,
                                    start_year = 2018,
@@ -400,6 +423,10 @@ get_last_year_scenario <- function(df,
 #' @param end_value value at end_year
 #'
 #' @return numeric with AARC
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 calculate_aarc <- function(baseline_year,
                            baseline_value,
                            end_year,
@@ -428,6 +455,10 @@ calculate_aarc <- function(baseline_year,
 #' @param end_value value at end_year
 #'
 #' @return numeric with AARC
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 calculate_aroc <- function(baseline_year,
                            baseline_value,
                            end_year,
@@ -442,8 +473,13 @@ calculate_aroc <- function(baseline_year,
 #' `iso3` and `ind` present in `df`.
 #'
 #' @inheritParams  scenario_aroc
+#'
 #' @return dataframe with AROC (in `aroc` column) for every combination of
 #' `iso3` and `ind`
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_latest_aarc <- function(df,
                             baseline_year,
                             value_col = "value") {
@@ -475,8 +511,13 @@ get_latest_aarc <- function(df,
 #' combination of `iso3` and `ind` present in `df`.
 #'
 #' @inheritParams  scenario_aroc
+#'
 #' @return dataframe with AROC (in `aroc` column) for every combination of
 #' `iso3` and `ind`
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_target_aarc <- function(df,
                             target_value,
                             baseline_year,
@@ -506,8 +547,13 @@ get_target_aarc <- function(df,
 #' years for every combination of `iso3` and `ind` present in `df`.
 #'
 #' @inheritParams  scenario_aroc
+#'
 #' @return dataframe with AROC (in `aroc` column) for every combination of
 #' `iso3` and `ind`
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_percent_change_aarc <- function(df,
                                     percent_change,
                                     baseline_year,
@@ -541,6 +587,10 @@ get_percent_change_aarc <- function(df,
 #' the same length as `year`
 #'
 #' @return a numeric being the beta value representing the AARR
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 get_aarr <- function(year, value) {
   df <- tibble::tibble(
     x = year,
@@ -551,7 +601,7 @@ get_aarr <- function(year, value) {
   100 * (1 - exp(coef))
 }
 
-
+#' @noRd
 get_quantile <- function(value, n) {
   quantiles_limits <- stats::quantile(value, probs = seq(0, 1, 1 / n))
 
@@ -578,6 +628,9 @@ get_quantile <- function(value, n) {
 #'
 #' @return a data frame with predicted data,
 #'
+#' @family scenarios
+#'
+#' @keywords internal
 flat_extrapolation <- function(df,
                                col,
                                group_col = NULL,
@@ -638,7 +691,12 @@ simple_extrap <- function(x) {
 #'
 #' @param df (data.frame) containing the data. Needs to have at least the `scenario_col` column
 #' @param unwanted_scenarios character vector of scenarios to be remove
+#'
 #' @inheritParams recycle_data_scenario_single
+#'
+#' @family scenarios
+#'
+#' @keywords internal
 remove_unwanted_scenarios <- function(df,
                                       scenario_col = "scenario",
                                       unwanted_scenarios) {
@@ -665,6 +723,9 @@ remove_unwanted_scenarios <- function(df,
 #' @param fn function to be executed
 #' @param parameters parameters to be passed to `fn`
 #'
+#' @family scenarios
+#'
+#' @keywords internal
 exec_scenario <- function(df, fn, parameters){
   rlang::exec(
     fn,
@@ -681,6 +742,9 @@ exec_scenario <- function(df, fn, parameters){
 #' @param cols (list) of columns to be infilled
 #' @param values (list) of values to infill with.
 #'
+#' @family scenarios
+#'
+#' @keywords internal
 fill_cols_scenario <- function(df,
                                scenario_col = "scenario",
                                cols = list("type",

@@ -80,3 +80,8 @@ This function requires that the user to have the
 and setup to access the data. For quetions about getting the relevant permissions,
 please contact \href{mailto:kanjim@who.int}{kanjim@who.int} or \href{mailto:messeillere@who.int}{messeillere@who.int}.
 }
+\seealso{
+Functions to load data from data lake
+\code{\link{load_misc_data}()}
+}
+\concept{load_data}

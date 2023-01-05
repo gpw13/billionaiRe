@@ -2,7 +2,7 @@
 % Please edit documentation in R/accelerate_hep.R
 \name{accelerate_cholera_campaign}
 \alias{accelerate_cholera_campaign}
-\title{Accelerate cholera_campaign}
+\title{Accelerate cholera}
 \usage{
 accelerate_cholera_campaign(
   df,
@@ -49,16 +49,26 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate cholera_campaign by adding planned cholera campaigns to the provided
-values in \code{df}. When a value is reported for a year and country, then this
-value is kept, even after 2018. Planned values are provided only for the
-denominator. For some planned campaigns only the denominator is provided. When
-this is the case, the numerator is calculated by taking the best historical
-vaccination coverage achieved, or if not available that the best regional
-historical coverage.
+\code{accelerate_cholera_campaign()} accelerate cholera by adding planned cholera
+campaigns to the provided values in \code{df}. When a value is reported for a year
+and country, then this value is kept, even after 2018. Planned values are
+provided only for the denominator. For some planned campaigns only the
+denominator is provided. When this is the case, the numerator is calculated
+by taking the best historical vaccination coverage achieved, or if not
+available that the best regional historical coverage.
 }
 \details{
 Planned campaigns are a mix between planned campaigns and the targets outlined
 in the \href{https://www.gtfcc.org/about-gtfcc/roadmap-2030/}{roadmap 2030}
 of the Global Task Force on Cholera Control.
 }
+\seealso{
+HEP acceleration scenarios
+\code{\link{accelerate_detect}()},
+\code{\link{accelerate_espar}()},
+\code{\link{accelerate_measles_routine}()},
+\code{\link{accelerate_meningitis_campaign}()},
+\code{\link{accelerate_polio_routine}()},
+\code{\link{accelerate_yellow_fever_campaign}()}
+}
+\concept{hep_acceleration}

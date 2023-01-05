@@ -37,3 +37,24 @@ Gets the annual average rate of change (AARC or AROC) between the
 baseline year and the target year given a percent change between the two
 years for every combination of \code{iso3} and \code{ind} present in \code{df}.
 }
+\seealso{
+General scenario functions
+\code{\link{add_scenario}()},
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_value}()},
+\code{\link{get_last_year_scenario}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{remove_unwanted_scenarios}()},
+\code{\link{trim_values}()},
+\code{\link{trim_years}()}
+}
+\concept{scenarios}
+\keyword{internal}

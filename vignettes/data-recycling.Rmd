@@ -16,56 +16,27 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The data pipeline of the Triple Billion store multiple data sets corresponding to different stages of transformation before combining them for the final calculations. This enables a flexible approach where one scenario can be reused by others to fill in the gaps. For more information on the scenarios see the [scenarios](scenarios.html) vignette. 
+The data pipeline of the Triple Billion store multiple data sets corresponding to different stages of transformation before combining them for the final calculations. This enables a flexible approach where one scenario can be reused by others to fill in the gaps. For more information on the scenarios see the [scenarios](scenarios.html) vignette.
 
-In order to have accurate Triple Billion calculations, it is necessary to *recycle the data* to recombine different datasets into single timeseries that then can be used in the calculations.
+As stated in the scenario definition, scenarios should contain **all** and **only** the data that is strictly needed for calculations with billionaiRe. In order to have accurate Triple Billion calculations, it is then necessary to **recycle the data** to recombine different datasets into single timeseries that then can be used in the calculations. .If a scenario does not contain the required data, the functions will fail.
 
-billionaiRe `transform_` and `calculate_` functions (as well as [rapporteur](https://gpw13.github.io/rapporteur/) export functions) use the `scenario` column as a `dplyr::group()` in [dplyr::group_by](https://dplyr.tidyverse.org/reference/group_by.html). *Scenarios should then contain all the required data needed for billionaiRe calculations*. If a scenario does not contain the required data, the functions will fail.
-
-As the functions require full minimal data sets, *data recycling* becomes necessary to be able to pull into partial scenarios the minium required data so that they can run.
+billionaiRe `transform_` and `calculate_` functions (as well as [rapporteur](https://gpw13.github.io/rapporteur/) export functions) use the `scenario` column as a `dplyr::group()` in [dplyr::group_by](https://dplyr.tidyverse.org/reference/group_by.html).If a scenario does not contain the required data, the functions will fail.
 
 For most users of billionaiRe, accessing external data tables (on xMart or World Health Data Hub) is more resource intensive than computation. This means that large tables should be avoided. Recycling the data between scenarios is then key to avoid storing identical data multiple times that will then be used by different scenarios. This is what data recycling aims to achieve: *minimal storage before computation*.
 
 Data recycling infers the existence of a reference scenario. This reference scenario is called `default` by default, and it is a parameter (`default_scenario`) of `recycle_data()` and all functions that rely on full data sets. The name of `default_scenario` can then be modified as required.
 
-`default` scenario provides values when they are absent from scenarios, along with `scenario_reported_estimated` for reported/estimated values (`routine` by default), `scenario_reference_infilling` for values imputed/projected by technical programs (`reference_infilling` by default) and `scenario_covid_shock` for COVID-19 shock values. Together `scenario_reported_estimated`, `scenario_reference_infilling`, and `scenario_covid_shock` are the base scenarios.
+`default` scenario provides values when they are absent from scenarios, along with:
+
+  - `scenario_reported_estimated` for reported/estimated values (`routine` by default),
+  - `scenario_reference_infilling` for values imputed/projected by technical programs (`reference_infilling` by default)
+  -  and `scenario_covid_shock` for COVID-19 shock values. 
+  
+Together `scenario_reported_estimated`, `scenario_reference_infilling`, and `scenario_covid_shock` are the base scenarios.
 
 Data recycling works by adding to all scenarios present in the `scenario_col` column values that are missing from first `default_scenario`, then looks in `scenario_reported_estimated`, `scenario_reported_estimated` and `scenario_covid_shock` to add values that are not present in the scenario, nor any of the preceding scenarios. This is done through a series of [dplyr::anti_join](https://dplyr.tidyverse.org/reference/filter-joins.html):
 
-```{r, include = TRUE, eval = FALSE}
-library(billionaiRe)
-
-df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet")
-
-scenario_df <- df %>%
-  dplyr::filter(scenario == "covid_dip_lag")
-
-default_not_in_scenario <- df %>%
-  dplyr::filter(scenario == "default") %>%
-  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
-
-reported_not_in_scenario <- df %>%
-  dplyr::filter(scenario == "routine") %>%
-  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
-
-reported_not_in_default <- dplyr::anti_join(reported_not_in_scenario, default_not_in_scenario,
-  by = c("iso3", "ind", "year")
-)
-
-reference_infilling_not_in_scenario <- df %>%
-  dplyr::filter(scenario == "reference_infilling") %>%
-  dplyr::anti_join(scenario_df, by = c("iso3", "ind", "year"))
-
-reference_infilling_not_in_default <- dplyr::anti_join(reference_infilling_not_in_scenario, default_not_in_scenario,
-  by = c("iso3", "ind", "year")
-)
-
-not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
-  dplyr::bind_rows(reference_infilling_not_in_default) %>%
-  dplyr::mutate(recycled = TRUE)
-```
-
-### Implementation of data recycling in billionaiRe
+## Implementation of data recycling in billionaiRe
 
 Data recycling is implemented in billionaiRe through the `recycle_data()` function. This function wraps around `recycle_data_scenario_single()` (not exported for external use) to run the recycling over all the scenarios present in the input data frame.
 
@@ -79,39 +50,6 @@ Data recycling is implemented in billionaiRe through the `recycle_data()` functi
 -   `recycle_campaigns`: Boolean to set if campaign data should be included in the recycling. `TRUE` by default.
 
 A `recycle` and `...`parameters were added to the `transform_` functions to ease recycling. If `recycle` is `TRUE`, data will be recycled, using the eventual parameters passed through the `...`.
-
-```{r recycling-example, include = TRUE, eval = FALSE}
-
-# Adding a detect_respond raw to avoid warning from recycle_data.
-detect_respond_afg_2018 <- data.frame(
-  iso3 = "AFG",
-  ind = "detect_respond",
-  value = 46.66667,
-  scenario = "routine",
-  type = "estimated")
-
-df <- load_misc_data("test_data/test_data/test_data_2022-03-06T09-30-41.parquet") %>% 
-  dplyr::bind_rows(detect_respond_afg_2018)
-
-test_data_hep <- df %>%
-  recycle_data(billion = "hep", include_projection = FALSE) %>%
-  transform_hep_data(scenario_col = "scenario")
-
-# Exactly equivalent to above:
-test_data_hep_transform <- df %>%
-  transform_hep_data(scenario_col = "scenario", recycle = TRUE, include_projection = FALSE)
-
-dplyr::setdiff(test_data_hep, test_data_hep_transform)
-
-test_data_hpop <- df %>%
-  recycle_data("hpop", include_projection = FALSE)
-
-# Exactly equivalent to above:
-test_data_hpop_transform <- df %>%
-  transform_hpop_data(recycle = TRUE, include_projection = FALSE)
-
-dplyr::setdiff(test_data_hep, test_data_hep_transform)
-```
 
 In order to facilitate the cleaning of data, a `recycled` column is added by the recycling function to identify data points that have been recycled. They can then be removed by the `remove_recycled_data()` function that takes into account a few specific scenarios.
 

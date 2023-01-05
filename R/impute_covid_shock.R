@@ -1,5 +1,3 @@
-
-
 #' Impute a COVID-19 shock
 #'
 #' Impute a COVID-19 shock for each `iso3` and `ind` combination by the imputation flow chart:
@@ -8,11 +6,17 @@
 #'    * Use mean regional chock (difference between 2020 and 2019) to infer a 2020 value
 #'
 #' @param region (character) Type of region to use for regional average. See \link[whoville]{iso3_to_regions} for more details.
+#'
 #' @inheritParams recycle_data
 #' @inheritParams recycle_data_scenario_single
 #' @inheritParams scenario_covid_rapid_return
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_billion
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 impute_covid_shock <- function(df,
                               region = c("who_region", "un_region", "un_subregion", "un_intermediate_region",
                                          "sdg_region", "sdg_subregion", "gbd_region", "gbd_subregion", "un_desa_region",

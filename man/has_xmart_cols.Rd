@@ -17,3 +17,17 @@ Tests to see if the given data frame has all the columns required by the Triple 
 xMart4 tables.The test does not take column order into consideration
 (e.g., a,b,c and c,a,b will both pass)
 }
+\seealso{
+Wrangle data functions
+\code{\link{add_missing_xmart_rows}()},
+\code{\link{get_data_lake_name}()},
+\code{\link{get_whdh_path}()},
+\code{\link{save_gho_backup_to_whdh}()},
+\code{\link{save_wrangled_output}()},
+\code{\link{wrangle_gho_data}()},
+\code{\link{wrangle_gho_rural_urban_data}()},
+\code{\link{wrangle_unsd_data}()},
+\code{\link{xmart_col_types}()},
+\code{\link{xmart_cols}()}
+}
+\concept{whdh}

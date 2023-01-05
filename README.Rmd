@@ -57,3 +57,82 @@ for the three Billions separately:
 
 ```{r child='vignettes/hep.rmd'}
 ```
+
+## Scenarios
+
+In the Triple Billions and the billionaiRe package context, scenarios are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.
+
+Scenarios must:
+
+1.  Be [tidy](https://r4ds.had.co.nz/tidy-data.html): each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).
+2.  Contain **all** and **only** the data that is strictly needed for calculations with billionaiRe
+
+Four main sets of scenarios can be identified, from the most basic to the more complex:
+
+1.  [Basic scenarios]: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (`scenario_fixed_target()`), follow a specific rate of change (`scenario_aroc()`), etc. See [Basic scenario](./vignettes/basic-scenarios.html) for more details.
+2.  [Target scenarios]: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called `sdg` scenarios)).
+3.  [Benchmarking scenarios]: Benchmarking scenarios compare performance of countries given various grouping and aim at a specified sub-set of best performing countries.
+4.  [Mixed scenarios]: Developped with indicator-level subject matter knowledge to pick realistic improvement scenarios (e.g. `acceleration` scenarios)
+
+If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see [Data recycling](./vignettes/data-recycling.html)).
+
+See [Scenarios vignette](./vignettes/basic-scenarios.html) for more details.
+
+### Quick start on billionaiRe scenarios
+
+`add_scenario()` is the entry point function to all other scenario functions. It essentially allow to pass a typical billionaiRe data frame (`df`) and apply the selected scenario function.
+
+```{r scenario-example-setup, include = TRUE, eval = FALSE}
+library(billionaiRe)
+
+df <- tibble::tibble(
+    value = 60:80,
+    year = 2010:2030,
+    ind = "pm25",
+    type = "reported",
+    iso3 = "AFG",
+    scenario = "default",
+    source = NA_character_
+  ) %>%
+    dplyr::mutate(scenario = dplyr::case_when(
+      year > 2021 ~ "historical",
+      TRUE ~ scenario
+    ),
+    type = dplyr::case_when(
+      year > 2021 ~ "projected",
+      TRUE ~ type
+    ))
+```
+
+The choice of scenario function to apply to the `df` is done through the `scenario_function` parameter. Additional parameters can be passed through the ellipsis (`...`).
+
+For instance, to halt the rise to the 2010 value by `end_year` (2025 by default), we can apply a simple function to `df`. This will apply the `halt_rise` function to all unique combination of country and indicator. In this case, there is just one combination:
+
+```{r scenario-example-single-function, include = TRUE, eval = FALSE}
+df %>%
+  add_scenario(
+    scenario_function = "halt_rise",
+    baseline_year = 2010
+  )
+```
+
+To apply the SDG targets, we use the `sdg`:
+
+```{r scenario-example-sdg-start-2018, include = TRUE, eval = FALSE}
+df %>%
+  add_scenario(
+    scenario_function = "sdg"
+  )
+```
+
+By default, the scenarios start from the last reported or estimated value in the default scenario. This can be bypassed by setting `start_scenario_last_default` to FALSE. The scenario will then start at `start_year` (2018 by default):
+
+```{r scenario-example-sdg-start-last, include = TRUE, eval = FALSE}
+df %>%
+  add_scenario(
+    scenario_function = "sdg",
+    start_scenario_last_default = FALSE
+  )
+```
+
+

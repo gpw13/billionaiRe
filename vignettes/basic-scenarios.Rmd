@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-The basic scenarios are the building blocks the other scenarios use. They can also be used by themselves onto the data.
+The basic scenarios are the building blocks of all other scenarios. They can also be used by themselves on the data.
 
-Each of those scenarios have share parameters, but also have their own. See the individual documentation for each function to see the details.
+Each of those scenarios have share parameters, but also have their own. See the individual documentation of each function to see the details.
 
 ### Annual Rate of Change (AROC)
 
@@ -74,7 +74,7 @@ Those scenarios are compairing countries to find the best performing countries g
 
 In order to have clean scenarios, a series of parameters are passed to the functions to run properly:
 
-* `small_is_best()`: if TRUE, a lower value is considered as a better public health outcome (e.g. adult obesity)
+* `small_is_best`: if TRUE, a lower value is considered as a better public health outcome (e.g. adult obesity)
 * `trim_values()`: if TRUE, values will be trimed around:
     -   `keep_better_values`: if TRUE, if values before running the scenario are better than after, the original values will be kept.
     -   `upper_limit`, `lower_limit`: if `trim` is TRUE, values above the upper_limit will have upper_limit and values below lower_limit will hasve lower_limit.

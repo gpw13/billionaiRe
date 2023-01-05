@@ -152,38 +152,4 @@ only \code{value_col} will be kept, depending on \code{small_is_best}. For insta
 if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
 75 will be kept.
 }
-\examples{
-df <- tibble::tibble(
-  value = 60:80,
-  year = 2010:2030,
-  ind = "test",
-  iso3 = "testalia",
-  scenario = "default",
-  type = dplyr::if_else(year <= 2021, "reported", "projected")
-  )
-
-target_value <- 99
-
-df_fixed_percent <- scenario_fixed_target(df,
-                                          target_value = target_value,
-                                          baseline_year = 2018,
-                                          target_year = 2025,
-                                          scenario_name = glue::glue("{target_value}_{2025}"),
-                                          small_is_best = FALSE)
-
-
-df_target_col <- df \%>\%
-  dplyr::mutate(target = target_value) \%>\%
-  scenario_fixed_target_col(
-    target_col = "target",
-    baseline_year = 2018,
-    target_year = 2025,
-    scenario_name = glue::glue("{target_value}_{2025}"),
-    small_is_best = FALSE)
-
-df_scenario_halt_rise <- scenario_halt_rise(df,
-                                            baseline_year = 2010,
-                                            target_year = 2025,
-                                            scenario_name = glue::glue("{target_value}_{2025}"))
-
-}
+\concept{fixed_target}

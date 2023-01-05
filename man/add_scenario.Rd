@@ -2,6 +2,7 @@
 % Please edit documentation in R/add_scenarios.R
 \name{add_scenario}
 \alias{add_scenario}
+\alias{add_scenario_indicator}
 \title{Add scenario to data frame}
 \usage{
 add_scenario(
@@ -17,6 +18,25 @@ add_scenario(
   end_year = 2025,
   default_scenario = "default",
   make_default = FALSE,
+  start_scenario_last_default = TRUE,
+  ...
+)
+
+add_scenario_indicator(
+  df,
+  scenario_function = c("aroc", "halt_rise", "percent_baseline", "linear_change",
+    "linear_change_col", "quantile", "best_in_region", "fixed_target",
+    "fixed_target_col", "bau", "accelerate", "accelerate_target", "sdg", "benchmarking",
+    "covid_rapid_return", "covid_sustained_disruption", "covid_delayed_return",
+    "covid_never_return", "return_previous_trajectory", "top_n_iso3"),
+  indicator,
+  start_year = 2018,
+  ind_ids = billion_ind_codes("all"),
+  scenario_col = "scenario",
+  default_scenario = "default",
+  bau_scenario = "historical",
+  make_default = FALSE,
+  expend_bau = FALSE,
   start_scenario_last_default = TRUE,
   ...
 )
@@ -62,7 +82,7 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{default_scenario}{name of the default scenario to be used.}
+\item{default_scenario}{name of the default scenario.}
 
 \item{make_default}{(Boolean) if \code{TRUE}, then \code{make_default_scenario} is used to
 generate the \code{default_scenario}}
@@ -70,13 +90,46 @@ generate the \code{default_scenario}}
 \item{start_scenario_last_default}{(Boolean) if \code{TRUE}, then the last year with values
 in the \code{default_scenario} is the starting point of the scenario, and not \code{start_year}.}
 
-\item{...}{additional arguments passed to \code{add_scenario_indicator}}
+\item{...}{additional parameters to be passed to the add_scenario_indicator
+function (e.g. \code{add_scenario_adult_obese}).}
+
+\item{indicator}{name of indicator to be passed to \code{scenario_function}}
+
+\item{bau_scenario}{name of scenario to be used for business as usual.
+Default is \code{historical}.}
+
+\item{expend_bau}{(Boolean)if \code{TRUE}, then \code{make_default_scenario} is used to
+expend \code{bau_scenario} to the start of the \code{default_scenario}.}
 }
 \value{
 data frame with additional rows with scenario values.
 }
 \description{
-\code{add_scenario} wraps around \code{add_scenario_indicator} to add the scenario
+\code{add_scenario()} wraps around \code{add_scenario_indicator()} to add the scenario
 specified in \code{scenario_function} to all the valid billionaiRe indicators
 present in \code{df}.
 }
+\details{
+\code{add_scenario_indicator()} gets the right \code{add_scenario_} function for the
+indicator specified and adds the scenario.
+}
+\seealso{
+General scenario functions
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_value}()},
+\code{\link{get_last_year_scenario}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_percent_change_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{remove_unwanted_scenarios}()},
+\code{\link{trim_values}()},
+\code{\link{trim_years}()}
+}
+\concept{scenarios}

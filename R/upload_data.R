@@ -47,6 +47,8 @@
 #'
 #' @export
 #'
+#' @family load_data
+#'
 upload_billion_data <- function(df,
                                 data_type = c("wrangled_data", "projected_data", "final_data"),
                                 billion = c("hep", "hpop", "uhc"),

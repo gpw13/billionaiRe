@@ -13,6 +13,11 @@
 #' @param scenario_shock (character) name of the scenario with the shock
 #' @param scenario_previous_trajectory (character) name of the scenario with the previous trajectories.
 #' @param scenario_col (character) name of the column with the scenarios.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
 scenario_return_previous_trajectory <- function(df,
                                                 dip_year = 2020,
                                                 recovery_year = 2022,

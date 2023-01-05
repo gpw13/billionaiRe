@@ -12,6 +12,9 @@
 #' contributions, and all calculations available.
 #'
 #' @return character vector
+#'
+#' @family whdh
+#'
 #' @export
 xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
   data_type <- rlang::arg_match(data_type)
@@ -41,7 +44,10 @@ xmart_cols <- function(data_type = c("wrangled_data", "projected_data", "final_d
 #'
 #' @inheritParams xmart_cols
 #'
+#' @family whdh
+#'
 #' @return a named vector with column specifications
+#'
 #' @export
 xmart_col_types <- function(data_type = c("wrangled_data", "projected_data", "final_data")) {
   data_type <- rlang::arg_match(data_type)
@@ -94,6 +100,9 @@ xmart_col_types <- function(data_type = c("wrangled_data", "projected_data", "fi
 #' @param df data.frame
 #'
 #' @return bool
+#'
+#' @family whdh
+#'
 #' @export
 has_xmart_cols <- function(df) {
   identical(sort(names(df)), sort(xmart_cols()))
@@ -113,6 +122,9 @@ has_xmart_cols <- function(df) {
 #' projected by the technical programme
 #'
 #' @return a data frame
+#'
+#' @family whdh
+#'
 #' @export
 add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
   proj <- ifelse(projected == TRUE, "proj_data", "unproj_data")
@@ -155,6 +167,8 @@ add_missing_xmart_rows <- function(df, billion, ind_code, projected) {
 #    data frame that is saved to disk. As such, any modifications required by
 #'   the function (such as from removing empty rows when `na_rm = TRUE`) are carried
 #'   over to the output.
+#'
+#' @family whdh
 #'
 #' @export
 save_wrangled_output <- function(df,

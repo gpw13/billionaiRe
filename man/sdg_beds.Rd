@@ -45,3 +45,22 @@ Default is \code{historical}.}
 Accelerate \code{beds} by aiming at 18 by 2030 if values are below 18. Otherwise,
 business as usual.
 }
+\seealso{
+UHC SDG scenarios
+\code{\link{sdg_anc4}()},
+\code{\link{sdg_art}()},
+\code{\link{sdg_bp}()},
+\code{\link{sdg_doctors}()},
+\code{\link{sdg_dtp3}()},
+\code{\link{sdg_fh}()},
+\code{\link{sdg_fpg}()},
+\code{\link{sdg_fp}()},
+\code{\link{sdg_hwf}()},
+\code{\link{sdg_itn}()},
+\code{\link{sdg_nurses}()},
+\code{\link{sdg_pneumo}()},
+\code{\link{sdg_tb}()},
+\code{\link{sdg_uhc_sanitation}()},
+\code{\link{sdg_uhc_tobacco}()}
+}
+\concept{uhc_sdg}

@@ -15,3 +15,13 @@ Numeric vector of SDI ratios.
 \description{
 Matches country ISO3 codes to data in the \code{sdi_ratio} data frame.
 }
+\seealso{
+Functions to access metadata
+\code{\link{billion_ind_codes}()},
+\code{\link{convert_ind_codes}()},
+\code{\link{get_country_shares}()},
+\code{\link{get_ind_billion}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{indicator_df}}
+}
+\concept{metadata}

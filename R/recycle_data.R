@@ -1,32 +1,43 @@
 #' Recycle data between scenarios
 #'
-#' `recycle_data` recycles data between the scenarios present in `df` to reduce
-#' size of tables stored.
+#' `recycle_data()` recycles data between the scenarios present in `df` to reduce
+#' size of tables stored. The function wraps around
+#' `recycle_data_scenario_single()` for all the scenarios present in the
+#' `scenario_col` column.
 #'
-#' This function wraps around `recycle_data_scenario_single()` for all the
-#' scenarios present in the `scenario_col` column. recycle_data_scenario_single
-#' reuses values present in the specified  scenarios in `default_scenario`,
-#' `scenario_reported_estimated`, and `scenario_reference_infilling` for the specified scenarios.
+#' `make_default_scenario()` wraps around `recycle_data_scenario_single()` to
+#' create a default scenario based on the parameters passed to the function.
+#'
+#' `recycle_data_scenario_single()` reuses values present in the specified
+#' scenarios in `default_scenario`, `scenario_reported_estimated`,
+#' `scenario_covid_shock` and `scenario_reference_infilling` for the specified
+#' scenarios.
 #'
 #' To do so, it looks at:
 #'
 #' 1. values in `default_scenario` but not in the scenario specified
-#' 2. values in `scenario_reported_estimated` but not in the scenario specified
-#' or `scenario_reference_infilling`
+#' 2. values in `scenario_reported_estimated` or `scenario_covid_shock` but not
+#' in the scenario specified or `default_scenario`.
 #' 3. values in `scenario_reference_infilling` but not in the scenario specified,
-#' `scenario_reported_estimated` or `scenario_reference_infilling`
+#' `scenario_reported_estimated`, `scenario_covid_shock`, or
+#' `scenario_reference_infilling`
 #'
 #' For more information see:
 #'
 #' \code{vignette("scenarios", package = "billionaiRe")}
 #'
+#' @param scenario name of scenario to recycle for.
+#' @param scenario_col Column name of column with scenario identifiers.
 #' @param billion name of billion to recycle data for.
 #' @param default_scenario name of the default scenario.
 #' @param scenario_reported_estimated name of the reported/estimated scenario.
-#' @param scenario_covid_shock name of the scenario with the COVID-19 shock years.
 #' @param scenario_reference_infilling name of the WHO technical programs projections/imputations scenario.
+#' @param scenario_covid_shock name of the scenario with the COVID-19 shock years.
 #' @param include_projection Boolean to include or not projections in recycling
 #' @param recycle_campaigns Boolean to include or not campaigns in recycling
+#' @param assert_data_calculations Boolean if true then output data frame will
+#' be tested to see if it contains the minimal required data to run the
+#' calculations.
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
@@ -34,7 +45,10 @@
 #' @inheritParams trim_years
 #' @inheritParams trim_values
 #'
-#' @return Data frame in long format.
+#' @rdname recycle_data
+#'
+#' @family recycle_data
+#'
 #' @export
 recycle_data <- function(df,
                          billion = c("hep", "hpop", "uhc"),
@@ -86,46 +100,8 @@ recycle_data <- function(df,
   )
 }
 
-#' Recycle data between scenarios for a single scenario
+#' @rdname recycle_data
 #'
-#' `recycle_data_scenario_single ` reuses values present in the specified
-#' scenarios in `default_scenario`, `scenario_reported_estimated`,
-#' `scenario_covid_shock` and `scenario_reference_infilling` for the specified
-#' scenarios.
-#'
-#' To do so, it looks at:
-#'
-#' 1. values in `default_scenario` but not in the scenario specified
-#' 2. values in `scenario_reported_estimated` or `scenario_covid_shock` but not
-#' in the scenario specified or `default_scenario`.
-#' 3. values in `scenario_reference_infilling` but not in the scenario specified,
-#' `scenario_reported_estimated`, `scenario_covid_shock`, or
-#' `scenario_reference_infilling`
-#'
-#' For more information see:
-#'
-#' \code{vignette("scenarios", package = "billionaiRe")}
-#'
-#' @param scenario name of scenario to recycle for.
-#' @param scenario_col Column name of column with scenario identifiers.
-#' @param billion name of billion to recycle data for.
-#' @param default_scenario name of the default scenario.
-#' @param scenario_reported_estimated name of the reported/estimated scenario.
-#' @param scenario_reference_infilling name of the WHO technical programs projections/imputations scenario.
-#' @param scenario_covid_shock name of the scenario with the COVID-19 shock years.
-#' @param include_projection Boolean to include or not projections in recycling
-#' @param recycle_campaigns Boolean to include or not campaigns in recycling
-#' @param assert_data_calculations Boolean if true then output data frame will
-#' be tested to see if it contains the minimal required data to run the
-#' calculations.
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_uhc_billion
-#' @inheritParams calculate_hpop_billion
-#' @inheritParams trim_years
-#' @inheritParams trim_values
-#'
-#' @return Data frame in long format.
 recycle_data_scenario_single <- function(df,
                                          scenario,
                                          billion = c("hep", "hpop", "uhc"),
@@ -315,21 +291,7 @@ recycle_data_scenario_single <- function(df,
   return(scenario_df_final)
 }
 
-#' Make a default scenario
-#'
-#' `make_default_scenario()` wraps around `recycle_data_scenario_single()` to create
-#'  a default scenario based on the parameters passed to the function.
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_uhc_billion
-#' @inheritParams trim_values
-#' @inheritParams calculate_hpop_billion
-#' @inheritParams recycle_data_scenario_single
-#' @param scenario name of scenario to recycle for. Defaults to "default".
-#' @param billion name of billion to recycle data for. Can be any of "hep",
-#' "hpop", "uhc", or "all". Defaults to "all".
-#'
-#' @export
+#' @rdname recycle_data
 make_default_scenario <- function(df,
                                   scenario = "default",
                                   billion = c("all", "hep", "hpop", "uhc"),

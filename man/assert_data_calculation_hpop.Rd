@@ -31,3 +31,4 @@ billion calculations as \code{hpop_healthier} will return 0.
 Warnings are also returned if some country (and scenario if provided) have
 only NAs.
 }
+\keyword{internal}

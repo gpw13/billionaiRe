@@ -89,3 +89,17 @@ Default is \code{historical}.}
 returns values in \code{value.} If values are missing for years between \code{start_year} and \code{end_year},
 the last available value will be imputed.
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_aroc}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_linear_change}()},
+\code{\link{scenario_percent_baseline}()}
+
+Comparing scenarios
+\code{\link{scenario_best_in_region}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_quantile}()}
+}
+\concept{basic_scenarios}
+\concept{comparing_scenario}

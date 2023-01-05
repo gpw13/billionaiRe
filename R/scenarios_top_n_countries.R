@@ -38,6 +38,8 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams accelerate_alcohol
+#'
+#' @family basic_benchmarking
 
 scenario_top_n_iso3 <- function(df,
                                 n = 10,

@@ -38,8 +38,7 @@ country, year, and indicator.}
 
 \item{end_year}{End year(s) for contribution calculation, defaults to 2019 to 2025.}
 
-\item{value_col}{Column name of column with indicator values. This column will be
-used to return the results.}
+\item{value_col}{Column name of column with indicator values.}
 
 \item{scenario_col}{(character) name of the column with the scenarios.}
 
@@ -65,16 +64,27 @@ than \code{col} will be kept.}
 
 \item{lower_limit}{lower_limit limit at which the indicator should be caped.}
 
-\item{trim_years}{logical to indicate if years before \code{start_year} and after
-\code{end_year} should be removed}
+\item{trim_years}{logical to indicate if years before \code{start_year_trim} and after
+\code{end_year_trim} should be removed}
 
 \item{start_year_trim}{(integer) year to start trimming from.}
 
 \item{end_year_trim}{(integer) year to end trimming.}
 
-\item{source}{Source to use if no unique source available for the calculation.}
+\item{source}{Source to provide for calculated average service coverage and
+single measure.}
 }
 \description{
 This scenario returns to the \code{scenario_previous_trajectory} after the last
 value of \code{scenario_shock}.
 }
+\seealso{
+COVID scenarios
+\code{\link{scenario_covid_delayed_return}()},
+\code{\link{scenario_covid_never_return}()},
+\code{\link{scenario_covid_rapid_return}()},
+\code{\link{scenario_covid_sustained_disruption}()},
+\code{\link{scenario_dip_recover}()}
+}
+\concept{scenario_covid}
+\keyword{internal}

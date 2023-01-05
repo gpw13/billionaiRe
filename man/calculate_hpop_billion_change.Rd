@@ -45,3 +45,15 @@ to calculate the Billion and return the data in long format. Called by itself,
 it expects a column of changes to be passed in, and
 returns the Billion for all \code{end_year} values.
 }
+\seealso{
+Other hpop: 
+\code{\link{add_hpop_populations}()},
+\code{\link{calculate_hpop_billion}()},
+\code{\link{calculate_hpop_contributions}()},
+\code{\link{hpop_df}},
+\code{\link{transform_hpop_data}()},
+\code{\link{transform_hpop_single}()},
+\code{\link{untransform_hpop_data}()},
+\code{\link{untransform_hpop_single}()}
+}
+\concept{hpop}

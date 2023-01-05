@@ -2,7 +2,7 @@
 % Please edit documentation in R/accelerate_hep.R
 \name{accelerate_measles_routine}
 \alias{accelerate_measles_routine}
-\title{Accelerate measles_routine}
+\title{Accelerate measles}
 \usage{
 accelerate_measles_routine(
   df,
@@ -36,7 +36,8 @@ data frame with acceleration scenario binded to \code{df}. \code{scenario_col} i
 set to \code{acceleration}
 }
 \description{
-Accelerate measles_routine by aiming at a +20\% percent change between 2013 and 2025 using
+\code{accelerate_measles_routine()} accelerate measles by aiming at a +20\% percent
+change between 2013 and 2025 using
 AROC.
 }
 \details{
@@ -45,3 +46,13 @@ Runs:
 \item \code{scenario_aroc(df, aroc_type = "percent_change", percent_change = 20, baseline_year = 2013, target_year = 2025, small_is_best = FALSE)}
 }
 }
+\seealso{
+HEP acceleration scenarios
+\code{\link{accelerate_cholera_campaign}()},
+\code{\link{accelerate_detect}()},
+\code{\link{accelerate_espar}()},
+\code{\link{accelerate_meningitis_campaign}()},
+\code{\link{accelerate_polio_routine}()},
+\code{\link{accelerate_yellow_fever_campaign}()}
+}
+\concept{hep_acceleration}

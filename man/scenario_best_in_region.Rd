@@ -92,3 +92,10 @@ best or not.
 Calculates the regional target, then wraps around
 \code{scenario_linear_change_col} to aim at the target.
 }
+\seealso{
+Comparing scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_quantile}()}
+}
+\concept{comparing_scenario}

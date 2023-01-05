@@ -17,4 +17,4 @@ sdi_ratio
 \description{
 Used internally to transform road safety data for the HPOP Billion. Exact methods available in methods report.
 }
-\keyword{datasets}
+\keyword{internal}

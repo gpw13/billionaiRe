@@ -83,3 +83,10 @@ and \href{https://github.com/WorldHealthOrganization/whdh}{whdh} packages instal
 and setup to access the data. For quetions about getting the relevant permissions,
 please contact \href{mailto:kanjim@who.int}{kanjim@who.int} or \href{mailto:messeillere@who.int}{messeillere@who.int}.
 }
+\seealso{
+Other access_data: 
+\code{\link{load_billion_data_legacy}()},
+\code{\link{load_billion_data_whdh}()},
+\code{\link{load_billion_data_xmart}()}
+}
+\concept{access_data}

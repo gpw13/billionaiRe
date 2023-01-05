@@ -14,7 +14,10 @@
 #' @param hepi_start_year First year to calculate HEP index for.
 #' @param source Source to use if no unique source available for the calculation.
 #'
+#' @family hep
+#'
 #' @export
+#'
 calculate_hep_components <- function(df,
                                      scenario_col = NULL,
                                      transform_value_col = "transform_value",
@@ -75,6 +78,9 @@ calculate_hep_components <- function(df,
 #' function for each prevent component and overall score.
 #'
 #' @inheritParams calculate_hep_components
+#'
+#' @keywords internal
+#'
 prevent_calculations <- function(df,
                                  scenario_col,
                                  source,
@@ -158,6 +164,8 @@ prevent_calculations <- function(df,
 #'     number of routine vaccines in numerator.
 #' @param max_value Maximum value the calculated pathogen value can take.
 #'
+#' @keywords internal
+#'
 pathogen_calc <- function(df,
                           name,
                           numerators,
@@ -218,6 +226,9 @@ pathogen_calc <- function(df,
 #'
 #' @inheritParams calculate_hep_components
 #' @param earliest_year Earliest year for HEPI calculation.
+#'
+#' @keywords internal
+#'
 calculate_hepi <- function(df,
                            scenario_col,
                            source,
