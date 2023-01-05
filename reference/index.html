@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,14 +21,8 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
-    <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
-    <a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a>
-    <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
-  </div>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/index.html">Articles</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -53,8 +47,231 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="calculations">Calculations<a class="anchor" aria-label="anchor" href="#calculations"></a></h2>
       
+      <p class="section-desc"></p><p>The package is built around a set of functions that calculate the Billions for the three Billions separately.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="hep">HEP<a class="anchor" aria-label="anchor" href="#hep"></a></h3>
+      <p class="section-desc"></p><p>Health Emergencies Protection (HEP): <code><a href="../articles/hep.html">vignette("hep", package = "billionaiRe")</a></code></p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="add_hep_populations.html">add_hep_populations()</a></code> 
+        </dt>
+        <dd>Add Population Figures for HEP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_hep_billion.html">calculate_hep_billion()</a></code> 
+        </dt>
+        <dd>Calculate HEP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_hep_components.html">calculate_hep_components()</a></code> 
+        </dt>
+        <dd>Calculate HEP component indicators</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hep_df.html">hep_df</a></code> 
+        </dt>
+        <dd>HEP generated example data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="transform_hep_data.html">transform_hep_data()</a></code> 
+        </dt>
+        <dd>Transform Raw Indicator Values for HEP Billion</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="hpop">HPOP<a class="anchor" aria-label="anchor" href="#hpop"></a></h3>
+      <p class="section-desc"></p><p>Healthier Populations (HPOP):<code><a href="../articles/hpop.html">vignette("hpop", package = "billionaiRe")</a></code></p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="add_hpop_populations.html">add_hpop_populations()</a></code> 
+        </dt>
+        <dd>Add Population Figures for HPOP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_hpop_billion.html">calculate_hpop_billion()</a></code> 
+        </dt>
+        <dd>Calculate HPOP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_hpop_billion_change.html">calculate_hpop_billion_change()</a></code> 
+        </dt>
+        <dd>Calculate the HPOP Billion using columns of change</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_hpop_contributions.html">calculate_hpop_contributions()</a></code> 
+        </dt>
+        <dd>Calculate HPOP Indicator Contributions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hpop_df.html">hpop_df</a></code> 
+        </dt>
+        <dd>HPOP generated example data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="transform_hpop_data.html">transform_hpop_data()</a></code> 
+        </dt>
+        <dd>Transform Raw Indicator Values for HPOP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="untransform_hpop_data.html">untransform_hpop_data()</a></code> 
+        </dt>
+        <dd>Untransform Indicator Values for HPOP Billion</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="uhc">UHC<a class="anchor" aria-label="anchor" href="#uhc"></a></h3>
+      <p class="section-desc"></p><p>Universal Health Coverage (UHC): <code><a href="../articles/uhc.html">vignette("uhc", package = "billionaiRe")</a></code></p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="calculate_uhc_billion.html">calculate_uhc_billion()</a></code> 
+        </dt>
+        <dd>Calculate UHC Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_uhc_contribution.html">calculate_uhc_contribution()</a></code> 
+        </dt>
+        <dd>Calculate UHC contribution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="transform_uhc_data.html">transform_uhc_data()</a></code> 
+        </dt>
+        <dd>Transform Raw Indicator Values for UHC Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="uhc_df.html">uhc_df</a></code> 
+        </dt>
+        <dd>UHC example data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="untransform_uhc_data.html">untransform_uhc_data()</a></code> 
+        </dt>
+        <dd>Untransform Indicator Values for UHC Billion</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="populations">Populations<a class="anchor" aria-label="anchor" href="#populations"></a></h3>
+      <p class="section-desc"></p><p>Using the right populations for aggregation between countries can be tricky. Those functions provide helper to add the appropriate populations in all cases.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="add_hep_populations.html">add_hep_populations()</a></code> 
+        </dt>
+        <dd>Add Population Figures for HEP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="add_hpop_populations.html">add_hpop_populations()</a></code> 
+        </dt>
+        <dd>Add Population Figures for HPOP Billion</dd>
+      </dl><dl><dt>
+          
+          <code><a href="add_populations.html">add_populations()</a></code> 
+        </dt>
+        <dd>Add Population Figures for all billions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pop_links.html">pop_links</a></code> 
+        </dt>
+        <dd>HPOP Billion population links</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="aggregations">Aggregations<a class="anchor" aria-label="anchor" href="#aggregations"></a></h3>
+      <p class="section-desc"></p><p>Aggregating multiple countries values together requires special considerations. Those functions provide helper.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="calculate_contribution_sums.html">calculate_contribution_sums()</a></code> 
+        </dt>
+        <dd>Calculate global/regional billions contributions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="acceleration-scenarios">Acceleration scenarios<a class="anchor" aria-label="anchor" href="#acceleration-scenarios"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to generate acceleration scenarios values at indicator-level. See <code><a href="../articles/acceleration-scenarios.html">vignette("acceleration-scenarios", package = "billionaiRe")</a></code> for more details.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="hep-1">HEP<a class="anchor" aria-label="anchor" href="#hep-1"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="accelerate_cholera.html">accelerate_cholera_campaign()</a></code> 
+        </dt>
+        <dd>Accelerate cholera</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_dnr.html">accelerate_detect()</a></code> <code><a href="accelerate_dnr.html">accelerate_respond()</a></code> <code><a href="accelerate_dnr.html">accelerate_notify()</a></code> <code><a href="accelerate_dnr.html">accelerate_detect_respond()</a></code> 
+        </dt>
+        <dd>Accelerate Detect, Notify, Respond, and Detect and Respond</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_espar.html">accelerate_espar()</a></code> 
+        </dt>
+        <dd>Accelerate espar</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_measles.html">accelerate_measles_routine()</a></code> 
+        </dt>
+        <dd>Accelerate measles</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_meningitis.html">accelerate_meningitis_campaign()</a></code> <code><a href="accelerate_meningitis.html">accelerate_meningitis_routine()</a></code> 
+        </dt>
+        <dd>Accelerate meningitis</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_polio.html">accelerate_polio_routine()</a></code> 
+        </dt>
+        <dd>Accelerate polio</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_yellow_fever.html">accelerate_yellow_fever_campaign()</a></code> <code><a href="accelerate_yellow_fever.html">accelerate_yellow_fever_routine()</a></code> 
+        </dt>
+        <dd>Accelerate yellow_fever</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="hpop-1">HPOP<a class="anchor" aria-label="anchor" href="#hpop-1"></a></h3>
       
 
       
@@ -75,26 +292,6 @@
         <dd>Accelerate alcohol</dd>
       </dl><dl><dt>
           
-          <code><a href="accelerate_anc4.html">accelerate_anc4()</a></code> 
-        </dt>
-        <dd>Accelerate anc4</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_art.html">accelerate_art()</a></code> 
-        </dt>
-        <dd>Accelerate art</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_beds.html">accelerate_beds()</a></code> 
-        </dt>
-        <dd>Accelerate beds</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_bp.html">accelerate_bp()</a></code> 
-        </dt>
-        <dd>Accelerate bp</dd>
-      </dl><dl><dt>
-          
           <code><a href="accelerate_child_obese.html">accelerate_child_obese()</a></code> 
         </dt>
         <dd>Accelerate child_obese</dd>
@@ -105,54 +302,9 @@
         <dd>Accelerate child_viol</dd>
       </dl><dl><dt>
           
-          <code><a href="accelerate_cholera_campaign.html">accelerate_cholera_campaign()</a></code> 
-        </dt>
-        <dd>Accelerate cholera_campaign</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_detect.html">accelerate_detect()</a></code> 
-        </dt>
-        <dd>Accelerate detect</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_detect_respond.html">accelerate_detect_respond()</a></code> 
-        </dt>
-        <dd>Accelerate detect_respond</dd>
-      </dl><dl><dt>
-          
           <code><a href="accelerate_devontrack.html">accelerate_devontrack()</a></code> 
         </dt>
         <dd>Accelerate devontrack</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_doctors.html">accelerate_doctors()</a></code> 
-        </dt>
-        <dd>Accelerate doctors</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_dtp3.html">accelerate_dtp3()</a></code> 
-        </dt>
-        <dd>Accelerate dtp3</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_espar.html">accelerate_espar()</a></code> 
-        </dt>
-        <dd>Accelerate espar</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_fh.html">accelerate_fh()</a></code> 
-        </dt>
-        <dd>Accelerate fh</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_fp.html">accelerate_fp()</a></code> 
-        </dt>
-        <dd>Accelerate fp</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_fpg.html">accelerate_fpg()</a></code> 
-        </dt>
-        <dd>Accelerate fpg</dd>
       </dl><dl><dt>
           
           <code><a href="accelerate_fuel.html">accelerate_fuel()</a></code> 
@@ -180,44 +332,9 @@
         <dd>Accelerate hpop_tobacco</dd>
       </dl><dl><dt>
           
-          <code><a href="accelerate_hwf.html">accelerate_hwf()</a></code> 
-        </dt>
-        <dd>Accelerate hwf</dd>
-      </dl><dl><dt>
-          
           <code><a href="accelerate_ipv.html">accelerate_ipv()</a></code> 
         </dt>
         <dd>Accelerate ipv</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_itn.html">accelerate_itn()</a></code> 
-        </dt>
-        <dd>Accelerate itn</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_measles_routine.html">accelerate_measles_routine()</a></code> 
-        </dt>
-        <dd>Accelerate measles_routine</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_meningitis_campaign.html">accelerate_meningitis_campaign()</a></code> 
-        </dt>
-        <dd>Accelerate meningitis_campaign</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_meningitis_routine.html">accelerate_meningitis_routine()</a></code> 
-        </dt>
-        <dd>Accelerate meningitis_routine</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_notify.html">accelerate_notify()</a></code> 
-        </dt>
-        <dd>Accelerate notify</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_nurses.html">accelerate_nurses()</a></code> 
-        </dt>
-        <dd>Accelerate nurses</dd>
       </dl><dl><dt>
           
           <code><a href="accelerate_overweight.html">accelerate_overweight()</a></code> 
@@ -228,21 +345,6 @@
           <code><a href="accelerate_pm25.html">accelerate_pm25()</a></code> 
         </dt>
         <dd>Accelerate pm25</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_pneumo.html">accelerate_pneumo()</a></code> 
-        </dt>
-        <dd>Accelerate pneumo</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_polio_routine.html">accelerate_polio_routine()</a></code> 
-        </dt>
-        <dd>Accelerate polio_routine</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_respond.html">accelerate_respond()</a></code> 
-        </dt>
-        <dd>Accelerate respond</dd>
       </dl><dl><dt>
           
           <code><a href="accelerate_road.html">accelerate_road()</a></code> 
@@ -259,6 +361,479 @@
         </dt>
         <dd>Accelerate suicide</dd>
       </dl><dl><dt>
+          
+          <code><a href="accelerate_transfats.html">accelerate_transfats()</a></code> 
+        </dt>
+        <dd>Accelerate transfats</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_wasting.html">accelerate_wasting()</a></code> 
+        </dt>
+        <dd>Accelerate wasting</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_water.html">accelerate_water()</a></code> 
+        </dt>
+        <dd>Accelerate water</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_water_rural.html">accelerate_water_rural()</a></code> 
+        </dt>
+        <dd>Accelerate water_rural</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_water_urban.html">accelerate_water_urban()</a></code> 
+        </dt>
+        <dd>Accelerate water_urban</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="uhc-1">UHC<a class="anchor" aria-label="anchor" href="#uhc-1"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="accelerate_anc4.html">accelerate_anc4()</a></code> 
+        </dt>
+        <dd>Accelerate anc4</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_art.html">accelerate_art()</a></code> 
+        </dt>
+        <dd>Accelerate art</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_beds.html">accelerate_beds()</a></code> 
+        </dt>
+        <dd>Accelerate beds</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_bp.html">accelerate_bp()</a></code> 
+        </dt>
+        <dd>Accelerate bp</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_doctors.html">accelerate_doctors()</a></code> 
+        </dt>
+        <dd>Accelerate doctors</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_dtp3.html">accelerate_dtp3()</a></code> 
+        </dt>
+        <dd>Accelerate dtp3</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_fh.html">accelerate_fh()</a></code> 
+        </dt>
+        <dd>Accelerate fh</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_fp.html">accelerate_fp()</a></code> 
+        </dt>
+        <dd>Accelerate fp</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_fpg.html">accelerate_fpg()</a></code> 
+        </dt>
+        <dd>Accelerate fpg</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_hwf.html">accelerate_hwf()</a></code> 
+        </dt>
+        <dd>Accelerate hwf</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_itn.html">accelerate_itn()</a></code> 
+        </dt>
+        <dd>Accelerate itn</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_nurses.html">accelerate_nurses()</a></code> 
+        </dt>
+        <dd>Accelerate nurses</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_pneumo.html">accelerate_pneumo()</a></code> 
+        </dt>
+        <dd>Accelerate pneumo</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_tb.html">accelerate_tb()</a></code> 
+        </dt>
+        <dd>Accelerate tb</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_uhc_sanitation.html">accelerate_uhc_sanitation()</a></code> 
+        </dt>
+        <dd>Accelerate uhc_sanitation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="accelerate_uhc_tobacco.html">accelerate_uhc_tobacco()</a></code> 
+        </dt>
+        <dd>Accelerate uhc_tobacco</dd>
+      </dl></div><div class="section level2">
+      <h2 id="sustainable-development-goals-sdg-scenarios">Sustainable Development Goals (SDG) scenarios<a class="anchor" aria-label="anchor" href="#sustainable-development-goals-sdg-scenarios"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to generate Sustainable Development Goals (SDG) scenarios values at indicator-level. See <code><a href="../articles/sdg-scenarios.html">vignette("sdg-scenarios", package = "billionaiRe")</a></code> for more details.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="hpop-2">HPOP<a class="anchor" aria-label="anchor" href="#hpop-2"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="sdg_adult_obese.html">sdg_adult_obese()</a></code> 
+        </dt>
+        <dd>Accelerate adult_obese to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_alcohol.html">sdg_alcohol()</a></code> 
+        </dt>
+        <dd>Accelerate alcohol to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_child_obese.html">sdg_child_obese()</a></code> 
+        </dt>
+        <dd>Accelerate child_obese to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_child_viol.html">sdg_child_viol()</a></code> 
+        </dt>
+        <dd>Accelerate child_viol to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_devontrack.html">sdg_devontrack()</a></code> 
+        </dt>
+        <dd>Accelerate devontrack to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_fuel.html">sdg_fuel()</a></code> 
+        </dt>
+        <dd>Accelerate fuel to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_hpop_sanitation.html">sdg_hpop_sanitation()</a></code> 
+        </dt>
+        <dd>Accelerate hpop_sanitation to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_hpop_sanitation_rural.html">sdg_hpop_sanitation_rural()</a></code> 
+        </dt>
+        <dd>Accelerate hpop_sanitation_rural to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_hpop_sanitation_urban.html">sdg_hpop_sanitation_urban()</a></code> 
+        </dt>
+        <dd>Accelerate hpop_sanitation_urban to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_hpop_tobacco.html">sdg_hpop_tobacco()</a></code> 
+        </dt>
+        <dd>Accelerate hpop_tobacco to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_ipv.html">sdg_ipv()</a></code> 
+        </dt>
+        <dd>Accelerate ipv to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_overweight.html">sdg_overweight()</a></code> 
+        </dt>
+        <dd>Accelerate overweight to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_pm25.html">sdg_pm25()</a></code> 
+        </dt>
+        <dd>Accelerate pm25 to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_road.html">sdg_road()</a></code> 
+        </dt>
+        <dd>Accelerate road to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_stunting.html">sdg_stunting()</a></code> 
+        </dt>
+        <dd>Accelerate stunting to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_suicide.html">sdg_suicide()</a></code> 
+        </dt>
+        <dd>Accelerate suicide to SDG targets</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_transfats.html">sdg_transfats()</a></code> 
+        </dt>
+        <dd>Accelerate transfats to SDG targets</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_wasting.html">sdg_wasting()</a></code> 
+        </dt>
+        <dd>Accelerate wasting to SDG targets</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_water.html">sdg_water()</a></code> 
+        </dt>
+        <dd>Accelerate water to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_water_rural.html">sdg_water_rural()</a></code> 
+        </dt>
+        <dd>Accelerate water_rural to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_water_urban.html">sdg_water_urban()</a></code> 
+        </dt>
+        <dd>Accelerate water_urban to SDG target</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="uhc-2">UHC<a class="anchor" aria-label="anchor" href="#uhc-2"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="sdg_anc4.html">sdg_anc4()</a></code> 
+        </dt>
+        <dd>Accelerate anc4 to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_art.html">sdg_art()</a></code> 
+        </dt>
+        <dd>Accelerate art to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_beds.html">sdg_beds()</a></code> 
+        </dt>
+        <dd>Accelerate beds to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_bp.html">sdg_bp()</a></code> 
+        </dt>
+        <dd>Accelerate bp to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_doctors.html">sdg_doctors()</a></code> 
+        </dt>
+        <dd>Accelerate doctors to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_dtp3.html">sdg_dtp3()</a></code> 
+        </dt>
+        <dd>Accelerate dtp3 to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_fh.html">sdg_fh()</a></code> 
+        </dt>
+        <dd>Accelerate fh to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_fp.html">sdg_fp()</a></code> 
+        </dt>
+        <dd>Accelerate fp to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_fpg.html">sdg_fpg()</a></code> 
+        </dt>
+        <dd>Accelerate fpg to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_hwf.html">sdg_hwf()</a></code> 
+        </dt>
+        <dd>Accelerate hwf to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_itn.html">sdg_itn()</a></code> 
+        </dt>
+        <dd>Accelerate itn to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_nurses.html">sdg_nurses()</a></code> 
+        </dt>
+        <dd>Accelerate nurses to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_pneumo.html">sdg_pneumo()</a></code> 
+        </dt>
+        <dd>Accelerate pneumo to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_tb.html">sdg_tb()</a></code> 
+        </dt>
+        <dd>Accelerate tb to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_uhc_sanitation.html">sdg_uhc_sanitation()</a></code> 
+        </dt>
+        <dd>Accelerate uhc_sanitation to SDG target</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sdg_uhc_tobacco.html">sdg_uhc_tobacco()</a></code> 
+        </dt>
+        <dd>Accelerate uhc_tobacco to SDG target</dd>
+      </dl></div><div class="section level2">
+      <h2 id="benchmarking-scenario">Benchmarking scenario<a class="anchor" aria-label="anchor" href="#benchmarking-scenario"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="uhc-benchmarking.html">benchmarking_anc4()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_art()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_beds()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_bp()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_doctors()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_nurses()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_hwf()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_dtp3()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_fh()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_fp()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_fpg()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_itn()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_pneumo()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_tb()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_uhc_sanitation()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_uhc_tobacco()</a></code> <code><a href="uhc-benchmarking.html">benchmarking_espar()</a></code> 
+        </dt>
+        <dd>Benchmarking scenarios</dd>
+      </dl></div><div class="section level2">
+      <h2 id="basic-scenarios">Basic scenarios<a class="anchor" aria-label="anchor" href="#basic-scenarios"></a></h2>
+      
+      <p class="section-desc"></p><p>The basic scenarios are the building blocks of all other scenarios. See <code><a href="../articles/basic-scenarios.html">vignette("basic-scenarios", package = "billionaiRe")</a></code> for more details.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="aroc-scenario">AROC scenario<a class="anchor" aria-label="anchor" href="#aroc-scenario"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="scenario_aroc.html">scenario_aroc()</a></code> 
+        </dt>
+        <dd>Scenario to use the average annual rate of change</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="linear-change-scenarios">Linear change scenarios<a class="anchor" aria-label="anchor" href="#linear-change-scenarios"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="linear_change.html">scenario_linear_change()</a></code> <code><a href="linear_change.html">scenario_linear_change_col()</a></code> 
+        </dt>
+        <dd>Scenario to add a linear  point change</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="reach-a-fixed-target">Reach a fixed target<a class="anchor" aria-label="anchor" href="#reach-a-fixed-target"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="fixed_target.html">scenario_fixed_target()</a></code> <code><a href="fixed_target.html">scenario_fixed_target_col()</a></code> <code><a href="fixed_target.html">scenario_halt_rise()</a></code> 
+        </dt>
+        <dd>Scenario to reach a fixed target</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="percent-from-baseline-scenarios">Percent from baseline scenarios<a class="anchor" aria-label="anchor" href="#percent-from-baseline-scenarios"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="scenario_percent_baseline.html">scenario_percent_baseline()</a></code> 
+        </dt>
+        <dd>Scenario to change by a fixed percentage from a baseline value by target year</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="basic-benchmarking-scenarios">Basic benchmarking scenarios<a class="anchor" aria-label="anchor" href="#basic-benchmarking-scenarios"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="scenario_top_n_iso3.html">scenario_top_n_iso3()</a></code> 
+        </dt>
+        <dd>Scenario to reach the top performing rate of change countries</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="compairing-scenarios">Compairing scenarios<a class="anchor" aria-label="anchor" href="#compairing-scenarios"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="scenario_bau.html">scenario_bau()</a></code> 
+        </dt>
+        <dd>Scenario establish a business as usual scenario</dd>
+      </dl><dl><dt>
+          
+          <code><a href="scenario_best_in_region.html">scenario_best_in_region()</a></code> 
+        </dt>
+        <dd>Scenario to add a linear percentage point aimed at regional values</dd>
+      </dl><dl><dt>
+          
+          <code><a href="scenario_best_of.html">scenario_best_of()</a></code> 
+        </dt>
+        <dd>Scenario to pick the best scenario out of a list of scenarios</dd>
+      </dl><dl><dt>
+          
+          <code><a href="scenario_quantile.html">scenario_quantile()</a></code> 
+        </dt>
+        <dd>Scenario to add a linear percentage point aimed at quantiles</dd>
+      </dl></div><div class="section level2">
+      <h2 id="target-scenarios">Target scenarios<a class="anchor" aria-label="anchor" href="#target-scenarios"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="accelerate_target_anc4.html">accelerate_target_anc4()</a></code> 
         </dt>
@@ -338,57 +913,34 @@
           <code><a href="accelerate_target_uhc_tobacco.html">accelerate_target_uhc_tobacco()</a></code> 
         </dt>
         <dd>Accelerate uhc_tobacco</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="scenarios-helper">Scenarios helper<a class="anchor" aria-label="anchor" href="#scenarios-helper"></a></h2>
+      
+      <p class="section-desc"></p><p>Helper functions used to generate scenarios. See <code><a href="../articles/scenarios.html">vignette("scenarios", package = "billionaiRe")</a></code> for more details</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="accelerate_tb.html">accelerate_tb()</a></code> 
+          <code><a href="add_scenario.html">add_scenario()</a></code> <code><a href="add_scenario.html">add_scenario_indicator()</a></code> 
         </dt>
-        <dd>Accelerate tb</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_transfats.html">accelerate_transfats()</a></code> 
-        </dt>
-        <dd>Accelerate transfats</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_uhc_sanitation.html">accelerate_uhc_sanitation()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_sanitation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_uhc_tobacco.html">accelerate_uhc_tobacco()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_tobacco</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_wasting.html">accelerate_wasting()</a></code> 
-        </dt>
-        <dd>Accelerate wasting</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_water.html">accelerate_water()</a></code> 
-        </dt>
-        <dd>Accelerate water</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_water_rural.html">accelerate_water_rural()</a></code> 
-        </dt>
-        <dd>Accelerate water_rural</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_water_urban.html">accelerate_water_urban()</a></code> 
-        </dt>
-        <dd>Accelerate water_urban</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_yellow_fever_campaign.html">accelerate_yellow_fever_campaign()</a></code> 
-        </dt>
-        <dd>Accelerate yellow_fever_campaign</dd>
-      </dl><dl><dt>
-          
-          <code><a href="accelerate_yellow_fever_routine.html">accelerate_yellow_fever_routine()</a></code> 
-        </dt>
-        <dd>Accelerate yellow_fever_routine</dd>
-      </dl><dl><dt>
+        <dd>Add scenario to data frame</dd>
+      </dl></div><div class="section level2">
+      <h2 id="populations-1">Populations<a class="anchor" aria-label="anchor" href="#populations-1"></a></h2>
+      
+      <p class="section-desc"></p><p>Using the right populations for aggregation between countries can be tricky. Those functions provide helper to add the appropriate populations in all cases.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="add_hep_populations.html">add_hep_populations()</a></code> 
         </dt>
@@ -400,515 +952,32 @@
         <dd>Add Population Figures for HPOP Billion</dd>
       </dl><dl><dt>
           
-          <code><a href="add_missing_xmart_rows.html">add_missing_xmart_rows()</a></code> 
-        </dt>
-        <dd>Add missing rows for xMart upload</dd>
-      </dl><dl><dt>
-          
           <code><a href="add_populations.html">add_populations()</a></code> 
         </dt>
         <dd>Add Population Figures for all billions</dd>
       </dl><dl><dt>
           
-          <code><a href="add_scenario.html">add_scenario()</a></code> 
-        </dt>
-        <dd>Add scenario to data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="add_scenario_indicator.html">add_scenario_indicator()</a></code> 
-        </dt>
-        <dd>Add scenario for a specific indicator</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_arg_exists.html">assert_arg_exists()</a></code> 
-        </dt>
-        <dd>Assert that argument exists</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_class.html">assert_class()</a></code> 
-        </dt>
-        <dd>Assert that an object is (or is not) of a given (range of) class(es)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_col_paired_with.html">assert_col_paired_with()</a></code> 
-        </dt>
-        <dd>Assert that paired columns have values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_col_types.html">assert_col_types()</a></code> 
-        </dt>
-        <dd>Assert that the column types of a data frame are as expected</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_columns.html">assert_columns()</a></code> 
-        </dt>
-        <dd>Assert that columns exist in a data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_data_calculation_hep.html">assert_data_calculation_hep()</a></code> 
-        </dt>
-        <dd>Assert presence of minimum HEP data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_data_calculation_hpop.html">assert_data_calculation_hpop()</a></code> 
-        </dt>
-        <dd>Assert presence of minimum HPOP data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_data_calculation_uhc.html">assert_data_calculation_uhc()</a></code> 
-        </dt>
-        <dd>Assert minimum data for UHC calculations</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_df.html">assert_df()</a></code> 
-        </dt>
-        <dd>Assert that <code>df</code> is a data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_distinct_rows.html">assert_distinct_rows()</a></code> 
-        </dt>
-        <dd>Assert unique rows by key columns</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_equals.html">assert_equals()</a></code> 
-        </dt>
-        <dd>Assert that x and y are (or are not) equal/identical</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_fileext.html">assert_fileext()</a></code> 
-        </dt>
-        <dd>Assert that a file's extension is one of a few options</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_has_names.html">assert_has_names()</a></code> 
-        </dt>
-        <dd>Assert that an object has names</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_homogeneous_col.html">assert_homogeneous_col()</a></code> 
-        </dt>
-        <dd>Assert that the data frame only has one value (is homogeneous) for a given column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_in_list_or_null.html">assert_in_list_or_null()</a></code> 
-        </dt>
-        <dd>Assert that x is in list or is NULL</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_ind_ids.html">assert_ind_ids()</a></code> 
-        </dt>
-        <dd>Assert that ind_ids is the correct named vector</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_ind_start_end_year.html">assert_ind_start_end_year()</a></code> 
-        </dt>
-        <dd>Asserts indicators have values at start and end year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_iso3_not_empty.html">assert_iso3_not_empty()</a></code> 
-        </dt>
-        <dd>Asserts that iso3 (and scenario if provided) is not only NAs</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_length.html">assert_length()</a></code> 
-        </dt>
-        <dd>Assert that a vector is of length n</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_list.html">assert_list()</a></code> 
-        </dt>
-        <dd>Assert that <code>df</code> is a list</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_min_length.html">assert_min_length()</a></code> 
-        </dt>
-        <dd>Assert that a vector has a minimum length n</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_numeric.html">assert_numeric()</a></code> 
-        </dt>
-        <dd>Assert that the given data frame columns are numeric</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_same_length.html">assert_same_length()</a></code> 
-        </dt>
-        <dd>Assert that two or more vectors are the same length</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_start_end_year.html">assert_start_end_year()</a></code> 
-        </dt>
-        <dd>Asserts start and end year are present</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_string.html">assert_string()</a></code> 
-        </dt>
-        <dd>Assert that <code>x</code> is a character vector of length n</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_strings.html">assert_strings()</a></code> 
-        </dt>
-        <dd>Assert that arguments passed in are length 1 character vectors</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_style_param.html">assert_style_param()</a></code> 
-        </dt>
-        <dd>Assert that <code>params</code> are valid formal argument to <code><a href="https://rdrr.io/pkg/openxlsx/man/createStyle.html" class="external-link">openxlsx::createStyle()</a></code></dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_timestamp.html">assert_timestamp()</a></code> 
-        </dt>
-        <dd>Assert that x is a valid timestamp string</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_type.html">assert_type()</a></code> 
-        </dt>
-        <dd>Assert that an object is (or is not) of a given (range of) type(s)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_unique_rows.html">assert_unique_rows()</a></code> 
-        </dt>
-        <dd>Assert unique rows of df</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_unique_vector.html">assert_unique_vector()</a></code> 
-        </dt>
-        <dd>Assert that the elements of the vector are unique</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_who_iso3.html">assert_who_iso3()</a></code> 
-        </dt>
-        <dd>Asserts that provided ISO is valid</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_x_in_y.html">assert_x_in_y()</a></code> 
-        </dt>
-        <dd>Assert that all elements in x are members of y</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assert_years.html">assert_years()</a></code> 
-        </dt>
-        <dd>Assert that end years are always later than start year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_anc4.html">benchmarking_anc4()</a></code> 
-        </dt>
-        <dd>Accelerate anc4 to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_art.html">benchmarking_art()</a></code> 
-        </dt>
-        <dd>Accelerate art to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_beds.html">benchmarking_beds()</a></code> 
-        </dt>
-        <dd>Accelerate beds to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_bp.html">benchmarking_bp()</a></code> 
-        </dt>
-        <dd>Accelerate bp to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_doctors.html">benchmarking_doctors()</a></code> 
-        </dt>
-        <dd>Accelerate doctors to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_dtp3.html">benchmarking_dtp3()</a></code> 
-        </dt>
-        <dd>Accelerate dtp3 to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_espar.html">benchmarking_espar()</a></code> 
-        </dt>
-        <dd>Accelerate espar to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_fh.html">benchmarking_fh()</a></code> 
-        </dt>
-        <dd>Accelerate fh to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_fp.html">benchmarking_fp()</a></code> 
-        </dt>
-        <dd>Accelerate fp to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_fpg.html">benchmarking_fpg()</a></code> 
-        </dt>
-        <dd>Accelerate fpg to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_hwf.html">benchmarking_hwf()</a></code> 
-        </dt>
-        <dd>Accelerate hwf to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_itn.html">benchmarking_itn()</a></code> 
-        </dt>
-        <dd>Accelerate itn to benchmarking scenarios</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_nurses.html">benchmarking_nurses()</a></code> 
-        </dt>
-        <dd>Accelerate nurses to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_pneumo.html">benchmarking_pneumo()</a></code> 
-        </dt>
-        <dd>Accelerate pneumo to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_tb.html">benchmarking_tb()</a></code> 
-        </dt>
-        <dd>Accelerate tb to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_uhc_sanitation.html">benchmarking_uhc_sanitation()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_sanitation to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="benchmarking_uhc_tobacco.html">benchmarking_uhc_tobacco()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_tobacco to benchmarking scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="billion_group_mean.html">billion_group_mean()</a></code> 
-        </dt>
-        <dd>Calculate average per Billion group</dd>
-      </dl><dl><dt>
-          
-          <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code> 
-        </dt>
-        <dd>Indicator codes for the Billions</dd>
-      </dl><dl><dt>
-          
-          <code><a href="billionaiRe_add_columns.html">billionaiRe_add_columns()</a></code> 
-        </dt>
-        <dd>Add columns to data frame if not already existing</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_aarc.html">calculate_aarc()</a></code> 
-        </dt>
-        <dd>Calcualte Average annual rate of change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_aroc.html">calculate_aroc()</a></code> 
-        </dt>
-        <dd>Calculate Average rate of change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_contribution_sums.html">calculate_contribution_sums()</a></code> 
-        </dt>
-        <dd>Calculate global/regional billions contributions</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_fixed_target.html">calculate_fixed_target()</a></code> 
-        </dt>
-        <dd>Calculate fixed target from a baseline year by a target year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hep_billion.html">calculate_hep_billion()</a></code> 
-        </dt>
-        <dd>Calculate HEP Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hep_components.html">calculate_hep_components()</a></code> 
-        </dt>
-        <dd>Calculate HEP component indicators</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hepi.html">calculate_hepi()</a></code> 
-        </dt>
-        <dd>Calculate HEPI</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hpop_billion.html">calculate_hpop_billion()</a></code> 
-        </dt>
-        <dd>Calculate HPOP Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hpop_billion_change.html">calculate_hpop_billion_change()</a></code> 
-        </dt>
-        <dd>Calculate the HPOP Billion using columns of change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hpop_billion_single.html">calculate_hpop_billion_single()</a></code> 
-        </dt>
-        <dd>Calculate the HPOP Billion for one column of change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hpop_change_vector.html">calculate_hpop_change_vector()</a></code> 
-        </dt>
-        <dd>Calculate the change for vectors, used in <code><a href="../reference/calculate_hpop_billion.html">calculate_hpop_billion()</a></code></dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_hpop_contributions.html">calculate_hpop_contributions()</a></code> 
-        </dt>
-        <dd>Calculate HPOP Indicator Contributions</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_percent_change_baseline.html">calculate_percent_change_baseline()</a></code> 
-        </dt>
-        <dd>Calculate percent change from baseline</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_uhc_billion.html">calculate_uhc_billion()</a></code> 
-        </dt>
-        <dd>Calculate UHC Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_uhc_billion_single.html">calculate_uhc_billion_single()</a></code> 
-        </dt>
-        <dd>Calculate UHC Billion for one set of columns</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calculate_uhc_contribution.html">calculate_uhc_contribution()</a></code> 
-        </dt>
-        <dd>Calculate UHC contribution</dd>
-      </dl><dl><dt>
-          
-          <code><a href="convert_ind_codes.html">convert_ind_codes()</a></code> 
-        </dt>
-        <dd>Convert indicator codes between types</dd>
-      </dl><dl><dt>
-          
-          <code><a href="country_shares.html">country_shares</a></code> 
-        </dt>
-        <dd>Country shares data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="exec_scenario.html">exec_scenario()</a></code> 
-        </dt>
-        <dd>Execute a scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="extrapolate_campaign_data.html">extrapolate_campaign_data()</a></code> 
-        </dt>
-        <dd>Extrapolate campaign data for the transform value, type, and source</dd>
-      </dl><dl><dt>
-          
-          <code><a href="extrapolate_campaign_vector.html">extrapolate_campaign_vector()</a></code> 
-        </dt>
-        <dd>Rolling sum and extrapolate campaigns data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fill_cols_scenario.html">fill_cols_scenario()</a></code> 
-        </dt>
-        <dd>Infills scenarios with <code>values</code> when <code>cols</code> are missing values.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="flat_extrapolation.html">flat_extrapolation()</a></code> 
-        </dt>
-        <dd>Flat extrapolation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="generate_hpop_populations.html">generate_hpop_populations()</a></code> 
-        </dt>
-        <dd>Generate HPOP Population Table</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_aarr.html">get_aarr()</a></code> 
-        </dt>
-        <dd>Get Average Annual Rate of Reduction</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_baseline_value.html">get_baseline_value()</a></code> 
-        </dt>
-        <dd>Get last value from baseline</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_baseline_year.html">get_baseline_year()</a></code> 
-        </dt>
-        <dd>Get last year from baseline</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_country_shares.html">get_country_shares()</a></code> 
-        </dt>
-        <dd>Get country shares data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_data_lake_name.html">get_data_lake_name()</a></code> 
-        </dt>
-        <dd>Return the name of the 3B data lake</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_ind_billion.html">get_ind_billion()</a></code> 
-        </dt>
-        <dd>Denotes which billion a given indicator belongs to</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_ind_metadata.html">get_ind_metadata()</a></code> 
-        </dt>
-        <dd>Get metadata for a Triple Billions indicator(s)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_last_value.html">get_last_value()</a></code> 
-        </dt>
-        <dd>Get last value for the filter</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_last_year_scenario.html">get_last_year_scenario()</a></code> 
-        </dt>
-        <dd>Get last value for the filter in default scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_latest_aarc.html">get_latest_aarc()</a></code> 
-        </dt>
-        <dd>Get the latest AARC for data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_percent_change_aarc.html">get_percent_change_aarc()</a></code> 
-        </dt>
-        <dd>Get AARC for data frame based on a percent change to baseline</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_sdi_ratio.html">get_sdi_ratio()</a></code> 
-        </dt>
-        <dd>Get SDI ratio data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_target_aarc.html">get_target_aarc()</a></code> 
-        </dt>
-        <dd>Get AARC for data frame based on a target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_valid_inds.html">get_valid_inds()</a></code> 
-        </dt>
-        <dd>Get correct set of indicators for WHDH operations</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_whdh_path.html">get_whdh_path()</a></code> 
-        </dt>
-        <dd>Generate file paths for the Triple Billions WHDH data lake</dd>
-      </dl><dl><dt>
-          
-          <code><a href="has_xmart_cols.html">has_xmart_cols()</a></code> 
-        </dt>
-        <dd>Check data frame for xMart4 columns</dd>
-      </dl><dl><dt>
-          
-          <code><a href="hep_df.html">hep_df</a></code> 
-        </dt>
-        <dd>HEP generated example data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="hpop_df.html">hpop_df</a></code> 
-        </dt>
-        <dd>HPOP generated example data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="impute_covid_shock.html">impute_covid_shock()</a></code> 
-        </dt>
-        <dd>Impute a COVID-19 shock</dd>
-      </dl><dl><dt>
-          
-          <code><a href="indicator_df.html">indicator_df</a></code> 
-        </dt>
-        <dd>Dataset of indicators used within the Billions calculations.</dd>
-      </dl><dl><dt>
+          <code><a href="pop_links.html">pop_links</a></code> 
+        </dt>
+        <dd>HPOP Billion population links</dd>
+      </dl></div><div class="section level2">
+      <h2 id="whdh-interface">WHDH interface<a class="anchor" aria-label="anchor" href="#whdh-interface"></a></h2>
+      
+      
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="load_billion_data.html">load_billion_data()</a></code> 
         </dt>
@@ -935,54 +1004,40 @@
         <dd>Load miscellaneous data</dd>
       </dl><dl><dt>
           
-          <code><a href="make_default_scenario.html">make_default_scenario()</a></code> 
+          <code><a href="upload_billion_data.html">upload_billion_data()</a></code> 
         </dt>
-        <dd>Make a default scenario</dd>
+        <dd>Upload Billions indicator data</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="data-wrangling">Data Wrangling<a class="anchor" aria-label="anchor" href="#data-wrangling"></a></h3>
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="add_missing_xmart_rows.html">add_missing_xmart_rows()</a></code> 
+        </dt>
+        <dd>Add missing rows for xMart upload</dd>
       </dl><dl><dt>
           
-          <code><a href="pathogen_calc.html">pathogen_calc()</a></code> 
+          <code><a href="get_data_lake_name.html">get_data_lake_name()</a></code> 
         </dt>
-        <dd>Calculate the vaccine coverage for a specific pathogen</dd>
+        <dd>Return the name of the 3B data lake</dd>
       </dl><dl><dt>
           
-          <code><a href="pop_links.html">pop_links</a></code> 
+          <code><a href="get_whdh_path.html">get_whdh_path()</a></code> 
         </dt>
-        <dd>HPOP Billion population links</dd>
+        <dd>Generate file paths for the Triple Billions WHDH data lake</dd>
       </dl><dl><dt>
           
-          <code><a href="prevent_calculations.html">prevent_calculations()</a></code> 
+          <code><a href="has_xmart_cols.html">has_xmart_cols()</a></code> 
         </dt>
-        <dd>Calculate prevent indicators</dd>
-      </dl><dl><dt>
-          
-          <code><a href="recycle_data.html">recycle_data()</a></code> 
-        </dt>
-        <dd>Recycle data between scenarios</dd>
-      </dl><dl><dt>
-          
-          <code><a href="recycle_data_scenario_single.html">recycle_data_scenario_single()</a></code> 
-        </dt>
-        <dd>Recycle data between scenarios for a single scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="reduce_type.html">reduce_type()</a></code> 
-        </dt>
-        <dd>Helper to reduce type to unique value</dd>
-      </dl><dl><dt>
-          
-          <code><a href="remove_recycled_data.html">remove_recycled_data()</a></code> 
-        </dt>
-        <dd>Remove recycled values from <code>df</code></dd>
-      </dl><dl><dt>
-          
-          <code><a href="remove_unwanted_scenarios.html">remove_unwanted_scenarios()</a></code> 
-        </dt>
-        <dd>Remove unwanted scenarios from df</dd>
-      </dl><dl><dt>
-          
-          <code><a href="reverse_ind.html">reverse_ind()</a></code> 
-        </dt>
-        <dd>Reverse indicator value</dd>
+        <dd>Check data frame for xMart4 columns</dd>
       </dl><dl><dt>
           
           <code><a href="save_gho_backup_to_whdh.html">save_gho_backup_to_whdh()</a></code> 
@@ -993,471 +1048,6 @@
           <code><a href="save_wrangled_output.html">save_wrangled_output()</a></code> 
         </dt>
         <dd>Save the output to disk after ensuring column specs</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_aroc.html">scenario_aroc()</a></code> 
-        </dt>
-        <dd>Scenario to use the average annual rate of change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_bau.html">scenario_bau()</a></code> 
-        </dt>
-        <dd>Scenario establish a business as usual scenario</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_best_in_region.html">scenario_best_in_region()</a></code> 
-        </dt>
-        <dd>Scenario to add a linear percentage point aimed at regional values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_best_of.html">scenario_best_of()</a></code> 
-        </dt>
-        <dd>Scenario to pick the best scenario out of a list of scenarios</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_covid_delayed_return.html">scenario_covid_delayed_return()</a></code> 
-        </dt>
-        <dd>Scenario COVID delayed return to normal</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_covid_never_return.html">scenario_covid_never_return()</a></code> 
-        </dt>
-        <dd>Scenario COVID never return to normal</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_covid_rapid_return.html">scenario_covid_rapid_return()</a></code> 
-        </dt>
-        <dd>Scenario COVID rapid return to normal</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_covid_sustained_disruption.html">scenario_covid_sustained_disruption()</a></code> 
-        </dt>
-        <dd>Scenario COVID sustained disruption to normal</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_dip_recover.html">scenario_dip_recover()</a></code> 
-        </dt>
-        <dd>Scenario dip and recover</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_dip_recover_iso3.html">scenario_dip_recover_iso3()</a></code> 
-        </dt>
-        <dd>Scenario dip and recover to specific iso3</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_dip_recover_iso3_ind.html">scenario_dip_recover_iso3_ind()</a></code> 
-        </dt>
-        <dd>Scenario dip and recover to specific <code>ind</code> and <code>iso3</code></dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_fixed_target.html">scenario_fixed_target()</a></code> 
-        </dt>
-        <dd>Scenario to reach a fixed target from a baseline year by a target year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_fixed_target_col.html">scenario_fixed_target_col()</a></code> 
-        </dt>
-        <dd>Scenario to reach a fixed targets stored in a column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_halt_rise.html">scenario_halt_rise()</a></code> 
-        </dt>
-        <dd>Calculate halt rise scenarios</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_linear_change.html">scenario_linear_change()</a></code> 
-        </dt>
-        <dd>Scenario to add a linear  point change</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_linear_change_col.html">scenario_linear_change_col()</a></code> 
-        </dt>
-        <dd>Scenario to add a linear percentage point change stored in a column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_percent_baseline.html">scenario_percent_baseline()</a></code> 
-        </dt>
-        <dd>Scenario to change by a fixed percentage from a baseline value by target year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_quantile.html">scenario_quantile()</a></code> 
-        </dt>
-        <dd>Scenario to add a linear percentage point aimed at quantiles</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_return_previous_trajectory.html">scenario_return_previous_trajectory()</a></code> 
-        </dt>
-        <dd>Scenario return to previpus trajectory</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario_top_n_iso3.html">scenario_top_n_iso3()</a></code> 
-        </dt>
-        <dd>Scenario to reach the top performing rate of change countries</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_adult_obese.html">sdg_adult_obese()</a></code> 
-        </dt>
-        <dd>Accelerate adult_obese to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_alcohol.html">sdg_alcohol()</a></code> 
-        </dt>
-        <dd>Accelerate alcohol to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_anc4.html">sdg_anc4()</a></code> 
-        </dt>
-        <dd>Accelerate anc4 to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_art.html">sdg_art()</a></code> 
-        </dt>
-        <dd>Accelerate art to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_beds.html">sdg_beds()</a></code> 
-        </dt>
-        <dd>Accelerate beds to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_bp.html">sdg_bp()</a></code> 
-        </dt>
-        <dd>Accelerate bp to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_child_obese.html">sdg_child_obese()</a></code> 
-        </dt>
-        <dd>Accelerate child_obese to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_child_viol.html">sdg_child_viol()</a></code> 
-        </dt>
-        <dd>Accelerate child_viol to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_devontrack.html">sdg_devontrack()</a></code> 
-        </dt>
-        <dd>Accelerate devontrack to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_doctors.html">sdg_doctors()</a></code> 
-        </dt>
-        <dd>Accelerate doctors to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_dtp3.html">sdg_dtp3()</a></code> 
-        </dt>
-        <dd>Accelerate dtp3 to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_fh.html">sdg_fh()</a></code> 
-        </dt>
-        <dd>Accelerate fh to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_fp.html">sdg_fp()</a></code> 
-        </dt>
-        <dd>Accelerate fp to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_fpg.html">sdg_fpg()</a></code> 
-        </dt>
-        <dd>Accelerate fpg to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_fuel.html">sdg_fuel()</a></code> 
-        </dt>
-        <dd>Accelerate fuel to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_hpop_sanitation.html">sdg_hpop_sanitation()</a></code> 
-        </dt>
-        <dd>Accelerate hpop_sanitation to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_hpop_sanitation_rural.html">sdg_hpop_sanitation_rural()</a></code> 
-        </dt>
-        <dd>Accelerate hpop_sanitation_rural to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_hpop_sanitation_urban.html">sdg_hpop_sanitation_urban()</a></code> 
-        </dt>
-        <dd>Accelerate hpop_sanitation_urban to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_hpop_tobacco.html">sdg_hpop_tobacco()</a></code> 
-        </dt>
-        <dd>Accelerate hpop_tobacco to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_hwf.html">sdg_hwf()</a></code> 
-        </dt>
-        <dd>Accelerate hwf to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_ipv.html">sdg_ipv()</a></code> 
-        </dt>
-        <dd>Accelerate ipv to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_itn.html">sdg_itn()</a></code> 
-        </dt>
-        <dd>Accelerate itn to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_nurses.html">sdg_nurses()</a></code> 
-        </dt>
-        <dd>Accelerate nurses to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_overweight.html">sdg_overweight()</a></code> 
-        </dt>
-        <dd>Accelerate overweight to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_pm25.html">sdg_pm25()</a></code> 
-        </dt>
-        <dd>Accelerate pm25 to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_pneumo.html">sdg_pneumo()</a></code> 
-        </dt>
-        <dd>Accelerate pneumo to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_road.html">sdg_road()</a></code> 
-        </dt>
-        <dd>Accelerate road to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_stunting.html">sdg_stunting()</a></code> 
-        </dt>
-        <dd>Accelerate stunting to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_suicide.html">sdg_suicide()</a></code> 
-        </dt>
-        <dd>Accelerate suicide to SDG targets</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_tb.html">sdg_tb()</a></code> 
-        </dt>
-        <dd>Accelerate tb to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_transfats.html">sdg_transfats()</a></code> 
-        </dt>
-        <dd>Accelerate transfats to SDG targets</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_uhc_sanitation.html">sdg_uhc_sanitation()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_sanitation to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_uhc_tobacco.html">sdg_uhc_tobacco()</a></code> 
-        </dt>
-        <dd>Accelerate uhc_tobacco to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_wasting.html">sdg_wasting()</a></code> 
-        </dt>
-        <dd>Accelerate wasting to SDG targets</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_water.html">sdg_water()</a></code> 
-        </dt>
-        <dd>Accelerate water to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_water_rural.html">sdg_water_rural()</a></code> 
-        </dt>
-        <dd>Accelerate water_rural to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdg_water_urban.html">sdg_water_urban()</a></code> 
-        </dt>
-        <dd>Accelerate water_urban to SDG target</dd>
-      </dl><dl><dt>
-          
-          <code><a href="sdi_ratio.html">sdi_ratio</a></code> 
-        </dt>
-        <dd>Socio-Demographic Index data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_alcohol.html">transform_alcohol()</a></code> 
-        </dt>
-        <dd>Transform alcohol data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_bp.html">transform_bp()</a></code> 
-        </dt>
-        <dd>Transform blood pressure data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_glucose.html">transform_glucose()</a></code> 
-        </dt>
-        <dd>Transform FPG data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_hep_data.html">transform_hep_data()</a></code> 
-        </dt>
-        <dd>Transform Raw Indicator Values for HEP Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_hosp_beds.html">transform_hosp_beds()</a></code> 
-        </dt>
-        <dd>Transform hospital beds data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_hpop_data.html">transform_hpop_data()</a></code> 
-        </dt>
-        <dd>Transform Raw Indicator Values for HPOP Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_hpop_single.html">transform_hpop_single()</a></code> 
-        </dt>
-        <dd>Perform a transformation on a single column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_hwf.html">transform_hwf()</a></code> 
-        </dt>
-        <dd>Transform health workforce data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_inversion.html">transform_inversion()</a></code> 
-        </dt>
-        <dd>Reverse indicator and cap</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_prev_cmpgn_data.html">transform_prev_cmpgn_data()</a></code> 
-        </dt>
-        <dd>Transform Prevent campaigns data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_prev_routine_data.html">transform_prev_routine_data()</a></code> 
-        </dt>
-        <dd>Transform Prevent routine data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_road_safety.html">transform_road_safety()</a></code> 
-        </dt>
-        <dd>Transform road safety data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_suicide_rate.html">transform_suicide_rate()</a></code> 
-        </dt>
-        <dd>Transform suicide rate data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_transfats.html">transform_transfats()</a></code> 
-        </dt>
-        <dd>Transform transfats policy data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_uhc_data.html">transform_uhc_data()</a></code> 
-        </dt>
-        <dd>Transform Raw Indicator Values for UHC Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_uhc_single.html">transform_uhc_single()</a></code> 
-        </dt>
-        <dd>Perform a transformation on a single column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="transform_uhc_tobacco.html">transform_uhc_tobacco()</a></code> 
-        </dt>
-        <dd>Transform UHC tobacco data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="trim_transforms.html">trim_transforms()</a></code> 
-        </dt>
-        <dd>Trim all transformed data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="trim_values.html">trim_values()</a></code> 
-        </dt>
-        <dd>Trim values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="trim_years.html">trim_years()</a></code> 
-        </dt>
-        <dd>Trim values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="uhc_df.html">uhc_df</a></code> 
-        </dt>
-        <dd>UHC example data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_alcohol.html">untransform_alcohol()</a></code> 
-        </dt>
-        <dd>Untransform alcohol data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_bp.html">untransform_bp()</a></code> 
-        </dt>
-        <dd>Untransform blood pressure data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_glucose.html">untransform_glucose()</a></code> 
-        </dt>
-        <dd>Unransform FPG data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_hosp_beds.html">untransform_hosp_beds()</a></code> 
-        </dt>
-        <dd>Untransform hospital beds data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_hpop_data.html">untransform_hpop_data()</a></code> 
-        </dt>
-        <dd>Untransform Indicator Values for HPOP Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_hpop_single.html">untransform_hpop_single()</a></code> 
-        </dt>
-        <dd>Perform a transformation on a single column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_hwf.html">untransform_hwf()</a></code> 
-        </dt>
-        <dd>Untransform health workforce data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_road_safety.html">untransform_road_safety()</a></code> 
-        </dt>
-        <dd>Untransform road safety data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_suicide_rate.html">untransform_suicide_rate()</a></code> 
-        </dt>
-        <dd>Untransform suicide rate date</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_transfats.html">untransform_transfats()</a></code> 
-        </dt>
-        <dd>Untransform transfats policy data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_uhc_data.html">untransform_uhc_data()</a></code> 
-        </dt>
-        <dd>Untransform Indicator Values for UHC Billion</dd>
-      </dl><dl><dt>
-          
-          <code><a href="untransform_uhc_single.html">untransform_uhc_single()</a></code> 
-        </dt>
-        <dd>Perform a transformation on a single column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="upload_billion_data.html">upload_billion_data()</a></code> 
-        </dt>
-        <dd>Upload Billions indicator data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="warning_col_missing_values.html">warning_col_missing_values()</a></code> 
-        </dt>
-        <dd>Warn user when any/all of the row are missing values for the the specified column</dd>
       </dl><dl><dt>
           
           <code><a href="wrangle_gho_data.html">wrangle_gho_data()</a></code> 
@@ -1483,8 +1073,76 @@
           <code><a href="xmart_cols.html">xmart_cols()</a></code> 
         </dt>
         <dd>Get names of xMart4 columns</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-recycling">Data recycling<a class="anchor" aria-label="anchor" href="#data-recycling"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to recycle the data and recombine it in different datasets into single timeseries that then can be used in the calculations. See <code><a href="../articles/data-recycling.html">vignette("data-recycling", package = "billionaiRe")</a></code> for more details</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="recycle_data.html">recycle_data()</a></code> <code><a href="recycle_data.html">recycle_data_scenario_single()</a></code> <code><a href="recycle_data.html">make_default_scenario()</a></code> 
+        </dt>
+        <dd>Recycle data between scenarios</dd>
+      </dl><dl><dt>
+          
+          <code><a href="remove_recycled_data.html">remove_recycled_data()</a></code> 
+        </dt>
+        <dd>Remove recycled values from <code>df</code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="metadata">Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to access the metadata.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="billion_ind_codes.html">billion_ind_codes()</a></code> 
+        </dt>
+        <dd>Indicator codes for the Billions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="convert_ind_codes.html">convert_ind_codes()</a></code> 
+        </dt>
+        <dd>Convert indicator codes between types</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_country_shares.html">get_country_shares()</a></code> 
+        </dt>
+        <dd>Get country shares data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_ind_billion.html">get_ind_billion()</a></code> 
+        </dt>
+        <dd>Denotes which billion a given indicator belongs to</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_ind_metadata.html">get_ind_metadata()</a></code> 
+        </dt>
+        <dd>Get metadata for a Triple Billions indicator(s)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_sdi_ratio.html">get_sdi_ratio()</a></code> 
+        </dt>
+        <dd>Get SDI ratio data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="indicator_df.html">indicator_df</a></code> 
+        </dt>
+        <dd>Dataset of indicators used within the Billions calculations.</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,14 +47,8 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/hep.html">HEP Billion Calculation</a>
-    <a class="dropdown-item" href="articles/hpop.html">HPOP Billion calculation</a>
-    <a class="dropdown-item" href="articles/scenarios.html">Scenarios</a>
-    <a class="dropdown-item" href="articles/uhc.html">UHC Billion calculation</a>
-  </div>
+<li class="nav-item">
+  <a class="nav-link" href="articles/index.html">Articles</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
@@ -93,7 +87,7 @@
 <p>You can install billionaiRe from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"gpw13/billionaiRe"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>You will need to have already installed the wppdistro package, which is stored in a private repo and only made public upon request. Please contact Vassily Trubetskoy (<a href="mailto:trubetskoyv@who.int" class="email">trubetskoyv@who.int</a>) or Alice Robson (<a href="mailto:robsona@who.int" class="email">robsona@who.int</a>) to request access.</p>
+<p>You will need to have already installed the wppdistro package, which is stored in a private repo and only made public upon request. Please contact <a href="mailto:caldwellst@who.int" class="email">caldwellst@who.int</a> to request access.</p>
 </div>
 </div>
 <div class="section level1">
@@ -128,17 +122,17 @@
 <span>  <span class="fu"><a href="reference/add_hpop_populations.html">add_hpop_populations</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/calculate_hpop_billion.html">calculate_hpop_billion</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">ind</span>, <span class="st">"hpop_healthier"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 x 9</span></span>
-<span><span class="co">#&gt;   iso3   year ind                  value transform_value population contribution</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 AFG    2023 hpop_healthier_plus     NA              NA   41681232    25608812.</span></span>
-<span><span class="co">#&gt; 2 AFG    2023 hpop_healthier_minus    NA              NA   41681232   -35897603.</span></span>
-<span><span class="co">#&gt; 3 AFG    2023 hpop_healthier          NA              NA   41681232   -10288791.</span></span>
-<span><span class="co">#&gt; 4 AFG    2023 hpop_healthier_plus~    NA              NA   41681232    30125312.</span></span>
-<span><span class="co">#&gt; 5 AFG    2023 hpop_healthier_minu~    NA              NA   41681232   -69269569.</span></span>
-<span><span class="co">#&gt; 6 AFG    2023 hpop_healthier_dbl_~    NA              NA   41681232   -39144257.</span></span>
-<span><span class="co">#&gt; # ... with 2 more variables: contribution_percent &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   contribution_percent_total_pop &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 6 × 10</span></span>
+<span><span class="co">#&gt;   iso3   year ind            value type  trans…¹ popul…² contr…³ contr…⁴ contr…⁵</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 AFG    2023 hpop_healthie…    NA &lt;NA&gt;       NA  4.45e7  2.72e7    61.2      NA</span></span>
+<span><span class="co">#&gt; 2 AFG    2023 hpop_healthie…    NA &lt;NA&gt;       NA  4.45e7 -3.84e7   -86.3      NA</span></span>
+<span><span class="co">#&gt; 3 AFG    2023 hpop_healthier    NA &lt;NA&gt;       NA  4.45e7 -1.12e7   -25.1      NA</span></span>
+<span><span class="co">#&gt; 4 AFG    2023 hpop_healthie…    NA &lt;NA&gt;       NA  4.45e7  3.20e7    71.9      NA</span></span>
+<span><span class="co">#&gt; 5 AFG    2023 hpop_healthie…    NA &lt;NA&gt;       NA  4.45e7 -7.46e7  -168.       NA</span></span>
+<span><span class="co">#&gt; 6 AFG    2023 hpop_healthie…    NA &lt;NA&gt;       NA  4.45e7 -4.26e7   -95.7      NA</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​transform_value, ²​population,</span></span>
+<span><span class="co">#&gt; #   ³​contribution, ⁴​contribution_percent, ⁵​contribution_percent_total_pop</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="uhc-billion-calculation">UHC Billion calculation<a class="anchor" aria-label="anchor" href="#uhc-billion-calculation"></a>
@@ -157,18 +151,18 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">uhc_df</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="reference/transform_uhc_data.html">transform_uhc_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/transform_uhc_data.html">transform_uhc_data</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/calculate_uhc_billion.html">calculate_uhc_billion</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="reference/calculate_uhc_contribution.html">calculate_uhc_contribution</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/calculate_uhc_contribution.html">calculate_uhc_contribution</a></span><span class="op">(</span>end_year <span class="op">=</span> <span class="fl">2023</span>, pop_year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ind</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"uhc_sm"</span>, <span class="st">"asc"</span>, <span class="st">"fh"</span><span class="op">)</span>,</span>
 <span>                <span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 x 9</span></span>
-<span><span class="co">#&gt;   iso3   year ind    value transform_value type      source         contribution</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;           &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                 &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 AFG    2023 fh      25.4            25.4 &lt;NA&gt;      &lt;NA&gt;               2963536.</span></span>
-<span><span class="co">#&gt; 2 AFG    2023 asc     45.6            45.6 projected WHO DDI calcu~     1607136.</span></span>
-<span><span class="co">#&gt; 3 AFG    2023 uhc_sm  34.0            34.0 projected WHO DDI calcu~      -38238.</span></span>
-<span><span class="co">#&gt; # ... with 1 more variable: contribution_percent &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 3 × 9</span></span>
+<span><span class="co">#&gt;   iso3   year ind    value type      transform_value source      contr…¹ contr…²</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 AFG    2023 fh      25.4 Projected            74.6 &lt;NA&gt;        -3.00e6  -7.11 </span></span>
+<span><span class="co">#&gt; 2 AFG    2023 asc     45.3 projected            45.3 WHO DDI ca…  1.72e6   4.06 </span></span>
+<span><span class="co">#&gt; 3 AFG    2023 uhc_sm  33.8 projected            33.8 WHO DDI ca…  4.41e4   0.104</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​contribution, ²​contribution_percent</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="hep-billion-calculation">HEP Billion calculation<a class="anchor" aria-label="anchor" href="#hep-billion-calculation"></a>
@@ -195,14 +189,82 @@
 <span>                           <span class="st">"detect_respond"</span>,</span>
 <span>                           <span class="st">"hep_idx"</span><span class="op">)</span>,</span>
 <span>                <span class="va">year</span> <span class="op">==</span> <span class="fl">2023</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 x 10</span></span>
-<span><span class="co">#&gt;   iso3   year ind            value type       source transform_value level contribution</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 AFG    2023 espar           51.2 Projection &lt;NA&gt;              51.2     3     4680802.</span></span>
-<span><span class="co">#&gt; 2 AFG    2023 detect_respond  91   Projection &lt;NA&gt;              91       5     2084062.</span></span>
-<span><span class="co">#&gt; 3 AFG    2023 prevent         NA   Projection WHO D~           100       5           0 </span></span>
-<span><span class="co">#&gt; 4 AFG    2023 hep_idx         NA   Projection WHO D~            80.7     4     6764864.</span></span>
-<span><span class="co">#&gt; # ... with 1 more variable: contribution_percent &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 4 × 12</span></span>
+<span><span class="co">#&gt;   iso3   year ind       value type  source trans…¹ use_d…² use_c…³ level contr…⁴</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;lgl&gt;   &lt;lgl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 AFG    2023 espar      51.2 Proj… &lt;NA&gt;      51.2 NA      NA          3  5.00e6</span></span>
+<span><span class="co">#&gt; 2 AFG    2023 detect_r…  91   Proj… &lt;NA&gt;      91   NA      NA          5  2.23e6</span></span>
+<span><span class="co">#&gt; 3 AFG    2023 prevent    NA   proj… Unite…   100   NA      NA          5  0     </span></span>
+<span><span class="co">#&gt; 4 AFG    2023 hep_idx    NA   proj… WHO D…    80.7 NA      NA          4  7.22e6</span></span>
+<span><span class="co">#&gt; # … with 1 more variable: contribution_percent &lt;dbl&gt;, and abbreviated variable</span></span>
+<span><span class="co">#&gt; #   names ¹​transform_value, ²​use_dash, ³​use_calc, ⁴​contribution</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="scenarios">Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
+</h2>
+<p>In the Triple Billions and the billionaiRe package context, scenarios are understood as alternative, plausible, description of how the future may develop based on a set of defined assumptions.</p>
+<p>Scenarios must:</p>
+<ol style="list-style-type: decimal">
+<li>Be <a href="https://r4ds.had.co.nz/tidy-data.html" class="external-link">tidy</a>: each row is a unique combination of iso3 country-code, year, indicator, and scenario (if relevant).</li>
+<li>Contain <strong>all</strong> and <strong>only</strong> the data that is strictly needed for calculations with billionaiRe</li>
+</ol>
+<p>Four main sets of scenarios can be identified, from the most basic to the more complex:</p>
+<ol style="list-style-type: decimal">
+<li>[Basic scenarios]: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (<code><a href="reference/fixed_target.html">scenario_fixed_target()</a></code>), follow a specific rate of change (<code><a href="reference/scenario_aroc.html">scenario_aroc()</a></code>), etc. See <a href="./vignettes/basic-scenarios.html">Basic scenario</a> for more details.</li>
+<li>[Target scenarios]: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called <code>sdg</code> scenarios)).</li>
+<li>
+</li>
+<li>
+</li>
+</ol>
+<p>If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see <a href="./vignettes/data-recycling.html">Data recycling</a>).</p>
+<p>See <a href="./vignettes/basic-scenarios.html">Scenarios vignette</a> for more details.</p>
+<div class="section level3">
+<h3 id="quick-start-on-billionaire-scenarios">Quick start on billionaiRe scenarios<a class="anchor" aria-label="anchor" href="#quick-start-on-billionaire-scenarios"></a>
+</h3>
+<p><code><a href="reference/add_scenario.html">add_scenario()</a></code> is the entry point function to all other scenario functions. It essentially allow to pass a typical billionaiRe data frame (<code>df</code>) and apply the selected scenario function.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.who.int/data/triple-billion-dashboard" class="external-link">billionaiRe</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>    value <span class="op">=</span> <span class="fl">60</span><span class="op">:</span><span class="fl">80</span>,</span>
+<span>    year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2030</span>,</span>
+<span>    ind <span class="op">=</span> <span class="st">"pm25"</span>,</span>
+<span>    type <span class="op">=</span> <span class="st">"reported"</span>,</span>
+<span>    iso3 <span class="op">=</span> <span class="st">"AFG"</span>,</span>
+<span>    scenario <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>    source <span class="op">=</span> <span class="cn">NA_character_</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2021</span> <span class="op">~</span> <span class="st">"historical"</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">scenario</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    type <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2021</span> <span class="op">~</span> <span class="st">"projected"</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">type</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The choice of scenario function to apply to the <code>df</code> is done through the <code>scenario_function</code> parameter. Additional parameters can be passed through the ellipsis (<code>...</code>).</p>
+<p>For instance, to halt the rise to the 2010 value by <code>end_year</code> (2025 by default), we can apply a simple function to <code>df</code>. This will apply the <code>halt_rise</code> function to all unique combination of country and indicator. In this case, there is just one combination:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/add_scenario.html">add_scenario</a></span><span class="op">(</span></span>
+<span>    scenario_function <span class="op">=</span> <span class="st">"halt_rise"</span>,</span>
+<span>    baseline_year <span class="op">=</span> <span class="fl">2010</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>To apply the SDG targets, we use the <code>sdg</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/add_scenario.html">add_scenario</a></span><span class="op">(</span></span>
+<span>    scenario_function <span class="op">=</span> <span class="st">"sdg"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>By default, the scenarios start from the last reported or estimated value in the default scenario. This can be bypassed by setting <code>start_scenario_last_default</code> to FALSE. The scenario will then start at <code>start_year</code> (2018 by default):</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/add_scenario.html">add_scenario</a></span><span class="op">(</span></span>
+<span>    scenario_function <span class="op">=</span> <span class="st">"sdg"</span>,</span>
+<span>    start_scenario_last_default <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 </div>
 
@@ -243,8 +305,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/gpw13/billionaiRe/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/gpw13/billionaiRe/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/gpw13/billionaiRe" class="external-link"><img src="https://codecov.io/gh/gpw13/billionaiRe/branch/main/graph/badge.svg?token=IT9RI3OOKV" alt="codecov"></a></li>
+<li><a href="https://github.com/gpw13/billionaiRe/actions" class="external-link"><img src="https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
 

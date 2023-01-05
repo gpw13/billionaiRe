@@ -12,7 +12,7 @@ Billions."><meta property="og:image" content="/logo.svg"><!-- mathjax --><script
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,14 +23,8 @@ Billions."><meta property="og:image" content="/logo.svg"><!-- mathjax --><script
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
-    <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
-    <a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a>
-    <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
-  </div>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/index.html">Articles</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -68,7 +62,7 @@ Billions.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 111 rows and 20 variables:</p><dl><dt>dashboard_id</dt>
+    <p>A data frame with 111 rows and 22 variables:</p><dl><dt>dashboard_id</dt>
 <dd><p>Dashboard ID used within the GPW13 xMart4 instance</p></dd>
 
 <dt>ind</dt>
@@ -129,8 +123,24 @@ and "unproj_data" if projected by DDI</p></dd>
 <dt>data_source</dt>
 <dd><p>Name of the source of the data for a specific indicator.</p></dd>
 
+<dt>acceleration_scenario</dt>
+<dd><p>Definition of the acceleration scenario.</p></dd>
+
+<dt>sdg_scenario</dt>
+<dd><p>Definition of the acceleration scenario.</p></dd>
+
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Functions to access metadata
+<code><a href="billion_ind_codes.html">billion_ind_codes</a>()</code>,
+<code><a href="convert_ind_codes.html">convert_ind_codes</a>()</code>,
+<code><a href="get_country_shares.html">get_country_shares</a>()</code>,
+<code><a href="get_ind_billion.html">get_ind_billion</a>()</code>,
+<code><a href="get_ind_metadata.html">get_ind_metadata</a>()</code>,
+<code><a href="get_sdi_ratio.html">get_sdi_ratio</a>()</code></p></div>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

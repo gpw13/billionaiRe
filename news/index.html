@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,14 +21,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
-    <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
-    <a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a>
-    <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
-  </div>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/index.html">Articles</a>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -53,6 +47,12 @@
       <small>Source: <a href="https://github.com/gpw13/billionaiRe/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.1" id="billionaire-081">billionaiRe 0.8.1<a class="anchor" aria-label="anchor" href="#billionaire-081"></a></h2>
+<ul><li>Update all documentation</li>
+<li>Add <code>basic-scenarios</code>, <code>acceleration-scenarios</code>, <code>sdg-scenarios</code>, and <code>data-recycling</code> vignettes.</li>
+<li>Organize documentation by topics.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="billionaire-080">billionaiRe 0.8.0<a class="anchor" aria-label="anchor" href="#billionaire-080"></a></h2>
 <ul><li>Pass to version 0.8.0</li>
@@ -89,9 +89,9 @@
 <ul><li>Adds support of <code>covid_shock</code>
 </li>
 <li>
-<code><a href="../reference/make_default_scenario.html">make_default_scenario()</a></code> now doesn’t require to have <code>default_scenario</code> in <code>scenario</code> column.</li>
+<code><a href="../reference/recycle_data.html">make_default_scenario()</a></code> now doesn’t require to have <code>default_scenario</code> in <code>scenario</code> column.</li>
 <li>Updated save_wrangled_output to explicitly enforce expectations about data frames before writing to disk.</li>
-<li>New assertions: <code><a href="../reference/assert_col_types.html">assert_col_types()</a></code>, <code><a href="../reference/assert_has_names.html">assert_has_names()</a></code>, <code><a href="../reference/assert_distinct_rows.html">assert_distinct_rows()</a></code>, and <code><a href="../reference/assert_col_paired_with.html">assert_col_paired_with()</a></code>.</li>
+<li>New assertions: <code>assert_col_types()</code>, <code>assert_has_names()</code>, <code>assert_distinct_rows()</code>, and <code>assert_col_paired_with()</code>.</li>
 <li>Updated <code>wrangle_data.R</code> functions to explicitly cast columns to expected types.</li>
 </ul></div>
     <div class="section level2">
@@ -216,7 +216,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="billionaire-021">billionaiRe 0.2.1<a class="anchor" aria-label="anchor" href="#billionaire-021"></a></h2>
-<ul><li>Changed <code><a href="../reference/transform_glucose.html">transform_glucose()</a></code> to have a domain of 5.1 to 7.4, previously one of 5.1 to 7.4.</li>
+<ul><li>Changed <code>transform_glucose()</code> to have a domain of 5.1 to 7.4, previously one of 5.1 to 7.4.</li>
 <li>Fixed pop_links to ensure that IPV double counting correction was correct</li>
 </ul></div>
     <div class="section level2">

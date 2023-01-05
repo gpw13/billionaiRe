@@ -14,7 +14,7 @@ the last available value will be imputed."><meta property="og:image" content="/l
     
     <a class="navbar-brand me-2" href="../index.html">billionaiRe</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,14 +25,8 @@ the last available value will be imputed."><meta property="og:image" content="/l
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/hep.html">HEP Billion Calculation</a>
-    <a class="dropdown-item" href="../articles/hpop.html">HPOP Billion calculation</a>
-    <a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a>
-    <a class="dropdown-item" href="../articles/uhc.html">UHC Billion calculation</a>
-  </div>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/index.html">Articles</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -60,7 +54,7 @@ the last available value will be imputed."><meta property="og:image" content="/l
 
     <div class="ref-description section level2">
     <p><code>scenario_bau</code> filters for values between start_year and end_year for <code>bau_scenario</code> and
-returns values in value. If values are missing for years between <code>start_year</code> and <code>end_year</code>,
+returns values in <code>value.</code> If values are missing for years between <code>start_year</code> and <code>end_year</code>,
 the last available value will be imputed.</p>
     </div>
 
@@ -187,20 +181,16 @@ Default is <code>historical</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>Dataframe with scenario rows</p>
-    </div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The returned scenario is a portion of the straight line drawn from the
-<code>baseline_year</code> value to the <code>target_year</code>. Only values for years between
-<code>start_year</code> and <code>end_year</code> will be returned.</p>
-<p>If <code>value_col</code> has values that are higher or lower than the scenario values, then
-only <code>value_col</code> will be kept, depending on <code>small_is_best</code>. For instance,
-if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
-75 will be kept.</p>
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Basic scenarios
+<code><a href="scenario_aroc.html">scenario_aroc</a>()</code>,
+<code><a href="scenario_best_of.html">scenario_best_of</a>()</code>,
+<code><a href="linear_change.html">scenario_linear_change</a>()</code>,
+<code><a href="scenario_percent_baseline.html">scenario_percent_baseline</a>()</code></p>
+<p>Comparing scenarios
+<code><a href="scenario_best_in_region.html">scenario_best_in_region</a>()</code>,
+<code><a href="scenario_best_of.html">scenario_best_of</a>()</code>,
+<code><a href="scenario_quantile.html">scenario_quantile</a>()</code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
