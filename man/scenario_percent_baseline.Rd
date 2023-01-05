@@ -106,3 +106,12 @@ The returned scenario is a portion of the straight line drawn from the
 \code{baseline_year} value to the \code{target_year}. Only values for years between
 \code{start_year} and \code{end_year} will be returned.
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_aroc}()},
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_linear_change}()}
+}
+\concept{basic_scenarios}
+\concept{percent_baseline}

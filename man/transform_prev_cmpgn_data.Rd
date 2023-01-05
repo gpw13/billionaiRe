@@ -51,3 +51,18 @@ a specific year, the default being 2023 If latest year values are provided
 for a specific pathogen, those years are used for calculating the rolling
 average out to, otherwise, the latest year with observed values is used.
 }
+\seealso{
+HEP functions
+\code{\link{add_hep_populations}()},
+\code{\link{calculate_hep_billion}()},
+\code{\link{calculate_hep_components}()},
+\code{\link{hep_df}},
+\code{\link{transform_hep_data}()},
+\code{\link{transform_prev_routine_data}()}
+
+Other transform: 
+\code{\link{transform_prev_routine_data}()}
+}
+\concept{hep}
+\concept{transform}
+\keyword{internal}

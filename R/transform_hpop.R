@@ -27,6 +27,8 @@
 #'
 #' @return Data frame in long format.
 #'
+#' @family hpop
+#'
 #' @export
 transform_hpop_data <- function(df,
                                 value_col = "value",
@@ -85,6 +87,11 @@ transform_hpop_data <- function(df,
 #' @param transform_col Column to put transformed values into
 #'
 #' @return A single column data frame of transformed values.
+#'
+#' @family hpop
+#'
+#' @keywords internal
+
 transform_hpop_single <- function(df,
                                   value_col,
                                   transform_col,
@@ -128,6 +135,8 @@ transform_hpop_single <- function(df,
 #'
 #' @return Data frame in long format.
 #'
+#' @family hpop
+#'
 #' @export
 untransform_hpop_data <- function(df,
                                   transform_value_col = "transform_value_col",
@@ -153,7 +162,12 @@ untransform_hpop_data <- function(df,
 #'
 #' @inheritParams untransform_hpop_data
 #'
-#' @return A single column data frame of transformed values.
+#' @return A single column data frame of transformed values.$
+#'
+#' @family hpop
+#'
+#' @keywords internal
+#'
 untransform_hpop_single <- function(df,
                                     transform_value_col,
                                     value_col,

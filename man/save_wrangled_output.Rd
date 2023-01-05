@@ -46,3 +46,17 @@ the correct columns as required by the Triple Billions xMart tables.
 The function returns a data frame (like \code{readr::write_csv()}) in order to allow
 it to work with pipes better.
 }
+\seealso{
+Wrangle data functions
+\code{\link{add_missing_xmart_rows}()},
+\code{\link{get_data_lake_name}()},
+\code{\link{get_whdh_path}()},
+\code{\link{has_xmart_cols}()},
+\code{\link{save_gho_backup_to_whdh}()},
+\code{\link{wrangle_gho_data}()},
+\code{\link{wrangle_gho_rural_urban_data}()},
+\code{\link{wrangle_unsd_data}()},
+\code{\link{xmart_col_types}()},
+\code{\link{xmart_cols}()}
+}
+\concept{whdh}

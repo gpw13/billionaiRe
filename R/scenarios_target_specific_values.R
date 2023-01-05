@@ -13,9 +13,13 @@
 #' @param quantile_year year at which the the quantiles ARC should be calculated.
 #' @param baseline_quantile_year baseline year at which the quantiles ARC should
 #' be calculated.
-#' @inherit scenario_fixed_target
+#' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#'
+#' @family comparing_scenario
+#'
+#' @export
 #'
 scenario_quantile <- function(df,
                               n = 5,
@@ -105,9 +109,13 @@ scenario_quantile <- function(df,
 #' Calculates the regional target, then wraps around
 #' `scenario_linear_change_col` to aim at the target.
 #'
-#' @inherit scenario_fixed_target
+#' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#'
+#' @family comparing_scenario
+#'
+#' @export
 
 scenario_best_in_region <- function(df,
                                     value_col = "value",

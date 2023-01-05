@@ -4,7 +4,13 @@
 #'
 #' @param pathogen Indicator IDs of the pathogens
 #' @param pathogen_year Latest year of data to use for flat extrapolation (extrapolating after that year)
+#'
 #' @inheritParams calculate_hep_components
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 extrapolate_campaign_data <- function(pathogen,
                                       pathogen_year,
                                       df,
@@ -49,6 +55,11 @@ extrapolate_campaign_data <- function(pathogen,
 #'
 #' @param x Vector of campaigns data, either numerator or denominator
 #' @param n Years to take rolling average for
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 extrapolate_campaign_vector <- function(x, n) {
   not_na <- which(!is.na(x))
   if (length(not_na) > 0) {

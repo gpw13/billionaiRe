@@ -50,3 +50,4 @@ billion calculations as \code{hep_idx} will not include them at all.
 Warnings are also returned if some country (and scenario if provided) have
 only NAs.
 }
+\keyword{internal}

@@ -10,6 +10,8 @@
 #'     is used for each column. Can also be a vector, but lists allow different types
 #'     of fill, e.g. `fill = list(NA_character_, NA_real_)`.
 #'
+#' @keywords internal
+#'
 #' @return A data frame.
 billionaiRe_add_columns <- function(df, cols, fill) {
   if (length(fill) == 1 & length(cols) != 1) {

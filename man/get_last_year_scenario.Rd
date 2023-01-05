@@ -28,16 +28,26 @@ calculating contributions on data in long format rather than wide format.}
 \item{type_filter}{(character vector) vector of types to be filtered for.}
 }
 \description{
-Accelerate alcohol by picking the best results between business as usual,
-halt downwards trend from 2018, and -10 percent from 2010.
+Get last value for the filter in default scenario
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+\seealso{
+General scenario functions
+\code{\link{add_scenario}()},
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_value}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_percent_change_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{remove_unwanted_scenarios}()},
+\code{\link{trim_values}()},
+\code{\link{trim_years}()}
 }
-
-Then picks the best result between the three scenarios.
-}
+\concept{scenarios}
+\keyword{internal}

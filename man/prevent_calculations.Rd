@@ -29,3 +29,4 @@ including the overall prevent indicator. It is used within \code{calculate_hep_c
 and primarily relies on using \code{purrr::pmap_dfr()} to apply the \code{pathogen_calc()}
 function for each prevent component and overall score.
 }
+\keyword{internal}

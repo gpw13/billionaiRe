@@ -26,4 +26,14 @@ See the UHC vignette for its example use:
 
 \href{../doc/uhc.html}{\code{vignette("uhc", package = "billionaiRe")}}
 }
+\seealso{
+Other uhc: 
+\code{\link{calculate_uhc_billion}()},
+\code{\link{calculate_uhc_contribution}()},
+\code{\link{transform_uhc_data}()},
+\code{\link{transform_uhc_single}()},
+\code{\link{untransform_uhc_data}()},
+\code{\link{untransform_uhc_single}()}
+}
+\concept{uhc}
 \keyword{datasets}

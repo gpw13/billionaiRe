@@ -40,3 +40,21 @@ ties in with the rest, see the vignette:
 
 \href{../doc/hpop.html}{\code{vignette("hpop", package = "billionaiRe")}}
 }
+\seealso{
+Add populations
+\code{\link{add_hep_populations}()},
+\code{\link{add_populations}()},
+\code{\link{pop_links}}
+
+Other hpop: 
+\code{\link{calculate_hpop_billion_change}()},
+\code{\link{calculate_hpop_billion}()},
+\code{\link{calculate_hpop_contributions}()},
+\code{\link{hpop_df}},
+\code{\link{transform_hpop_data}()},
+\code{\link{transform_hpop_single}()},
+\code{\link{untransform_hpop_data}()},
+\code{\link{untransform_hpop_single}()}
+}
+\concept{hpop}
+\concept{populations}

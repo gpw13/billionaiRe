@@ -43,14 +43,34 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
-Accelerate hpop_tobacco by running a custom version of
+Put hpop_tobacco on SDG trajectory by running a custom version of
 scenario_percent_baseline. The custom \code{scenario_percent_baseline} is
 taking similar parameters to \code{scenario_percent_baseline}'s
 \code{percent_change} = -30, \code{baseline_year} = 2010, but values are added to the
 \code{start_year} value, rather than the \code{baseline_year} values.
 }
+\seealso{
+HPOP SDG scenarios
+\code{\link{sdg_adult_obese}()},
+\code{\link{sdg_alcohol}()},
+\code{\link{sdg_child_obese}()},
+\code{\link{sdg_child_viol}()},
+\code{\link{sdg_devontrack}()},
+\code{\link{sdg_fuel}()},
+\code{\link{sdg_hpop_sanitation_rural}()},
+\code{\link{sdg_hpop_sanitation_urban}()},
+\code{\link{sdg_hpop_sanitation}()},
+\code{\link{sdg_ipv}()},
+\code{\link{sdg_overweight}()},
+\code{\link{sdg_pm25}()},
+\code{\link{sdg_road}()},
+\code{\link{sdg_stunting}()},
+\code{\link{sdg_suicide}()},
+\code{\link{sdg_transfats}()},
+\code{\link{sdg_wasting}()},
+\code{\link{sdg_water_rural}()},
+\code{\link{sdg_water_urban}()},
+\code{\link{sdg_water}()}
+}
+\concept{hpop_sdg}

@@ -51,3 +51,4 @@ and multiplies the surviving infants denominator by that number.
 This function is currently called from the \code{prevent_calculations()} function
 that sits within \code{calculate_hep_components()}.
 }
+\keyword{internal}

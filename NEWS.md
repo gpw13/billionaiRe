@@ -1,3 +1,8 @@
+# billionaiRe 0.8.1
+* Update all documentation
+* Add `basic-scenarios`, `acceleration-scenarios`, `sdg-scenarios`, and `data-recycling` vignettes.
+* Organize documentation by topics.
+
 # billionaiRe 0.8.0
 * Pass to version 0.8.0
 * Modify all existing scenarios handling to implement modification requested by DFI:

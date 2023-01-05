@@ -86,9 +86,6 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{default_scenario}{name of the default scenario to be used.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_quantile} aims to reach the mean quantile average annual change
 (ARC) in which a country is at \code{quantile_year}. The target is based on the
@@ -100,3 +97,10 @@ quantile if above the mean.
 Calculates the quantile target, then wraps around
 \code{scenario_linear_change_col} to aim at the target.
 }
+\seealso{
+Comparing scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_in_region}()},
+\code{\link{scenario_best_of}()}
+}
+\concept{comparing_scenario}

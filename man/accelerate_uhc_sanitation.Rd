@@ -31,22 +31,27 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate uhc_sanitation by encouraging the country to reach the mean (or upper
 threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
 and upper limits of 0 and 99, respectively, are also imposed on the results.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+\seealso{
+UHC acceleration scenarios
+\code{\link{accelerate_anc4}()},
+\code{\link{accelerate_art}()},
+\code{\link{accelerate_beds}()},
+\code{\link{accelerate_bp}()},
+\code{\link{accelerate_doctors}()},
+\code{\link{accelerate_dtp3}()},
+\code{\link{accelerate_fh}()},
+\code{\link{accelerate_fpg}()},
+\code{\link{accelerate_fp}()},
+\code{\link{accelerate_hwf}()},
+\code{\link{accelerate_itn}()},
+\code{\link{accelerate_nurses}()},
+\code{\link{accelerate_pneumo}()},
+\code{\link{accelerate_tb}()},
+\code{\link{accelerate_uhc_tobacco}()}
 }
-
-Then picks the best result between the three scenarios.
-}
+\concept{uhc_acceleration}

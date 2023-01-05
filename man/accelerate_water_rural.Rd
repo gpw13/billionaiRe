@@ -15,9 +15,27 @@ country, year, and indicator.}
 \description{
 Accelerate water_rural by aiming at best value in quintile.
 }
-\details{
-Runs:
-\itemize{
-\item \verb{scenario_quantile(df, n = 5, quantile_year = 2017, baseline_quantile_year = 2018, upper_limit = 99, lower_limit = 0 small_is_best = FALSE,...)}
+\seealso{
+HPOP acceleration scenarios
+\code{\link{accelerate_adult_obese}()},
+\code{\link{accelerate_alcohol}()},
+\code{\link{accelerate_child_obese}()},
+\code{\link{accelerate_child_viol}()},
+\code{\link{accelerate_devontrack}()},
+\code{\link{accelerate_fuel}()},
+\code{\link{accelerate_hpop_sanitation_rural}()},
+\code{\link{accelerate_hpop_sanitation_urban}()},
+\code{\link{accelerate_hpop_sanitation}()},
+\code{\link{accelerate_hpop_tobacco}()},
+\code{\link{accelerate_ipv}()},
+\code{\link{accelerate_overweight}()},
+\code{\link{accelerate_pm25}()},
+\code{\link{accelerate_road}()},
+\code{\link{accelerate_stunting}()},
+\code{\link{accelerate_suicide}()},
+\code{\link{accelerate_transfats}()},
+\code{\link{accelerate_wasting}()},
+\code{\link{accelerate_water_urban}()},
+\code{\link{accelerate_water}()}
 }
-}
+\concept{hpop_acceleration}

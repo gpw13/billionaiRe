@@ -16,6 +16,8 @@
 #'
 #' @return Character vector of indicator names.
 #'
+#' @family metadata
+#'
 #' @export
 billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
                               include_covariates = FALSE,
@@ -56,6 +58,8 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
 #'
 #' @return A character vector.
 #'
+#' @family metadata
+#'
 #' @export
 #'
 convert_ind_codes <- function(ind_codes,
@@ -77,6 +81,8 @@ convert_ind_codes <- function(ind_codes,
 #'
 #' @return A character vector with the metadata. The positions correspond to the
 #' order of the ind_codes input.
+#'
+#' @family metadata
 #'
 #' @export
 #' @examples
@@ -116,6 +122,8 @@ get_ind_metadata <- function(ind_codes,
 #'
 #' @param ind_code (character) string identifying the indicator to identify.
 #'
+#' @family metadata
+#'
 #' @export
 get_ind_billion <- function(ind_code) {
   assert_type(ind_code, "character")
@@ -134,6 +142,8 @@ get_ind_billion <- function(ind_code) {
 #'
 #' @param iso3 Country ISO3 codes.
 #'
+#' @family metadata
+#'
 #' @return Numeric vector of SDI ratios.
 get_sdi_ratio <- function(iso3) {
   billionaiRe::sdi_ratio[["sdiratio"]][match(iso3, billionaiRe::sdi_ratio[["iso3"]])]
@@ -148,7 +158,8 @@ get_sdi_ratio <- function(iso3) {
 #' @param share_type Type of share to return, either in total numbers of people ("n"),
 #'     or as a percent of total projected population in 2023 ("perc").
 #'
-#' @export
+#' @family metadata
+#'
 get_country_shares <- function(iso3,
                                billion = c("hep", "hpop", "uhc"),
                                share_type = c("n", "perc")) {
@@ -162,6 +173,10 @@ get_country_shares <- function(iso3,
   df[[paste0("share_", share_type)]][match(iso3, df[["iso3"]])]
 }
 
+#' @keywords internal
+#'
+#' @noRd
+#'
 default_col_names <- function(...){
   default_cols <- c()
 }

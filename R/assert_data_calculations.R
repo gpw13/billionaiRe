@@ -18,6 +18,8 @@
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_hpop_contributions
 #'
+#' @keywords internal
+#'
 #' @return Data frame in long format.
 assert_data_calculation_hep <- function(df,
                                         value_col = "value",
@@ -129,7 +131,9 @@ assert_data_calculation_hep <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #'
 #' @return Data frame in long format.
-
+#'
+#' @keywords internal
+#'
 assert_data_calculation_hpop <- function(df,
                                          value_col = "value",
                                          scenario_col = NULL) {
@@ -156,7 +160,8 @@ assert_data_calculation_hpop <- function(df,
 #' @inheritParams calculate_hpop_contributions
 #'
 #' @return Data frame in long format.
-
+#' @keywords internal
+#'
 assert_data_calculation_uhc <- function(df,
                                         value_col = "value",
                                         scenario_col = NULL,
@@ -195,6 +200,10 @@ Missing values in:\n",
   return(df)
 }
 
+#' @keywords internal
+#'
+#' @noRd
+#'
 assert_data_contributions <- function(df,
                                       value_col = "value",
                                       scenario_col = NULL,

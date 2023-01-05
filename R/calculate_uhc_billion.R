@@ -14,6 +14,8 @@
 #' @param projected_year Year that calculated data will be regarded as projected.
 #'     Years prior reported as estimated.
 #'
+#' @family uhc
+#'
 #' @export
 calculate_uhc_billion <- function(df,
                                   transform_value_col = "transform_value",
@@ -56,6 +58,9 @@ calculate_uhc_billion <- function(df,
 #' Calculate UHC Billion for one set of columns
 #'
 #' @inheritParams calculate_uhc_billion
+#'
+#' @keywords internal
+#'
 calculate_uhc_billion_single <- function(df,
                                          transform_value_col,
                                          value_col,
@@ -103,6 +108,9 @@ calculate_uhc_billion_single <- function(df,
 #' @param ind Vector of inds
 #' @param transform_value Vector of transformed values
 #' @inheritParams calculate_uhc_billion
+#'
+#' @keywords internal
+#'
 billion_group_mean <- function(ind,
                                transform_value,
                                ind_ids) {

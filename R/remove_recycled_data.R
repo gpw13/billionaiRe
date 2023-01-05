@@ -8,6 +8,8 @@
 #'
 #' @return Data frame in long format without recycled values
 #'
+#' @family recycle_data
+#'
 #' @export
 remove_recycled_data <- function(df,
                                  recycled = "recycled",

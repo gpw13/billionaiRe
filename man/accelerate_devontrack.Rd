@@ -49,3 +49,27 @@ Runs:
 \item \code{scenario_fixed_target(df, target_value = 80, target_year = 2030, small_is_best = FALSE,...)},
 }
 }
+\seealso{
+HPOP acceleration scenarios
+\code{\link{accelerate_adult_obese}()},
+\code{\link{accelerate_alcohol}()},
+\code{\link{accelerate_child_obese}()},
+\code{\link{accelerate_child_viol}()},
+\code{\link{accelerate_fuel}()},
+\code{\link{accelerate_hpop_sanitation_rural}()},
+\code{\link{accelerate_hpop_sanitation_urban}()},
+\code{\link{accelerate_hpop_sanitation}()},
+\code{\link{accelerate_hpop_tobacco}()},
+\code{\link{accelerate_ipv}()},
+\code{\link{accelerate_overweight}()},
+\code{\link{accelerate_pm25}()},
+\code{\link{accelerate_road}()},
+\code{\link{accelerate_stunting}()},
+\code{\link{accelerate_suicide}()},
+\code{\link{accelerate_transfats}()},
+\code{\link{accelerate_wasting}()},
+\code{\link{accelerate_water_rural}()},
+\code{\link{accelerate_water_urban}()},
+\code{\link{accelerate_water}()}
+}
+\concept{hpop_acceleration}

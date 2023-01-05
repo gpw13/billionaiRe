@@ -46,3 +46,13 @@ and denominator data from the inputs and calculates the vaccination coverage
 per year and country for each relevant pathogen, as well as the overall Prevent
 score. For DNR and its components, the level_col is calculated in this function.
 }
+\seealso{
+HEP functions
+\code{\link{add_hep_populations}()},
+\code{\link{calculate_hep_billion}()},
+\code{\link{hep_df}},
+\code{\link{transform_hep_data}()},
+\code{\link{transform_prev_cmpgn_data}()},
+\code{\link{transform_prev_routine_data}()}
+}
+\concept{hep}

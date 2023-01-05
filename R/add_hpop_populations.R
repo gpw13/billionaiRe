@@ -10,6 +10,9 @@
 #' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
 #' @param population Column name of column to create with population figures.
 #'
+#' @family populations
+#' @family hpop
+#'
 #' @export
 add_hpop_populations <- function(df,
                                  population = "population",

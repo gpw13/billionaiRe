@@ -33,3 +33,18 @@ be supplied as a named vector where the names correspond to the output of
 Prevent routine data is now stored raw using the percent coverage of the indicator.
 We want to transform this back into a numerator value for use within \code{pathogen_calc}.
 }
+\seealso{
+HEP functions
+\code{\link{add_hep_populations}()},
+\code{\link{calculate_hep_billion}()},
+\code{\link{calculate_hep_components}()},
+\code{\link{hep_df}},
+\code{\link{transform_hep_data}()},
+\code{\link{transform_prev_cmpgn_data}()}
+
+Other transform: 
+\code{\link{transform_prev_cmpgn_data}()}
+}
+\concept{hep}
+\concept{transform}
+\keyword{internal}

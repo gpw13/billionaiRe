@@ -1,6 +1,6 @@
 #' Accelerate anc4 to SDG target
 #'
-#' Accelerate `anc4` by aiming at 100 by 2030 if there are 2 values or more
+#' Put `anc4` on SDG target trajectory by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
 #' @inheritParams transform_hpop_data
@@ -9,8 +9,10 @@
 #' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
-#' @return data frame with acceleration scenario binded to `df`. `scenario` is
-#' set to `acceleration`
+#' @return data frame with sdg scenario binded to `df`. `scenario` is
+#' set to `sdg`
+#'
+#' @family uhc_sdg
 #'
 sdg_anc4 <- function(df,
                      scenario_col = "scenario",
@@ -33,11 +35,13 @@ sdg_anc4 <- function(df,
 
 #' Accelerate art to SDG target
 #'
-#' Accelerate `art` by aiming at 100 by 2030 if there are 2 values or more
+#' Put `art` on SDG target trajectory by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
+#'
+#' @family uhc_sdg
 #'
 sdg_art <- function(df,
                     end_year = 2030,
@@ -54,9 +58,11 @@ sdg_art <- function(df,
 #' Accelerate `beds` by aiming at 18 by 2030 if values are below 18. Otherwise,
 #' business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
 #'
 sdg_beds <- function(df,
                      ind_ids = billion_ind_codes("uhc"),
@@ -131,9 +137,11 @@ sdg_beds <- function(df,
 #' Accelerate `bp` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
 #'
 sdg_bp <- function(df,
                    ...) {
@@ -148,7 +156,10 @@ sdg_bp <- function(df,
 #'
 #' Accelerate doctors using the business as usual scenario.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_doctors <- function(df,
                         ...) {
@@ -170,7 +181,9 @@ sdg_doctors <- function(df,
 #' Accelerate nurses using the business as usual scenario.
 #'
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
 #'
 sdg_nurses <- function(df,
                        ...) {
@@ -188,9 +201,11 @@ sdg_nurses <- function(df,
 #' Accelerate `hwf` by returning to business as usual, as there are no globally
 #' agreed target.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
 #'
 sdg_hwf <- function(df,
                     ind_ids = billion_ind_codes("uhc"),
@@ -213,9 +228,12 @@ sdg_hwf <- function(df,
 #' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_dtp3 <- function(df,
                      ...) {
@@ -233,7 +251,10 @@ sdg_dtp3 <- function(df,
 #' Accelerate `fh` by aiming at 0 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_fh <- function(df,
                    ...) {
@@ -253,9 +274,12 @@ sdg_fh <- function(df,
 #' Accelerate `dtp3` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_fp <- function(df,
                    ...) {
@@ -271,8 +295,11 @@ sdg_fp <- function(df,
 #' Accelerate `fpg` by aiming at 0 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_fpg <- function(df,
                     start_year = 2018,
@@ -296,7 +323,10 @@ sdg_fpg <- function(df,
 #' Accelerate `itn` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_itn <- function(df,
                     ...) {
@@ -314,7 +344,10 @@ sdg_itn <- function(df,
 #' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_pneumo <- function(df,
                        ...) {
@@ -330,7 +363,10 @@ sdg_pneumo <- function(df,
 #' Accelerate `pneumo` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_tb <- function(df,
                    ...) {
@@ -346,7 +382,10 @@ sdg_tb <- function(df,
 #' Accelerate `uhc_sanitation` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_uhc_sanitation <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
@@ -364,9 +403,12 @@ sdg_uhc_sanitation <- function(df,
 #' Accelerate `uhc_tobacco` by aiming at 100 by 2030 if there are 2 values or more
 #' reported. Otherwise, business as usual.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_sdg
+#'
 #'
 sdg_uhc_tobacco <- function(df,
                             ind_ids = billion_ind_codes("uhc"),

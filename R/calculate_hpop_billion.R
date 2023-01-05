@@ -7,6 +7,8 @@
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams add_hpop_populations
 #'
+#' @family hpop
+#'
 #' @export
 calculate_hpop_billion <- function(df,
                                    start_year = 2018,
@@ -65,6 +67,8 @@ calculate_hpop_billion <- function(df,
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column(s) with change value
 #' @param population Column name of column to create with population figures.
+#'
+#' @family hpop
 #'
 #' @export
 calculate_hpop_billion_change <- function(df,
@@ -138,6 +142,9 @@ calculate_hpop_billion_change <- function(df,
 #'
 #' @inheritParams calculate_hpop_billion
 #' @param change Column name of column with change value
+#'
+#' @keywords internal
+#'
 calculate_hpop_billion_single <- function(change,
                                           contribution_col,
                                           df,
@@ -210,6 +217,8 @@ calculate_hpop_billion_single <- function(change,
 #' @return Data frame in long format.
 #' @inheritParams add_hpop_populations
 #'
+#' @keywords internal
+#'
 #' @export
 generate_hpop_populations <- function(pop_year) {
   dplyr::tibble(
@@ -248,6 +257,9 @@ generate_hpop_populations <- function(pop_year) {
 #' @param transform_value_col Vector of transform values
 #' @param year Vector of years
 #' @param start_year Start year
+#'
+#' @keywords internal
+#'
 calculate_hpop_change_vector <- function(transform_value_col,
                                          year,
                                          start_year) {

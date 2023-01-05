@@ -12,20 +12,25 @@ country, year, and indicator.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate hwf by returning to business as usual, as there are no globally agreed target.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+\seealso{
+Target scenario
+\code{\link{accelerate_target_anc4}()},
+\code{\link{accelerate_target_art}()},
+\code{\link{accelerate_target_beds}()},
+\code{\link{accelerate_target_bp}()},
+\code{\link{accelerate_target_doctors}()},
+\code{\link{accelerate_target_dtp3}()},
+\code{\link{accelerate_target_fh}()},
+\code{\link{accelerate_target_fpg}()},
+\code{\link{accelerate_target_fp}()},
+\code{\link{accelerate_target_itn}()},
+\code{\link{accelerate_target_nurses}()},
+\code{\link{accelerate_target_pneumo}()},
+\code{\link{accelerate_target_tb}()},
+\code{\link{accelerate_target_uhc_sanitation}()},
+\code{\link{accelerate_target_uhc_tobacco}()}
 }
-
-Then picks the best result between the three scenarios.
-}
+\concept{accelerate_target}

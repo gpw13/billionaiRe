@@ -15,6 +15,9 @@
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_hpop_change_vector
 #'
+#' @family populations
+#' @family hep
+#'
 #' @export
 add_hep_populations <- function(df,
                                 population = "population",
@@ -131,6 +134,10 @@ add_hep_populations <- function(df,
     dplyr::select(-"_temp_pop")
 }
 
+#' @keywords internal
+#'
+#' @noRd
+#'
 hep_pop_calc <- function(df,
                          name,
                          denominator,

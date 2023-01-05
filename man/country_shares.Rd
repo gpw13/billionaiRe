@@ -20,4 +20,4 @@ country_shares
 Country shares data for UHC and HPOP Billions for all 194 WHO member
 states.
 }
-\keyword{datasets}
+\keyword{internal}

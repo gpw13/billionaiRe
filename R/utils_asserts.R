@@ -4,6 +4,10 @@
 #'
 #' @param ind_ids Indicator ids to check
 #' @param billion Billion which we're checking for
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_ind_ids <- function(ind_ids, billion) {
   ind_check <- billion_ind_codes(billion)
   ind_check_nms <- all(ind_check %in% names(ind_ids))
@@ -21,6 +25,10 @@ assert_ind_ids <- function(ind_ids, billion) {
 #'
 #' @param start_year Start year
 #' @param end_year End year(s)
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_years <- function(start_year, end_year) {
   if (!all(start_year < end_year)) {
     stop("`end_year` must always be after `start_year`.",
@@ -33,6 +41,11 @@ assert_years <- function(start_year, end_year) {
 #'
 #' @param file_names (character vector) The file names.
 #' @param valid_exts (character vector) A list of the valid extensions.
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_fileext <- function(file_names, valid_exts) {
   # Check that file_names and valid_exts are character vectors
   assert_type(file_names, "character")
@@ -57,6 +70,11 @@ assert_fileext <- function(file_names, valid_exts) {
 #' Assert that the elements of the vector are unique
 #'
 #' @param x (vector)
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_unique_vector <- function(x) {
   if (length(x) != length(unique(x))) {
     stop(sprintf("%s has duplicate elements", deparse(substitute(x))))
@@ -66,6 +84,10 @@ assert_unique_vector <- function(x) {
 #' Assert that x is a valid timestamp string
 #'
 #' @param x (string)
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_timestamp <- function(x) {
   if (!stringr::str_detect(x, "^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}$")) {
     stop(sprintf("%s is not a valid `yyyy-mm-ddTHH-MM-SS` formatted string", x))
@@ -78,6 +100,10 @@ assert_timestamp <- function(x) {
 #'
 #' @param df Data frame
 #' @param ... Column names
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_columns <- function(df, ...) {
   columns <- c(...)
   bad_cols <- columns[!(columns %in% names(df))]
@@ -97,6 +123,11 @@ assert_columns <- function(df, ...) {
 #' @param expected a **named vector**, whose names are the names of the columns (i.e.,
 #' `names(df) == names(expected)`) and whose elements are the expected class/type
 #' of the column.
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_col_types <- function(df, expected) {
   assert_type(expected, "character")
   assert_has_names(expected)
@@ -128,6 +159,11 @@ assert_col_types <- function(df, expected) {
 #'
 #' @param df Data frame
 #' @param ... Column names
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_numeric <- function(df, ...) {
   args <- c(...)
   nums <- sapply(args, function(x) is.numeric(df[[x]]))
@@ -147,6 +183,10 @@ assert_numeric <- function(df, ...) {
 #' @param df Input data frame
 #' @param col_name string specifying the name of column
 #' @param how string specifying whether to check for any/all missing values
+#'
+#' @noRd
+#'
+#' @keywords internal
 warning_col_missing_values <- function(df, col_name, how) {
   if (how == "any") {
     if (any(is.na(df[[col_name]]))) {
@@ -177,6 +217,9 @@ warning_col_missing_values <- function(df, col_name, how) {
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #'
+#' @noRd
+#'
+#' @keywords internal
 assert_unique_rows <- function(df,
                                scenario_col = NULL,
                                ind_ids) {
@@ -196,6 +239,11 @@ assert_unique_rows <- function(df,
 #'
 #' @param df a data frame
 #' @param key_cols (character vector) the names of the key columns
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_distinct_rows <- function(df, key_cols) {
   assert_type(key_cols, "character")
 
@@ -213,6 +261,11 @@ assert_distinct_rows <- function(df, key_cols) {
 #'
 #' @param df input data frame
 #' @param col_name string specifying the column to check
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_homogeneous_col <- function(df, col_name) {
   if (length(unique(df[[col_name]])) > 1) {
     stop(
@@ -232,6 +285,10 @@ assert_homogeneous_col <- function(df, col_name) {
 #' @param col_name (string) the name of a column in the data frame
 #' @param pair_cols (character vectors) the names of the columns which are paired
 #'   with the `col_name` column
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_col_paired_with <- function(df, col_name, pair_cols) {
   assert_string(col_name, 1)
   assert_type(pair_cols, "character")
@@ -260,6 +317,11 @@ assert_col_paired_with <- function(df, col_name, pair_cols) {
 #' @param x argument to check
 #' @param error_template A template for generating the error message. Used as the
 #'   input to an `sprintf()` call. Must include %s, which corresponds to the input x.
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_arg_exists <- function(x, error_template = "The %s argument is required and cannot be NA or NULL") {
   if (is.null(x) || is.na(x)) {
     stop(
@@ -276,6 +338,10 @@ assert_arg_exists <- function(x, error_template = "The %s argument is required a
 #' @param x The input object
 #' @param expected (character) The expected type(s) of x
 #' @param reverse Invert the test (i.e., the type of x is not)
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_type <- function(x, expected, reverse = FALSE) {
   stopifnot(typeof(expected) == "character", typeof(reverse) == "logical")
 
@@ -304,6 +370,10 @@ assert_type <- function(x, expected, reverse = FALSE) {
 #'     of `expected`
 #'   * `how = "all"`, the test is passed only is `x` inherits from all the elements
 #'     of `expected`.
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
   how <- rlang::arg_match(how)
   assert_type(expected, "character")
@@ -334,6 +404,10 @@ assert_class <- function(x, expected, reverse = FALSE, how = c("any", "all")) {
 #' Assert that an object has names
 #'
 #' @param x an object
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_has_names <- function(x) {
   if (is.null(names(x))) {
     lab <- deparse(substitute(x))
@@ -344,6 +418,10 @@ assert_has_names <- function(x) {
 #' Assert that `df` is a data frame
 #'
 #' @param df Supposed data frame
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_df <- function(df) {
   assert_class(df, "data.frame")
 }
@@ -352,6 +430,10 @@ assert_df <- function(df) {
 #'
 #' @param x Supposed string to test
 #' @param n Length to test
+#'
+#' @noRd
+#'
+#' @keywords internal
 assert_string <- function(x, n) {
   if (!is.null(x)) {
     lx <- length(x)
@@ -370,6 +452,11 @@ assert_string <- function(x, n) {
 #' Assert that arguments passed in are length 1 character vectors
 #'
 #' @param ... Character vectors to check
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_strings <- function(...) {
   arg_names <- sys.call()[-1]
   args <- list(...)
@@ -401,6 +488,11 @@ assert_strings <- function(...) {
 #'
 #' @param x (vector)
 #' @param n (integer) the expected length of x
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_length <- function(x, n) {
   l <- length(x)
   if (l != n) {
@@ -414,6 +506,11 @@ assert_length <- function(x, n) {
 #'
 #' @param x (vector)
 #' @param n (integer) the minimum allowed size of the vector
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_min_length <- function(x, n) {
   l <- length(x)
   if (l < n) {
@@ -433,6 +530,11 @@ assert_min_length <- function(x, n) {
 #' @param reverse (logical) whether to reverse the condition (i.e., the two vectors are
 #'   not equal/identical)
 #' @param msg_suffix (string) A string to be appended to the end of the error message
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_equals <- function(x, y, identical = FALSE, reverse = FALSE, msg_suffix = NULL) {
   cond <- if (identical) identical(x, y) else x == y
   cond <- if (reverse) !cond else cond
@@ -462,6 +564,11 @@ assert_equals <- function(x, y, identical = FALSE, reverse = FALSE, msg_suffix =
 #'
 #' @param x (vector)
 #' @param y (vector)
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_x_in_y <- function(x, y) {
   cond <- x %in% y
   if (!all(cond)) {
@@ -482,6 +589,11 @@ assert_x_in_y <- function(x, y) {
 #'   of the other vectors.
 #' @param remove_null (logical) whether NULL values should be removed from the inputs before
 #'   comparison
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   # Extract just the names of the ... arguments
   args <- rlang::dots_list(..., .named = TRUE)
@@ -519,14 +631,17 @@ assert_same_length <- function(..., recycle = FALSE, remove_null = FALSE) {
   }
 }
 
-# rapporteur --------------------------------------------------------------
-
 #' Asserts that provided ISO is valid
 #'
 #' Checks that provided ISO code is a valid ISO3 code for a WHO member state,
 #' using [whoville::is_who_member()].
 #'
 #' @param iso3 Single ISO3 code
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_who_iso3 <- function(iso3) {
   assert_string(iso3, 1)
   if (!whoville::is_who_member(iso3)) {
@@ -541,6 +656,11 @@ assert_who_iso3 <- function(iso3) {
 #' Assert that `df` is a list
 #'
 #' @param df Supposed list
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_list <- function(df) {
   if (!is.list(df)) {
     stop(sprintf(
@@ -555,6 +675,11 @@ assert_list <- function(df) {
 #' Assert that `params` are valid formal argument to [openxlsx::createStyle()]
 #'
 #' @param ... character vector of parameters to [openxlsx::createStyle()]
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_style_param <- function(...) {
   params <- list(...)
   createStylesParams <- names(formals(openxlsx::createStyle))
@@ -574,6 +699,11 @@ assert_style_param <- function(...) {
 #'
 #' @param x value to be checked
 #' @param list list of values to be checked against
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_in_list_or_null <- function(x, list) {
   if (!is.null(x)) {
     if (!x %in% list) {
@@ -591,6 +721,11 @@ assert_in_list_or_null <- function(x, list) {
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") {
 
   assert_columns(df, scenario_col, value_col)
@@ -622,7 +757,11 @@ assert_iso3_not_empty <- function(df, scenario_col = NULL, value_col = "value") 
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_hpop_contributions
-
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_start_end_year <- function(df,
                                   value_col = "value",
                                   start_year = 2018,
@@ -669,6 +808,11 @@ assert_start_end_year <- function(df,
 #' @inheritParams transform_hpop_data
 #' @inheritParams transform_hep_data
 #' @inheritParams calculate_hpop_contributions
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_ind_start_end_year <- function(df,
                                       value_col = "value",
                                       start_year = 2018,
@@ -714,6 +858,19 @@ Missing values in:\n",
   }
 }
 
+#' Asserts that vector is in column
+#'
+#' @param df named list of indicators to be checked for values. Follows
+#' similar structure as `billion_ind_codes` indicator lists.
+#'
+#' @param vector (vector) to check if is in `column`
+#' @param column (character) name of column wheret to check for `vector`
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
+
 assert_vector_in_column <- function(df, vector, column) {
   unique_col_value <- unique(df[[column]])
 
@@ -728,10 +885,34 @@ assert_vector_in_column <- function(df, vector, column) {
   }
 }
 
+#' Asserts that scenario is in scenario_col
+#'
+#'#' @param df named list of indicators to be checked for values.
+#' @param scenario (character) name of scenario column to be asserted
+#' @inheritParams calculate_hpop_contributions
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
+
 assert_scenario_in_df <- function(df, scenario, scenario_col = "scenario") {
   assert_vector_in_column(df, scenario, scenario_col)
 }
 
+#' Asserts indicators are in df (by_iso3)
+#'
+#'#' @param df named list of indicators to be checked for values. Follows
+#' similar structure as `billion_ind_codes` indicator lists.
+#' @param by_iso3 (Boolean) indicating if the indicator assertion should be done
+#' by ISO3 or not.
+#'
+#' @inheritParams transform_hpop_data
+#'
+#' @noRd
+#'
+#' @keywords internal
+#'
 assert_ind_ids_in_df <- function(df, ind_ids, by_iso3 = TRUE) {
   assert_columns(df, "ind")
 

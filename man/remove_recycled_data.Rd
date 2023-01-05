@@ -19,8 +19,7 @@ remove_recycled_data(
 \item{recycled}{name of boolean recycle column with whether the data is
 recycled or not. Default to "recycle".}
 
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
+\item{scenario_col}{Column name of column with scenario identifiers.}
 
 \item{scenario_reported_estimated}{name of the reported/estimated scenario.}
 
@@ -34,3 +33,8 @@ Data frame in long format without recycled values
 \description{
 Remove recycled values from \code{df}
 }
+\seealso{
+Functions to recycle the data
+\code{\link{recycle_data}()}
+}
+\concept{recycle_data}

@@ -33,8 +33,7 @@ country, year, and indicator.}
 \item{value_col}{Column name of column with indicator values. This column will be
 used to return the results.}
 
-\item{scenario_col}{Column name of column with scenario identifiers. Useful for
-calculating contributions on data in long format rather than wide format.}
+\item{scenario_col}{Column name of column with scenario identifiers.}
 
 \item{scenario_name}{name of scenario}
 
@@ -54,7 +53,7 @@ be supplied as a named vector where the names correspond to the output of
 a data frame with scenario values in \code{value_col} with a \code{scenario_col} column.
 }
 \description{
-\code{scenario_covid_rapid_return} creates a scenario where there is a rapid
+\code{scenario_covid_rapid_return()} creates a scenario where there is a rapid
 return to the pre-pandemic situation after a dip due to COVID-19.
 }
 \details{
@@ -65,3 +64,13 @@ missing values between \code{covid_year} and \code{recovery_year}, the last valu
 indicator value for \code{covid_year} is \code{reported} or \code{estimated}. Otherwise,
 the value is carried with \code{scenario_bau}.
 }
+\seealso{
+COVID scenarios
+\code{\link{scenario_covid_delayed_return}()},
+\code{\link{scenario_covid_never_return}()},
+\code{\link{scenario_covid_sustained_disruption}()},
+\code{\link{scenario_dip_recover}()},
+\code{\link{scenario_return_previous_trajectory}()}
+}
+\concept{scenario_covid}
+\keyword{internal}

@@ -105,11 +105,8 @@ be supplied as a named vector where the names correspond to the output of
 
 \item{default_scenario}{name of the default scenario to be used.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
-\code{scenario_aroc} uses the annual rate of change (AROC) in different cases to
+\code{scenario_aroc()} uses the annual rate of change (AROC) in different cases to
 calculate the values of the scenario:
 }
 \details{
@@ -120,13 +117,13 @@ calculate the values of the scenario:
 \code{baseline_year}.
 }
 
-This function is different than \code{scenario_percent_baseline} or
-\code{scenario_linear_change} as it uses percentage difference and not
+This function is different than \code{scenario_percent_baseline()} or
+\code{scenario_linear_change()} as it uses percentage difference and not
 percentage points difference.
 
 AROC use a general \href{https://en.wikipedia.org/wiki/Compound_annual_growth_rate}{compounded rate of change}
 formula:
-AROC(Value(year_n), Value(year_0)) = (Value(year_n) / Value(year_0)) ^ (1 / (year_n -  year_0)) - 1
+(Value(year_n) / Value(year_0)) ^ (1 / (year_n -  year_0)) - 1
 
 \code{direction_limit_aroc} in combination with \code{limit_aroc} allows to limit the
 AROC to a value given a direction. This can be helpful to avoid extreme
@@ -135,3 +132,12 @@ values if AROC is unknown before being passed to the function.If
 the calculated AROC and \code{limit_aroc}. If \code{negative}, it will be the maximum
 between AROC and
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_linear_change}()},
+\code{\link{scenario_percent_baseline}()}
+}
+\concept{aroc}
+\concept{basic_scenarios}

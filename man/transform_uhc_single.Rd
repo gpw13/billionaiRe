@@ -27,3 +27,14 @@ A single column data frame of transformed values.
 This function is used within \code{\link[=transform_uhc_data]{transform_uhc_data()}} to generate transformed data
 on a single column.
 }
+\seealso{
+Other uhc: 
+\code{\link{calculate_uhc_billion}()},
+\code{\link{calculate_uhc_contribution}()},
+\code{\link{transform_uhc_data}()},
+\code{\link{uhc_df}},
+\code{\link{untransform_uhc_data}()},
+\code{\link{untransform_uhc_single}()}
+}
+\concept{uhc}
+\keyword{internal}

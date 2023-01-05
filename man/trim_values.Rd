@@ -60,18 +60,26 @@ trimed data frame, removing the \code{col} column, and putting the trimmed
 values in \code{value_col}
 }
 \description{
-This scenario allows to change a value by a fixed percentage to a provided year
-from a provided baseline year. It provides values for scenarios stated as
-"Reduce INDICATOR by XX\% by YEAR"
+Trim values
 }
-\details{
-The \code{percent_change} parameter is understood as a percentage change,
-and not a percentage point change, as this is usually what intended by those
-formulations. If it is indeed the percentage change that is required, please
-use \code{scenario_aroc}. For instance, to calculate the scenario "reduce the 2018
-value (90\%) by 30\% by 2025", will results to a 2025 value of 63\% and not 60\%.
-
-The returned scenario is a portion of the straight line drawn from the
-\code{baseline_year} value to the \code{target_year}. Only values for years between
-\code{start_year} and \code{end_year} will be returned.
+\seealso{
+General scenario functions
+\code{\link{add_scenario}()},
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_value}()},
+\code{\link{get_last_year_scenario}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_percent_change_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{remove_unwanted_scenarios}()},
+\code{\link{trim_years}()}
 }
+\concept{scenarios}
+\keyword{internal}

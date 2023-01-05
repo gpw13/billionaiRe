@@ -13,7 +13,11 @@
 #'   messages and progress bar are shown
 #'
 #' @return The original data frame
+#'
 #' @export
+#'
+#' @family whdh
+#'
 save_gho_backup_to_whdh <- function(df,
                                     billion,
                                     ind_code,
@@ -85,6 +89,8 @@ save_gho_backup_to_whdh <- function(df,
 #'
 #' @return A character vector.
 #' @export
+#'
+#' @family whdh
 #'
 get_whdh_path <- function(operation = c("download", "upload"),
                           data_type = c("wrangled_data", "projected_data", "final_data", "ingestion_data"),
@@ -200,6 +206,10 @@ get_whdh_path <- function(operation = c("download", "upload"),
 #' @return (character vector) a list of the indicators belonging to the given billion,
 #'   as used by the WHDH functions.
 #'
+#' @noRd
+#'
+#' @family whdh
+#'
 get_valid_inds <- function(data_type, billion) {
   assert_type(data_type, "character")
   assert_type(billion, "character")
@@ -230,6 +240,12 @@ get_valid_inds <- function(data_type, billion) {
   valid_inds
 }
 
+#' Get WHDH data layer by data_type
+#'
+#' @inheritParams get_whdh_path
+#'
+#' @family whdh
+#'
 #' @noRd
 get_data_layer <- function(data_type) {
   switch(data_type,
@@ -243,6 +259,9 @@ get_data_layer <- function(data_type) {
 #' Return the name of the 3B data lake
 #'
 #' @return A string. The name of the Triple Billions WHDH data lake.
+#'
+#' @family whdh
+#'
 #' @export
 get_data_lake_name <- function() {
   "srhdteuwstdsa"

@@ -1,7 +1,6 @@
-
 #' Scenario COVID rapid return to normal
 #'
-#' `scenario_covid_rapid_return` creates a scenario where there is a rapid
+#' `scenario_covid_rapid_return()` creates a scenario where there is a rapid
 #' return to the pre-pandemic situation after a dip due to COVID-19.
 #'
 #' In details, the AROC  between the `start_year`  and `covid_year` - 1 is
@@ -14,7 +13,7 @@
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2022.
 #' @param scenario name of scenario column to be created
@@ -23,6 +22,11 @@
 #' `scenario_dip_recover_iso3()`
 #'
 #' @return a data frame with scenario values in `value_col` with a `scenario_col` column.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
 scenario_covid_rapid_return <- function(df,
                                  start_year = 2018,
                                  covid_year = 2020,
@@ -55,7 +59,7 @@ scenario_covid_rapid_return <- function(df,
 
 #' Scenario COVID never return to normal
 #'
-#' `scenario_covid_rapid_return` creates a scenario where there is no
+#' `scenario_covid_rapid_return()` creates a scenario where there is no
 #' return to the pre-pandemic situation.
 #'
 #' In details, the last value from `covid_year` is carried forward.
@@ -66,7 +70,7 @@ scenario_covid_rapid_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2060.
 #' @param scenario_col name of scenario column to be created
@@ -75,6 +79,11 @@ scenario_covid_rapid_return <- function(df,
 #' `scenario_dip_recover_iso3()`
 #'
 #' @return a data frame with scenario values in `value_col` with a `scenario_col` column.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
 scenario_covid_never_return <- function(df,
                                         start_year = 2018,
                                         covid_year = 2020,
@@ -106,7 +115,7 @@ scenario_covid_never_return <- function(df,
 
 #' Scenario COVID delayed return to normal
 #'
-#' `scenario_covid_delayed_return` creates a scenario where there is a
+#' `scenario_covid_delayed_return()` creates a scenario where there is a
 #' a delayed by number for years between `covid_year` and `recovery_year` before
 #' returning to the pre-pandemic situation.
 #'
@@ -120,7 +129,7 @@ scenario_covid_never_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param covid_year (integer) year where the values are impacted by COVID.
 #' @param recovery_year integer year from which the AROC will be applied. Default to 2023.
 #' @param scenario_col name of scenario column to be created
@@ -129,6 +138,10 @@ scenario_covid_never_return <- function(df,
 #' `scenario_dip_recover_iso3()`
 #'
 #' @return a data frame with scenario values in `value_col` with a `scenario_col` column.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
 scenario_covid_delayed_return <- function(df,
                                         start_year = 2018,
                                         covid_year = 2020,
@@ -160,7 +173,7 @@ scenario_covid_delayed_return <- function(df,
 
 #' Scenario COVID sustained disruption to normal
 #'
-#' `scenario_covid_delayed_return` creates a scenario where there is a
+#' `scenario_covid_delayed_return()` creates a scenario where there is a
 #' a delayed by one year before progressivelly returning to the pre-pendemic
 #' situation.
 #'
@@ -178,7 +191,7 @@ scenario_covid_delayed_return <- function(df,
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @param progressive_recovery (logical) TRUE if the recovery after COVID-19
 #' should be progressive.
 #' @param covid_year (integer) year where the values are impacted by COVID.
@@ -189,6 +202,11 @@ scenario_covid_delayed_return <- function(df,
 #' `scenario_dip_recover_iso3()`
 #'
 #' @return a data frame with scenario values in `value_col` with a `scenario_col` column.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
 scenario_covid_sustained_disruption <- function(df,
                                           start_year = 2018,
                                           covid_year = 2020,

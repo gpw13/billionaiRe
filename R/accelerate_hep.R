@@ -1,6 +1,8 @@
 #' Accelerate espar
 #'
-#' Accelerate espar by aiming at the best value between the regional average
+#'  @description
+#'
+#' `accelerate_espar()` accelerate espar by aiming at the best value between the regional average
 #' (WHO regions) and the value last year of the last year with complete espar
 #' data (with categories and sub-categories).
 #'
@@ -8,11 +10,14 @@
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams recycle_data
 #' @inheritParams scenario_percent_baseline
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
+#'
+#' @family hep_acceleration
+#'
 accelerate_espar <- function(df,
                              value_col = "value",
                              ind_ids = billion_ind_codes("hep"),
@@ -175,18 +180,7 @@ accelerate_espar <- function(df,
     dplyr::bind_rows(df_accelerated)
 }
 
-#' Accelerate detect
-#'
-#' Accelerate detect by taking the business as usual.
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @inheritParams accelerate_alcohol
-#' @param ... additional parameters to be passed to scenario function
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
-
+#' @rdname accelerate_dnr
 accelerate_detect <- function(df,
                               ind_ids = billion_ind_codes("hep"),
                               scenario_col = "scenario",
@@ -208,17 +202,7 @@ accelerate_detect <- function(df,
   dplyr::bind_rows(df, df_accelerated)
 }
 
-#' Accelerate respond
-#'
-#' Accelerate respond by taking the business as usual.
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @param ... additional parameters to be passed to scenario function
-#' @inherit accelerate_alcohol
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
+#' @rdname accelerate_dnr
 accelerate_respond <- function(df,
                                scenario_name = "acceleration",
                                ...) {
@@ -232,17 +216,8 @@ accelerate_respond <- function(df,
 
 }
 
-#' Accelerate notify
+#' @rdname accelerate_dnr
 #'
-#' Accelerate notify by taking the business as usual.
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @param ... additional parameters to be passed to scenario function
-#' @inherit accelerate_alcohol
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
 accelerate_notify <- function(df,
                               scenario_name = "acceleration",
                               ...) {
@@ -256,17 +231,24 @@ accelerate_notify <- function(df,
 
 }
 
-#' Accelerate detect_respond
+#' Accelerate Detect, Notify, Respond, and Detect and Respond
 #'
-#' Accelerate detect_respond by taking the business as usual.
+#' `accelerate_detect()`, `accelerate_respond()`, `accelerate_notify()`, and
+#'  `accelerate_detect_respond()` accelerate by returning to business as usual
+#'  values.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
 #' @param ... additional parameters to be passed to scenario function
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_dnr
+#'
 accelerate_detect_respond <- function(df,
                                       scenario_name = "acceleration",
                                       ...) {
@@ -280,15 +262,15 @@ accelerate_detect_respond <- function(df,
 
 }
 
-#' Accelerate cholera_campaign
+#' Accelerate cholera
 #'
-#' Accelerate cholera_campaign by adding planned cholera campaigns to the provided
-#' values in `df`. When a value is reported for a year and country, then this
-#' value is kept, even after 2018. Planned values are provided only for the
-#' denominator. For some planned campaigns only the denominator is provided. When
-#' this is the case, the numerator is calculated by taking the best historical
-#' vaccination coverage achieved, or if not available that the best regional
-#' historical coverage.
+#' `accelerate_cholera_campaign()` accelerate cholera by adding planned cholera
+#' campaigns to the provided values in `df`. When a value is reported for a year
+#' and country, then this value is kept, even after 2018. Planned values are
+#' provided only for the denominator. For some planned campaigns only the
+#' denominator is provided. When this is the case, the numerator is calculated
+#' by taking the best historical vaccination coverage achieved, or if not
+#' available that the best regional historical coverage.
 #'
 #' Planned campaigns are a mix between planned campaigns and the targets outlined
 #' in the \href{https://www.gtfcc.org/about-gtfcc/roadmap-2030/}{roadmap 2030}
@@ -302,7 +284,11 @@ accelerate_detect_respond <- function(df,
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
-
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_cholera
+#'
 accelerate_cholera_campaign <- function(df,
                                         value_col = "value",
                                         end_year = 2025,
@@ -488,9 +474,59 @@ accelerate_cholera_campaign <- function(df,
     dplyr::bind_rows(df_accelerated)
 }
 
-#' Accelerate meningitis_campaign
+#' Accelerate measles
 #'
-#' Accelerate meningitis_campaign by adding planned meningitis campaigns to the
+#' `accelerate_measles_routine()` accelerate measles by aiming at a +20% percent
+#'  change between 2013 and 2025 using
+#' AROC.
+#'
+#' Runs:
+#'
+#'  - `scenario_aroc(df, aroc_type = "percent_change", percent_change = 20, baseline_year = 2013, target_year = 2025, small_is_best = FALSE)`
+#'
+#' @inheritParams transform_hpop_data
+#' @inheritParams calculate_hpop_contributions
+#' @inheritParams accelerate_alcohol
+#' @param ... additional parameters to be passed to scenario function
+#'
+#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
+#' set to `acceleration`
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_measles
+#'
+accelerate_measles_routine <- function(df,
+                                       ind_ids = billion_ind_codes("hep"),
+                                       scenario_col = "scenario",
+                                       default_scenario = "default",
+                                       scenario_name = "acceleration",
+                                       ...) {
+  this_ind <- ind_ids["measles_routine"]
+
+  df_this_ind <- df %>%
+    dplyr::filter(.data[["ind"]] == this_ind,
+                  .data[[scenario_col]] == default_scenario)
+
+  assert_ind_start_end_year(df_this_ind, start_year = 2013, end_year = 2018, ind_ids = this_ind)
+
+  params_aroc_percent_change <- get_dots_and_call_parameters(...) %>%
+    get_right_parameters(scenario_aroc) %>%
+    set_parameters(
+      aroc_type = "percent_change",
+      percent_change = 20,
+      baseline_year = 2013
+    )
+
+  exec_scenario(df_this_ind,
+                scenario_aroc,
+                params_aroc_percent_change)
+}
+
+#' Accelerate meningitis
+#'
+#' `accelerate_meningitis_campaign()` accelerate meningitis_campaign by adding
+#' planned meningitis campaigns to the
 #' provided values in `df`. When a value is reported for a year and country, then this
 #' value is kept, even after 2018. Some planned values are provided only for the
 #' denominator. For some planned campaigns only the denominator is provided. When
@@ -498,8 +534,14 @@ accelerate_cholera_campaign <- function(df,
 #' vaccination coverage achieved, or if not available by taking the best historical
 #' coverage across all countries.
 #'
-#' Planned campaigns are the planned campaingns targets provided by WHO technical
-#' programs based on member states planifications.
+#' Planned campaigns are the planned campaigns targets provided by WHO technical
+#' programs based on member states planification.
+#'
+#' `accelerate_meningitis_routine()` accelerate routine vaccination by aiming at
+#'  a 90% 2030, only when value is >= 0 (removes cases where value is absent).
+#'
+#' Runs:
+#'  - `scenario_fixed_target_col(df, target_col = "target, target_year = 2025, small_is_best = FALSE, upper_limit = 99)`
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
@@ -511,7 +553,11 @@ accelerate_cholera_campaign <- function(df,
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
-
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_meningitis
+#'
 accelerate_meningitis_campaign <- function(df,
                                            ind_ids = billion_ind_codes("hep"),
                                            scenario_col = "scenario",
@@ -680,66 +726,8 @@ accelerate_meningitis_campaign <- function(df,
     dplyr::bind_rows(df_accelerated)
 }
 
-#' Accelerate measles_routine
+#' @rdname accelerate_meningitis
 #'
-#' Accelerate measles_routine by aiming at a +20% percent change between 2013 and 2025 using
-#' AROC.
-#'
-#' Runs:
-#'
-#'  - `scenario_aroc(df, aroc_type = "percent_change", percent_change = 20, baseline_year = 2013, target_year = 2025, small_is_best = FALSE)`
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @inheritParams accelerate_alcohol
-#' @param ... additional parameters to be passed to scenario function
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
-
-accelerate_measles_routine <- function(df,
-                                       ind_ids = billion_ind_codes("hep"),
-                                       scenario_col = "scenario",
-                                       default_scenario = "default",
-                                       scenario_name = "acceleration",
-                                       ...) {
-  this_ind <- ind_ids["measles_routine"]
-
-  df_this_ind <- df %>%
-    dplyr::filter(.data[["ind"]] == this_ind,
-                  .data[[scenario_col]] == default_scenario)
-
-  assert_ind_start_end_year(df_this_ind, start_year = 2013, end_year = 2018, ind_ids = this_ind)
-
-  params_aroc_percent_change <- get_dots_and_call_parameters(...) %>%
-    get_right_parameters(scenario_aroc) %>%
-    set_parameters(
-      aroc_type = "percent_change",
-      percent_change = 20,
-      baseline_year = 2013
-    )
-
-  exec_scenario(df_this_ind,
-                scenario_aroc,
-                params_aroc_percent_change)
-}
-
-#' Accelerate meningitis_routine
-#'
-#' Accelerate meningitis_routine by aiming at a 90% 2030, only when value is >= 0
-#' (removes cases where value is absent).
-#'
-#' Runs:
-#'
-#'  - `scenario_fixed_target_col(df, target_col = "target, target_year = 2025, small_is_best = FALSE, upper_limit = 99)`
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @inheritParams accelerate_alcohol
-#' @param ... additional parameters to be passed to scenario function
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
 accelerate_meningitis_routine <- function(df,
                                           ind_ids = billion_ind_codes("hep"),
                                           value_col = "value",
@@ -781,10 +769,10 @@ accelerate_meningitis_routine <- function(df,
     dplyr::select(-"target_col")
 }
 
-#' Accelerate polio_routine
+#' Accelerate polio
 #'
-#' Accelerate polio_routine by aiming at a +20% percent change between 2015 and 2025
-#' AROC.
+#' `accelerate_polio_routine()` accelerate polio routine by aiming at a +20%
+#' percent change between 2015 and 2025 AROC.
 #'
 #' Runs:
 #'
@@ -797,6 +785,11 @@ accelerate_meningitis_routine <- function(df,
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_polio
+#'
 accelerate_polio_routine <- function(df,
                                      ind_ids = billion_ind_codes("hep"),
                                      scenario_col = "scenario",
@@ -826,9 +819,10 @@ accelerate_polio_routine <- function(df,
                                   params_aroc_percent_change)
 }
 
-#' Accelerate yellow_fever_campaign
+#' Accelerate yellow_fever
 #'
-#' Accelerate yellow_fever_campaign by adding planned yellow fever campaigns to the
+#' `accelerate_yellow_fever_campaign()` accelerate yellow fever campaign
+#' by adding planned yellow fever campaigns to the
 #' provided values in `df`. When a value is reported for a year and country, then this
 #' value is kept, even after 2018. Some planned values are provided only for the
 #' denominator. For some planned campaigns only the denominator is provided. When
@@ -839,6 +833,13 @@ accelerate_polio_routine <- function(df,
 #' Planned campaigns are the planned campaigns targets provided by WHO technical
 #' programs based on member states planification.
 #'
+#' `accelerate_yellow_fever_routine()` accelerate routine by aiming at a +20%
+#' percent change between 2015 and 2025 AROC.
+#'
+#' Runs:
+#'
+#'  - `scenario_aroc(df, aroc_type = "percent_change", percent_change = 20, baseline_year = 2015, target_year = 2025, small_is_best = FALSE)`
+#'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams calculate_hpop_contributions
@@ -848,7 +849,11 @@ accelerate_polio_routine <- function(df,
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
-
+#'
+#' @family hep_acceleration
+#'
+#' @rdname accelerate_yellow_fever
+#'
 accelerate_yellow_fever_campaign <- function(df,
                                              ind_ids = billion_ind_codes("hep"),
                                              scenario_col = "scenario",
@@ -1006,22 +1011,9 @@ accelerate_yellow_fever_campaign <- function(df,
   dplyr::bind_rows(df, df_accelerated)
 }
 
-#' Accelerate yellow_fever_routine
+
+#' @rdname accelerate_yellow_fever
 #'
-#' Accelerate yellow_fever_routine by aiming at a +20% percent change between 2015 and 2025
-#' AROC.
-#'
-#' Runs:
-#'
-#'  - `scenario_aroc(df, aroc_type = "percent_change", percent_change = 20, baseline_year = 2015, target_year = 2025, small_is_best = FALSE)`
-#'
-#' @inheritParams transform_hpop_data
-#' @inheritParams calculate_hpop_contributions
-#' @inheritParams accelerate_alcohol
-#' @param ... additional parameters to be passed to scenario function
-#'
-#' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
-#' set to `acceleration`
 accelerate_yellow_fever_routine <- function(df,
                                             scenario_name = "acceleration",
                                             ...) {

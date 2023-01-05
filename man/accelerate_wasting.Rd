@@ -41,10 +41,6 @@ Default is \code{historical}.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate wasting by picking the best results between halt downwards trend
 from \code{start_year}, and AROC by 3\% by 2030.
@@ -58,3 +54,27 @@ Runs:
 
 Then picks the best result between the two scenarios.
 }
+\seealso{
+HPOP acceleration scenarios
+\code{\link{accelerate_adult_obese}()},
+\code{\link{accelerate_alcohol}()},
+\code{\link{accelerate_child_obese}()},
+\code{\link{accelerate_child_viol}()},
+\code{\link{accelerate_devontrack}()},
+\code{\link{accelerate_fuel}()},
+\code{\link{accelerate_hpop_sanitation_rural}()},
+\code{\link{accelerate_hpop_sanitation_urban}()},
+\code{\link{accelerate_hpop_sanitation}()},
+\code{\link{accelerate_hpop_tobacco}()},
+\code{\link{accelerate_ipv}()},
+\code{\link{accelerate_overweight}()},
+\code{\link{accelerate_pm25}()},
+\code{\link{accelerate_road}()},
+\code{\link{accelerate_stunting}()},
+\code{\link{accelerate_suicide}()},
+\code{\link{accelerate_transfats}()},
+\code{\link{accelerate_water_rural}()},
+\code{\link{accelerate_water_urban}()},
+\code{\link{accelerate_water}()}
+}
+\concept{hpop_acceleration}

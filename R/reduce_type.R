@@ -5,6 +5,9 @@
 #'
 #' @param value Vector of values
 #' @param type Vector of types
+#'
+#' @keywords internal
+#'
 reduce_type <- function(value, type) {
   if (all(is.na(value))) {
     return(NA_character_)

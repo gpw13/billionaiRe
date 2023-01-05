@@ -18,4 +18,11 @@ pop_links
 A dataset linking each HPOP Billion indicator to relevant population groups
 to be used for double counting correction. Used within \code{generate_hpop_populations()}.
 }
+\seealso{
+Add populations
+\code{\link{add_hep_populations}()},
+\code{\link{add_hpop_populations}()},
+\code{\link{add_populations}()}
+}
+\concept{populations}
 \keyword{datasets}

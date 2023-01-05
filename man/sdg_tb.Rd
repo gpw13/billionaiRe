@@ -12,21 +12,26 @@ country, year, and indicator.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
 Accelerate \code{pneumo} by aiming at 100 by 2030 if there are 2 values or more
 reported. Otherwise, business as usual.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+\seealso{
+UHC SDG scenarios
+\code{\link{sdg_anc4}()},
+\code{\link{sdg_art}()},
+\code{\link{sdg_beds}()},
+\code{\link{sdg_bp}()},
+\code{\link{sdg_doctors}()},
+\code{\link{sdg_dtp3}()},
+\code{\link{sdg_fh}()},
+\code{\link{sdg_fpg}()},
+\code{\link{sdg_fp}()},
+\code{\link{sdg_hwf}()},
+\code{\link{sdg_itn}()},
+\code{\link{sdg_nurses}()},
+\code{\link{sdg_pneumo}()},
+\code{\link{sdg_uhc_sanitation}()},
+\code{\link{sdg_uhc_tobacco}()}
 }
-
-Then picks the best result between the three scenarios.
-}
+\concept{uhc_sdg}

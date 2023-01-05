@@ -2,7 +2,7 @@
 #'
 #' `scenario_top_n_iso3` aims to reach the top `n` (or `prop`) performing countries
 #' Annual Rate of Change (AAROC) in `df` `default_scenario` (by `group_col`
-#' when provided). This is done by calculated the annual rate of change of all
+#' when provided). This is done by calculating the annual rate of change of all
 #' countries with at least two reported or estimated values between `baseline_year`
 #' and `aroc_end_year`. Then the values of the top `n` or top `prop` percent
 #' performing countries (in `group_col` if provided) are averaged out to have a
@@ -34,10 +34,12 @@
 #' or `estimated` value to start the AROC interval.
 #' @param min_n_reported_estimated (integer) minimum number of `value_col`
 #' points `reported` or `estimated` in the AROC interval.s
-#' @inherit scenario_fixed_target
+#' @inheritParams scenario_fixed_target
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
 #' @inheritParams accelerate_alcohol
+#'
+#' @family basic_benchmarking
 
 scenario_top_n_iso3 <- function(df,
                                 n = 10,

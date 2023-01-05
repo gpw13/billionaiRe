@@ -14,3 +14,4 @@ reduce_type(value, type)
 \description{
 Used with \code{pathogen_calc()}
 }
+\keyword{internal}

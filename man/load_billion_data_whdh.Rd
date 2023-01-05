@@ -74,3 +74,10 @@ A data frame.
 \description{
 Load Billions indicator data from WHDH
 }
+\seealso{
+Other access_data: 
+\code{\link{load_billion_data_legacy}()},
+\code{\link{load_billion_data_xmart}()},
+\code{\link{load_billion_data}()}
+}
+\concept{access_data}

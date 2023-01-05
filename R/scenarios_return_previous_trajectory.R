@@ -3,16 +3,21 @@
 #' This scenario returns to the `scenario_previous_trajectory` after the last
 #' value of `scenario_shock`.
 #'
-#' @inherit scenario_dip_recover
+#' @inheritParams scenario_dip_recover
 #' @inheritParams transform_hpop_data
 #' @inheritParams recycle_data
 #' @inheritParams calculate_uhc_billion
 #' @inheritParams trim_values
-#' @inherit scenario_aroc
+#' @inheritParams scenario_aroc
 #' @inheritParams scenario_dip_recover_iso3
 #' @param scenario_shock (character) name of the scenario with the shock
 #' @param scenario_previous_trajectory (character) name of the scenario with the previous trajectories.
 #' @param scenario_col (character) name of the column with the scenarios.
+#'
+#' @family scenario_covid
+#'
+#' @keywords internal
+#'
 scenario_return_previous_trajectory <- function(df,
                                                 dip_year = 2020,
                                                 recovery_year = 2022,

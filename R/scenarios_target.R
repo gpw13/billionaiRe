@@ -1,8 +1,17 @@
-#' Scenario to reach a fixed target from a baseline year by a target year
+#' Scenario to reach a fixed target
 #'
-#' This scenario allows to reach a target value from a baseline year by target
-#' year It provides values for scenarios stated as "Reach XX% in INDICATOR by
+#' @description
+#' Those scenarios allow to reach a target value from a baseline year by target
+#' year.
+#'
+#' `scenario_fixed_target()` provides values for scenarios stated as "Reach XX% in INDICATOR by
 #' YEAR" or "Eliminate XX by YEAR".
+#'
+#' `scenario_fixed_target_col()` wraps around `scenario_fixed_target` to provide
+#' targets from a column specified in `target_col` rather than a single value.
+#'
+#' `scenario_halt_rise()` is a special case of `scenario_fixed_target_col()`
+#' where each country aims at a value of a specific year.
 #'
 #' The returned scenario is a portion of the straight line drawn from the
 #' `baseline_year` value to the `target_year`. Only values for years between
@@ -13,14 +22,18 @@
 #' if the scenario value is 80 and the value 75 and small_is_best is TRUE, then
 #' 75 will be kept.
 #'
-#' @inherit scenario_percent_baseline
+#' @inheritParams scenario_percent_baseline
 #' @param target_value value to be achieved by scenario by `target_year`
 #' @param small_is_best Logical to identify if a lower value is better than a higher
 #' one (e.g. lower obesity in a positive public health outcome, so obesity rate
 #' should have small_is_best = TRUE).
 #' @param default_scenario name of the default scenario to be used.
 #' @inheritParams trim_values
-
+#'
+#' @family fixed_target
+#'
+#' @rdname fixed_target
+#'
 scenario_fixed_target <- function(df,
                                   target_value,
                                   value_col = "value",
@@ -101,11 +114,11 @@ scenario_fixed_target <- function(df,
 #' `baseline_year` value to the `target_year`. Only values for years between
 #' `start_year` and `end_year` will be returned.
 #'
-#' @inherit scenario_percent_baseline
-#' @inherit scenario_fixed_target
 #' @param target_value vector of values to use as targets
 #' @param baseline_value value at baseline_year
 #' @param year (vector) vector of years
+#'
+#' @noRd
 calculate_fixed_target <- function(target_value,
                                    small_is_best,
                                    year,
@@ -133,14 +146,9 @@ calculate_fixed_target <- function(target_value,
   }
 }
 
-#' Scenario to reach a fixed targets stored in a column
-#'
-#' `scenario_fixed_target_col` wraps around `scenario_fixed_target` to provide
-#' targets from a column specified in `target_col` rather than a single value.
-#'
 #' @param target_col name of column with targets
-#' @inherit scenario_fixed_target
-#' @inheritParams trim_values
+#'
+#' @rdname fixed_target
 scenario_fixed_target_col <- function(df,
                                       value_col = "value",
                                       scenario_col = "scenario",
@@ -204,15 +212,7 @@ scenario_fixed_target_col <- function(df,
     dplyr::bind_rows(scenario_df)
 }
 
-#' Calculate halt rise scenarios
-#'
-#' Special case of `scenario_fixed_target_col` where each country aims at a
-#' value of a specific year.
-#'
-#' @inherit scenario_fixed_target
-#' @inheritParams trim_values
-#' @inheritParams scenario_fixed_target
-#' @inheritParams transform_hpop_data
+#' @rdname fixed_target
 scenario_halt_rise <- function(df,
                                value_col = "value",
                                start_year = 2018,
@@ -236,7 +236,7 @@ scenario_halt_rise <- function(df,
 
   target_df <- df %>%
     dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
-    dplyr::mutate(target = get_baseline_value(.data[[value_col]],
+    dplyr::mutate("target" := get_baseline_value(.data[[value_col]],
                                               .data[["year"]],
                                               .data[["type"]],
                                               .data[[scenario_col]],

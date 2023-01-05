@@ -23,3 +23,4 @@ The function takes in a data frame, a vector of column names,
 and a vector of base fill to use for the column. If the column doesn't already
 exist, it is added to the data frame and filled with the relevant fill value.
 }
+\keyword{internal}

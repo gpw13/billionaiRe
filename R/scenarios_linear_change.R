@@ -1,8 +1,13 @@
 #' Scenario to add a linear  point change
 #'
-#' Scenario to add a `linear_value` percentage point change to `baseline_value`
-#' from a `baseline_year`. It provides values for scenarios stated as "Increase
-#' INDICATOR by XX% points".
+#' @description
+#'
+#' `scenario_linear_change()` to add a `linear_value` percentage point change
+#' to `baseline_value` from a `baseline_year`. It provides values for scenarios
+#' stated as "Increase INDICATOR by XX% points".
+#'
+#' `scenario_linear_change_col()` wraps around `scenario_linear_change()` to
+#'  provide linear values from a column specified in `linear_value` rather than a single value.
 #'
 #' The calculation is done by taking the `baseline_year` `value_col` and adding the
 #' `linear_value` times the number of years between the baseline year and the
@@ -10,7 +15,7 @@
 #' and `baseline_year` `value_col` is 10, then 2019 `value_col` will be 12, 2020 14,
 #' etc.
 #'
-#' It differs from `scenario_aroc` `percent_change` in two ways: it is not
+#' It differs from `scenario_aroc()` `percent_change` in two ways: it is not
 #' compounded and it adds percentage points and not percentage of values.
 #'
 #' `upper_limit` and `lower_limit` allow to trim values when they are exceeding
@@ -22,9 +27,14 @@
 #' calculation. If `value_col` is already higher before calculation it will be kept
 #' @param lower_limit numeric indicating the lower bound of the data after
 #' calculation. If `value_col` is already lower before calculation it will be kept
-#' @inherit scenario_percent_baseline
+#' @inheritParams scenario_percent_baseline
 #' @inheritParams trim_values
 #' @inheritParams transform_hpop_data
+#'
+#' @rdname linear_change
+#'
+#' @family basic_scenarios
+#' @family linear_change
 #'
 scenario_linear_change <- function(df,
                                    linear_value,
@@ -93,17 +103,9 @@ scenario_linear_change <- function(df,
     dplyr::bind_rows(scenario_linear_change)
 }
 
-#' Scenario to add a linear percentage point change stored in a column
-#'
-#' `scenario_linear_change_col` wraps around
-#' `scenario_linear_change` to provide linear values from a column
-#' specified in `linear_value` rather than a single value.
-#'
 #' @param linear_value_col name of column with linear values
-#' @inherit scenario_fixed_target
-#' @inheritParams trim_values
-#' @inheritParams transform_hpop_data
-
+#'
+#' @rdname linear_change
 scenario_linear_change_col <- function(df,
                                        linear_value_col,
                                        value_col = "value",

@@ -11,10 +11,12 @@
 #' as usual scenario for reported data, and the best of the two chosen as the
 #' acceleration scenario.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #'
 #' @return data frame with acceleration scenario binded to `df`. `scenario_col` is
 #' set to `acceleration`
+#'
+#' @family uhc_acceleration
 #'
 accelerate_anc4 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
@@ -123,8 +125,11 @@ accelerate_anc4 <- function(df,
 #' - For countries with reported data, the best of business as usual and **fixed
 #'  target of 95% by 2025** is chosen.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_art <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -224,8 +229,11 @@ accelerate_art <- function(df,
 #' performing countries with at least 4 reported/estimated values**, with an
 #' upper limit of 18, is returned.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_beds <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
@@ -324,12 +332,15 @@ accelerate_beds <- function(df,
 
 #' Accelerate bp
 #'
-#' Accelerate bp by aiming at reaching 80% by 2030.
+#' Accelerate bp by taking the best of aiming at reaching 80% by 2030 and
+#' business as usual.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
 #'
-accelerate_bp <- function(df,
+#' @family uhc_acceleration
+#'
+ accelerate_bp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
                           value_col = "value",
                           scenario_col = "scenario",
@@ -384,7 +395,10 @@ accelerate_bp <- function(df,
 #'
 #' Accelerate doctors using the business as usual scenario.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_doctors <- function(df,
                                ind_ids = billion_ind_codes("uhc"),
@@ -411,7 +425,10 @@ accelerate_doctors <- function(df,
 #' Accelerate nurses using the business as usual scenario.
 #'
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_nurses <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
@@ -437,9 +454,12 @@ accelerate_nurses <- function(df,
 #' - For countries with a 2018 value less than the 2018 global median, the
 #' average of the top 5 rate of change within all countries.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams transform_hpop_data
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_hwf <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -512,8 +532,11 @@ accelerate_hwf <- function(df,
 #' - the scenario is then a straight line to the target_value and target_year
 #' - the target values for each country are provided by the technical program.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_dtp3 <- function(df,
                             ind_ids = billion_ind_codes("uhc"),
@@ -578,7 +601,10 @@ accelerate_dtp3 <- function(df,
 #' Accelerate fh by taking the best of business as usual and halting upward trends
 #' in the data to the 2018 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_fh <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
@@ -636,8 +662,11 @@ accelerate_fh <- function(df,
 #' target for quantile_year = 2018 and 5 quantiles (capped by the maximum regional
 #' value in 2018).
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_fp <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
@@ -734,7 +763,10 @@ accelerate_fp <- function(df,
 #'
 #' Accelerate fpg by halting the rise to 2010 value.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_fpg <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -751,7 +783,9 @@ accelerate_fpg <- function(df,
 #' Accelerate itn by taking the best of business as usual and a **fixed target of
 #' 80 by 2030**.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
+#'
+#' @family uhc_acceleration
 #'
 accelerate_itn <- function(df,
                            ind_ids = billion_ind_codes("uhc"),
@@ -809,7 +843,10 @@ accelerate_itn <- function(df,
 #' of 90 by 2025** for countries with two or more data points since 2000. Otherwise,
 #' the business as usual scenario is used.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_pneumo <- function(df,
                               ind_ids = billion_ind_codes("uhc"),
@@ -892,7 +929,10 @@ accelerate_pneumo <- function(df,
 #'
 #' Accelerate tb by using a **fixed target of 90 by 2025**.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_tb <- function(df,
                           ind_ids = billion_ind_codes("uhc"),
@@ -950,8 +990,11 @@ accelerate_tb <- function(df,
 #' threshold) of the quantile it belongs to in 2017, with n = 5 quantiles. Lower
 #' and upper limits of 0 and 99, respectively, are also imposed on the results.
 #'
-#' @inherit accelerate_anc4
+#' @inheritParams accelerate_anc4
 #' @inheritParams recycle_data
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_uhc_sanitation <- function(df,
                                       ind_ids = billion_ind_codes("uhc"),
@@ -999,8 +1042,11 @@ accelerate_uhc_sanitation <- function(df,
 #' scenarios are run on the **crude tobacco usage** values, which are then converted
 #' to their age-standardised equivalents using an approximation.
 #'
-#' @inherit accelerate_alcohol
+#' @inheritParams accelerate_alcohol
 #' @inheritParams accelerate_child_viol
+#'
+#' @family uhc_acceleration
+#'
 #'
 accelerate_uhc_tobacco <- function(df,
                                    ind_ids = billion_ind_codes("uhc"),

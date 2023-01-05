@@ -80,9 +80,6 @@ Although separate indicator codes can be used than the standard, they must
 be supplied as a named vector where the names correspond to the output of
 \code{billion_ind_codes()}.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_best_of} picks the best value between multiple scenarios specified
 in \code{scenario_names}. \code{small_is_best} allows to pick if higher value or
@@ -93,3 +90,17 @@ If multiple scenario are tied for the best scenario, the scenario with the best 
 series for each \code{iso3} and \code{ind} is picked. If they are still tied scenarios for
 the best value, the first in alphabetical order is picked.
 }
+\seealso{
+Basic scenarios
+\code{\link{scenario_aroc}()},
+\code{\link{scenario_bau}()},
+\code{\link{scenario_linear_change}()},
+\code{\link{scenario_percent_baseline}()}
+
+Comparing scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_in_region}()},
+\code{\link{scenario_quantile}()}
+}
+\concept{basic_scenarios}
+\concept{comparing_scenario}

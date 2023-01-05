@@ -25,16 +25,30 @@ calculating contributions on data in long format rather than wide format.}
 
 \item{...}{additional parameters to be passed to scenario function}
 }
-\value{
-data frame with acceleration scenario binded to \code{df}. \code{scenario_col} is
-set to \code{acceleration}
-}
 \description{
-Accelerate transfats by targeting 100 by 2025.
+Put transfats on SDG trajectory by targeting 100 by 2025.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_fixed_target(df, target_value = 100, target_year = 2025, small_is_best = TRUE,...)},
+\seealso{
+HPOP SDG scenarios
+\code{\link{sdg_adult_obese}()},
+\code{\link{sdg_alcohol}()},
+\code{\link{sdg_child_obese}()},
+\code{\link{sdg_child_viol}()},
+\code{\link{sdg_devontrack}()},
+\code{\link{sdg_fuel}()},
+\code{\link{sdg_hpop_sanitation_rural}()},
+\code{\link{sdg_hpop_sanitation_urban}()},
+\code{\link{sdg_hpop_sanitation}()},
+\code{\link{sdg_hpop_tobacco}()},
+\code{\link{sdg_ipv}()},
+\code{\link{sdg_overweight}()},
+\code{\link{sdg_pm25}()},
+\code{\link{sdg_road}()},
+\code{\link{sdg_stunting}()},
+\code{\link{sdg_suicide}()},
+\code{\link{sdg_wasting}()},
+\code{\link{sdg_water_rural}()},
+\code{\link{sdg_water_urban}()},
+\code{\link{sdg_water}()}
 }
-}
+\concept{hpop_sdg}

@@ -13,27 +13,27 @@ remove_unwanted_scenarios(df, scenario_col = "scenario", unwanted_scenarios)
 
 \item{unwanted_scenarios}{character vector of scenarios to be remove}
 }
-\value{
-Data frame in long format.
-}
 \description{
-\code{recycle_data_scenario_single } reuses values present in the specified
-scenarios in \code{default_scenario}, \code{scenario_reported_estimated},
-\code{scenario_covid_shock} and \code{scenario_reference_infilling} for the specified
-scenarios.
+Remove unwanted scenarios from df
 }
-\details{
-To do so, it looks at:
-\enumerate{
-\item values in \code{default_scenario} but not in the scenario specified
-\item values in \code{scenario_reported_estimated} or \code{scenario_covid_shock} but not
-in the scenario specified or \code{default_scenario}.
-\item values in \code{scenario_reference_infilling} but not in the scenario specified,
-\code{scenario_reported_estimated}, \code{scenario_covid_shock}, or
-\code{scenario_reference_infilling}
+\seealso{
+General scenario functions
+\code{\link{add_scenario}()},
+\code{\link{calculate_aarc}()},
+\code{\link{calculate_aroc}()},
+\code{\link{exec_scenario}()},
+\code{\link{fill_cols_scenario}()},
+\code{\link{flat_extrapolation}()},
+\code{\link{get_aarr}()},
+\code{\link{get_baseline_value}()},
+\code{\link{get_baseline_year}()},
+\code{\link{get_last_value}()},
+\code{\link{get_last_year_scenario}()},
+\code{\link{get_latest_aarc}()},
+\code{\link{get_percent_change_aarc}()},
+\code{\link{get_target_aarc}()},
+\code{\link{trim_values}()},
+\code{\link{trim_years}()}
 }
-
-For more information see:
-
-\code{vignette("scenarios", package = "billionaiRe")}
-}
+\concept{scenarios}
+\keyword{internal}

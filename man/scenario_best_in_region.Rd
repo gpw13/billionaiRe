@@ -80,9 +80,6 @@ limit if \code{percent_change} is positive, and 100 if negative.}
 
 \item{default_scenario}{name of the default scenario to be used.}
 }
-\value{
-Dataframe with scenario rows
-}
 \description{
 \code{scenario_best_in_region} aims to reach the mean regional average annual change in
 which a country is at \code{quantile_year}. The target is based on the ARC between
@@ -95,3 +92,10 @@ best or not.
 Calculates the regional target, then wraps around
 \code{scenario_linear_change_col} to aim at the target.
 }
+\seealso{
+Comparing scenarios
+\code{\link{scenario_bau}()},
+\code{\link{scenario_best_of}()},
+\code{\link{scenario_quantile}()}
+}
+\concept{comparing_scenario}

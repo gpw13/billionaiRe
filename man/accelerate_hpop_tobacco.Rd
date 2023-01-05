@@ -49,9 +49,9 @@ Default is \code{historical}.}
 }
 \description{
 Accelerate hpop_tobacco by picking the best value between business as usual,
-halt the rise in 2018, or a custom version of scenario_percent_baseline. The
-custom \code{scenario_percent_baseline} is taking similar parameters to
-\code{scenario_percent_baseline}'s \code{percent_change} = -30, \code{baseline_year} = 2010,
+halt the rise in 2018, or a custom version of \code{scenario_percent_baseline()}. The
+custom function is taking similar parameters to
+\code{scenario_percent_baseline()}'s \code{percent_change} = -30, \code{baseline_year} = 2010,
 but values are added to the \code{start_year} value, rather than the \code{baseline_year}
 values.
 }
@@ -65,3 +65,29 @@ Runs:
 
 Then picks the best result between the three scenarios.
 }
+\seealso{
+scenario_percent_baseline
+
+HPOP acceleration scenarios
+\code{\link{accelerate_adult_obese}()},
+\code{\link{accelerate_alcohol}()},
+\code{\link{accelerate_child_obese}()},
+\code{\link{accelerate_child_viol}()},
+\code{\link{accelerate_devontrack}()},
+\code{\link{accelerate_fuel}()},
+\code{\link{accelerate_hpop_sanitation_rural}()},
+\code{\link{accelerate_hpop_sanitation_urban}()},
+\code{\link{accelerate_hpop_sanitation}()},
+\code{\link{accelerate_ipv}()},
+\code{\link{accelerate_overweight}()},
+\code{\link{accelerate_pm25}()},
+\code{\link{accelerate_road}()},
+\code{\link{accelerate_stunting}()},
+\code{\link{accelerate_suicide}()},
+\code{\link{accelerate_transfats}()},
+\code{\link{accelerate_wasting}()},
+\code{\link{accelerate_water_rural}()},
+\code{\link{accelerate_water_urban}()},
+\code{\link{accelerate_water}()}
+}
+\concept{hpop_acceleration}

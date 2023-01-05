@@ -22,3 +22,4 @@ indicators available for use in the calculation. It returns NA (and thus NA when
 calculated as ASC) if any indicator is missing. The only exception is if
 insecticide treated nets is missing.
 }
+\keyword{internal}

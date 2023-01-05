@@ -13,15 +13,29 @@ country, year, and indicator.}
 \item{...}{additional parameters to be passed to scenario function}
 }
 \description{
-Accelerate child_obese by halting upwards trend in the data to the 2010 value.
+Put child_obese on SDG trajectory by halting upwards trend in the data to the 2010 value.
 }
-\details{
-Runs:
-\itemize{
-\item \code{scenario_halt_rise(df, baseline_year = 2018, small_is_best = TRUE,...)},
-\item \code{scenario_bau(df, small_is_best = TRUE,...)}, and
-\item \code{scenario_percent_baseline(df, percent_change = -10, baseline_year = 2010, small_is_best = TRUE, ...)}
+\seealso{
+HPOP SDG scenarios
+\code{\link{sdg_adult_obese}()},
+\code{\link{sdg_alcohol}()},
+\code{\link{sdg_child_viol}()},
+\code{\link{sdg_devontrack}()},
+\code{\link{sdg_fuel}()},
+\code{\link{sdg_hpop_sanitation_rural}()},
+\code{\link{sdg_hpop_sanitation_urban}()},
+\code{\link{sdg_hpop_sanitation}()},
+\code{\link{sdg_hpop_tobacco}()},
+\code{\link{sdg_ipv}()},
+\code{\link{sdg_overweight}()},
+\code{\link{sdg_pm25}()},
+\code{\link{sdg_road}()},
+\code{\link{sdg_stunting}()},
+\code{\link{sdg_suicide}()},
+\code{\link{sdg_transfats}()},
+\code{\link{sdg_wasting}()},
+\code{\link{sdg_water_rural}()},
+\code{\link{sdg_water_urban}()},
+\code{\link{sdg_water}()}
 }
-
-Then picks the best result between the three scenarios.
-}
+\concept{hpop_sdg}

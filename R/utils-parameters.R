@@ -1,3 +1,6 @@
+#' @noRd
+#'
+#' @keywords internal
 get_right_parameters <- function(params, fn) {
   params_fn <- params[names(params) %in% names(formals(fn))]
 
@@ -6,6 +9,9 @@ get_right_parameters <- function(params, fn) {
   }
 }
 
+#' @noRd
+#'
+#' @keywords internal
 get_dots_and_call_parameters <- function(...,
                                          remove_df = TRUE){
   dots <- rlang::list2(...)
@@ -26,6 +32,9 @@ get_dots_and_call_parameters <- function(...,
 
 }
 
+#' @noRd
+#'
+#' @keywords internal
 name_call_parameters <- function(call_parameters, fn_formals_names){
 
   for(i in 1:length(call_parameters)){
@@ -36,6 +45,9 @@ name_call_parameters <- function(call_parameters, fn_formals_names){
   return(call_parameters)
 }
 
+#' @noRd
+#'
+#' @keywords internal
 set_parameters <- function(parameters, ...){
   changes <- rlang::list2(...)
 

@@ -21,3 +21,13 @@ or as a percent of total projected population in 2023 ("perc").}
 \description{
 Matches country ISO3 codes to data in the \code{country_shares} data frame.
 }
+\seealso{
+Functions to access metadata
+\code{\link{billion_ind_codes}()},
+\code{\link{convert_ind_codes}()},
+\code{\link{get_ind_billion}()},
+\code{\link{get_ind_metadata}()},
+\code{\link{get_sdi_ratio}()},
+\code{\link{indicator_df}}
+}
+\concept{metadata}

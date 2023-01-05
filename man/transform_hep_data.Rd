@@ -60,3 +60,13 @@ ties in with the rest, see the vignette:
 
 \href{../doc/hpop.html}{\code{vignette("hep", package = "billionaiRe")}}
 }
+\seealso{
+HEP functions
+\code{\link{add_hep_populations}()},
+\code{\link{calculate_hep_billion}()},
+\code{\link{calculate_hep_components}()},
+\code{\link{hep_df}},
+\code{\link{transform_prev_cmpgn_data}()},
+\code{\link{transform_prev_routine_data}()}
+}
+\concept{hep}
