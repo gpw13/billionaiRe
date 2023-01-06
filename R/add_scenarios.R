@@ -230,7 +230,7 @@ add_scenario_indicator <- function(df,
 
         params <- set_parameters(params, value_col = "transform_value")
       }
-    }else if(scenario_function == "benchmarking" & get_ind_billion(this_ind) %in% c("hep", "hpop")){
+    }else if(scenario_function == "benchmarking" & this_ind != "espar" & get_ind_billion(this_ind) %in% c("hep", "hpop")){
       scenario_fn <- get(glue::glue("{scenario_function}_anc4"), mode = "function")
 
       params <- set_parameters(params, no_data_no_scenario = TRUE)
