@@ -292,6 +292,8 @@ recycle_data_scenario_single <- function(df,
 }
 
 #' @rdname recycle_data
+#'
+#' @export
 make_default_scenario <- function(df,
                                   scenario = "default",
                                   billion = c("all", "hep", "hpop", "uhc"),
