@@ -30,9 +30,7 @@ You can install billionaiRe from [GitHub](https://github.com/) with:
 remotes::install_github("gpw13/billionaiRe", build_vignettes = TRUE)
 ```
 
-You will need to have already installed the wppdistro package, which is stored in
-a private repo and only made public upon request. Please contact caldwellst@who.int
-to request access.
+You will need to have already installed the wppdistro and whdh packages, which is stored in a private repo and only made public upon request from valid WHO users. Please contact messeillere@who.int to request access.
 
 # Calculations
 
@@ -69,10 +67,10 @@ Scenarios must:
 
 Four main sets of scenarios can be identified, from the most basic to the more complex:
 
-1.  [Basic scenarios]: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (`scenario_fixed_target()`), follow a specific rate of change (`scenario_aroc()`), etc. See [Basic scenario](./vignettes/basic-scenarios.html) for more details.
-2.  [Target scenarios]: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called `sdg` scenarios)).
-3.  [Benchmarking scenarios]: Benchmarking scenarios compare performance of countries given various grouping and aim at a specified sub-set of best performing countries.
-4.  [Mixed scenarios]: Developped with indicator-level subject matter knowledge to pick realistic improvement scenarios (e.g. `acceleration` scenarios)
+1.  Basic scenarios: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (`scenario_fixed_target()`), follow a specific rate of change (`scenario_aroc()`), etc. See [Basic scenario](./vignettes/basic-scenarios.html) for more details.
+2.  Target scenarios: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called `sdg` scenarios)).
+3.  Benchmarking scenarios: Benchmarking scenarios compare performance of countries given various grouping and aim at a specified sub-set of best performing countries.
+4.  Mixed scenarios: Developped with indicator-level subject matter knowledge to pick realistic improvement scenarios (e.g. `acceleration` scenarios)
 
 If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see [Data recycling](./vignettes/data-recycling.html)).
 
