@@ -160,3 +160,50 @@ testthat::test_that(glue::glue("add_hep_population generates accurate population
   testthat::expect_equal(uga_2025,
                          sum(uga_2025_campaign, surviving_infants * length(uga_2025_routine), na.rm = TRUE))
 })
+
+
+testthat::test_that(glue::glue("add_hep_population generates accurate population figures when pop_year values are missing"),{
+  surviving_infants <- wppdistro::get_population("UGA", 2025, age_range = "under_1")
+
+  test_add_hep_population_2021 <- test_data_calculated %>%
+    dplyr::filter(dplyr::case_when(
+      year >= 2021 & scenario == "pre_covid_trajectory" ~ FALSE,
+      TRUE ~ TRUE)) %>%
+    add_hep_populations(scenario_col = "scenario")
+
+
+  uga_2020 <- test_add_hep_population_2021 %>%
+    dplyr::filter(iso3 == "UGA",
+                  year == 2020,
+                  ind == "prevent",
+                  scenario == "pre_covid_trajectory") %>%
+    dplyr::pull(population) %>%
+    unique()
+
+  campaign_denom <- billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "_campaign_denom$")]
+
+  uga_2020_campaign <- test_add_hep_population_2021 %>%
+    dplyr::group_by(scenario) %>%
+    dplyr::filter(year == max(year)) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(iso3 == "UGA",
+                  .data[["ind"]] %in% campaign_denom,
+                  scenario == "pre_covid_trajectory") %>%
+    dplyr::pull(transform_value) %>%
+    unique() %>%
+    sum()
+
+  routine_num <- billion_ind_codes("hep")[stringr::str_detect(billion_ind_codes("hep"), "_routine_num$")]
+
+  uga_routine <- test_add_hep_population_2021 %>%
+    dplyr::filter(iso3 == "UGA",
+                  .data[["ind"]] %in% routine_num,
+                  year == 2020,
+                  scenario == "pre_covid_trajectory") %>%
+    dplyr::distinct() %>%
+    dplyr::pull(transform_value) %>%
+    unique()
+
+  testthat::expect_equal(uga_2020,
+                         sum(uga_2020_campaign, surviving_infants * length(uga_routine), na.rm = TRUE))
+})

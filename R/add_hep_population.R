@@ -10,7 +10,7 @@
 #' the `transform_value_col` is required.
 #'
 #' @inherit transform_hpop_data return details params
-#' @param pop_year Year used to pull in HPOP populations, defaults to 2025.
+#' @param pop_year Year used to pull in HEP populations, defaults to 2025.
 #' @param population Column name of column to create with population figures.
 #' @inheritParams calculate_hpop_contributions
 #' @inheritParams calculate_hpop_change_vector
@@ -111,13 +111,20 @@ add_hep_populations <- function(df,
                                 TRUE)
   )
 
+  surviving_infants_df <- df %>%
+    dplyr::ungroup() %>%
+    dplyr::select(.data[["iso3"]]) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate("surviving_infants" := wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "under_1"))
+
   pop_df <- furrr::future_pmap_dfr(args,
                                    hep_pop_calc,
                                    df = df,
                                    transform_value_col = transform_value_col,
                                    ind_ids = ind_ids,
                                    pop_year = pop_year,
-                                   scenario_col = scenario_col
+                                   scenario_col = scenario_col,
+                                   surviving_infants_df = surviving_infants_df
   )
 
   other_inds <- ind_ids[stringr::str_detect(ind_ids, paste0(unique(pop_df[["ind"]]), collapse = "|"), negate = TRUE)]
@@ -146,38 +153,69 @@ hep_pop_calc <- function(df,
                          ind_ids,
                          multiply_surviving_infs,
                          pop_year,
-                         scenario_col = "scenario"){
+                         scenario_col = "scenario",
+                         surviving_infants_df){
 
-  keep_surviving_infants <- df %>%
+
+  routine_num <- numerator[stringr::str_detect(numerator, "routine_num$")]
+  routine_denom <- denominator[stringr::str_detect(denominator, "routine_denom$|^surviving_infants$")]
+  campaign_num <- numerator[stringr::str_detect(numerator, "campaign_num$")]
+  campaign_denom <- denominator[stringr::str_detect(denominator, "campaign_denom$")]
+
+  df_get_surviving_infants <- df %>%
     dplyr::group_by(dplyr::across(c("iso3", !!scenario_col))) %>%
-    dplyr::filter(.data[["ind"]] %in% numerator[stringr::str_detect(numerator, "routine_num$")]) %>%
-    dplyr::mutate("ind" := "surviving_infants") %>%
-    dplyr::select("iso3", "ind", !!scenario_col) %>%
+    dplyr::filter(.data[["ind"]] %in% routine_num) %>%
+    dplyr::select(dplyr::all_of(c("iso3", !!scenario_col))) %>%
     dplyr::distinct()
+
+  if(nrow(df_get_surviving_infants) > 0){
+
+    full_routine_df <- df %>%
+      dplyr::semi_join(df_get_surviving_infants, by = c("iso3", scenario_col)) %>%
+      dplyr::filter(.data[["ind"]] %in% routine_denom) %>%
+      dplyr::select(dplyr::all_of(c("iso3", "ind", !!scenario_col))) %>%
+      dplyr::distinct()
+
+    df_get_surviving_infants <- df %>%
+      dplyr::semi_join(df_get_surviving_infants, by = c("iso3", scenario_col)) %>%
+      dplyr::filter(.data[["ind"]] %in% routine_denom) %>%
+      dplyr::filter(.data[["year"]] == pop_year) %>%
+      dplyr::full_join(full_routine_df, by = c("iso3", "ind", scenario_col)) %>%
+      dplyr::left_join(surviving_infants_df, by = "iso3") %>%
+      dplyr::mutate("ind" := "surviving_infants",
+                    dplyr::across(
+                      transform_value_col,
+                      ~ dplyr::case_when(
+                        !is.na(.x) ~ .x,
+                        TRUE ~ .data[["surviving_infants"]]
+                      )
+                    )) %>%
+      dplyr::select(dplyr::all_of(c("iso3", "ind", !!scenario_col, !!transform_value_col))) %>%
+      dplyr::distinct()
+  }
 
   campaign_df <- df %>%
     dplyr::group_by(dplyr::across(c("iso3", !!scenario_col))) %>%
-    dplyr::filter(.data[["ind"]] %in% numerator[stringr::str_detect(numerator, "campaign_num$")]) %>%
-    dplyr::mutate("ind" := stringr::str_replace_all(.data[["ind"]], "_num", "_denom")) %>%
-    dplyr::select("iso3", "ind", !!scenario_col) %>%
-    dplyr::distinct()
+    dplyr::filter(.data[["ind"]] %in% campaign_denom) %>%
+    dplyr::filter(.data[["year"]] <= pop_year)
 
-  ind_keep <- dplyr::bind_rows(keep_surviving_infants, campaign_df)
 
-  pop_df <- df %>%
-    dplyr::filter(
-      .data[["ind"]] %in% denominator,
-      .data[["year"]] %in% pop_year
-    ) %>%
-    dplyr::select("ind", "iso3", !!transform_value_col, !!scenario_col) %>%
-    dplyr::semi_join(ind_keep, by = c("iso3", "ind", scenario_col))
+  if(nrow(campaign_df) > 0){
+    campaign_df <- campaign_df %>%
+      dplyr::group_by(dplyr::across(c("iso3", "ind", !!scenario_col))) %>%
+      dplyr::filter(.data[["year"]] == suppressWarnings(max(.data[["year"]]))) %>%
+      dplyr::select(dplyr::all_of(c("ind", "iso3", !!transform_value_col, !!scenario_col))) %>%
+      dplyr::distinct()
+  }
+
+  pop_df <- dplyr::bind_rows(df_get_surviving_infants, campaign_df)
 
   if (multiply_surviving_infs) {
 
     nb_multi <- df %>%
       dplyr::group_by(dplyr::across(c("iso3", !!scenario_col))) %>%
-      dplyr::filter(.data[["ind"]] %in% numerator[stringr::str_detect(numerator, "routine_num$")],
-                    .data[["year"]] %in% pop_year) %>%
+      dplyr::filter(.data[["ind"]] %in% routine_num) %>%
+      dplyr::filter(.data[["year"]] == max(.data[["year"]])) %>%
       dplyr::summarise(n = dplyr::n())
 
     pop_df <- pop_df %>%
