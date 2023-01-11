@@ -87,7 +87,7 @@
 <p>You can install billionaiRe from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"gpw13/billionaiRe"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>You will need to have already installed the wppdistro package, which is stored in a private repo and only made public upon request. Please contact <a href="mailto:caldwellst@who.int" class="email">caldwellst@who.int</a> to request access.</p>
+<p>You will need to have already installed the wppdistro and whdh packages, which is stored in a private repo and only made public upon request from valid WHO users. Please contact <a href="mailto:messeillere@who.int" class="email">messeillere@who.int</a> to request access.</p>
 </div>
 </div>
 <div class="section level1">
@@ -210,12 +210,10 @@
 </ol>
 <p>Four main sets of scenarios can be identified, from the most basic to the more complex:</p>
 <ol style="list-style-type: decimal">
-<li>[Basic scenarios]: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (<code><a href="reference/fixed_target.html">scenario_fixed_target()</a></code>), follow a specific rate of change (<code><a href="reference/scenario_aroc.html">scenario_aroc()</a></code>), etc. See <a href="./vignettes/basic-scenarios.html">Basic scenario</a> for more details.</li>
-<li>[Target scenarios]: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called <code>sdg</code> scenarios)).</li>
-<li>
-</li>
-<li>
-</li>
+<li>Basic scenarios: Those scenarios are the building blocks of the other scenarios, but they can also be called on their own. They can reach a fixed target at a specified year (<code><a href="reference/fixed_target.html">scenario_fixed_target()</a></code>), follow a specific rate of change (<code><a href="reference/scenario_aroc.html">scenario_aroc()</a></code>), etc. See <a href="./vignettes/basic-scenarios.html">Basic scenario</a> for more details.</li>
+<li>Target scenarios: Target-based scenarios apply indicator-specific targets or trajectories to be reached by a specific date (e.g. Sustainable Development Goal (SDG) targets (called <code>sdg</code> scenarios)).</li>
+<li>Benchmarking scenarios: Benchmarking scenarios compare performance of countries given various grouping and aim at a specified sub-set of best performing countries.</li>
+<li>Mixed scenarios: Developped with indicator-level subject matter knowledge to pick realistic improvement scenarios (e.g. <code>acceleration</code> scenarios)</li>
 </ol>
 <p>If billionaiRe require data that is missing in the scenario, they will be recycled from other scenarios (see <a href="./vignettes/data-recycling.html">Data recycling</a>).</p>
 <p>See <a href="./vignettes/basic-scenarios.html">Scenarios vignette</a> for more details.</p>
