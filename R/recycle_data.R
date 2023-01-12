@@ -119,8 +119,7 @@ recycle_data_scenario_single <- function(df,
                                          trim_years = FALSE,
                                          start_year_trim = start_year,
                                          end_year_trim = end_year,
-                                         assert_data_calculations = TRUE
-) {
+                                         assert_data_calculations = TRUE) {
   assert_columns(df, scenario_col, value_col, "iso3", "ind", "year", "type")
   assert_unique_rows(df, scenario_col = scenario_col, ind_ids)
 
@@ -132,47 +131,27 @@ recycle_data_scenario_single <- function(df,
   if (scenario %in% c(scenario_reported_estimated, scenario_covid_shock, scenario_reference_infilling)) {
     df_no_recycling <- df %>%
       dplyr::filter(.data[[scenario_col]] == !!scenario)
-    ## Start of addition to fix issue with missing contributions for covid_shock (and other similar data)
-
-    #The No recycling "scenarios" are for data that is reported or infilled including the covid shock reported data
-    #Note that for other scenarios (such as flat extrapolation a complete scenario with all years is created using recycled data to fill it out,
-    # but the recycled data is then thrown away after the calculation has been carried out.
-    #There is an issue because these are the values that are retained from the no recycling scenarios can end up with a contribution that is missing
-    #The cotnributions fot these values are calculated as prt of the scenarios ... but then chucked out.
-    # To get around this (may be only a temporaty fix) we make sure the contributions are calculated for the no recycling values
-    #A contribution can be determined if the start year (2018) is present.
-    #So we add in baseline year to these no recyling scenario to ensure contribution can be  calculated
-    #first find where there are some data but without the initial 2018 value
-    # if (dim(df_no_recycling %>% filter(year==start_year))[1]==0 & dim( df_no_recycling %>%filter( year>start_year))[1]>0) {
-    #   #and for these cases add in an extra recyled value for the start year (this will be thrown away afterwards, but will allow
-    #   #the contribution to be estimated for the later years)
-    #   df_2018<- df %>% filter(year==start_year) %>% select(-!!scenario_col) %>% mutate(recycled=TRUE, `:=`(!!sym(scenario_col), scenario))
-    #   df_no_recycling <- df_no_recycling %>% bind_rows(df_2018)
-    # }
-    ##end of addition
     return(df_no_recycling)
   }
 
   assert_ind_ids(ind_ids, billion)
 
-  default_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!default_scenario)
-
-  reported_estimated_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!scenario_reported_estimated)
-
-  covid_shock_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!scenario_covid_shock)
-
-  reference_infilling_df <- df %>%
-    dplyr::filter(.data[[scenario_col]] == !!scenario_reference_infilling)
-
   scenario_df <- df %>%
     dplyr::filter(.data[[scenario_col]] == !!scenario)
+
+  # Get unique default
+
+  default_df <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!default_scenario)
 
   default_not_in_scenario <- dplyr::anti_join(default_df, scenario_df,
                                               by = c("iso3", "ind", "year")
   )
+
+  # Get unique reported
+
+  reported_estimated_df <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!scenario_reported_estimated)
 
   reported_not_in_scenario <- dplyr::anti_join(reported_estimated_df, scenario_df,
                                                by = c("iso3", "ind", "year")
@@ -182,6 +161,11 @@ recycle_data_scenario_single <- function(df,
                                               by = c("iso3", "ind", "year")
   )
 
+  # Get unique covid
+
+  covid_shock_df <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!scenario_covid_shock)
+
   covid_shock_not_in_scenario <- dplyr::anti_join(covid_shock_df, scenario_df,
                                                   by = c("iso3", "ind", "year")
   )
@@ -189,6 +173,15 @@ recycle_data_scenario_single <- function(df,
   covid_shock_not_in_default <- dplyr::anti_join(covid_shock_not_in_scenario, default_not_in_scenario,
                                                  by = c("iso3", "ind", "year")
   )
+
+  covid_shock_not_in_reported <- dplyr::anti_join(covid_shock_not_in_default, reported_not_in_default,
+                                                 by = c("iso3", "ind", "year")
+  )
+
+  # Get unique reference
+
+  reference_infilling_df <- df %>%
+    dplyr::filter(.data[[scenario_col]] == !!scenario_reference_infilling)
 
   reference_infilling_not_in_scenario <- dplyr::anti_join(
     reference_infilling_df, scenario_df,
@@ -199,13 +192,20 @@ recycle_data_scenario_single <- function(df,
                                                          by = c("iso3", "ind", "year")
   )
 
+  reference_infilling_not_in_reported <- dplyr::anti_join(reference_infilling_not_in_default, reported_not_in_default,
+                                                          by = c("iso3", "ind", "year")
+  )
+
   reference_infilling_not_in_covid_shock <- dplyr::anti_join(
-    reference_infilling_not_in_default, covid_shock_df,
+    reference_infilling_not_in_reported, covid_shock_not_in_reported,
     by = c("iso3", "ind", "year")
   )
 
-  not_in_scenario <- dplyr::bind_rows(default_not_in_scenario, reported_not_in_default) %>%
-    dplyr::bind_rows(reference_infilling_not_in_covid_shock, covid_shock_not_in_default) %>%
+  not_in_scenario <- dplyr::bind_rows(default_not_in_scenario,
+                                      reported_not_in_default,
+                                      reference_infilling_not_in_covid_shock,
+                                      covid_shock_not_in_reported
+  ) %>%
     dplyr::mutate(recycled = TRUE)
 
   if (!include_projection) {

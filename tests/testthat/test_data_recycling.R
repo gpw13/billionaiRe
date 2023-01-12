@@ -248,3 +248,24 @@ testthat::test_that("recycling functions recycle with missing base scenarios", {
   testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "covid_shock"))), 2)
   testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df, scenario == "reference_infilling"))), 0)
 })
+
+testthat::test_that("recycling return one value when two base scenarios are present",{
+  duplicated_scenarios <- test_df %>%
+    dplyr::add_row(
+      value = 34:35,
+      scenario = "reference_infilling",
+      iso3 = "AFG",
+      year = 2018:2019,
+      type = rep("projected", 2),
+      ind = "water"
+    ) %>%
+    dplyr::arrange(iso3, ind, year)
+
+  recycled_df <- recycle_data(duplicated_scenarios, billion = "hpop")
+
+  testthat::expect_equal(length(dplyr::pull(dplyr::filter(recycled_df,
+                                                          year == 2018,
+                                                          scenario == "default"))),
+                         1)
+
+})
