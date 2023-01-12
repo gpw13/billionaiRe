@@ -113,7 +113,7 @@ add_hep_populations <- function(df,
 
   surviving_infants_df <- df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[["iso3"]]) %>%
+    dplyr::select("iso3") %>%
     dplyr::distinct() %>%
     dplyr::mutate("surviving_infants" := wppdistro::get_population(.data[["iso3"]], pop_year, age_range = "under_1"))
 
@@ -184,7 +184,7 @@ hep_pop_calc <- function(df,
       dplyr::left_join(surviving_infants_df, by = "iso3") %>%
       dplyr::mutate("ind" := "surviving_infants",
                     dplyr::across(
-                      transform_value_col,
+                      dplyr::all_of(transform_value_col),
                       ~ dplyr::case_when(
                         !is.na(.x) ~ .x,
                         TRUE ~ .data[["surviving_infants"]]
