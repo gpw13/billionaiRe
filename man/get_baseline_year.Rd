@@ -16,9 +16,9 @@ get_baseline_year(
 )
 }
 \arguments{
-\item{year}{(character vector) of years. Must be the same length as \code{value}}
+\item{year}{(character vector) of years.}
 
-\item{type}{(character vector) of types. Must be the same length as \code{value}}
+\item{type}{(character vector) of years. Must be the same length as \code{year}}
 
 \item{scenario_col}{(character vector) of scenarios. Must be the same length as \code{value}}
 

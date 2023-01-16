@@ -330,7 +330,7 @@ make_default_scenario <- function(df,
   ind_ids <- purrr::map(billion, billion_ind_codes) %>%
     stats::setNames(billion)
 
-  purrr::map_dfr(
+  recycled_data <- purrr::map_dfr(
     billion,
     ~ recycle_data_scenario_single(
       df = df,
@@ -352,8 +352,15 @@ make_default_scenario <- function(df,
       end_year_trim = end_year_trim,
       assert_data_calculations = assert_data_calculations
     )
-  ) %>%
-    dplyr::bind_rows(df) %>%
+  )
+
+  recycled_data_not_in_df <- dplyr::anti_join(recycled_data, df,
+                                              by = c("iso3", "ind", "year", "scenario",
+                                                     "value")
+  )
+
+  df %>%
+    dplyr::bind_rows(recycled_data_not_in_df) %>%
     dplyr::mutate(recycled = dplyr::case_when(
       is.na(.data[["recycled"]]) | .data[["recycled"]] == FALSE ~ FALSE,
       TRUE ~ TRUE

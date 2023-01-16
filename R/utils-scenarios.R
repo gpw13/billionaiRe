@@ -193,6 +193,8 @@ get_baseline_value <- function(value,
 
 #' Get last year from baseline
 #'
+#' @param year (character vector) of years.
+#' @param type (character vector) of years. Must be the same length as `year`
 #' @inheritParams get_baseline_value
 #'
 #' @family scenarios
@@ -362,7 +364,7 @@ get_last_interval_year <- function(year,
 #' @family scenarios
 #'
 #' @keywords internal
-get_last_value <- function(df, type_filter = c("reported", "estimated")){
+get_last_value <- function(df, type_filter = c("reported", "estimated", "projected", "estimated")){
   assert_columns(df, "type", "year")
 
   df %>%

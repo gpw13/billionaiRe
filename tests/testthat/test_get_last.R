@@ -26,7 +26,7 @@ testthat::test_that("get_last_value gets the last reported or estimated value",{
   )
 
   last_reported_year <- df %>%
-    get_last_value() %>%
+    get_last_value(type_filter = c("reported", "estimated")) %>%
     dplyr::pull("year")
 
   testthat::expect_equal(last_reported_year, 2019)

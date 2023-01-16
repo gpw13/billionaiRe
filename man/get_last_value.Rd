@@ -4,7 +4,10 @@
 \alias{get_last_value}
 \title{Get last value for the filter}
 \usage{
-get_last_value(df, type_filter = c("reported", "estimated"))
+get_last_value(
+  df,
+  type_filter = c("reported", "estimated", "projected", "estimated")
+)
 }
 \arguments{
 \item{df}{(data.frame) containing the data. Needs to have at least the \code{year} and \code{type} columns.}
