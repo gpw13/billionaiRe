@@ -143,7 +143,7 @@ sdg_devontrack <- function(df,
 
   full_df <- tidyr::expand_grid(
     "iso3" := unique(df_this_ind[["iso3"]]),
-    "year" := start_year,
+    "year" := 2018,
     "ind" := this_ind,
     "{scenario_col}" := unique(df_this_ind[[scenario_col]])
   )
@@ -172,14 +172,16 @@ sdg_devontrack <- function(df,
     set_parameters(
       target_value = 100,
       target_year = 2030,
-      start_year = start_year
+      start_year = 2018,
+      start_trim_year = 2018
     ) %>%
     get_right_parameters(scenario_fixed_target)
 
   df_accelerated <- exec_scenario(df_this_ind,
                                   scenario_fixed_target,
                                   params) %>%
-    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]])
+    dplyr::filter(.data[[scenario_col]] %in% params[["scenario_name"]],
+                  year >= 2018)
 
   dplyr::bind_rows(df, df_accelerated)
 }
