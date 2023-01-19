@@ -52,9 +52,9 @@ set to \code{acceleration}
 @description
 }
 \details{
-\code{accelerate_espar()} accelerate espar by aiming at the best value between the regional average
-(WHO regions) and the value last year of the last year with complete espar
-data (with categories and sub-categories).
+\code{accelerate_espar()} accelerate espar by aiming at the best value between the
+regional average (WHO regions) and the last value of the last year with
+complete espar data.
 }
 \seealso{
 HEP acceleration scenarios

@@ -181,7 +181,6 @@ scenario_bau <- function(df,
                          default_scenario = "default") {
 
   indicator <- unique(df[["ind"]]) %>%
-    stringr::str_remove_all(paste0(c("espar[0-9]{2}_[0-9]{2}$", "espar[0-9]{2}$"), collapse = "|")) %>%
     unique()
 
   indicator <- indicator[indicator != ""]
@@ -289,7 +288,6 @@ scenario_with_values <- function(df,
                                  ...){
 
   indicator <- unique(df[["ind"]]) %>%
-    stringr::str_remove_all(paste0(c("espar[0-9]{2}_[0-9]{2}$", "espar[0-9]{2}$"), collapse = "|")) %>%
     unique()
 
   params <- get_dots_and_call_parameters(...)

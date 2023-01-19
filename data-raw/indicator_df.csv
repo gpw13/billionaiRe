@@ -51,37 +51,6 @@ HE_cholera_CampignSize,cholera_campaign_denom,NA,proj_data,FALSE,FALSE,TRUE,FALS
 HE_cholera_Campign,cholera_campaign_num,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA
 HE_detect,detect,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP1,Time to detect,days,%,Time to detect,Time to detect,60,detect_respond,FALSE,NA,NA,Business as usual,Business as usual
 HE_events,detect_respond,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP4,Time to detect and respond,days,%,Time to detect and respond,Time to detect and respond,63,detect_respond,FALSE,NA,NA,Business as usual,Business as usual
-HE_legislation,espar01,IHRSPAR_CAPACITY01,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP1,Legislation and Financing,%,%,Legislation and Financing,Legislation and Financing,39,prepare,FALSE,NA,NA,NA,NA
-NA,espar01_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_01,NA,%,%,"Legislation, laws, regulations, policy, administrative requirements or other government instruments to implement the IHR",Legislation and policies for IHR implementation,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar01_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_02,NA,%,%,Financing for the implementation of IHR capacities,Financing of IHR capacities,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar01_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP01_03,NA,%,%,Financing mechanism and funds for timely response to public health emergencies,Funds for timely response,NA,NA,FALSE,NA,NA,NA,NA
-HE_coordination,espar02,IHRSPAR_CAPACITY02,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP2,IHR functions,%,%,IHR coordination and National IHR Focal Point Functions,IHR functions,40,prepare,FALSE,NA,NA,NA,NA
-NA,espar02_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_01,NA,%,%,National IHR Focal Point functions under IHR,IHR focal point functions,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar02_02,IHRSPAR_CAPACITY02,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP02_02,NA,%,%,Multisectoral IHR coordination mechanisms,Multisectoral IHR coordination mechanisms,NA,NA,FALSE,NA,NA,NA,NA
-HE_zoonosis,espar03,IHRSPAR_CAPACITY03,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP3,Zoonotic interface,%,%,Zoonotic events and the human-animal interface,Zoonotic interface,41,prepare,FALSE,NA,NA,NA,NA
-HE_food,espar04,IHRSPAR_CAPACITY04,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP4,Food safety,%,%,Food safety,Food safety,42,prepare,FALSE,NA,NA,NA,NA
-HE_laboratory,espar05,IHRSPAR_CAPACITY05,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP5,Laboratory,%,%,Laboratory,Laboratory,43,prepare,FALSE,NA,NA,NA,NA
-NA,espar05_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_01,NA,%,%,Specimen referral and transport system,Specimen referral and transport system,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar05_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_02,NA,%,%,Implementation of a laboratory biosafety and biosecurity regime,Laboratory biosafety and security,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar05_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP05_03,NA,%,%,Access to laboratory testing capacity for priority diseases,Access to laboratory testing,NA,NA,FALSE,NA,NA,NA,NA
-HE_surveillance,espar06,IHRSPAR_CAPACITY06,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP6,Surveillance,%,%,Surveillance,Surveillance,44,prepare,FALSE,NA,NA,NA,NA
-NA,espar06_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_01,NA,%,%,Early warning function: indicator-and event-based surveillance,Indicator and event-based surveillance,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar06_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP06_02,NA,%,%,"Mechanism for event management (verification, risk assessment, analysis investigation)",Mechanism for event management,NA,NA,FALSE,NA,NA,NA,NA
-HE_hr,espar07,IHRSPAR_CAPACITY07,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP7,Human resources,%,%,Human resources,Human resources,45,prepare,FALSE,NA,NA,NA,NA
-HE_preparedness,espar08,IHRSPAR_CAPACITY08,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP8,National Health Emergency Framework,%,%,National Health Emergency Framework,National Health Emergency Framework,46,prepare,FALSE,NA,NA,NA,NA
-NA,espar08_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_01,NA,%,%,Planning for emergency preparedness and response mechanism,Preparedness for emergency and response mechanism,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar08_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_02,NA,%,%,Management of health emergency response operations,Management of health emergency response operations,NA,NA,FALSE,NA,NA,NA,NA
-HE_preparedness,espar08_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP08_03,NA,%,%,Emergency resource mobilization,Emergency resource mobilization,NA,NA,FALSE,NA,NA,NA,NA
-HE_response,espar09,IHRSPAR_CAPACITY09,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP9,Health service provision,%,%,Health service provision,Health service provision,47,prepare,FALSE,NA,NA,NA,NA
-NA,espar09_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_01,NA,%,%,Case management capacity for IHR relevant hazards,Case management for IHR hazards,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar09_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_02,NA,%,%,Capacity for infection prevention and control and chemical and radiation decontamination,Prevention and control of radiation,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar09_03,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP09_03,NA,%,%,Access to essential health services,Access to health services,NA,NA,FALSE,NA,NA,NA,NA
-HE_risk,espar10,IHRSPAR_CAPACITY10,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP10,Risk communication,%,%,$Risk communication,Risk communication,48,prepare,FALSE,NA,NA,NA,NA
-HE_points,espar11,IHRSPAR_CAPACITY11,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11,Points of entry,%,%,Points of entry,Points of entry,49,prepare,FALSE,NA,NA,NA,NA
-NA,espar11_01,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_01,NA,%,%,"Core capacity requirements at all times for designated airports, ports and ground crossings",Core capacity for points of entry,NA,NA,FALSE,NA,NA,NA,NA
-NA,espar11_02,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP11_02,NA,%,%,Effective public health response at points of entry,Response at points of entry,NA,NA,FALSE,NA,NA,NA,NA
-HE_chemical,espar12,IHRSPAR_CAPACITY12,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP12,Chemical events,%,%,Chemical events,Chemical events,50,prepare,FALSE,NA,NA,NA,NA
-HE_radionuclear,espar13,IHRSPAR_CAPACITY13,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREP13,Radiation emergencies,%,%,Radiation emergencies,Radiation emergencies,51,prepare,FALSE,NA,NA,NA,NA
 HE_hepi,hep_idx,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,HEPI,HEPI,%,%,HEP index,HEP index,64,NA,NA,NA,NA,NA,NA
 HE_numberofpeople,hep_num,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 NA,measles,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Measles - Campaign and Routine combined,Measles,NA,NA,NA,NA,NA,NA,NA

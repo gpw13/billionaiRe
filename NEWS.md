@@ -1,3 +1,6 @@
+# billionaiRe 0.8.2
+* Remove espar categories (i.e. `espar[0-9]{2}`) and sub-categories (`espar[0-9]{2}_[0-9]{2}`) as the 2018-2020 and >2020 timeseries are incompatible for those. The main change is in acceleration scenario.
+
 # billionaiRe 0.8.1
 * Update all documentation
 * Add `basic-scenarios`, `acceleration-scenarios`, `sdg-scenarios`, and `data-recycling` vignettes.

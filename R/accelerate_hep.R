@@ -2,9 +2,9 @@
 #'
 #'  @description
 #'
-#' `accelerate_espar()` accelerate espar by aiming at the best value between the regional average
-#' (WHO regions) and the value last year of the last year with complete espar
-#' data (with categories and sub-categories).
+#' `accelerate_espar()` accelerate espar by aiming at the best value between the
+#'  regional average (WHO regions) and the last value of the last year with
+#'  complete espar data.
 #'
 #' @inheritParams transform_hpop_data
 #' @inheritParams calculate_hpop_contributions
@@ -33,22 +33,10 @@ accelerate_espar <- function(df,
 
   assert_columns(df, "iso3", "year", value_col, "ind", "type", scenario_col)
 
-  espar_inds <- ind_ids[stringr::str_detect(ind_ids, "^espar")]
-
-  espar_cat <- ind_ids[stringr::str_detect(ind_ids, "espar[0-9]{2}$")]
-
-  espar_cat_sub_cat <- ind_ids[stringr::str_detect(ind_ids, "espar[0-9]{2}.{0,3}")]
-
-  espar_sub_cat <- ind_ids[stringr::str_detect(ind_ids, "espar[0-9]{2}_[0-9]{2}$")]
-
-  espar_cat_not_in_sub_cat <- espar_cat[!stringr::str_detect(espar_cat, paste0(unique(stringr::str_remove(espar_sub_cat, "_[0-9]{2}")), collapse = "|"))]
-
-  espar_sub_cat <- c(espar_sub_cat, espar_cat_not_in_sub_cat)
-
-  assert_ind_ids_in_df(df, ind_ids = espar_sub_cat, by_iso3 = FALSE)
+  espar_ind <- ind_ids["espar"]
 
   espar_data <- df %>%
-    dplyr::filter(.data[["ind"]] %in% espar_inds,
+    dplyr::filter(.data[["ind"]] %in% espar_ind,
                   .data[[scenario_col]] == default_scenario)
 
   last_year_reported <- espar_data %>%
@@ -68,17 +56,19 @@ accelerate_espar <- function(df,
     dplyr::group_by(.data[["iso3"]]) %>%
     tidyr::pivot_wider(names_from = "year", names_prefix = "value_", values_from = tidyselect::all_of(value_col)) %>%
     dplyr::mutate(baseline = dplyr::case_when(
-      !is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & (is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) | .data[[glue::glue("{value_col}_{last_year_reported - 1}")]] > .data[[glue::glue("{value_col}_{start_year - 1}")]]) ~ as.integer(last_year_reported - 1),
-      is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) & is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) & !is.na(.data[[glue::glue("{value_col}_{last_year_reported}")]]) ~ as.integer(last_year_reported),
+      !is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) &
+        (is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) |
+           .data[[glue::glue("{value_col}_{last_year_reported - 1}")]] > .data[[glue::glue("{value_col}_{start_year - 1}")]]) ~ as.integer(last_year_reported - 1),
+      is.na(.data[[glue::glue("{value_col}_{last_year_reported - 1}")]]) &
+        is.na(.data[[glue::glue("{value_col}_{start_year - 1}")]]) & !is.na(.data[[glue::glue("{value_col}_{last_year_reported}")]]) ~ as.integer(last_year_reported),
       TRUE ~ as.integer(start_year-1)
     )) %>%
     dplyr::select("iso3", "baseline")
 
   baseline_year_complete <- espar_data %>%
-    dplyr::filter(.data[["ind"]] %in% espar_sub_cat) %>%
     dplyr::group_by(.data[["iso3"]], .data[["year"]]) %>%
     dplyr::tally() %>%
-    dplyr::filter(.data[["n"]] == length(espar_sub_cat)) %>%
+    dplyr::filter(.data[["n"]] == 1) %>%
     dplyr::summarise(baseline_complete = min(.data[["year"]]))
 
   espar_full <- espar_data %>%
@@ -88,15 +78,10 @@ accelerate_espar <- function(df,
     dplyr::filter(
       !is.na(.data[["region"]]),
       .data[["year"]] >= baseline_year
-    ) %>%
-    dplyr::mutate(
-      is_cat = dplyr::if_else(.data[["ind"]] %in% espar_cat, TRUE, FALSE),
-      is_sub_cat = dplyr::if_else(.data[["ind"]] %in% espar_sub_cat, TRUE, FALSE)
     )
 
   espar_regional <- espar_full %>%
     dplyr::filter(
-      .data[["is_sub_cat"]],
       .data[["year"]] == .data[["baseline_complete"]] & .data[["baseline_complete"]] <= last_year_reported
     ) %>%
     dplyr::group_by(.data[["region"]], .data[["ind"]]) %>%
@@ -106,31 +91,13 @@ accelerate_espar <- function(df,
   espar_year_complete <- espar_full %>%
     dplyr::filter(.data[["year"]] == .data[["baseline_complete"]])
 
-  espar_year_complete_sub_cat <- espar_year_complete %>%
-    dplyr::filter(.data[["is_sub_cat"]])
-
-  espar_sub_target <- tidyr::expand_grid("iso3" := whoville::who_member_states(),
-                                         "ind" := unique(espar_regional[["ind"]])
+  espar_target <- tidyr::expand_grid("iso3" := whoville::who_member_states(),
+                                     "ind" := unique(espar_regional[["ind"]])
   ) %>%
     dplyr::mutate(region = whoville::iso3_to_regions(.data[["iso3"]])) %>%
-    dplyr::left_join(espar_year_complete_sub_cat, by = c("iso3", "ind", "region")) %>%
+    dplyr::left_join(espar_year_complete, by = c("iso3", "ind", "region")) %>%
     dplyr::left_join(espar_regional, by = c("ind", "region")) %>%
     dplyr::mutate(target = pmax(.data[["reg_av_sub"]], .data[[value_col]], na.rm = TRUE)) %>%
-    dplyr::select("iso3", "ind", "target")
-
-  espar_cat_target <- espar_sub_target %>%
-    dplyr::mutate("ind" := stringr::str_replace(.data[["ind"]], "_[0-9]{2}$", "")) %>%
-    dplyr::group_by(.data[["iso3"]], .data[["ind"]]) %>%
-    dplyr::summarise(target = mean(.data[["target"]]), .groups = "drop") %>%
-    dplyr::select("iso3", "ind", "target")
-
-  espar_target <- espar_cat_target %>%
-    dplyr::group_by(.data[["iso3"]]) %>%
-    dplyr::summarise(
-      target = mean(.data[["target"]]),
-      "ind" := "espar",
-      .groups = "drop"
-    ) %>%
     dplyr::select("iso3", "ind", "target") %>%
     dplyr::full_join(baseline_year_espar, by = "iso3") %>%
     dplyr::mutate(baseline = dplyr::case_when(

@@ -34,7 +34,7 @@ billion_ind_codes <- function(billion = c("hep", "hpop", "uhc", "all"),
   }
 
   if (!include_subindicators) {
-    df <- dplyr::filter(df, !stringr::str_detect(.data[["ind"]], "rural|urban|denom|num|espar.+"))
+    df <- dplyr::filter(df, !stringr::str_detect(.data[["ind"]], "rural|urban|denom|num"))
   }
 
   if (billion == "all") {

@@ -87,13 +87,7 @@ add_scenario <- function(df,
   assert_columns(df, "ind")
   scenario_function <- rlang::arg_match(scenario_function)
 
-  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids,
-                                               paste0(c(
-                                                 "espar[0-9].{0,3}",
-                                                 "surviving_infants"
-                                               ),
-                                               collapse = "|"
-                                               ))]
+  sub_set_inds <- ind_ids[!stringr::str_detect(ind_ids,"surviving_infants")]
 
   if(default_scenario %in% unique(df[[scenario_col]])){
     last_year_default_scenario <- get_last_year_scenario(df,
@@ -186,24 +180,15 @@ add_scenario_indicator <- function(df,
 
   this_ind <- ind_ids[indicator]
 
-  if(stringr::str_detect(this_ind, "espar")){
-    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-      "espar[0-9].{0,3}",
-      glue::glue("^{this_ind}$")
-    ),
-    collapse = "|"
-    ))]
-  }else {
-    this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
-      glue::glue("^{this_ind}$"),
-      glue::glue("^{this_ind}_num$"),
-      glue::glue("^{this_ind}_denom$"),
-      glue::glue("^{this_ind}_urban$"),
-      glue::glue("^{this_ind}_rural$")
-    ),
-    collapse = "|"
-    ))]
-  }
+  this_ind_with_sub <- ind_ids[stringr::str_detect(ind_ids, paste0(c(
+    glue::glue("^{this_ind}$"),
+    glue::glue("^{this_ind}_num$"),
+    glue::glue("^{this_ind}_denom$"),
+    glue::glue("^{this_ind}_urban$"),
+    glue::glue("^{this_ind}_rural$")
+  ),
+  collapse = "|"
+  ))]
 
   this_ind_df <- df %>%
     dplyr::filter(.data[["ind"]] %in% this_ind_with_sub)
