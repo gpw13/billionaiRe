@@ -175,14 +175,14 @@ arrow::write_parquet(test_data, test_data_output_path)
 
 whdh::upload_to_data_lake(
   data_lake_name = get_data_lake_name(),
-  container = "dropzone",
+  container = "whdh",
   source_path = test_data_output_path,
   destination_path = test_data_destination_path_notimestamp
 )
 
 whdh::upload_to_data_lake(
   data_lake_name = get_data_lake_name(),
-  container = "dropzone",
+  container = "whdh",
   source_path = test_data_output_path,
   destination_path = test_data_destination_path
 )
@@ -199,14 +199,14 @@ arrow::write_parquet(test_data_calculated, test_data_calculated_output_path)
 
 whdh::upload_to_data_lake(
   data_lake_name = get_data_lake_name(),
-  container = "dropzone",
+  container = "whdh",
   source_path = test_data_calculated_output_path,
   destination_path = test_data_calculated_destination_path
 )
 
 whdh::upload_to_data_lake(
   data_lake_name = get_data_lake_name(),
-  container = "dropzone",
+  container = "whdh",
   source_path = test_data_calculated_output_path,
   destination_path = test_data_destination_path_notimestamp
 )
@@ -227,7 +227,7 @@ test_data_unofficial_destination_path <- glue::glue("3B/Bronze/misc_data/test_da
 whdh::upload_to_data_lake(
   data_lake_name = get_data_lake_name(),
   source_path = test_data_output_path,
-  container = "dropzone",
+  container = "whdh",
   destination_path = test_data_unofficial_destination_path
 )
 
