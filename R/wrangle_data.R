@@ -245,7 +245,7 @@ wrangle_gho_rural_urban_data <- function(df,
     # time series
     dplyr::filter(.data[["ind"]] == .data[["ind_mode"]]) %>%
     # Remove unnecessary columns
-    dplyr::select(!c("DataSourceDim", "ind_mode")) %>%
+    dplyr::select(-all_of(c("DataSourceDim", "ind_mode"))) %>%
     # Filter to keep only WHO members
     dplyr::filter(whoville::is_who_member(.data[["iso3"]])) %>%
     # Arrange in ascending order of iso3, year
