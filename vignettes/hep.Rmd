@@ -18,7 +18,8 @@ To calculate the HEP Billion, there are a series of functions made available thr
 the billionaiRe package:
 
 * `transform_hep_data()` to transform raw values into normalized values used within the calculations. For now, this is primarily calculating the total prevent numerators and denominators for campaign and routine data.
-* `calculate_hep_components()` to calculate component indicators (Prevent coverages), the HEP index, and levels for all components.
+* `calculate_hep_prevent_ind` to calculate the sub-indicator for 'prevent'.
+* `calculate_hep_components()` to calculate the HEP index, and levels for all components.
 * `calculate_hep_billion()` to calculate the change for the three HEP components (DNR, Prepare, and Prevent), their contribution to the Billion, and overall HEPI change and contribution.
 
 Run in sequence, these can calculate the entire HEP Billion, or they can be run separately
@@ -33,6 +34,7 @@ library(billionaiRe)
 hep_df %>%
   transform_hep_data() %>%
   calculate_hep_components() %>%
+  dplyr::bind_rows(billionaiRe::calculate_hep_prevent_ind(.)) %>%
   calculate_hep_billion(end_year = 2023) %>%
   dplyr::filter(ind %in% c("prevent",
                            "espar",
