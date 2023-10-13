@@ -129,20 +129,16 @@ calculate_fixed_target <- function(target_value,
                                    original_value) {
   if (small_is_best) {
     dplyr::case_when(
-      year >= baseline_year & year <= target_year & baseline_value > target_value ~
+      year >= baseline_year & year <= target_year ~
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
-      year >= baseline_year & year <= target_year & baseline_value <= target_value ~
-        as.numeric(baseline_value),
       year > target_year ~ target_value,
       year < baseline_year ~ original_value,
       TRUE ~ NA_real_
     )
   } else {
     dplyr::case_when(
-      year >= baseline_year & year <= target_year & baseline_value < target_value ~
+      year >= baseline_year & year <= target_year ~
         baseline_value + (target_value - baseline_value) * (year - baseline_year) / (target_year - baseline_year),
-      year >= baseline_year & year <= target_year & baseline_value >= target_value ~
-        as.numeric(baseline_value),
       year > target_year ~ target_value,
       year < baseline_year ~ original_value,
       TRUE ~ NA_real_
