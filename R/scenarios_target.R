@@ -83,7 +83,7 @@ scenario_fixed_target <- function(df,
         is.na(.data[["baseline_value_"]]) ~ as.numeric(0),
         TRUE ~ as.numeric(.data[["baseline_value_"]])
       ),
-      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], start_year, target_year, .data[["baseline_value_"]]),
+      scenario_value = calculate_fixed_target(target_value, small_is_best, .data[["year"]], baseline_year, target_year, .data[["baseline_value_"]], .data[["value"]]),
       !!sym(scenario_col) := scenario_name
     ) %>%
     dplyr::select(-c("baseline_value_", "baseline_year_")) %>%
@@ -117,6 +117,7 @@ scenario_fixed_target <- function(df,
 #' @param target_value vector of values to use as targets
 #' @param baseline_value value at baseline_year
 #' @param year (vector) vector of years
+#' @param original_value (vector) vector of the original values. returned for years before the baseline year
 #'
 #' @noRd
 calculate_fixed_target <- function(target_value,
@@ -124,7 +125,8 @@ calculate_fixed_target <- function(target_value,
                                    year,
                                    baseline_year,
                                    target_year,
-                                   baseline_value) {
+                                   baseline_value,
+                                   original_value) {
   if (small_is_best) {
     dplyr::case_when(
       year >= baseline_year & year <= target_year & baseline_value > target_value ~
@@ -132,6 +134,7 @@ calculate_fixed_target <- function(target_value,
       year >= baseline_year & year <= target_year & baseline_value <= target_value ~
         as.numeric(baseline_value),
       year > target_year ~ target_value,
+      year < baseline_year ~ original_value,
       TRUE ~ NA_real_
     )
   } else {
@@ -141,6 +144,7 @@ calculate_fixed_target <- function(target_value,
       year >= baseline_year & year <= target_year & baseline_value >= target_value ~
         as.numeric(baseline_value),
       year > target_year ~ target_value,
+      year < baseline_year ~ original_value,
       TRUE ~ NA_real_
     )
   }
