@@ -23,7 +23,7 @@ remotes::install_github("gpw13/billionaiRe", build_vignettes = TRUE)
 
 You will need to have already installed the wppdistro and whdh packages,
 which is stored in a private repo and only made public upon request from
-valid WHO users. Please contact <messeillere@who.int> to request access.
+valid WHO users. Please contact <trubetskoyv@who.int> to request access.
 
 # Calculations
 
