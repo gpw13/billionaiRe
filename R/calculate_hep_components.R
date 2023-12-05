@@ -86,6 +86,8 @@ calculate_hep_prevent_ind <- function(df,
 
   df <- billionaiRe_add_columns(df, c("type", "source"), NA_character_)
 
+  df_original <- df
+
   df <- dplyr::group_by(df, dplyr::across(c("iso3", "year", !!scenario_col)))
 
   args <- list(
@@ -137,13 +139,15 @@ calculate_hep_prevent_ind <- function(df,
     max_value = c(rep(Inf, 13), 100)
   )
 
-  furrr::future_pmap_dfr(args,
+  df <- furrr::future_pmap_dfr(args,
     pathogen_calc,
     df = df,
     transform_value_col = transform_value_col,
     source = source,
     ind_ids = ind_ids
   )
+  df <- dplyr::bind_rows(df, df_original)
+  return(df)
 }
 
 #' Calculate the vaccine coverage for a specific pathogen

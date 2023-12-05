@@ -34,7 +34,7 @@ library(billionaiRe)
 hep_df %>%
   transform_hep_data() %>%
   calculate_hep_components() %>%
-  dplyr::bind_rows(billionaiRe::calculate_hep_prevent_ind(.)) %>%
+  calculate_hep_prevent_ind() %>%
   calculate_hep_billion(end_year = 2023) %>%
   dplyr::filter(ind %in% c("prevent",
                            "espar",
