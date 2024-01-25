@@ -48,7 +48,7 @@ currently counts the number of routine vaccinations included in the numerator,
 and multiplies the surviving infants denominator by that number.
 }
 \details{
-This function is currently called from the \code{prevent_calculations()} function
+This function is currently called from the \code{calculate_hep_prevent_ind()} function
 that sits within \code{calculate_hep_components()}.
 }
 \keyword{internal}
