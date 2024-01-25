@@ -188,28 +188,28 @@ wrangle_gho_rural_urban_data <- function(df,
       # If a total value doesn't exist, use the rural/urban indicator name
       "ind" := dplyr::case_when(
         !is.na(.data[["NumericValue_RESIDENCEAREATYPE_TOTL"]]) ~ .env$ind,
-        !is.na(.data[["NumericValue_RUR"]]) ~ sprintf("%s_rural", .env$ind),
-        !is.na(.data[["NumericValue_URB"]]) ~ sprintf("%s_urban", .env$ind)
+        !is.na(.data[["NumericValue_RESIDENCEAREATYPE_RUR"]]) ~ sprintf("%s_rural", .env$ind),
+        !is.na(.data[["NumericValue_RESIDENCEAREATYPE_URB"]]) ~ sprintf("%s_urban", .env$ind)
       ),
 
       # If a total value doesn't exist, use the rural/urban value
       "value" := as.double(dplyr::case_when(
-        !!!make_conds(prefixes = c("NumericValue"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("NumericValue"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       )),
 
       # If a total low doesn't exist, use the rural/urban low
       "lower" := as.double(dplyr::case_when(
-        !!!make_conds(prefixes = c("Low"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("Low"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       )),
 
       # If a total high doesn't exist, use the rural/urban high
       "upper" := as.double(dplyr::case_when(
-        !!!make_conds(prefixes = c("High"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("High"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       )),
 
       # If a total source doesn't exist, use the rural/urban source
       "DataSourceDim" := as.character(dplyr::case_when(
-        !!!make_conds(prefixes = c("DataSourceDim"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("DataSourceDim"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       )),
 
       # If a data source is explicitly provided, override the sources from the DataSourceDim column
@@ -220,7 +220,7 @@ wrangle_gho_rural_urban_data <- function(df,
 
       # If a total comment doesn't exist, use the rural/urban comment
       "other_detail" := as.character(dplyr::case_when(
-        !!!make_conds(prefixes = c("Comments"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("Comments"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       )),
 
       # If a type argument is provided, use that; otherwise NA
@@ -232,7 +232,7 @@ wrangle_gho_rural_urban_data <- function(df,
       type_detail = NA_character_,
       upload_detail = NA_character_,
       "upload_date" := as.Date(dplyr::case_when(
-        !!!make_conds(prefixes = c("Date"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RUR", "URB"))
+        !!!make_conds(prefixes = c("Date"), suffixes = c("RESIDENCEAREATYPE_TOTL", "RESIDENCEAREATYPE_RUR", "RESIDENCEAREATYPE_URB"))
       ))
     ) %>%
     ## Filter out 'mixed' time series
