@@ -100,7 +100,7 @@ HE_notify,notify,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP2,Time to not
 NA,polio,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,%,%,Polio - Campaigns and routine combined,Polio,NA,NA,NA,NA,NA,NA,NA
 HE_polio_Routine,polio_routine,WHS4_544,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,PREV1,Polio 3 - Routine,%,%,Polio 3 - Routine,Polio 3 - Routine,52,prevent,FALSE,NA,NA,Business as usual,AROC 20% percent change between 2015 and 2025
 NA,polio_routine_num,NA,NA,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Polio - Routine reached population (numerator),Polio - Routine (numerator),NA,NA,FALSE,NA,NA,NA,NA
-HE_vaccinecov,prevent,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,59,prevent,NA,NA,NA,NA,NA
+HE_vaccinecov,prevent,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,PREV8,Prevent,%,%,Prevent,Prevent,59,prevent,FALSE,NA,NA,NA,NA
 HE_respond,respond,NA,unproj_data,FALSE,FALSE,TRUE,FALSE,FALSE,DECREP3,Time to respond,days,%,Time to respond,Time to respond,62,detect_respond,FALSE,NA,NA,Business as usual,Business as usual
 HE_surviving_infants,surviving_infants,NA,proj_data,FALSE,FALSE,TRUE,FALSE,FALSE,NA,NA,#,#,Surviving infants,Surviving infants,NA,NA,FALSE,NA,NA,NA,NA
 NA,yellow_fever,NA,NA,FALSE,FALSE,TRUE,FALSE,TRUE,NA,NA,#,#,Yellow fever - Campaign and routine combined,Yellow fever,NA,NA,NA,NA,NA,NA,NA

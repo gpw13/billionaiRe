@@ -32,13 +32,6 @@ calculate_hep_components <- function(df,
   df <- billionaiRe_add_columns(df, c("type", "source"), NA_character_)
 
   new_df <- df %>%
-    dplyr::bind_rows(prevent_calculations(
-      .,
-      scenario_col,
-      source,
-      transform_value_col,
-      ind_ids
-    )) %>%
     dplyr::bind_rows(calculate_hepi(
       .,
       scenario_col,
@@ -73,19 +66,28 @@ calculate_hep_components <- function(df,
 #' Calculate prevent indicators
 #'
 #' This function calculates the overall vaccine coverage scores for each pathogen,
-#' including the overall prevent indicator. It is used within `calculate_hep_components()`
-#' and primarily relies on using `purrr::pmap_dfr()` to apply the `pathogen_calc()`
-#' function for each prevent component and overall score.
+#' including the overall prevent indicator. It primarily relies on using
+#' `purrr::pmap_dfr()` to apply the `pathogen_calc()` function for each prevent
+#' component and overall score.
 #'
 #' @inheritParams calculate_hep_components
 #'
-#' @keywords internal
-#'
-prevent_calculations <- function(df,
-                                 scenario_col,
-                                 source,
-                                 transform_value_col,
-                                 ind_ids) {
+#' @export
+calculate_hep_prevent_ind <- function(df,
+                                      scenario_col = NULL,
+                                      transform_value_col = "transform_value",
+                                      source = sprintf("WHO DDI, %s", format(Sys.Date(), "%B %Y")),
+                                      level_col = stringr::str_replace(transform_value_col, "transform_value", "level"),
+                                      ind_ids = billion_ind_codes("hep", include_calculated = TRUE)) {
+
+  assert_columns(df, "iso3", "ind", "year", transform_value_col, scenario_col)
+  assert_same_length(transform_value_col, level_col)
+  assert_unique_rows(df, scenario_col, ind_ids)
+
+  df <- billionaiRe_add_columns(df, c("type", "source"), NA_character_)
+
+  df_original <- df
+
   df <- dplyr::group_by(df, dplyr::across(c("iso3", "year", !!scenario_col)))
 
   args <- list(
@@ -137,13 +139,15 @@ prevent_calculations <- function(df,
     max_value = c(rep(Inf, 13), 100)
   )
 
-  furrr::future_pmap_dfr(args,
+  df <- furrr::future_pmap_dfr(args,
     pathogen_calc,
     df = df,
     transform_value_col = transform_value_col,
     source = source,
     ind_ids = ind_ids
   )
+  df <- dplyr::bind_rows(df, df_original)
+  return(df)
 }
 
 #' Calculate the vaccine coverage for a specific pathogen
@@ -153,7 +157,7 @@ prevent_calculations <- function(df,
 #' currently counts the number of routine vaccinations included in the numerator,
 #' and multiplies the surviving infants denominator by that number.
 #'
-#' This function is currently called from the `prevent_calculations()` function
+#' This function is currently called from the `calculate_hep_prevent_ind()` function
 #' that sits within `calculate_hep_components()`.
 #'
 #' @inheritParams calculate_hep_components
