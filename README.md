@@ -3,12 +3,6 @@
 
 # billionaiRe <a href='https://github.com/gpw13/billionaiRe'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
-<!-- badges: start -->
-
-[![R build
-status](https://github.com/gpw13/billionaiRe/workflows/R-CMD-check/badge.svg)](https://github.com/gpw13/billionaiRe/actions)
-<!-- badges: end -->
-
 The goal of billionaiRe is to provide an easy interface for using long
 format data to calculate the World Health Organization’s Triple
 Billions.
