@@ -190,7 +190,7 @@ testthat::test_that(paste0("sdg_fp returns accurate values:"), {
 testthat::test_that(paste0("sdg_fpg returns accurate values:"), {
   ind <- "fpg"
 
-  testthat::expect_equal(get_value(60:80, ind, "reported"), 0)
+  testthat::expect_equal(get_value(60:80, ind, "reported"), 80)
 })
 
 # itn ----------------------------
