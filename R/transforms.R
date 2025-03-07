@@ -114,32 +114,6 @@ untransform_hwf <- function(x) {
   x
 }
 
-#' Transform FPG data
-#'
-#' Rescales FPG data from `[70,0]` to `[0,100]`
-#'
-#' @inheritParams reverse_ind
-#'
-#' @keywords internal
-#' @noRd
-transform_glucose <- function(x) {
-  x <- scales::rescale(x, from = c(70, 0), to = c(0, 100))
-  trim_transforms(x)
-}
-
-#' Unransform FPG data
-#'
-#' Reverses transformation from [transform_glucose()]
-#'
-#' @inheritParams reverse_ind
-#'
-#' @keywords internal
-#' @noRd
-untransform_glucose <- function(x) {
-  x <- scales::rescale(x, to = c(70, 0), from = c(0, 100))
-  x
-}
-
 #' Transform alcohol data
 #'
 #' Rescales alcohol data according to Billions methods report
